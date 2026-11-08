@@ -233,11 +233,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKE19' )
 
 !
 !     Capture the subtype from the record and set the packet size
@@ -263,7 +260,6 @@
          //            'type 19 record.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(INVALIDVALUE)'                      )
-         call chkout ( 'SPKE19'                                   )
          return
 
       end if
@@ -421,11 +417,9 @@
          //            'type 19 record.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(INVALIDVALUE)'                      )
-         call chkout ( 'SPKE19'                                   )
          return
 
       end if
 
-      call chkout ( 'SPKE19' )
       return
       end

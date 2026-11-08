@@ -161,19 +161,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS17' )
-      end if
+      if ( return () ) return
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  >  end  ) then
-         call chkout ( 'SPKS17' )
-         return
-      end if
+      if (  begin  >  end  ) return
 
 
 !
@@ -188,6 +181,5 @@
       call dafada ( data, nitems )
 
 
-      call chkout ( 'SPKS17' )
       return
       end

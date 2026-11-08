@@ -1135,11 +1135,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GFSEP' )
 
 
       if ( mw < 2 .or. .not. even(mw) ) then
@@ -1148,7 +1145,6 @@
          //            'at least 2 and an even value.'            )
          call errint ( '#',  mw                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
-         call chkout ( 'GFSEP'                                    )
          return
 
       end if
@@ -1161,7 +1157,6 @@
          call errint ( '#',  nw                                      )
          call errint ( '#',  nwsep                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
-         call chkout ( 'GFSEP'                                       )
          return
 
       end if
@@ -1173,7 +1168,6 @@
          //            'at least 2 and an even value.'             )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFSEP'                                     )
          return
 
       end if
@@ -1250,7 +1244,6 @@
                     mw,       nwsep,    work, &
                     .false.,  gfbail,   result )
 
-      call chkout ( 'GFSEP' )
 
       return
       end

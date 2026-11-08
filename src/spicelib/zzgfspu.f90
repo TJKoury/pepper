@@ -360,9 +360,7 @@
 !
 !     Never directly call this routine.
 !
-      call chkin ( 'ZZGFSPU'           )
       call sigerr( 'SPICE(BOGUSENTRY)' )
-      call chkout( 'ZZGFSPU'           )
 
       return
 
@@ -593,11 +591,7 @@
 !-&
 
 
-      if ( return () ) then
-         return
-      else
-         call chkin( 'ZZGFSPIN' )
-      end if
+      if ( return () ) return
 
       call bods2c ( of(1), svbod1, found )
 
@@ -610,7 +604,6 @@
             //         'version of the SPICE Toolkit.'        )
          call errch ( '#', of( 1 )                            )
          call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
-         call chkout( 'ZZGFSPIN'                              )
          return
 
       end if
@@ -627,7 +620,6 @@
             //         'version of the SPICE Toolkit.'        )
          call errch ( '#', of ( 2 )                           )
          call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
-         call chkout( 'ZZGFSPIN'                              )
          return
 
       end if
@@ -644,7 +636,6 @@
             //            'version of the SPICE Toolkit.'          )
          call errch  ( '#', from                                   )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                     )
-         call chkout ( 'ZZGFSPIN'                                  )
          return
 
       end if
@@ -666,7 +657,6 @@
          call errint( '#', svbod2                                   )
          call errint( '#', svobs                                    )
          call sigerr( 'SPICE(BODIESNOTDISTINCT)'                    )
-         call chkout( 'ZZGFSPIN'                                    )
          return
 
       end if
@@ -684,10 +674,7 @@
 !
       call zzvalcor ( svabcr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFSPIN' )
-         return
-      end if
+      if ( failed() ) return
 
       svref  = ref
       svref1 = frame(1)
@@ -711,7 +698,6 @@
             //         'POINT, SPHERE.'                        )
          call errch  ( '#', shape(1)                           )
          call sigerr ( 'SPICE(NOTRECOGNIZED)'                  )
-         call chkout ( 'ZZGFSPIN'                              )
          return
 
       else if ( svshp1 == point ) then
@@ -722,10 +708,7 @@
 
          call zzgftreb( svbod1, axes1 )
 
-         if (  failed() ) then
-            call chkout( 'ZZGFSPIN' )
-            return
-         end if
+         if (  failed() ) return
 
          svrad1 = max( axes1(1), axes1(2), axes1(3) )
 
@@ -740,7 +723,6 @@
                       'This indicates a bug. Please contact NAIF.')
          call errch  ('#', shape(1)                               )
          call sigerr ('SPICE(BUG)'                                )
-         call chkout ( 'ZZGFSPIN'                                 )
          return
 
       end if
@@ -760,7 +742,6 @@
                        'POINT, SPHERE.'                             )
          call errch ( '#', shape(2)                                 )
          call sigerr( 'SPICE(NOTRECOGNIZED)'                        )
-         call chkout( 'ZZGFSPIN'                                    )
          return
 
       else if ( svshp2 == point ) then
@@ -771,10 +752,7 @@
 
          call zzgftreb( svbod2, axes2)
 
-         if (  failed() ) then
-            call chkout( 'ZZGFSPIN' )
-            return
-         end if
+         if (  failed() ) return
 
          svrad2 = max( axes2(1), axes2(2), axes2(3) )
 
@@ -789,7 +767,6 @@
                       'This indicates a bug. Please contact NAIF.')
          call errch  ('#', shape(2)                               )
          call sigerr ('SPICE(BUG)'                                )
-         call chkout ( 'ZZGFSPIN'                                 )
          return
 
       end if
@@ -816,7 +793,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', svref1                               )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZGFSPIN'                                )
             return
 
          end if
@@ -830,7 +806,6 @@
             call errch  ( '#1', svref1                     )
             call errch  ( '#2', of(1)                      )
             call sigerr ( 'SPICE(INVALIDFRAME)'            )
-            call chkout ( 'ZZGFSPIN'                       )
             return
 
          end if
@@ -849,7 +824,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', svref2                               )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZGFSPIN'                                )
             return
 
          end if
@@ -863,14 +837,12 @@
             call errch  ( '#1', svref2                     )
             call errch  ( '#2', of(2)                      )
             call sigerr ( 'SPICE(INVALIDFRAME)'            )
-            call chkout ( 'ZZGFSPIN'                       )
             return
 
          end if
 
       end if
 
-      call chkout( 'ZZGFSPIN' )
       return
 
 
@@ -999,25 +971,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin( 'ZZGFSPDC' )
-      end if
+      if ( return () ) return
 
       call spkez ( svbod1, et, svref, svabcr, svobs, pv1, lt )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFSPDC' )
-         return
-      end if
+      if (  failed() ) return
 
       call spkez ( svbod2, et, svref, svabcr, svobs, pv2, lt )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFSPDC' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     The angular separation between the bodies has the value
@@ -1047,7 +1009,6 @@
 !
       if (  failed() ) then
          decres = .true.
-         call chkout ( 'ZZGFSPDC' )
          return
       end if
 
@@ -1059,7 +1020,6 @@
          decres = .false.
       end if
 
-      call chkout ( 'ZZGFSPDC' )
       return
 
 

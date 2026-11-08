@@ -340,7 +340,6 @@
          return
       end if
 
-      call chkin( 'DVSEP' )
 
 !
 !     Compute the unit vectors and corresponding time derivatives
@@ -362,7 +361,6 @@
       if ( vzero(pcross) ) then
 
          dvsep = 0.0_wp
-         call chkout( 'DVSEP' )
          return
 
       end if
@@ -388,7 +386,6 @@
 !     Return, the expectation exists that a FAILED() call
 !     follows the DVSEP call.
 !
-      call chkout( 'DVSEP' )
 
       return
       end

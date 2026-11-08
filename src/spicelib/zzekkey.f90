@@ -350,11 +350,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKKEY' )
-      end if
+      if ( return () ) return
 
 !
 !     There's no key column to begin with.
@@ -369,7 +365,6 @@
          call errint ( '#',   ncnstr                               )
          call errint ( '#',   maxcon                               )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'ZZEKKEY'                                   )
          return
 
       end if
@@ -420,12 +415,7 @@
 !     We finish up now if there are no indexed columns
 !     on which there are active constraints.
 !
-      if ( cardi(idxset) == 0 ) then
-
-         call chkout ( 'ZZEKKEY' )
-         return
-
-      end if
+      if ( cardi(idxset) == 0 ) return
 
 !
 !     For each column in the `indexed' set, find out how many
@@ -615,10 +605,7 @@
                i  =  i  +  1
             end if
 
-            if ( failed() ) then
-               call chkout ( 'ZZEKKEY' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -707,6 +694,5 @@
 !
       found = .true.
 
-      call chkout ( 'ZZEKKEY' )
       return
       end

@@ -1076,9 +1076,7 @@
       if ( return () ) then
          return
       else
-         call chkin  ( 'DASFM' )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'DASFM' )
       end if
 
       return
@@ -1476,11 +1474,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASOPR' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -1505,10 +1500,7 @@
 !
       call zzddhopn ( fname, 'READ', 'DAS', handle )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine whether this file is already in the file table.
@@ -1537,7 +1529,6 @@
 !
 !        There's nothing else to do.
 !
-         call chkout ( 'DASOPR' )
          return
 
       end if
@@ -1553,7 +1544,6 @@
          call errint ( '#', ftsize                                )
          call errch  ( '#', fname                                 )
          call sigerr ( 'SPICE(DASFTFULL)'                         )
-         call chkout ( 'DASOPR'                                   )
          return
 
       end if
@@ -1564,10 +1554,7 @@
       call zzdasrfr ( handle, idword, locifn, locrrc, &
                       locrch, loccrc, loccch         )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Update the file table to include information about our newly
@@ -1631,10 +1618,7 @@
 !
             call zzdasgri ( handle, nxtdir, dirrec )
 
-            if ( failed() ) then
-               call chkout ( 'DASOPR' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if (  dirrec(rngbas + 2*type)  >  0  ) then
@@ -1673,10 +1657,7 @@
 !
             call zzdasgri ( handle, nrec, dirrec )
 
-            if ( failed() ) then
-               call chkout ( 'DASOPR' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Traverse the directory record, looking for the last
@@ -1767,7 +1748,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DASOPR' )
       return
 
 
@@ -2160,11 +2140,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASOPW' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -2186,7 +2163,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DASFTFULL)'                              )
-         call chkout ( 'DASOPW'                                        )
          return
 
       end if
@@ -2203,10 +2179,7 @@
       call zzdasrfr ( handle, idword, locifn, locrrc, &
                       locrch, loccrc, loccch         )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     At this point, we know that we have a valid DAS file, and
@@ -2247,10 +2220,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., number )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We'll find the values for each data type separately.
@@ -2286,10 +2256,7 @@
 !
             call zzdasgri ( handle, nxtdir, dirrec )
 
-            if ( failed() ) then
-               call chkout ( 'DASOPW' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if (  dirrec(rngbas + 2*type)  >  0  ) then
@@ -2328,10 +2295,7 @@
 !
             call zzdasgri ( handle, nrec, dirrec )
 
-            if ( failed() ) then
-               call chkout ( 'DASOPW' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Traverse the directory record, looking for the last
@@ -2423,7 +2387,6 @@
       call insrti ( handle, fhlist )
 
 
-      call chkout ( 'DASOPW' )
       return
 
 
@@ -2760,11 +2723,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASONW' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -2785,7 +2745,6 @@
 
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
-         call chkout ( 'DASONW'                   )
          return
 
       end if
@@ -2796,7 +2755,6 @@
 
          call setmsg ( 'The file type is blank. ' )
          call sigerr ( 'SPICE(BLANKFILETYPE)'     )
-         call chkout ( 'DASONW'                   )
          return
 
       end if
@@ -2813,7 +2771,6 @@
             call setmsg ( 'The file type contains nonprinting' // &
                           ' characters. '                       )
             call sigerr ( 'SPICE(ILLEGALCHARACTER)'             )
-            call chkout ( 'DASONW'                              )
             return
 
          end if
@@ -2829,7 +2786,6 @@
                        'must be non-negative but was #.'           )
          call errint ( '#',  ncomr                                 )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'DASONW'                                    )
          return
 
       end if
@@ -2854,7 +2810,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DASFTFULL)'                              )
-         call chkout ( 'DASONW'                                        )
          return
 
       end if
@@ -2909,10 +2864,7 @@
 !     writing the file record to the logical unit. In the event
 !     an error occurs, checkout and return.
 !
-      if ( failed() ) then
-         call chkout ( 'DASONW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Zero out the first directory record in the file. If this
@@ -2935,7 +2887,6 @@
 !
          call zzddhcls ( handle, 'DAS', .true. )
 
-         call chkout ( 'DASONW' )
          return
 
       end if
@@ -2971,7 +2922,6 @@
       call insrti ( handle, fhlist )
 
 
-      call chkout ( 'DASONW' )
       return
 
 
@@ -3293,11 +3243,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASOPN' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -3318,7 +3265,6 @@
 
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
-         call chkout ( 'DASOPN'                   )
          return
 
       end if
@@ -3333,7 +3279,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DASFTFULL)'                              )
-         call chkout ( 'DASOPN'                                        )
          return
 
 
@@ -3359,10 +3304,7 @@
 
       call zzddhhlu ( handle, 'DAS', .false., number )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the system file format.
@@ -3400,10 +3342,7 @@
                       0, &
                       format  )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Zero out the first directory record (record #2) in the file. If
@@ -3419,7 +3358,6 @@
 
       if ( failed() ) then
          close       ( unit = number,  status = 'DELETE' )
-         call chkout ( 'DASOPN' )
          return
       end if
 
@@ -3452,7 +3390,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DASOPN' )
       return
 
 
@@ -3765,11 +3702,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASOPS' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -3798,7 +3732,6 @@
                        ' details.'                                     )
          call errint ( '#', ftsize                                     )
          call sigerr ( 'SPICE(DASFTFULL)'                              )
-         call chkout ( 'DASOPS'                                        )
          return
 
       end if
@@ -3814,10 +3747,7 @@
 !
       call zzddhopn ( locdas, 'SCRATCH', 'DAS', handle )
 
-      if ( failed() ) then
-         call chkout ( 'DASOPS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get a logical unit for the file.
@@ -3864,10 +3794,7 @@
 !     writing the file record to the logical unit. In the event
 !     an error occurs, checkout and return.
 !
-      if ( failed() ) then
-         call chkout ( 'DASOPS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Update the file table to include information about
@@ -3899,7 +3826,6 @@
       call insrti ( handle, fhlist )
 
 
-      call chkout ( 'DASOPS' )
       return
 
 
@@ -4370,11 +4296,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASLLC' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -4424,10 +4347,7 @@
 !
             call zzddhcls ( handle, 'DAS', .false. )
 
-            if ( failed() ) then
-               call chkout ( 'DASLLC' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( findex == fthead ) then
                fthead = lnknxt ( findex, pool )
@@ -4441,7 +4361,6 @@
 
       end if
 
-      call chkout ( 'DASLLC' )
       return
 
 
@@ -4940,11 +4859,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASHFS' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -4995,7 +4910,6 @@
          call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                    )
       end if
 
-      call chkout ( 'DASHFS' )
       return
 
 
@@ -5288,11 +5202,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASUFS' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -5328,10 +5239,7 @@
 !
          call zzddhhlu ( handle, 'DAS', .false., number )
 
-         if ( failed() ) then
-            call chkout ( 'DASUFS' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Now check to see that HANDLE is open for write, as one has
@@ -5345,7 +5253,6 @@
             call errint ( '#', handle                                  )
             call errfnm ( '#', number                                  )
             call sigerr ( 'SPICE(DASINVALIDACCESS)'                    )
-            call chkout ( 'DASUFS'                                     )
             return
 
          end if
@@ -5382,7 +5289,6 @@
                call errfnm ( '#', number                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(DASREADFAIL)'                   )
-               call chkout ( 'DASUFS'                               )
                return
 
             end if
@@ -5408,10 +5314,7 @@
 
                call zzddhcls ( handle, 'DAS', .false. )
 
-               if ( failed() ) then
-                  call chkout ( 'DASUFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                call setmsg ( 'Attempt to update file record failed. ' &
                //            'File was ''#''.  Value of IOSTAT was' &
@@ -5419,7 +5322,6 @@
                call errch  ( '#', locdas                               )
                call errint ( '#', iostat                               )
                call sigerr ( 'SPICE(DASWRITEFAIL)'                     )
-               call chkout ( 'DASUFS'                                  )
                return
 
             end if
@@ -5446,12 +5348,10 @@
          call setmsg ( 'There is no file open with handle = #' )
          call errint ( '#', handle                             )
          call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                )
-         call chkout ( 'DASUFS'                                )
          return
 
       end if
 
-      call chkout ( 'DASUFS' )
       return
 
 
@@ -5630,21 +5530,17 @@
 !
 !     We use discovery check-ins in this routine.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
       if ( pass1 ) then
 
-         call chkin  ( 'DASHLU'       )
 
          call lnkini ( ftsize, pool   )
          call ssizei ( ftsize, fhlist )
 
-         call chkout ( 'DASHLU'       )
 
          pass1 = .false.
 
@@ -5676,11 +5572,9 @@
 
       else
 
-         call chkin  ( 'DASHLU'                                )
          call setmsg ( 'There is no file open with handle = #' )
          call errint ( '#', handle                             )
          call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                )
-         call chkout ( 'DASHLU'                                )
 
       end if
 
@@ -5849,11 +5743,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASLUH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -5880,7 +5771,6 @@
 
       end if
 
-      call chkout ( 'DASLUH' )
       return
 
 
@@ -6109,11 +5999,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASHFN' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6158,7 +6044,6 @@
 
       end if
 
-      call chkout ( 'DASHFN' )
       return
 
 
@@ -6324,11 +6209,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASFNH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6353,7 +6235,6 @@
 
       end if
 
-      call chkout ( 'DASFNH' )
       return
 
 
@@ -6511,11 +6392,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASHOF' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6534,7 +6411,6 @@
 !
       call copyi ( fhlist, fhset )
 
-      call chkout ( 'DASHOF' )
       return
 
 
@@ -6749,11 +6625,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASSIH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6781,7 +6654,6 @@
          call setmsg ( 'Unrecognized access type.  Type was #. ' )
          call errch  ( '#', access                               )
          call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-         call chkout ( 'DASSIH'                                  )
          return
 
       end if
@@ -6795,7 +6667,6 @@
          call setmsg ( 'Handle # is not attached to an open DAS file.' )
          call errint ( '#', handle                                     )
          call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                        )
-         call chkout ( 'DASSIH'                                        )
          return
 
       else
@@ -6833,7 +6704,6 @@
             call errint ( '#', handle                                  )
             call errfnm ( '#', number                                  )
             call sigerr ( 'SPICE(DASINVALIDACCESS)'                    )
-            call chkout ( 'DASSIH'                                     )
             return
 
          end if
@@ -6843,7 +6713,6 @@
 !
 !     The DAS file's handle is o.k.
 !
-      call chkout ( 'DASSIH' )
       return
 
 
@@ -7015,11 +6884,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASHAM' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -7056,7 +6922,6 @@
                        'file '                                         )
          call errint ( '#',  handle                                    )
          call sigerr ( 'SPICE(INVALIDHANDLE)'                          )
-         call chkout ( 'DASHAM'                                        )
          return
 
       end if
@@ -7071,6 +6936,5 @@
          access = 'WRITE'
       end if
 
-      call chkout ( 'DASHAM' )
       return
       end

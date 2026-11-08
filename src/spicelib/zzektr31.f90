@@ -211,11 +211,9 @@
 !
       if ( nrkeys /= 1 ) then
 
-         call chkin  ( 'ZZEKTR31'                                 )
          call setmsg ( 'Number of keys in root = #; should be 1.' )
          call errint ( '#',  nrkeys                               )
          call sigerr ( 'SPICE(BUG)'                               )
-         call chkout ( 'ZZEKTR31'                                 )
          return
 
       end if
@@ -239,14 +237,12 @@
 !
       if (  sum  /=  ( 2*mnkeyc - 1 )  ) then
 
-         call chkin  ( 'ZZEKTR31'                                      )
          call setmsg ( 'Number of keys in nodes LEFT = #; in RIGHT ' // &
                        '= #; counts summing to # were expected.'       )
          call errint ( '#',  nlkeys                                    )
          call errint ( '#',  nrkeys                                    )
          call errint ( '#',  2*mnkeyc-1                                )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKTR31'                                      )
          return
 
       end if

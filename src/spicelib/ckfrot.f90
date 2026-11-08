@@ -412,11 +412,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKFROT' )
 
 !
 !     We don't need angular velocity data.
@@ -433,10 +430,8 @@
       call ckmeta ( inst,  'SCLK', sclkid )
 
       if ( .not. have ) then
-         call chkout ( 'CKFROT' )
          return
       else if ( .not. zzsclk ( inst, sclkid ) ) then
-         call chkout ( 'CKFROT' )
          return
       end if
 
@@ -478,7 +473,6 @@
 !
             call xpose ( rot, rotate )
 
-            call chkout ( 'CKFROT' )
             return
 
          end if
@@ -488,6 +482,5 @@
       end do
 
 
-      call chkout ( 'CKFROT' )
       return
       end

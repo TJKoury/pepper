@@ -190,11 +190,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFB2A' )
-      end if
+      if ( return () ) return
 !
 !     Open the ASCII file for writing. If an error occurs, then check
 !     out and return. An appropriate error message will have already
@@ -202,12 +198,7 @@
 !
       call txtopn ( ascii, unit )
 
-      if ( failed () ) then
-
-         call chkout ( 'DAFB2A' )
-         return
-
-      end if
+      if ( failed () ) return
 !
 !     Attempt to perform the file conversion. If it fails, close the
 !     text file with STATUS = 'DELETE', check out and return, as an
@@ -218,7 +209,6 @@
       if ( failed() ) then
 
          close       ( unit, status='DELETE' )
-         call chkout ( 'DAFB2A'              )
          return
 
       end if
@@ -227,6 +217,5 @@
 !
       close ( unit )
 
-      call chkout ( 'DAFB2A' )
       return
       end

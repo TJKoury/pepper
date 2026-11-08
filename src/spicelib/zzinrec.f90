@@ -200,9 +200,7 @@
 !
 !     Check-in is discovery style.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Assume the point is outside to start. This allows us
@@ -217,11 +215,9 @@
 !
       if ( margin < 0.0_wp ) then
 
-         call chkin  ( 'ZZINREC'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINREC'                                )
          return
 
       end if
@@ -231,11 +227,9 @@
 !
       if ( ( exclud < none ) .or. ( exclud > 3 ) ) then
 
-         call chkin  ( 'ZZINREC'                             )
          call setmsg ( 'EXCLUD was #; allowed range is 0:3.' )
          call errint ( '#', exclud                           )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
-         call chkout ( 'ZZINREC'                             )
          return
 
       end if
@@ -251,13 +245,11 @@
 
          if ( l(i) < 0.0_wp ) then
 
-            call chkin  ( 'ZZINREC'                              )
             call setmsg ( 'Bounds are out of order for index #; ' &
             //            'bounds are #:#.'                      )
             call errdp  ( '#', bounds(lower,i)                   )
             call errdp  ( '#', bounds(upper,i)                   )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'              )
-            call chkout ( 'ZZINREC'                              )
             return
 
          end if
@@ -279,12 +271,7 @@
             amncor(i) = mincor(i) - delta(i)
             amxcor(i) = maxcor(i) + delta(i)
 
-            if (      ( p(i) < amncor(i) ) &
-                 .or. ( p(i) > amxcor(i) ) ) then
-
-                return
-
-            end if
+            if (      ( p(i) < amncor(i) ) .or. ( p(i) > amxcor(i) ) ) return
 
          end if
 

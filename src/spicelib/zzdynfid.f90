@@ -260,11 +260,8 @@
       logical               found
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDYNFID' )
 
 !
 !     Prepare to check the name of the kernel variable we're about
@@ -274,10 +271,7 @@
 !
       call intstr ( frcode, cdestr )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDYNFID' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the lengths of the input frame code, name and item.
@@ -342,7 +336,6 @@
             call errint ( '#',  reqnam                              )
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            call chkout ( 'ZZDYNFID'                                )
             return
 
 
@@ -379,7 +372,6 @@
             call errint ( '#',  kvnmln                              )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNFID'                                )
             return
 
          end if
@@ -428,7 +420,6 @@
             call errint ( '#',  kvnmln                              )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNFID'                                )
             return
 
 
@@ -455,7 +446,6 @@
             call errch  ( '#',  item                                )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNFID'                                )
             return
 
          end if
@@ -485,7 +475,6 @@
             call errch  ( '#',  frname                                )
             call errint ( '#',  n                                     )
             call sigerr ( 'SPICE(BADVARIABLESIZE)'                    )
-            call chkout ( 'ZZDYNFID'                                  )
             return
 
          end if
@@ -503,7 +492,6 @@
             call errch  ( '#',  kvname                                )
             call errch  ( '#',  frname                                )
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'ZZDYNFID'                                  )
             return
 
          end if
@@ -536,7 +524,6 @@
                call errch  ( '#',  frname                             )
                call errch  ( '#',  outnam                             )
                call sigerr ( 'SPICE(NOTRANSLATION)'                   )
-               call chkout ( 'ZZDYNFID'                               )
                return
 
             end if
@@ -562,7 +549,6 @@
             call errch  ( '#',  frname                                )
             call errint ( '#',  n                                     )
             call sigerr ( 'SPICE(BADVARIABLESIZE)'                    )
-            call chkout ( 'ZZDYNFID'                                  )
             return
 
          end if
@@ -580,14 +566,12 @@
             call errch  ( '#',  kvname                                )
             call errch  ( '#',  frname                                )
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'ZZDYNFID'                                  )
             return
 
          end if
 
       end if
 
-      call chkout ( 'ZZDYNFID' )
       return
       end
 

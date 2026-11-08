@@ -466,11 +466,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKW17')
 
 !
 !     Fetch the various entities from the inputs and put them into
@@ -507,7 +504,6 @@
          //            '#.' )
          call errdp  ( '#', a                  )
          call sigerr ( 'SPICE(BADSEMIAXIS)' )
-         call chkout ( 'SPKW17'                )
          return
 
       else if ( ecc > 0.9_wp ) then
@@ -519,7 +515,6 @@
          //            'to the type 17 evaluator was #. ' )
          call errdp  ( '#',   ecc                )
          call sigerr ( 'SPICE(BADECCENTRICITY)'  )
-         call chkout ( 'SPKW17'                  )
          return
 
       end if
@@ -532,7 +527,6 @@
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW17'                                  )
          return
 
       end if
@@ -550,7 +544,6 @@
             //            'code #.'                               )
             call errint ( '#',   value                            )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW17'                                )
             return
 
          end if
@@ -564,20 +557,14 @@
       call spkpds ( body,  center, frame, type, first, last, &
                     descr        )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW17' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Begin a new segment.
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW17' )
-         return
-      end if
+      if ( failed() ) return
 
       call dafada ( record, datsiz )
 
@@ -585,6 +572,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW17' )
       return
       end

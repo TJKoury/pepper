@@ -253,11 +253,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKPV' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -303,6 +299,5 @@
 
       end if
 
-      call chkout ( 'SPKPV' )
       return
       end

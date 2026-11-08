@@ -457,11 +457,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW13' )
-      end if
+      if ( return () ) return
 
 !
 !     Set the window size corresponding to the input degree.  This
@@ -479,7 +475,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW13'                                    )
          return
 
       end if
@@ -492,7 +487,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW13'                                  )
          return
 
       end if
@@ -510,7 +504,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW13'                                )
             return
 
          end if
@@ -528,7 +521,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW13'                                        )
          return
 
       end if
@@ -542,7 +534,6 @@
                        'for SPK type 13, the degree must be odd.'      )
          call errint ( '#', degree                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW13'                                        )
          return
 
       end if
@@ -560,7 +551,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
-         call chkout ( 'SPKW13'                                        )
          return
 
       end if
@@ -575,7 +565,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW13'                                    )
          return
 
       end if
@@ -595,7 +584,6 @@
             call errint ( '#',  i                                     )
             call errdp  ( '#',  epochs(i-1)                           )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
-            call chkout ( 'SPKW13'                                    )
             return
          else
             maxtim = epochs(i)
@@ -613,7 +601,6 @@
          call errdp  ( '#',  first                                    )
          call errdp  ( '#',  epochs(1)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW13'                                       )
          return
 
       else if (  epochs(n) < last ) then
@@ -622,7 +609,6 @@
          call errdp  ( '#',  last                                     )
          call errdp  ( '#',  epochs(n)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW13'                                       )
          return
 
       end if
@@ -642,10 +628,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW13' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -706,6 +689,5 @@
       end if
 
 
-      call chkout ( 'SPKW13' )
       return
       end

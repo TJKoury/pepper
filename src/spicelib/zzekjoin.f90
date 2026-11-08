@@ -319,13 +319,11 @@
 !
       if (  ( njcnst < 0 ) .or. ( njcnst > mxjcon )  ) then
 
-         call chkin  ( 'ZZEKJOIN'                                  )
          call setmsg ( 'Number of join constraints was #; valid ' // &
                        'range is 0:#'                              )
          call errint ( '#',  njcnst                                )
          call errint ( '#',  mxjcon                                )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'ZZEKJOIN'                                  )
          return
 
       end if
@@ -348,35 +346,29 @@
 
       if (  ( nt1 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
 
-         call chkin  ( 'ZZEKJOIN'                                      )
          call setmsg ( 'Number tables in first join row set was #; '  // &
                        'valid range is 1:#'                            )
          call errint ( '#',  nt1                                       )
          call errint ( '#',  mxjoin-1                                  )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         call chkout ( 'ZZEKJOIN'                                      )
          return
 
       else if (  ( nt2 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
 
-         call chkin  ( 'ZZEKJOIN'                                      )
          call setmsg ( 'Number tables in second join row set was #; ' // &
                        'valid range is 1:#'                            )
          call errint ( '#',  nt2                                       )
          call errint ( '#',  mxjoin-1                                  )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         call chkout ( 'ZZEKJOIN'                                      )
          return
 
       else if ( nt3 > mxjoin ) then
 
-         call chkin  ( 'ZZEKJOIN'                                  )
          call setmsg ( 'Number of crossed tables was #; valid '  // &
                        'range is 0:#'                              )
          call errint ( '#',  nt3                                   )
          call errint ( '#',  mxjoin                                )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'ZZEKJOIN'                                  )
          return
 
       end if
@@ -393,7 +385,6 @@
             if (       ( cpidx1(i) < 1   ) &
                   .or. ( cpidx1(i) > nt3 )  ) then
 
-               call chkin  ( 'ZZEKJOIN'                             )
                call setmsg ( 'Cross product table index for left ' // &
                              'hand side of constraint # was #; '   // &
                              'valid range is 1:#'                   )
@@ -401,14 +392,12 @@
                call errint ( '#',  cpidx1(i)                        )
                call errint ( '#',  nt3                              )
                call sigerr ( 'SPICE(INVALIDINDEX)'                  )
-               call chkout ( 'ZZEKJOIN'                             )
                return
 
 
             else if (      ( cpidx2(i) < 1   ) &
                       .or. ( cpidx2(i) > nt3 )  ) then
 
-               call chkin  ( 'ZZEKJOIN'                              )
                call setmsg ( 'Cross product table index for right ' // &
                              'hand side of constraint # was #; '    // &
                              'valid range is 1:#'                    )
@@ -416,7 +405,6 @@
                call errint ( '#',  cpidx2(i)                         )
                call errint ( '#',  nt3                               )
                call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-               call chkout ( 'ZZEKJOIN'                              )
                return
 
             end if

@@ -865,11 +865,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( rname )
-      end if
+      if ( return () ) return
 
 !
 !     Get the frame id for J2000 on the first call to this routine.
@@ -922,17 +918,13 @@
             //            'the name of the output frame. ' )
             call errch  ( '#', ref )
             call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-            call chkout ( rname )
             return
 
          end if
 
          call frinfo ( reqfrm, center, type, typeid, found )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. found ) then
 
@@ -944,7 +936,6 @@
             //            'the name of the output frame. ' )
             call errch  ( '#',  ref )
             call sigerr ( 'SPICE(UNKNOWNFRAME2)' )
-            call chkout ( rname )
 
             return
 
@@ -958,7 +949,6 @@
 
             call zzspksb1 ( obs,  et, ref, sobs )
             call zzspkpa1 ( targ, et, ref, sobs, abcorr, ptarg, lt )
-            call chkout ( rname )
             return
 
          end if
@@ -976,10 +966,7 @@
          call zzspksb1 ( obs,  et, 'J2000', sobs )
          call zzspkpa1 ( targ, et, 'J2000', sobs, abcorr, postn, lt )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( center == obs ) then
             ltcent = 0.0_wp
@@ -994,10 +981,7 @@
 !        If something went wrong (like we couldn't get the position of
 !        the center relative to the observer) now it is time to quit.
 !
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the aberration corrections are for transmission, negate
@@ -1015,16 +999,12 @@
 !
          call zzrefch1 ( fj2000, reqfrm, et-ltcent, xform )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call mxv    ( xform,  postn,             ptarg )
 
       end if
 
-      call chkout ( rname )
       return
       end
 

@@ -416,11 +416,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKR01' )
-      end if
+      if ( return () ) return
 
 !
 !     To minimize the number of file reads performed during the search,
@@ -465,7 +461,6 @@
                        'Type is #'                                 )
          call errint ( '#', icd(3)                                 )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
-         call chkout ( 'CKR01'                                     )
          return
 
       end if
@@ -490,7 +485,6 @@
             call setmsg ( 'Segment does not contain angular velocity '// &
                           'data.'           )
             call sigerr ( 'SPICE(NOAVDATA)' )
-            call chkout ( 'CKR01'           )
             return
 
          end if
@@ -611,12 +605,7 @@
 !
       i = lstcld( sclkdp, n, buffer )
 
-      if ( abs( sclkdp - buffer( i ) ) > tol ) then
-
-         call chkout ( 'CKR01' )
-         return
-
-      end if
+      if ( abs( sclkdp - buffer( i ) ) > tol ) return
 
 !
 !     Now we know the exact record that we want.
@@ -638,6 +627,5 @@
 !
 !     That is all.
 !
-      call chkout ( 'CKR01' )
       return
       end

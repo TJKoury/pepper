@@ -349,9 +349,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Return empty output if the input index is bad.
@@ -367,7 +365,6 @@
 !
 !     Check in.
 !
-      call chkin ( 'SEPOOL')
 
 !
 !     Check if the first component exists. Return empty output if not.
@@ -381,7 +378,6 @@
          string = ' '
          size   = 0
          lidx   = 0
-         call chkout ( 'SEPOOL' )
          return
       end if
 
@@ -449,7 +445,6 @@
       size = putat - 1
       lidx = comp  - 1
 
-      call chkout ( 'SEPOOL' )
 
       return
       end

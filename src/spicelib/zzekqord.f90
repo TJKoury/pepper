@@ -181,16 +181,12 @@
 
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( iparse == ifalse ) then
 
-         call chkin  ( 'ZZEKQORD'                                )
          call setmsg ( 'Encoded query has not yet been parsed.'  )
          call sigerr ( 'SPICE(UNPARSEDQUERY)'                    )
-         call chkout ( 'ZZEKQORD'                                )
          return
 
       end if
@@ -200,12 +196,10 @@
 
       if (  ( n < 1 ) .or. ( n > nord )  ) then
 
-         call chkin  ( 'ZZEKQORD'                                  )
          call setmsg ( 'Column index # is out of valid range 1:#.' )
          call errint ( '#',  n                                     )
          call errint ( '#',  nord                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-         call chkout ( 'ZZEKQORD'                                  )
          return
 
       end if
@@ -248,13 +242,11 @@
 !        We should never see invalid pointers in a parsed, encoded
 !        query, but let's not take chances.
 !
-         call chkin  ( 'ZZEKQORD'                                )
          call setmsg ( 'Invalid string bounds #:# for column #.' )
          call errint ( '#',  cb                                  )
          call errint ( '#',  ce                                  )
          call errint ( '#',  n                                   )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKQORD'                                )
          return
 
       end if
@@ -280,14 +272,12 @@
 !           If the first pointer is non-zero, both pointers should have
 !           been valid.
 !
-            call chkin  ( 'ZZEKQORD'                                   )
             call setmsg ( 'Invalid string bounds #:# for the table '  // &
                           'qualifying column #.'                       )
             call errint ( '#',  tb                                     )
             call errint ( '#',  te                                     )
             call errint ( '#',  n                                      )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZEKQORD'                                   )
             return
 
          end if

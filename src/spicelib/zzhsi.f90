@@ -416,17 +416,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZHSI' )
-      end if
+      if ( return() ) return
 
 !
 !     Signal bogus entry error and check out.
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZHSI' )
 
       return
 
@@ -543,7 +538,6 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkin  ( 'ZZHSIINI' )
 
       if ( hashsz > 0 ) then
 !
@@ -566,12 +560,8 @@
 !
       i = zzhashi( 1, hashsz )
 
-      if ( failed() ) then
-         call chkout ( 'ZZHSIINI' )
-         return
-      end if
+      if ( failed() ) return
 
-      call chkout ( 'ZZHSIINI' )
 
       return
 
@@ -696,9 +686,7 @@
 !     Standard SPICE error handling. No checking-in here. We will do it
 !     when we have to.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Set flag indicating whether the hash is full.
@@ -710,11 +698,9 @@
 !
       if ( collst ( sizidx ) < 1 ) then
 
-         call chkin  ( 'ZZHSIADD'                        )
          call setmsg ( 'Uninitialized hash. Size was #.' )
          call errint ( '#', collst ( sizidx )            )
          call sigerr ( 'SPICE(UNINITIALIZEDHASH)'        )
-         call chkout ( 'ZZHSIADD'                        )
          return
 
       end if
@@ -842,12 +828,10 @@
 !
       if ( full .and. .not. lfound ) then
 
-         call chkin  ( 'ZZHSIADD' )
 
          call setmsg ( 'The hash has no room for any more items.')
          call sigerr ( 'SPICE(HASHISFULL)' )
 
-         call chkout ( 'ZZHSIADD' )
          return
 
       end if
@@ -967,20 +951,16 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Use simple division hash function to get index of the head node.
 !
       if ( collst ( sizidx ) < 1 ) then
 
-         call chkin  ( 'ZZHSICHK'                        )
          call setmsg ( 'Uninitialized hash. Size was #.' )
          call errint ( '#', collst ( sizidx )            )
          call sigerr ( 'SPICE(UNINITIALIZEDHASH)'        )
-         call chkout ( 'ZZHSICHK'                        )
          return
 
       end if
@@ -1301,11 +1281,9 @@
 
          avail = 0
 
-         call chkin  ( 'ZZHSIINF'                           )
          call setmsg ( 'Parameter ''#'' is not recognized.' )
          call errch  ( '#', param                           )
          call sigerr ( 'SPICE(ITEMNOTRECOGNIZED)'           )
-         call chkout ( 'ZZHSIINF'                           )
 
       end if
 

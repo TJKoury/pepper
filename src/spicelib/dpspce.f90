@@ -696,11 +696,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DPSPCE' )
-      end if
+      if ( return () ) return
 
 
 
@@ -1139,7 +1135,6 @@
 !     All done now....
 !
 
-      call chkout ( 'DPSPCE' )
 
       return
       end

@@ -520,11 +520,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCDECD' )
 
 !
 !     Use a working copy of the input.
@@ -541,10 +538,7 @@
 !
       call scpart ( sc, nparts, pstart, pstop )
 
-      if ( failed() ) then
-         call chkout ( 'SCDECD' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( nparts > mxpart ) then
 !
@@ -556,7 +550,6 @@
          call errint ( '#', sc               )
          call errint ( '#', mxpart           )
          call sigerr ( 'SPICE(TOOMANYPARTS)' )
-         call chkout ( 'SCDECD'              )
          return
 
       end if
@@ -595,7 +588,6 @@
          call errdp  ( '#', ticks                     )
          call errint ( '#', sc                        )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
-         call chkout ( 'SCDECD'                       )
          return
 
       end if
@@ -618,10 +610,7 @@
 !
       call scfmt ( sc, ticks, sclkch )
 
-      if ( failed() ) then
-         call chkout ( 'SCDECD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Now convert the partition number to a character string and prefix
@@ -643,13 +632,11 @@
          call errint ( '#', prelen + suflen     )
          call errint ( '#', len ( sclkch )      )
          call sigerr ( 'SPICE(SCLKTRUNCATED)'   )
-         call chkout ( 'SCDECD'                 )
          return
 
       end if
 
       call prefix ( prtstr, 0, sclkch )
 
-      call chkout ( 'SCDECD' )
       return
       end

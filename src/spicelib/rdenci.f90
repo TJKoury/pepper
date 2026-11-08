@@ -184,11 +184,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'RDENCI' )
-      end if
+      if ( return () ) return
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
@@ -199,7 +195,6 @@
                        ' not positive: #.'                        )
          call errint ( '#', n                                     )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
-         call chkout ( 'RDENCI'                                   )
          return
 
       end if
@@ -247,7 +242,6 @@
             call errint ( '#', unit                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(FILEREADFAILED)'               )
-            call chkout ( 'RDENCI'                              )
             return
 
          end if
@@ -266,7 +260,6 @@
                call errch  ( '#', work(i)                           )
                call errch  ( '#', errmsg                            )
                call sigerr ( 'SPICE(DECODINGERROR)'                 )
-               call chkout ( 'RDENCI'                               )
                return
 
             end if
@@ -281,6 +274,5 @@
 
       end do
 
-      call chkout ( 'RDENCI' )
       return
       end

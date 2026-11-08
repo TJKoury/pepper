@@ -188,21 +188,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKNSEG' )
-      end if
+      if ( return () ) return
 
 !
 !     Make sure this is a paged DAS EK.
 !
       call zzekpgch ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'EKNSEG' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Obtain the base address of the first integer page.
@@ -219,6 +212,5 @@
 !
       eknseg  =  zzektrsz ( handle, tree )
 
-      call chkout ( 'EKNSEG' )
       return
       end

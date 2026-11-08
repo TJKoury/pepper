@@ -154,11 +154,9 @@
 
       if ( init /= itrue ) then
 
-         call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Encoded query must be initialized before it ' // &
                        'may be written.'                             )
          call sigerr ( 'SPICE(NOTINITIALIZED)'                       )
-         call chkout ( 'ZZEKINQC'                                    )
          return
 
       end if
@@ -168,11 +166,9 @@
 !
       if ( length < 1 ) then
 
-         call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Length of string value was #; must be > 0.'  )
          call errint ( '#',  length                                  )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                         )
-         call chkout ( 'ZZEKINQC'                                    )
          return
 
       end if
@@ -187,14 +183,12 @@
 
       if ( length > room ) then
 
-         call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Out of room in character portion of encoded ' // &
                        'query; only # elements were available; # '    // &
                        'are needed.'                                 )
          call errint ( '#',  room                                    )
          call errint ( '#',  length                                  )
          call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
-         call chkout ( 'ZZEKINQC'                                    )
          return
 
       end if

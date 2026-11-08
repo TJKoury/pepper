@@ -321,11 +321,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFCPRX' )
 
 !
 !     For planetographic coordinates, check the longitude sense.
@@ -337,7 +334,6 @@
             call setmsg ( 'Longitude sense # should be 1 or -1.'  )
             call errint ( '#', sense                              )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
-            call chkout ( 'ZZGFCPRX'                              )
             return
 
          end if
@@ -359,7 +355,6 @@
 !
          call cleari ( 3, cdsign )
 
-         call chkout ( 'ZZGFCPRX' )
          return
 
       else
@@ -396,7 +391,6 @@
 !
 !        All done.
 !
-         call chkout ( 'ZZGFCPRX' )
          return
 
       end if
@@ -565,7 +559,6 @@
             //            'specifier matches a value from zzgf.inc.' )
             call errch  ( '#', corsys                                )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-            call chkout ( 'ZZGFCPRX'                                 )
             return
 
          end if
@@ -573,7 +566,6 @@
 !
 !        We've handled the on-Z-axis cases. Return now.
 !
-         call chkout ( 'ZZGFCPRX' )
          return
 
       end if
@@ -594,10 +586,7 @@
 !
          call recgeo ( state, re,  f,   lon, lat, alt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFCPRX' )
-            return
-         end if
+         if ( failed() ) return
 
          call latrec ( 1.0_wp,  lon, lat, normal )
 
@@ -713,12 +702,10 @@
          //            'specifier matches a value from zzgf.inc.' )
          call errch  ( '#', corsys                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'ZZGFCPRX'                                 )
          return
 
       end if
 
-      call chkout ( 'ZZGFCPRX' )
       return
       end
 

@@ -280,11 +280,8 @@
 !
 !     Standard SPICE Error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'PCKMAT' )
 
 !
 !     Get a segment applicable to a specified body and epoch.
@@ -293,7 +290,6 @@
 
       if ( failed() ) then
          found = .false.
-         call chkout ( 'PCKMAT' )
          return
       end if
 
@@ -320,7 +316,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 !
@@ -345,7 +340,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 
@@ -361,7 +355,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 
@@ -377,7 +370,6 @@
                call errint ( '#', recsiz                               )
                call errint ( '#', maxrec                               )
                call sigerr ( 'SPICE(PCKKRECTOOLARGE)'                  )
-               call chkout ( 'PCKMAT'                                  )
                return
 
             end if
@@ -387,7 +379,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 
@@ -405,7 +396,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 !
@@ -430,7 +420,6 @@
 
             if ( failed() ) then
                found = .false.
-               call chkout ( 'PCKMAT' )
                return
             end if
 
@@ -446,6 +435,5 @@
 
       end if
 
-      call chkout ( 'PCKMAT' )
       return
       end

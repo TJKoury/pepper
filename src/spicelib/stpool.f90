@@ -347,9 +347,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( nth < 1 ) then
          found  = .false.
@@ -359,7 +357,6 @@
       end if
 
 
-      call chkin ( 'STPOOL')
 
       room  = len(nthstr)
       csize = rtrim(contin)
@@ -383,7 +380,6 @@
             nthstr = ' '
             size   = 0
             found  = .false.
-            call chkout ( 'STPOOL' )
             return
          end if
 
@@ -460,7 +456,6 @@
 !
       size = putat - 1
 
-      call chkout ( 'STPOOL' )
 
       return
       end

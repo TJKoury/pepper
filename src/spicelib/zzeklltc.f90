@@ -175,11 +175,9 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLLTC'                 )
          call setmsg ( 'Column # is not indexed.' )
          call errch  ( '#',  column               )
          call sigerr ( 'SPICE(NOTINDEXED)'        )
-         call chkout ( 'ZZEKLLTC'                 )
          return
 
       end if
@@ -194,12 +192,10 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLLTC'                               )
          call setmsg ( 'Column # should be CHR but has type #.' )
          call errch  ( '#',  column                             )
          call errint ( '#',  dtype                              )
          call sigerr ( 'SPICE(INVALIDTYPE)'                     )
-         call chkout ( 'ZZEKLLTC'                               )
          return
 
       end if

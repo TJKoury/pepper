@@ -393,21 +393,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKOBJ' )
 
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
       call getfat ( ckfnm, arch, kertyp )
 
-      if ( failed() ) then
-         call chkout ( 'CKOBJ' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( arch == 'XFR' ) then
 
@@ -419,7 +413,6 @@
          call errch  ( '#',  ckfnm                                  )
          call errch  ( '#',  arch                                   )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                       )
-         call chkout ( 'CKOBJ'                                      )
          return
 
       else if ( arch /= 'DAF' ) then
@@ -436,7 +429,6 @@
          call errch  ( '#',  ckfnm                                  )
          call errch  ( '#',  arch                                   )
          call sigerr ( 'SPICE(INVALIDARCHTYPE)'                     )
-         call chkout ( 'CKOBJ'                                      )
          return
 
       else if ( kertyp /= 'CK' ) then
@@ -452,7 +444,6 @@
          call errch  ( '#',  ckfnm                                  )
          call errch  ( '#',  kertyp                                 )
          call sigerr ( 'SPICE(INVALIDFILETYPE)'                     )
-         call chkout ( 'CKOBJ'                                      )
          return
 
       end if
@@ -462,12 +453,7 @@
 !
       call dafopr ( ckfnm, handle )
 
-      if ( failed() ) then
-
-         call chkout ( 'CKOBJ' )
-         return
-
-      end if
+      if ( failed() ) return
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -507,6 +493,5 @@
 !
       call dafcls ( handle )
 
-      call chkout ( 'CKOBJ' )
       return
       end

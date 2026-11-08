@@ -203,11 +203,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKDELR' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually modify the file, do every error
@@ -218,10 +214,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'EKDELR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Look up the integer metadata page and page base for the segment.
@@ -230,10 +223,7 @@
 !
       call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      if ( failed() ) then
-         call chkout ( 'EKDELR' )
-         return
-      end if
+      if ( failed() ) return
 
       call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
@@ -263,7 +253,6 @@
          call errint ( '#',  recno                              )
          call errint ( '#',  nrec                               )
          call sigerr ( 'SPICE(INVALIDINDEX)'                    )
-         call chkout ( 'EKDELR'                                 )
          return
 
       end if
@@ -337,7 +326,6 @@
             call errint ( '#',  segdsc(snoidx)                      )
             call errfnm ( '#',  unit                                )
             call sigerr ( 'SPICE(NOCLASS)'                          )
-            call chkout ( 'EKDELR'                                  )
             return
 
          end if
@@ -386,6 +374,5 @@
       call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 
-      call chkout ( 'EKDELR' )
       return
       end

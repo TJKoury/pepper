@@ -245,21 +245,18 @@
            .or. ( tail < 1                   ) &
            .or. ( tail > pool(sizrow,sizcol) )  )  then
 
-         call chkin  ( 'LNKXSL'                                        )
          call setmsg ( 'HEAD was #.  TAIL was #. '                    // &
                        'Valid range is 1 to #.'                        )
          call errint ( '#', head                                       )
          call errint ( '#', tail                                       )
          call errint ( '#', pool(sizrow, sizcol)                       )
          call sigerr ( 'SPICE(INVALIDNODE)'                            )
-         call chkout ( 'LNKXSL'                                        )
          return
 
 
       else if (       ( pool(bckwrd,head)  ==  free ) &
                 .or.  ( pool(bckwrd,tail)  ==  free )  ) then
 
-         call chkin  ( 'LNKXSL'                                        )
          call setmsg ( 'Node HEAD: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
@@ -275,7 +272,6 @@
          call errint ( '#', pool(forwrd,tail)                          )
          call errint ( '#', free                                       )
          call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
-         call chkout ( 'LNKXSL'                                        )
          return
 
       end if
@@ -295,13 +291,11 @@
 !
       if ( node /= tail ) then
 
-         call chkin  ( 'LNKXSL'                                        )
          call setmsg ( 'Node # cannot be found by forward '           // &
                        'traversal, starting at node #.'                )
          call errint ( '#', tail                                       )
          call errint ( '#', head                                       )
          call sigerr ( 'SPICE(INVALIDSUBLIST)'                         )
-         call chkout ( 'LNKXSL'                                        )
          return
 
       end if

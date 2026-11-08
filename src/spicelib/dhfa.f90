@@ -317,8 +317,6 @@
       if ( return () ) then
          dhfa = 0.0_wp
          return
-      else
-         call chkin( 'DHFA' )
       end if
 
 !
@@ -329,7 +327,6 @@
       if ( bodyr == 0 ) then
 
          dhfa = 0.0_wp
-         call chkout( 'DHFA' )
          return
 
       else if ( bodyr < 0 ) then
@@ -338,7 +335,6 @@
          call setmsg( 'Non physical case. The input body radius ' &
             //        'has a negative value.'                      )
          call sigerr( 'SPICE(BADRADIUS)'                           )
-         call chkout( 'DHFA'                                       )
          return
 
       end if
@@ -355,7 +351,6 @@
          call setmsg( 'The position component of the input state ' &
             //        'vector equals the zero vector.'             )
          call sigerr( 'SPICE(DEGENERATECASE)'                      )
-         call chkout( 'DHFA'                                       )
          return
 
       end if
@@ -378,7 +373,6 @@
          call errdp ( '#1', bodyr                                  )
          call errdp ( '#2', r                                      )
          call sigerr( 'SPICE(BADGEOMETRY)'                         )
-         call chkout( 'DHFA'                                       )
          return
 
       end if
@@ -389,7 +383,6 @@
       base = dsqrt( base )
       dhfa = -(rngrat * bodyr)/(base * r)
 
-      call chkout( 'DHFA' )
       return
 
       end

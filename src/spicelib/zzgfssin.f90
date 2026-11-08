@@ -445,11 +445,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFSSIN' )
 
 !
 !     No result has been found.
@@ -481,10 +478,7 @@
 !
       call zzvalcor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFSSIN' )
-         return
-      end if
+      if ( failed() ) return
 
       geom   = attblk( geoidx )
       uselt  = attblk( ltidx  )
@@ -511,7 +505,6 @@
          //            'is not supported by this routine.'            )
          call errch  ( '#', method                                    )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
-         call chkout ( 'ZZGFSSIN'                                     )
          return
 
       end if
@@ -543,10 +536,7 @@
          call namfrm ( fixref, frcode )
          call frinfo ( frcode, center, frclss, clssid, fnd )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSIN' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. fnd ) then
 
@@ -554,7 +544,6 @@
             //            'recognized.'                     )
             call errch  ( '#', fixref                       )
             call sigerr ( 'SPICE(NOFRAME)'                  )
-            call chkout ( 'ZZGFSSIN'                        )
             return
 
          end if
@@ -567,7 +556,6 @@
             call errint ( '#', center                           )
             call errint ( '#', trgid                            )
             call sigerr ( 'SPICE(INVALIDFRAME)'                 )
-            call chkout ( 'ZZGFSSIN'                            )
             return
 
          end if
@@ -580,10 +568,7 @@
 !
          call spkgeo ( trgid, et, fixref, obsid, fxtsta, lt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSIN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Compute the state of the observer with respect to the target
@@ -612,10 +597,7 @@
 !        intercept state; return now if the state was not
 !        computable.
 !
-         if ( .not. found ) then
-            call chkout ( 'ZZGFSSIN' )
-            return
-         end if
+         if ( .not. found ) return
 
 
       else if ( uselt ) then
@@ -647,10 +629,7 @@
             call spkacs ( dctr,   et,    'J2000', abcorr, obsid, &
                           ctrsta, ltctr, dltctr                 )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFSSIN' )
-               return
-            end if
+            if ( failed() ) return
 
             drfepc  =  et  +  ltsign * ltctr
 
@@ -736,10 +715,7 @@
 !        It's not an error for SINCPT to be unable to compute an
 !        intercept point; return now if the intercept was not found.
 !
-         if ( .not. found ) then
-            call chkout ( 'ZZGFSSIN' )
-            return
-         end if
+         if ( .not. found ) return
 
 !
 !        Get J2000-relative states of observer and target with respect
@@ -755,10 +731,7 @@
 !
          call sxform ( 'J2000', fixref, trgepc, xform )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSIN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Initialize the state of the surface intercept point in the
@@ -783,10 +756,7 @@
 
             end do
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFSSIN' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Compute the observer's acceleration using a quadratic
@@ -913,10 +883,7 @@
 !           intercept state; return now if the state was not
 !           computable.
 !
-            if ( .not. found ) then
-               call chkout ( 'ZZGFSSIN' )
-               return
-            end if
+            if ( .not. found ) return
 
 !
 !           At this point we can update the surface point
@@ -967,7 +934,6 @@
          //            'recognized.'                      )
          call errch  ( '#',  abcorr                       )
          call sigerr ( 'SPICE(NOTSUPPORTED)'              )
-         call chkout ( 'ZZGFSSIN'                         )
          return
 
       end if
@@ -978,6 +944,5 @@
 !
       call moved ( fxpsta, 6, state )
 
-      call chkout  ( 'ZZGFSSIN' )
       return
       end

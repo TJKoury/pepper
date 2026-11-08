@@ -196,11 +196,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDAFGSR' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -231,7 +227,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZDAFGSR'                                   )
             return
 
          end if
@@ -264,7 +259,6 @@
          //            'has been closed.'                           )
          call errint ( '#', handle                                  )
          call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
-         call chkout ( 'ZZDAFGSR'                                   )
          return
       end if
 
@@ -276,7 +270,6 @@
 
       if ( failed() ) then
          found = .false.
-         call chkout ( 'ZZDAFGSR' )
          return
       end if
 
@@ -300,10 +293,7 @@
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGSR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !     Process the non-native binary file format case.
@@ -321,10 +311,7 @@
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGSR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !        Translate the summary record.  First extract the leading
@@ -337,10 +324,7 @@
 !        Check FAILED() in case the translation process fails for
 !        any reason.
 !
-         if ( failed() ) then
-            call chkout ( 'ZZDAFGSR' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Convert NSUM to an integer, and compute the number of
@@ -398,10 +382,7 @@
 !              If the translation routine fails for any reason,
 !              check out and return.
 !
-               if ( failed() ) then
-                  call chkout ( 'ZZDAFGSR' )
-                  return
-               end if
+               if ( failed() ) return
 
                dindex = dindex + nd
                cindex = cindex + dplen*nd
@@ -433,10 +414,7 @@
 !              If the translation routine fails for any reason,
 !              check out and return.
 !
-               if ( failed() ) then
-                  call chkout ( 'ZZDAFGSR' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Now check to see if NI is odd.  If so, then zero
@@ -472,7 +450,6 @@
       found = .true.
       call moved ( dpbuf, 128, dprec )
 
-      call chkout( 'ZZDAFGSR' )
       return
 
       end

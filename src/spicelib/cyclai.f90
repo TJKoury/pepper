@@ -197,19 +197,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CYCLAI' )
-      end if
+      if ( return () ) return
 
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      if ( nelt < 1 ) then
-         call chkout ( 'CYCLAI' )
-         return
-      end if
+      if ( nelt < 1 ) return
 
 
 !
@@ -233,7 +226,6 @@
          call setmsg ( 'Cycling direction was *.' )
          call errch  ( '*', dir )
          call sigerr ( 'SPICE(INVALIDDIRECTION)'  )
-         call chkout ( 'CYCLAI' )
          return
 
       end if
@@ -245,7 +237,6 @@
       else if ( k == 0 ) then
 
          call movei ( array, nelt, out )
-         call chkout ( 'CYCLAI' )
          return
 
       end if
@@ -282,6 +273,5 @@
       end do
 
 
-      call chkout ( 'CYCLAI' )
       return
       end

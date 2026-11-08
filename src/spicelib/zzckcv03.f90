@@ -193,11 +193,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZCKCV03' )
-      end if
+      if ( return() ) return
 
 !
 !     Check tolerance value.
@@ -208,7 +204,6 @@
                        'was #.'                                       )
          call errdp  ( '#',  tol                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZCKCV03'                                     )
          return
 
       end if
@@ -229,7 +224,6 @@
                           'values are SCLK and TDB.'                )
             call errch  ( '#',  timsys                              )
             call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-            call chkout ( 'ZZCKCV03'                                )
             return
 
          end if
@@ -282,7 +276,6 @@
          call errint ( '#', navsln                                   )
          call errint ( '#', avsln                                    )
          call sigerr ( 'SPICE(BADCK3SEGMENT)'                        )
-         call chkout ( 'ZZCKCV03'                                    )
          return
       end if
 
@@ -339,10 +332,7 @@
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      if ( tick < start ) then
-         call chkout ( 'ZZCKCV03' )
-         return
-      end if
+      if ( tick < start ) return
 
 
       bail = .false.
@@ -437,6 +427,5 @@
 
       end do
 
-      call chkout ( 'ZZCKCV03' )
       return
       end

@@ -145,11 +145,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PARTOF' )
-      end if
+      if ( return () ) return
 
 
 
@@ -161,7 +157,6 @@
 
       if ( ma == 0.0_wp ) then
          d = 0.0_wp
-         call chkout ( 'PARTOF' )
          return
       else
          m = abs ( ma )
@@ -212,6 +207,5 @@
       end if
 
 
-      call chkout ( 'PARTOF' )
       return
       end

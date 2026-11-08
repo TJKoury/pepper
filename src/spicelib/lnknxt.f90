@@ -230,12 +230,10 @@
 
          lnknxt = 0
 
-         call chkin  ( 'LNKNXT'                             )
          call setmsg ( 'NODE was #; valid range is 1 to #.' )
          call errint ( '#', node                            )
          call errint ( '#', pool(sizrow,sizcol)             )
          call sigerr ( 'SPICE(INVALIDNODE)'                 )
-         call chkout ( 'LNKNXT'                             )
          return
 
 !
@@ -245,7 +243,6 @@
 
          lnknxt = 0
 
-         call chkin  ( 'LNKNXT'                                        )
          call setmsg ( 'NODE was #; backward pointer = #; '           // &
                        'forward pointer = #. "FREE" is #)'             )
          call errint ( '#', node                                       )
@@ -253,7 +250,6 @@
          call errint ( '#', pool(forwrd,node)                          )
          call errint ( '#', free                                       )
          call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
-         call chkout ( 'LNKNXT'                                        )
          return
 
       end if

@@ -945,13 +945,9 @@
 !
 !     Nobody has any business calling PCKBSR directly.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'PCKBSR' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'PCKBSR' )
 
       return
 
@@ -1111,11 +1107,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PCKLOF' )
-      end if
+      if ( return () ) return
 
 !
 !     Any time we load a file, there is a possibility that the
@@ -1146,10 +1138,7 @@
 !
       call dafopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'PCKLOF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine if the file is already in the table.
@@ -1261,7 +1250,6 @@
                           'with # entries.'         )
             call errint ( '#', ftsize               )
             call sigerr ( 'SPICE(PCKFILETABLEFULL)' )
-            call chkout ( 'PCKLOF'                  )
             return
 
          end if
@@ -1361,7 +1349,6 @@
       fthan(nft) = handle
       ftnum(nft) = next
 
-      call chkout ( 'PCKLOF' )
       return
 
 
@@ -1493,9 +1480,7 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     All of the stored segments from the file must be removed
@@ -1506,9 +1491,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex == 0 ) then
-         return
-      end if
+      if ( findex == 0 ) return
 
 !
 !     First get rid of the entry in the file table. Close the file
@@ -1817,11 +1800,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'PCKSFS' )
 
 !
 !     Buffering segments involves maintaining three tables:  the
@@ -1835,10 +1815,7 @@
 !     case, it's not an error to call this routine if no files are
 !     loaded.
 !
-      if ( nft == 0 ) then
-         call chkout ( 'PCKSFS' )
-         return
-      end if
+      if ( nft == 0 ) return
 
 !
 !     The stack of suspended tasks is empty.
@@ -1998,7 +1975,6 @@
 
                found  = .true.
 
-               call chkout ( 'PCKSFS' )
                return
 
             end if
@@ -2209,10 +2185,7 @@
 
             call dafbfs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'PCKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'NEW SEGMENTS'
 
@@ -2237,10 +2210,7 @@
 
             call daffna ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'PCKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2256,10 +2226,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'PCKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (       ( icd(1) == body   ) &
                     .and. ( dcd(1) <= dcd(2) )  ) then
@@ -2307,10 +2274,7 @@
 
             call dafbbs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'PCKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
 
             status = 'OLD SEGMENTS'
@@ -2339,10 +2303,7 @@
 !
             call daffpa ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'PCKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2359,10 +2320,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'PCKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (       ( icd(1) == body   ) &
                     .and. ( dcd(1) <= dcd(2) )  )  then
@@ -2443,7 +2401,6 @@
                   call moved ( descr, dscsiz, btprvd(1,bindex) )
                   btchkp(bindex) =  .true.
 
-                  call chkout ( 'PCKSFS' )
                   return
 
                end if
@@ -2672,10 +2629,7 @@
                call moved ( descr, dscsiz, stdes(1,new) )
                call dafgn ( stidnt(new) )
 
-               if ( failed() ) then
-                  call chkout ( 'PCKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              If the current list is empty, this append operation
@@ -2717,10 +2671,7 @@
                call moved ( descr, dscsiz, stdes( 1,new ) )
                call dafgn ( stidnt( new ) )
 
-               if ( failed() ) then
-                  call chkout ( 'PCKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( btbeg(bindex) <= 0 ) then
 !
@@ -2875,7 +2826,6 @@
                      tail = lnktl ( crflbg, stpool )
                      call lnkfsl ( p, tail, stpool )
 
-                     call chkout ( 'PCKSFS' )
                      return
 
                   end if
@@ -2919,10 +2869,7 @@
                   call dafgs ( descr )
                   call dafus ( descr, nd, ni, dcd, icd )
 
-                  if ( failed() ) then
-                     call chkout ( 'PCKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( body == icd(1) ) then
 !
@@ -2950,10 +2897,7 @@
 !
                         call dafgn ( ident )
 
-                        if ( failed() ) then
-                           call chkout ( 'PCKSFS' )
-                           return
-                        end if
+                        if ( failed() ) return
 
                         handle = fthan( findex )
                         found  = .true.
@@ -2979,7 +2923,6 @@
 !
                         btexp(bindex) = btexp(bindex) + btruex(bindex)
 
-                        call chkout ( 'PCKSFS' )
                         return
 
                      end if
@@ -2988,10 +2931,7 @@
 
                   call daffpa ( fnd )
 
-                  if ( failed() ) then
-                     call chkout ( 'PCKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                end do
 
@@ -3005,10 +2945,7 @@
                   call dafbbs ( fthan( findex ) )
                   call daffpa ( fnd             )
 
-                  if ( failed() ) then
-                     call chkout ( 'PCKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                end if
 
@@ -3056,6 +2993,5 @@
       end if
 
 
-      call chkout ( 'PCKSFS' )
       return
       end

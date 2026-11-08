@@ -22,6 +22,10 @@ contains
 
 !$Procedure ALLTRU ( All entries true? )
 
+      !> Determine if all the entries in an array of logicals are .TRUE.
+      !>
+      !> The function returns .TRUE. if all of the values in the array
+      !> LOGCLS are true.
       pure logical function alltru ( logcls, n )
       use pepper_kinds, only: ip
 
@@ -41,19 +45,9 @@ contains
 
       implicit none
 
-      logical, intent(in) :: logcls ( * )
-      integer(ip), intent(in) :: n
+      logical, intent(in) :: logcls ( * )  !! An array of logicals.
+      integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LOGCLS     I   An array of logicals.
-!     N          I   Number of elements in the array LOGCLS.
-!
-!     The function returns .TRUE. if all of the values in the array
-!     LOGCLS are true.
-!
 ! $ Detailed_Input
 !
 !     LOGCLS   is an array of logicals.
@@ -165,6 +159,12 @@ contains
 
 !$Procedure BSCHOC ( Binary search with order vector, character )
 
+      !> Do a binary search for a given value within an array of character
+      !> strings, accompanied by an order vector. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> The function returns the index of the first matching array element
+      !> or zero if the value is not found.
       pure integer(ip) function bschoc ( value, ndim, array, order )
       use pepper_kinds, only: ip
 
@@ -187,23 +187,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      character(*), intent(in) :: array ( * )
-      integer(ip), intent(in) :: order ( * )
+      character(*), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      character(*), intent(in) :: array ( * )  !! Character string array to search.
+      integer(ip), intent(in) :: order ( * )  !! Order vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Character string array to search.
-!     ORDER      I   Order vector.
-!
-!     The function returns the index of the first matching array element
-!     or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the key value to be found in the array. Trailing
@@ -443,6 +431,12 @@ contains
 
 !$Procedure BSCHOI ( Binary search with order vector, integer )
 
+      !> Do a binary search for a given value within an integer array,
+      !> accompanied by an order vector. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> The function returns the index of the first matching array element
+      !> or zero if the value is not found.
       pure integer(ip) function bschoi ( value, ndim, array, order )
       use pepper_kinds, only: ip
 
@@ -465,23 +459,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(in) :: array ( * )
-      integer(ip), intent(in) :: order ( * )
+      integer(ip), intent(in) :: value  !! Value to find in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Array to be searched.
+      integer(ip), intent(in) :: order ( * )  !! Order vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Value to find in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Array to be searched.
-!     ORDER      I   Order vector.
-!
-!     The function returns the index of the first matching array element
-!     or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the value to be found in the input array.
@@ -636,6 +618,12 @@ contains
 
 !$Procedure BSRCHC ( Binary search for a character string )
 
+      !> Do a binary search for a given value within a character array,
+      !> assumed to be in nondecreasing order. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> The function returns the index of the first matching array element
+      !> or zero if the value is not found.
       pure integer(ip) function bsrchc ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -658,21 +646,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      character(*), intent(in) :: array ( * )
+      character(*), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      character(*), intent(in) :: array ( * )  !! Character string array to search.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Character string array to search.
-!
-!     The function returns the index of the first matching array element
-!     or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the key value to be found in the array. Trailing
@@ -833,6 +810,12 @@ contains
 
 !$Procedure BSRCHD ( Binary search for double precision value )
 
+      !> Do a binary search for a given value within a double precision
+      !> array, assumed to be in nondecreasing order. Return the index of
+      !> the matching array entry, or zero if the key value is not found.
+      !>
+      !> The function returns the index of VALUE in ARRAY, or zero if not
+      !> found.
       pure integer(ip) function bsrchd ( value, ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -855,21 +838,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: array ( * )
+      real(wp), intent(in) :: value  !! Value to find in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      real(wp), intent(in) :: array ( * )  !! Array to be searched.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Value to find in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Array to be searched.
-!
-!     The function returns the index of VALUE in ARRAY, or zero if not
-!     found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the double precision value to be found in the input
@@ -1021,6 +993,12 @@ contains
 
 !$Procedure BSRCHI ( Binary search for an integer value )
 
+      !> Do a binary search for a given value within an integer array,
+      !> assumed to be in nondecreasing order. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> The function returns the index of VALUE in ARRAY, or zero if not
+      !> found.
       pure integer(ip) function bsrchi ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -1043,21 +1021,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(in) :: array ( * )
+      integer(ip), intent(in) :: value  !! Value to find in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Array to be searched.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Value to find in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Array to be searched.
-!
-!     The function returns the index of VALUE in ARRAY, or zero if not
-!     found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the value to be found in the input array.
@@ -1207,6 +1174,7 @@ contains
 
 !$Procedure CLEARC ( Clear an array of strings )
 
+      !> Fill an array of strings with blank strings.
       pure subroutine clearc ( ndim, array )
       use pepper_kinds, only: ip
 
@@ -1227,16 +1195,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      character(*), intent(out) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! Number of elements of ARRAY to be set to blank.
+      character(*), intent(out) :: array ( * )  !! Array of strings to be filled with blank strings.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   Number of elements of ARRAY to be set to blank.
-!     ARRAY      O   Array of strings to be filled with blank strings.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in ARRAY which are to be set to
@@ -1406,6 +1367,7 @@ contains
 
 !$Procedure CLEARD ( Clear a double precision array )
 
+      !> Fill a double precision array with zeros.
       pure subroutine cleard ( ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -1426,17 +1388,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(out) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      real(wp), intent(out) :: array ( * )  !! Double precision array to be filled.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   The number of elements of ARRAY which are to be
-!                    set to zero.
-!     ARRAY      O   Double precision array to be filled.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in ARRAY which are to be
@@ -1577,6 +1531,7 @@ contains
 
 !$Procedure CLEARI ( Clear an integer array )
 
+      !> Fill an integer array with zeros.
       pure subroutine cleari ( ndim, array )
       use pepper_kinds, only: ip
 
@@ -1597,17 +1552,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      integer(ip), intent(out) :: array ( * )  !! Integer array to be filled.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   The number of elements of ARRAY which are to be
-!                    set to zero.
-!     ARRAY      O   Integer array to be filled.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in ARRAY which are to be
@@ -1753,6 +1700,7 @@ contains
 
 !$Procedure FILLC ( Fill a character array )
 
+      !> Fill a character string array with a specified string.
       pure subroutine fillc ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -1773,18 +1721,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      character(*), intent(out) :: array ( * )
+      character(*), intent(in) :: value  !! Character string value to be placed in ARRAY.
+      integer(ip), intent(in) :: ndim  !! The number of elements in ARRAY.
+      character(*), intent(out) :: array ( * )  !! Character string array which is to be filled.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     VALUE      I   Character string value to be placed in ARRAY.
-!     NDIM       I   The number of elements in ARRAY.
-!     ARRAY      O   Character string array which is to be filled.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the value to be assigned to the array elements
@@ -1883,6 +1823,7 @@ contains
 
 !$Procedure FILLD ( Fill a double precision array )
 
+      !> Fill a double precision array with a specified value.
       pure subroutine filld ( value, ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -1903,19 +1844,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(out) :: array ( * )
+      real(wp), intent(in) :: value  !! Double precision value to be placed in all the elements of ARRAY.
+      integer(ip), intent(in) :: ndim  !! The number of elements in ARRAY.
+      real(wp), intent(out) :: array ( * )  !! Double precision array which is to be filled.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Double precision value to be placed in all the
-!                    elements of ARRAY.
-!     NDIM       I   The number of elements in ARRAY.
-!     ARRAY      O   Double precision array which is to be filled.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the value to be assigned to the array elements
@@ -2060,6 +1992,7 @@ contains
 
 !$Procedure FILLI ( Fill an integer array )
 
+      !> Fill an integer array with a specified value.
       pure subroutine filli ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -2080,19 +2013,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: array ( * )
+      integer(ip), intent(in) :: value  !! Integer value to be placed in all the elements of ARRAY.
+      integer(ip), intent(in) :: ndim  !! The number of elements in ARRAY.
+      integer(ip), intent(out) :: array ( * )  !! Integer array which is to be filled.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Integer value to be placed in all the elements of
-!                    ARRAY.
-!     NDIM       I   The number of elements in ARRAY.
-!     ARRAY      O   Integer array which is to be filled.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the value to be assigned to the array elements
@@ -2235,6 +2159,11 @@ contains
 
 !$Procedure ISORDV ( Is it an order vector )
 
+      !> Determine whether an array of N items contains the integers
+      !> 1 through N.
+      !>
+      !> The function returns .TRUE. if the array contains the integers
+      !> 1 through N, otherwise it returns .FALSE.
       logical function isordv ( array, n )
       use pepper_kinds, only: ip
 
@@ -2257,19 +2186,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: array (*)
-      integer(ip), intent(in) :: n
+      integer(ip), intent(inout) :: array (*)  !! Array of integers.
+      integer(ip), intent(in) :: n  !! Number of integers in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Array of integers.
-!     N          I   Number of integers in ARRAY.
-!
-!     The function returns .TRUE. if the array contains the integers
-!     1 through N, otherwise it returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an array of integers. Often this will be an array
@@ -2522,6 +2441,12 @@ contains
 
 !$Procedure ISRCHC  ( Search in a character array )
 
+      !> Search for a given value within a character string array. Return
+      !> the index of the first matching array entry, or zero if the key
+      !> value was not found.
+      !>
+      !> The function returns the index of the first matching array
+      !> element or zero if the value is not found.
       pure integer(ip) function  isrchc ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -2544,21 +2469,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      character(*), intent(in) :: array ( * )
+      character(*), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      character(*), intent(in) :: array ( * )  !! Character string array to search.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Character string array to search.
-!
-!     The function returns the index of the first matching array
-!     element or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the key value to be found in the array. Trailing
@@ -2668,6 +2582,12 @@ contains
 
 !$Procedure ISRCHD  ( Search in a double precision array )
 
+      !> Search for a given value within a double precision array. Return
+      !> the index of the first matching array entry, or zero if the key
+      !> value was not found.
+      !>
+      !> The function returns the index of the first matching array
+      !> element or zero if the value is not found.
       pure integer(ip) function  isrchd ( value, ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -2690,21 +2610,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: array ( * )
+      real(wp), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      real(wp), intent(in) :: array ( * )  !! Double precision array to search.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Double precision array to search.
-!
-!     The function returns the index of the first matching array
-!     element or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the key value to be found in the array.
@@ -2813,6 +2722,12 @@ contains
 
 !$Procedure ISRCHI  ( Search in an integer array )
 
+      !> Search for a given value within a integer array. Return
+      !> the index of the first matching array entry, or zero if
+      !> the key value was not found.
+      !>
+      !> The function returns the index of the first matching array
+      !> element or zero if the value is not found.
       pure integer(ip) function  isrchi ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -2835,21 +2750,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(in) :: array ( * )
+      integer(ip), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Integer array to search.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Integer array to search.
-!
-!     The function returns the index of the first matching array
-!     element or zero if the value is not found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is the key value to be found in the array.
@@ -2953,6 +2857,11 @@ contains
 
 !$Procedure LSTCLD ( Last closest double precision array element )
 
+      !> Find the index of the array element closest to a given number X
+      !> in an array of non-decreasing numbers.
+      !>
+      !> The function returns the index of the element of ARRAY
+      !> whose value is closest to X.
       pure integer(ip) function  lstcld ( x, n, array )
       use pepper_kinds, only: ip, wp
 
@@ -2974,21 +2883,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      integer(ip), intent(in) :: n
-      real(wp), intent(in) :: array ( * )
+      real(wp), intent(in) :: x  !! Search value.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      real(wp), intent(in) :: array ( * )  !! Array to be searched.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Search value.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array to be searched.
-!
-!     The function returns the index of the element of ARRAY
-!     whose value is closest to X.
-!
 ! $ Detailed_Input
 !
 !     X        is the value to be compared with the elements of ARRAY.
@@ -3210,6 +3108,11 @@ contains
 
 !$Procedure LSTCLI ( Closest integer array element )
 
+      !> Find the index of the array element closest to a given integer X
+      !> in an array of non-decreasing integers.
+      !>
+      !> The function returns the index of the element of ARRAY
+      !> whose value is closest to X.
       pure integer(ip) function  lstcli ( x, n, array )
       use pepper_kinds, only: ip
 
@@ -3231,21 +3134,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: x
-      integer(ip), intent(in) :: n
-      integer(ip), intent(in) :: array ( * )
+      integer(ip), intent(in) :: x  !! Search value.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Array to be searched.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Search value.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array to be searched.
-!
-!     The function returns the index of the element of ARRAY
-!     whose value is closest to X.
-!
 ! $ Detailed_Input
 !
 !     X        is the value to be compared with the elements of ARRAY.
@@ -3452,6 +3344,11 @@ contains
 
 !$Procedure LSTLEC ( Last character element less than or equal to. )
 
+      !> Find the index of the largest array element less than or equal to
+      !> a given character string in an ordered array of character strings.
+      !>
+      !> The function returns the index of the last element of ARRAY that
+      !> is lexically less than or equal to STRING.
       pure integer(ip) function  lstlec ( string, n, array )
       use pepper_kinds, only: ip
 
@@ -3473,21 +3370,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      integer(ip), intent(in) :: n
-      character(*), intent(in) :: array ( * )
+      character(*), intent(in) :: string  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      character(*), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is lexically less than or equal to STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a string acting as an upper bound: the element of
@@ -3719,6 +3605,11 @@ contains
 
 !$Procedure LSTLED ( Last double precision element less than or equal)
 
+      !> Find the index of the largest array element less than or equal
+      !> to a given number X in an array of non-decreasing numbers.
+      !>
+      !> The function returns the index of the last element of ARRAY that
+      !> is less than or equal to X.
       pure integer(ip) function  lstled ( x, n, array )
       use pepper_kinds, only: ip, wp
 
@@ -3740,21 +3631,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      integer(ip), intent(in) :: n
-      real(wp), intent(in) :: array ( * )
+      real(wp), intent(in) :: x  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      real(wp), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is less than or equal to X.
-!
 ! $ Detailed_Input
 !
 !     X        is a double precision value acting as an upper bound: the
@@ -3956,6 +3836,11 @@ contains
 
 !$Procedure LSTLEI ( Last integer element less than or equal to )
 
+      !> Find the index of the largest array element less than or equal
+      !> to a given integer X in an array of non-decreasing integers.
+      !>
+      !> The function returns the index of the last element of ARRAY that
+      !> is less than or equal to X.
       pure integer(ip) function  lstlei ( x, n, array )
       use pepper_kinds, only: ip
 
@@ -3977,21 +3862,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: x
-      integer(ip), intent(in) :: n
-      integer(ip), intent(in) :: array ( * )
+      integer(ip), intent(in) :: x  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is less than or equal to X.
-!
 ! $ Detailed_Input
 !
 !     X        is an integer value acting as an upper bound: the element
@@ -4267,6 +4141,11 @@ contains
 
 !$Procedure LSTLTC ( Last character element less than )
 
+      !> Find the index of the largest array element less than a given
+      !> character string in an ordered array of character strings.
+      !>
+      !> The function returns the index of the last element of ARRAY that
+      !> is lexically less than STRING.
       pure integer(ip) function  lstltc ( string, n, array )
       use pepper_kinds, only: ip
 
@@ -4288,21 +4167,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      integer(ip), intent(in) :: n
-      character(*), intent(in) :: array ( * )
+      character(*), intent(in) :: string  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      character(*), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is lexically less than STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a string acting as an upper bound: the element of
@@ -4531,6 +4399,11 @@ contains
 
 !$Procedure LSTLTD ( Last double precision element less than )
 
+       !> Find the index of the largest array element less than
+       !> a given number X in an array of non-decreasing numbers.
+       !>
+       !> The function returns the index of the last element of ARRAY that
+       !> is less than X.
        pure integer(ip) function  lstltd ( x, n, array )
        use pepper_kinds, only: ip, wp
 
@@ -4552,21 +4425,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      integer(ip), intent(in) :: n
-      real(wp), intent(in) :: array ( * )
+      real(wp), intent(in) :: x  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      real(wp), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is less than X.
-!
 ! $ Detailed_Input
 !
 !     X        is a double precision value acting as an upper bound: the
@@ -4772,6 +4634,11 @@ contains
 
 !$Procedure LSTLTI ( Last integer element less than )
 
+      !> Find the index of the largest array element less than
+      !> a given integer X in an array of non-decreasing integers.
+      !>
+      !> The function returns the index of the last element of ARRAY that
+      !> is less than X.
       pure integer(ip) function  lstlti ( x, n, array )
       use pepper_kinds, only: ip
 
@@ -4793,21 +4660,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: x
-      integer(ip), intent(in) :: n
-      integer(ip), intent(in) :: array ( * )
+      integer(ip), intent(in) :: x  !! Upper bound value to search against.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
+      integer(ip), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   Upper bound value to search against.
-!     N          I   Number of elements in ARRAY.
-!     ARRAY      I   Array of possible lower bounds.
-!
-!     The function returns the index of the last element of ARRAY that
-!     is less than X.
-!
 ! $ Detailed_Input
 !
 !     X        is an integer value acting as an upper bound: the element
@@ -5083,6 +4939,7 @@ contains
 
 !$Procedure MAXAC  ( Maximum element of array, character )
 
+      !> Locate the maximum element of a character array.
       pure subroutine maxac ( array, ndim, maxval, loc )
       use pepper_kinds, only: ip
 
@@ -5103,20 +4960,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      character(*), intent(out) :: maxval
-      integer(ip), intent(out) :: loc
+      character(*), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      character(*), intent(out) :: maxval  !! Maximum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MAXVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MAXVAL     O   Maximum value in ARRAY.
-!     LOC        O   Location of MAXVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -5245,6 +5093,7 @@ contains
 
 !$Procedure MAXAD  ( Maximum element of array, DP )
 
+      !> Locate the maximum element of a DP array.
       pure subroutine maxad ( array, ndim, maxval, loc )
       use pepper_kinds, only: ip, wp
 
@@ -5265,20 +5114,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(out) :: maxval
-      integer(ip), intent(out) :: loc
+      real(wp), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      real(wp), intent(out) :: maxval  !! Maximum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MAXVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MAXVAL     O   Maximum value in ARRAY.
-!     LOC        O   Location of MAXVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -5401,6 +5241,7 @@ contains
 
 !$Procedure MAXAI  ( Maximum element of array, integer )
 
+      !> Locate the maximum element of an integer array.
       pure subroutine maxai ( array, ndim, maxval, loc )
       use pepper_kinds, only: ip
 
@@ -5421,20 +5262,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: maxval
-      integer(ip), intent(out) :: loc
+      integer(ip), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      integer(ip), intent(out) :: maxval  !! Maximum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MAXVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MAXVAL     O   Maximum value in ARRAY.
-!     LOC        O   Location of MAXVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -5555,6 +5387,7 @@ contains
 
 !$Procedure MINAC  ( Minimum element of array, character )
 
+      !> Locate the minimum element of a character array.
       pure subroutine minac ( array, ndim, minval, loc )
       use pepper_kinds, only: ip
 
@@ -5575,20 +5408,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      character(*), intent(out) :: minval
-      integer(ip), intent(out) :: loc
+      character(*), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      character(*), intent(out) :: minval  !! Minimum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MINVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MINVAL     O   Minimum value in ARRAY.
-!     LOC        O   Location of MINVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -5714,6 +5538,7 @@ contains
 
 !$Procedure MINAD  ( Minimum element of array, DP )
 
+      !> Locate the minimum element of a DP array.
       pure subroutine minad ( array, ndim, minval, loc )
       use pepper_kinds, only: ip, wp
 
@@ -5734,20 +5559,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(out) :: minval
-      integer(ip), intent(out) :: loc
+      real(wp), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      real(wp), intent(out) :: minval  !! Minimum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MINVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MINVAL     O   Minimum value in ARRAY.
-!     LOC        O   Location of MINVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -5866,6 +5682,7 @@ contains
 
 !$Procedure MINAI  ( Minimum element of array, integer )
 
+      !> Locate the minimum element of an integer array.
       pure subroutine minai ( array, ndim, minval, loc )
       use pepper_kinds, only: ip
 
@@ -5886,20 +5703,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: array ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: minval
-      integer(ip), intent(out) :: loc
+      integer(ip), intent(in) :: array ( * )  !! Array.
+      integer(ip), intent(in) :: ndim  !! Number of elements in ARRAY.
+      integer(ip), intent(out) :: minval  !! Minimum value in ARRAY.
+      integer(ip), intent(out) :: loc  !! Location of MINVAL in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     ARRAY      I   Array.
-!     NDIM       I   Number of elements in ARRAY.
-!     MINVAL     O   Minimum value in ARRAY.
-!     LOC        O   Location of MINVAL in ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is an arbitrary array.
@@ -6018,6 +5826,8 @@ contains
 
 !$Procedure MOVEC  ( Move a character array to another )
 
+      !> Copy the elements of one character array into another
+      !> array.
       pure subroutine movec ( arrfrm, ndim, arrto )
       use pepper_kinds, only: ip
 
@@ -6038,19 +5848,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: arrfrm ( * )
-      integer(ip), intent(in) :: ndim
-      character(*), intent(out) :: arrto  ( * )
+      character(*), intent(in) :: arrfrm ( * )  !! Character array to be moved.
+      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      character(*), intent(out) :: arrto  ( * )  !! Destination array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRFRM     I   Character array to be moved.
-!     NDIM       I   Number of elements to copy, i.e. the dimension
-!                    of ARRFRM and ARRTO.
-!     ARRTO      O   Destination array.
-!
 ! $ Detailed_Input
 !
 !     ARRFRM   is an array from which to copy items.
@@ -6170,6 +5971,8 @@ contains
 
 !$Procedure MOVED ( Move a double precision array to another )
 
+      !> Copy the elements of one double precision array into another
+      !> array.
       pure subroutine moved ( arrfrm, ndim, arrto )
       use pepper_kinds, only: ip, wp
 
@@ -6190,18 +5993,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: arrfrm ( * )
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(out) :: arrto  ( * )
+      real(wp), intent(in) :: arrfrm ( * )  !! Double precision array to be moved.
+      integer(ip), intent(in) :: ndim  !! Number of elements to copy.
+      real(wp), intent(out) :: arrto  ( * )  !! Destination array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRFRM     I   Double precision array to be moved.
-!     NDIM       I   Number of elements to copy.
-!     ARRTO      O   Destination array.
-!
 ! $ Detailed_Input
 !
 !     ARRFRM   is an array from which to copy items.
@@ -6424,6 +6219,8 @@ contains
 
 !$Procedure MOVEI  ( Move a integer array to another )
 
+      !> Copy the elements of one integer array into another
+      !> array.
       pure subroutine movei ( arrfrm, ndim, arrto )
       use pepper_kinds, only: ip
 
@@ -6444,19 +6241,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: arrfrm ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: arrto  ( * )
+      integer(ip), intent(in) :: arrfrm ( * )  !! Integer array to be moved.
+      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      integer(ip), intent(out) :: arrto  ( * )  !! Destination array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRFRM     I   Integer array to be moved.
-!     NDIM       I   Number of elements to copy, i.e. the dimension
-!                    of ARRFRM and ARRTO.
-!     ARRTO      O   Destination array.
-!
 ! $ Detailed_Input
 !
 !     ARRFRM   is an array from which to copy items.
@@ -6576,6 +6364,9 @@ contains
 
 !$Procedure NOTRU ( No true entries? )
 
+      !> Determine if none the entries in an array of logicals are .TRUE.
+      !>
+      !> The function returns .TRUE. if no entry has a value of .TRUE.
       pure logical function notru ( logcls, n )
       use pepper_kinds, only: ip
 
@@ -6595,18 +6386,9 @@ contains
 
       implicit none
 
-      logical, intent(in) :: logcls ( * )
-      integer(ip), intent(in) :: n
+      logical, intent(in) :: logcls ( * )  !! An array of logicals.
+      integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LOGCLS     I   An array of logicals.
-!     N          I   Number of elements in the array LOGCLS.
-!
-!     The function returns .TRUE. if no entry has a value of .TRUE.
-!
 ! $ Detailed_Input
 !
 !     LOGCLS   is an array of logicals.
@@ -6717,6 +6499,7 @@ contains
 
 !$Procedure ORDERC ( Order of a character array )
 
+      !> Determine the order of elements in an array of character strings.
       pure subroutine orderc ( array, ndim, iorder )
       use pepper_kinds, only: ip
 
@@ -6737,18 +6520,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: iorder ( * )
+      character(*), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I    Input array.
-!     NDIM       I    Dimension of ARRAY.
-!     IORDER     O    Order vector for ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -6981,6 +6756,7 @@ contains
 
 !$Procedure ORDERD ( Order of a double precision array )
 
+      !> Determine the order of elements in a double precision array.
       pure subroutine orderd ( array, ndim, iorder )
       use pepper_kinds, only: ip, wp
 
@@ -7001,18 +6777,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: iorder ( * )
+      real(wp), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I    Input array.
-!     NDIM       I    Dimension of ARRAY.
-!     IORDER     O    Order vector for ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -7164,6 +6932,7 @@ contains
 
 !$Procedure ORDERI ( Order of an integer array )
 
+      !> Determine the order of elements in an integer array.
       pure subroutine orderi ( array, ndim, iorder )
       use pepper_kinds, only: ip
 
@@ -7184,18 +6953,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(out) :: iorder ( * )
+      integer(ip), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I    Input array.
-!     NDIM       I    Dimension of ARRAY.
-!     IORDER     O    Order vector for ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -7347,6 +7108,9 @@ contains
 
 !$Procedure PRODAD ( Product of a double precision array )
 
+      !> Return the product of the elements of a double precision array.
+      !>
+      !> The function returns the product of the elements of ARRAY.
       pure real(wp) function  prodad ( array, n )
       use pepper_kinds, only: ip, wp
 
@@ -7368,18 +7132,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: array ( * )
-      integer(ip), intent(in) :: n
+      real(wp), intent(in) :: array ( * )  !! Input array.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     N          I   Number of elements in ARRAY.
-!
-!     The function returns the product of the elements of ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -7500,6 +7255,9 @@ contains
 
 !$Procedure PRODAI ( Product of an integer array )
 
+      !> Return the product of the elements of an integer array.
+      !>
+      !> The function returns the product of the elements of ARRAY.
       pure integer(ip) function  prodai ( array, n )
       use pepper_kinds, only: ip
 
@@ -7521,18 +7279,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: n
+      integer(ip), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     N          I   Number of elements in ARRAY.
-!
-!     The function returns the product of the elements of ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -7654,6 +7403,8 @@ contains
 
 !$Procedure REORDC ( Reorder a character array )
 
+      !> Reorder the elements of an array of character strings according to
+      !> a given order vector.
       pure subroutine reordc ( iorder, ndim, array )
       use pepper_kinds, only: ip
 
@@ -7675,18 +7426,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: iorder ( * )
-      integer(ip), intent(in) :: ndim
-      character(*), intent(inout) :: array  ( * )
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      character(*), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IORDER     I   Order vector to be used to re-order ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY     I-O  Array to be re-ordered.
-!
 ! $ Detailed_Input
 !
 !     IORDER   is the order vector to be used to re-order the input
@@ -7985,6 +7728,8 @@ contains
 
 !$Procedure REORDD ( Reorder a double precision array )
 
+      !> Reorder the elements of a double precision array according to a
+      !> given order vector.
       pure subroutine reordd ( iorder, ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -8006,18 +7751,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: iorder ( * )
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(inout) :: array  ( * )
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      real(wp), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IORDER     I   Order vector to be used to re-order ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY     I-O  Array to be re-ordered.
-!
 ! $ Detailed_Input
 !
 !     IORDER   is the order vector to be used to re-order the input
@@ -8300,6 +8037,8 @@ contains
 
 !$Procedure REORDI ( Reorder an integer array )
 
+      !> Reorder the elements of an integer array according to a given
+      !> order vector.
       pure subroutine reordi ( iorder, ndim, array )
       use pepper_kinds, only: ip
 
@@ -8321,18 +8060,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: iorder ( * )
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(inout) :: array  ( * )
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      integer(ip), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IORDER     I   Order vector to be used to re-order ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY     I-O  Array to be re-ordered.
-!
 ! $ Detailed_Input
 !
 !     IORDER   is the order vector to be used to re-order the input
@@ -8615,6 +8346,8 @@ contains
 
 !$Procedure REORDL ( Reorder a logical array )
 
+      !> Reorder the elements of a logical array according to a given order
+      !> vector.
       pure subroutine reordl ( iorder, ndim, array )
       use pepper_kinds, only: ip
 
@@ -8636,18 +8369,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: iorder ( * )
-      integer(ip), intent(in) :: ndim
-      logical, intent(inout) :: array  ( * )
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      logical, intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IORDER     I   Order vector to be used to re-order ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY     I-O  Array to be re-ordered.
-!
 ! $ Detailed_Input
 !
 !     IORDER   is the order vector to be used to re-order the input
@@ -8925,6 +8650,7 @@ contains
 
 !$Procedure RMDUPC ( Remove duplicates from a character array )
 
+      !> Remove duplicate elements from a character array.
       pure subroutine rmdupc ( nelt, array )
       use pepper_kinds, only: ip
 
@@ -8944,16 +8670,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: nelt
-      character(*), intent(inout) :: array   (*)
+      integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
+      character(*), intent(inout) :: array   (*)  !! Input/output array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NELT      I-O  Number of elements in the array.
-!     ARRAY     I-O  Input/output array.
-!
 ! $ Detailed_Input
 !
 !     NELT     on input is the number of elements in the input
@@ -9097,6 +8816,7 @@ contains
 
 !$Procedure RMDUPD ( Remove duplicates from a double precision array )
 
+      !> Remove duplicate elements from a double precision array.
       pure subroutine rmdupd ( nelt, array )
       use pepper_kinds, only: ip, wp
 
@@ -9116,16 +8836,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: nelt
-      real(wp), intent(inout) :: array   (*)
+      integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
+      real(wp), intent(inout) :: array   (*)  !! Input/output array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NELT      I-O  Number of elements in the array.
-!     ARRAY     I-O  Input/output array.
-!
 ! $ Detailed_Input
 !
 !     NELT     on input is the number of elements in the input
@@ -9269,6 +8982,7 @@ contains
 
 !$Procedure RMDUPI ( Remove duplicates from an integer array )
 
+      !> Remove duplicate elements from an integer array.
       pure subroutine rmdupi ( nelt, array )
       use pepper_kinds, only: ip
 
@@ -9288,16 +9002,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: nelt
-      integer(ip), intent(inout) :: array   (*)
+      integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
+      integer(ip), intent(inout) :: array   (*)  !! Input/output array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NELT      I-O  Number of elements in the array.
-!     ARRAY     I-O  Input/output array.
-!
 ! $ Detailed_Input
 !
 !     NELT     on input is the number of elements in the input
@@ -9441,6 +9148,9 @@ contains
 
 !$Procedure SAMEAI ( Are two integer arrays the same? )
 
+      !> Indicate whether two integer arrays are equal.
+      !>
+      !> The function returns the value .TRUE. if and only if A1 = A2.
       pure logical function sameai ( a1, a2, ndim )
       use pepper_kinds, only: ip
 
@@ -9460,20 +9170,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: a1 ( * )
-      integer(ip), intent(in) :: a2 ( * )
-      integer(ip), intent(in) :: ndim
+      integer(ip), intent(in) :: a1 ( * )  !! First array to be compared.
+      integer(ip), intent(in) :: a2 ( * )  !! Second array to be compared.
+      integer(ip), intent(in) :: ndim  !! Dimension of A1 and A2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A1         I    First array to be compared.
-!     A2         I    Second array to be compared.
-!     NDIM       I    Dimension of A1 and A2.
-!
-!     The function returns the value .TRUE. if and only if A1 = A2.
-!
 ! $ Detailed_Input
 !
 !     A1,
@@ -9580,6 +9280,8 @@ contains
 
 !$Procedure SHELLC ( Shell sort a character array )
 
+      !> Sort an array of character strings according to the ASCII
+      !> collating sequence using the Shell Sort algorithm.
       pure subroutine shellc ( ndim, array )
       use pepper_kinds, only: ip
 
@@ -9601,16 +9303,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      character(*), intent(inout) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! Dimension of the array.
+      character(*), intent(inout) :: array ( * )  !! The array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   Dimension of the array.
-!     ARRAY     I-O  The array.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in the array to be sorted.
@@ -9814,6 +9509,7 @@ contains
 
 !$Procedure SHELLD ( Shell sort a double precision array )
 
+      !> Sort a double precision array using the Shell Sort algorithm.
       pure subroutine shelld ( ndim, array )
       use pepper_kinds, only: ip, wp
 
@@ -9834,16 +9530,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(inout) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! Dimension of the array.
+      real(wp), intent(inout) :: array ( * )  !! The array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   Dimension of the array.
-!     ARRAY     I-O  The array.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in the array to be sorted.
@@ -9980,6 +9669,7 @@ contains
 
 !$Procedure SHELLI ( Shell sort an integer array )
 
+      !> Sort an integer array using the Shell Sort algorithm.
       pure subroutine shelli ( ndim, array )
       use pepper_kinds, only: ip
 
@@ -10000,16 +9690,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      integer(ip), intent(inout) :: array ( * )
+      integer(ip), intent(in) :: ndim  !! Dimension of the array.
+      integer(ip), intent(inout) :: array ( * )  !! The array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NDIM       I   Dimension of the array.
-!     ARRAY     I-O  The array.
-!
 ! $ Detailed_Input
 !
 !     NDIM     is the number of elements in the array to be sorted.
@@ -10146,6 +9829,11 @@ contains
 
 !$Procedure SOMFLS ( Some entries false? )
 
+      !> Determine if some of the entries in an array of logicals are
+      !> .FALSE.
+      !>
+      !> The function returns .TRUE. if some of the values in the array
+      !> LOGCLS are .FALSE.
       pure logical function somfls ( logcls, n )
       use pepper_kinds, only: ip
 
@@ -10166,19 +9854,9 @@ contains
 
       implicit none
 
-      logical, intent(in) :: logcls ( * )
-      integer(ip), intent(in) :: n
+      logical, intent(in) :: logcls ( * )  !! An array of logicals.
+      integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LOGCLS     I   An array of logicals.
-!     N          I   Number of elements in the array LOGCLS.
-!
-!     The function returns .TRUE. if some of the values in the array
-!     LOGCLS are .FALSE.
-!
 ! $ Detailed_Input
 !
 !     LOGCLS   is an array of logicals.
@@ -10290,6 +9968,11 @@ contains
 
 !$Procedure SOMTRU ( Some entries true? )
 
+      !> Determine if some of the entries in an array of logicals are
+      !> .TRUE.
+      !>
+      !> The function returns .TRUE. if some of the values in the array
+      !> LOGCLS are .TRUE.
       pure logical function somtru ( logcls, n )
       use pepper_kinds, only: ip
 
@@ -10310,19 +9993,9 @@ contains
 
       implicit none
 
-      logical, intent(in) :: logcls ( * )
-      integer(ip), intent(in) :: n
+      logical, intent(in) :: logcls ( * )  !! An array of logicals.
+      integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LOGCLS     I   An array of logicals.
-!     N          I   Number of elements in the array LOGCLS.
-!
-!     The function returns .TRUE. if some of the values in the array
-!     LOGCLS are .TRUE.
-!
 ! $ Detailed_Input
 !
 !     LOGCLS   is an array of logicals.
@@ -10436,6 +10109,9 @@ contains
 
 !$Procedure SUMAD ( Sum of a double precision array )
 
+      !> Return the sum of the elements of a double precision array.
+      !>
+      !> The function returns the sum of the elements of ARRAY.
       pure real(wp) function sumad ( array, n )
       use pepper_kinds, only: ip, wp
 
@@ -10457,18 +10133,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: n
+      real(wp), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     N          I   Number of elements in ARRAY.
-!
-!     The function returns the sum of the elements of ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input double precision array.
@@ -10589,6 +10256,9 @@ contains
 
 !$Procedure SUMAI ( Sum of an integer array )
 
+      !> Return the sum of the elements of an integer array.
+      !>
+      !> The function returns the sum of the elements of ARRAY.
       pure integer(ip) function sumai ( array, n )
       use pepper_kinds, only: ip
 
@@ -10610,18 +10280,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: array  ( * )
-      integer(ip), intent(in) :: n
+      integer(ip), intent(in) :: array  ( * )  !! Input array.
+      integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     N          I   Number of elements in ARRAY.
-!
-!     The function returns the sum of the elements of ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input integer array.
@@ -10742,6 +10403,7 @@ contains
 
 !$Procedure SWAPC ( Swap character values )
 
+      !> Swap the contents of two character strings.
       elemental subroutine swapc ( a, b )
       use pepper_kinds, only: ip
 
@@ -10761,16 +10423,9 @@ contains
 
       implicit none
 
-      character(*), intent(inout) :: a
-      character(*), intent(inout) :: b
+      character(*), intent(inout) :: a  !! First string.
+      character(*), intent(inout) :: b  !! Second string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A         I-O  First string.
-!     B         I-O  Second string.
-!
 ! $ Detailed_Input
 !
 !     A,
@@ -10902,6 +10557,7 @@ contains
 
 !$Procedure SWAPD ( Swap double precision values )
 
+      !> Swap the contents of two double precision variables.
       elemental subroutine swapd ( a, b )
       use pepper_kinds, only: wp
 
@@ -10921,16 +10577,9 @@ contains
 
       implicit none
 
-      real(wp), intent(inout) :: a
-      real(wp), intent(inout) :: b
+      real(wp), intent(inout) :: a  !! First variable.
+      real(wp), intent(inout) :: b  !! Second variable.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A         I-O  First variable.
-!     B         I-O  Second variable.
-!
 ! $ Detailed_Input
 !
 !     A,
@@ -11032,6 +10681,7 @@ contains
 
 !$Procedure SWAPI ( Swap integer values )
 
+      !> Swap the contents of two integer variables.
       elemental subroutine swapi ( a, b )
       use pepper_kinds, only: ip
 
@@ -11051,16 +10701,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(inout) :: a
-      integer(ip), intent(inout) :: b
+      integer(ip), intent(inout) :: a  !! First variable.
+      integer(ip), intent(inout) :: b  !! Second variable.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A         I-O  First variable.
-!     B         I-O  Second variable.
-!
 ! $ Detailed_Input
 !
 !     A,

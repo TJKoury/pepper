@@ -186,11 +186,7 @@
 
 
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'VALIDI')
-      end if
+      if ( return() ) return
 
 !
 !     Is the set size big enough?
@@ -203,7 +199,6 @@
          call errint ( '#', size )
          call errint ( '#', n    )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'VALIDI' )
          return
       end if
 
@@ -221,6 +216,5 @@
       call scardi ( card, a )
 
 
-      call chkout( 'VALIDI' )
       return
       end

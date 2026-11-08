@@ -133,13 +133,11 @@
          return
       else
 
-         call chkin  ( 'STDIO' )
          call setmsg ( 'The only "names" recognized by STDIO are ' &
          //            '''STDIN'' and ''STDOUT'' you requested a ' &
          //            'unit for ''#''. '     )
          call errch  ( '#', name              )
          call sigerr ( 'SPICE(BADSTDIONAME)'  )
-         call chkout ( 'STDIO' )
       end if
 
       return

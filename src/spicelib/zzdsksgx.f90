@@ -189,11 +189,8 @@
       integer(ip)           plid
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKSGX' )
 
 !
 !     Note: input argument ET is provided to support time-dependent
@@ -220,13 +217,11 @@
          //            'supported for DSK data type #.'     )
          call errint ( '#', dtype                           )
          call sigerr ( 'SPICE(TYPENOTSUPPORTED)'            )
-         call chkout ( 'ZZDSKSGX'                           )
          return
 
       end if
 
 
-      call chkout ( 'ZZDSKSGX' )
       return
       end
 

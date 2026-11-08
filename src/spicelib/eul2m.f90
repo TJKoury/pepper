@@ -438,11 +438,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EUL2M' )
-      end if
+      if ( return () ) return
 
 !
 !     Make sure the axis numbers are all right:  They must belong to
@@ -460,7 +456,6 @@
          call errint ( '#',  axis2                    )
          call errint ( '#',  axis1                    )
          call sigerr ( 'SPICE(BADAXISNUMBERS)'        )
-         call chkout ( 'EUL2M'                        )
          return
 
       end if
@@ -472,6 +467,5 @@
       call rotmat ( r,   angle2,  axis2,  r1 )
       call rotmat ( r1,  angle3,  axis3,  r  )
 
-      call chkout ( 'EUL2M' )
       return
       end

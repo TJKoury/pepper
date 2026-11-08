@@ -357,11 +357,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASCUD' )
-      end if
+      if ( return () ) return
 
 !
 !     Here's a preview of coming attractions:
@@ -521,7 +517,6 @@
          call setmsg ( 'Invalid data type: #. ' )
          call errint ( '#',  type               )
          call sigerr ( 'SPICE(DASINVALIDTYPE)'  )
-         call chkout ( 'DASCUD'                 )
          return
 
       end if
@@ -534,7 +529,6 @@
          call setmsg ( 'NWORDS was #; should be non-negative.' )
          call errint ( '#',  nwords                            )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
-         call chkout ( 'DASCUD'                                )
          return
 
       end if
@@ -948,6 +942,5 @@
       end if
 
 
-      call chkout ( 'DASCUD' )
       return
       end

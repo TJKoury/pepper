@@ -431,11 +431,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CKE03' )
-      end if
+      if ( return() ) return
 
 !
 !     Unpack the record, for easier reading.
@@ -464,7 +460,6 @@
             call vequ ( av1, av )
          end if
 
-         call chkout ( 'CKE03' )
 
          return
 
@@ -503,10 +498,7 @@
 
       call raxisa ( rot,   axis,  angle )
 
-      if ( failed() ) then
-         call chkout ( 'CKE03' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Calculate the matrix that rotates vectors about the vector AXIS
@@ -544,7 +536,6 @@
 
       end if
 
-      call chkout ( 'CKE03' )
 
       return
       end

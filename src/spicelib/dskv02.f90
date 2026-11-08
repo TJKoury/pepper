@@ -405,11 +405,8 @@
       integer(ip)           nv
       integer(ip)           unit
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKV02' )
 
 !
 !     Look up the DSK descriptor for this segment.
@@ -443,7 +440,6 @@
          call errint ( '#', nv                               )
          call errint ( '#', start                            )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
-         call chkout ( 'DSKV02'                              )
          return
 
       end if
@@ -466,6 +462,5 @@
 !
       n = n / 3
 
-      call chkout ( 'DSKV02' )
       return
       end

@@ -427,11 +427,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'GEOREC' )
-      end if
+      if ( return () ) return
 
 
 
@@ -442,7 +438,6 @@
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-          call chkout ( 'GEOREC'                   )
           return
       end if
 
@@ -456,7 +451,6 @@
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-          call chkout ( 'GEOREC'                         )
           return
       end if
 
@@ -509,6 +503,5 @@
 
 
 
-      call chkout ( 'GEOREC' )
       return
       end

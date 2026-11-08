@@ -183,10 +183,7 @@
 !
 !     Standard introductory error handling preparations.
 !
-      if ( return() ) then
-         return
-      end if
-      call chkin ( 'SPKUDS' )
+      if ( return() ) return
 
 !
 !     No judgments are made about the descriptor when we
@@ -195,10 +192,7 @@
 !
       call dafus ( descr, nd, ni, dppart, ipart )
 
-      if ( failed() ) then
-         call chkout ( 'SPKUDS' )
-         return
-      end if
+      if ( failed() ) return
 
       body   = ipart(1)
       center = ipart(2)
@@ -210,7 +204,6 @@
       first  = dppart(1)
       last   = dppart(2)
 
-      call chkout ( 'SPKUDS' )
       return
 
       end

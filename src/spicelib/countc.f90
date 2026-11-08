@@ -183,7 +183,6 @@
          countc = 0
          return
       else
-         call chkin ( 'COUNTC' )
          countc = 0
       end if
 
@@ -197,7 +196,6 @@
          call errint ( '#', bline                                     )
          call errint ( '#', eline                                     )
          call sigerr ( 'SPICE(CANNOTFINDGRP)'                         )
-         call chkout ( 'COUNTC'                                       )
          return
 
       end if
@@ -228,7 +226,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FILENAME', unit                            )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'COUNTC'                                    )
             return
 
          else if ( iostat < 0 ) then
@@ -240,7 +237,6 @@
             call errint ( '#', eline                                  )
             call errfnm ( 'FILE', unit                                )
             call sigerr ( 'SPICE(CANNOTFINDGRP)'                      )
-            call chkout ( 'COUNTC'                                    )
             return
 
          else
@@ -275,7 +271,6 @@
                   call errint ( '#', linect                           )
                   call errfnm ( 'FILENAME', unit                      )
                   call sigerr ( 'SPICE(INVALIDTEXT)'                  )
-                  call chkout ( 'COUNTC'                              )
                   return
 
                end if
@@ -294,6 +289,5 @@
       countc = chars
 
 
-      call chkout ( 'COUNTC' )
       return
       end

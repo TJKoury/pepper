@@ -165,11 +165,8 @@
       logical               corblk ( abatsz )
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZCOREPC' )
 
 !
 !     Parse the aberration correction string.  Obtain a correction
@@ -206,7 +203,6 @@
 
       end if
 
-      call chkout ( 'ZZCOREPC' )
       return
       end
 

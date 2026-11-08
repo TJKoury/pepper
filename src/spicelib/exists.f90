@@ -243,8 +243,6 @@
       if ( return () ) then
          exists = .false.
          return
-      else
-         call chkin ( 'EXISTS' )
       end if
 !
 !     Initialize the local variable MYEXST to be .FALSE.
@@ -259,7 +257,6 @@
          exists = .false.
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
-         call chkout ( 'EXISTS'                   )
          return
 
       end if
@@ -276,7 +273,6 @@
          call setmsg ( 'Value of IOSTAT was *.' )
          call errint ( '*', iostat              )
          call sigerr ( 'SPICE(INQUIREFAILED)'   )
-         call chkout ( 'EXISTS'                 )
          return
 
       end if
@@ -285,6 +281,5 @@
 !
       exists = myexst
 
-      call chkout ( 'EXISTS' )
       return
       end

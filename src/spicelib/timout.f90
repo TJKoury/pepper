@@ -1163,11 +1163,8 @@
                                      1.0e8_wp,  1.0e9_wp,  1.0e10_wp, 1.0e11_wp, &
                                      1.0e12_wp, 1.0e13_wp, 1.0e14_wp         /
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'TIMOUT' )
 
 !
 !     Chapter 1. Initializations.
@@ -2530,6 +2527,5 @@
       output = string
 
 
-      call chkout ( 'TIMOUT' )
       return
       end

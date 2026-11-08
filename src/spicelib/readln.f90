@@ -140,12 +140,10 @@
 !
       if ( iostat > 0  ) then
 
-         call chkin  ( 'READLN'                                  )
          call setmsg ( 'Error reading from file: #. IOSTAT = #.' )
          call errfnm ( '#', unit                                 )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(FILEREADFAILED)'                   )
-         call chkout ( 'READLN'                                  )
          return
 
       end if

@@ -381,9 +381,7 @@
       if ( return() ) then
          return
       else
-         call chkin  ( 'ZZDDHMAN' )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'ZZDDHMAN' )
       end if
 
       return
@@ -588,11 +586,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHOPN' )
-      end if
+      if ( return() ) return
 
 !
 !     Do the initialization tasks.
@@ -606,10 +600,7 @@
 !        Check FAILED() to handle the unlikely event that
 !        ZZDDHINI signaled SPICE(BUG).
 !
-         if ( failed() ) then
-            call chkout ( 'ZZDDHOPN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear FIRST since we've done the initialization.
@@ -625,10 +616,7 @@
 
          call zzpltchk ( platok )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDDHOPN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear OPNFST, since we've performed the diagnostics.
@@ -672,7 +660,6 @@
          call errch  ( '#', locfnm                                     )
          call errch  ( '#', method                                     )
          call sigerr ( 'SPICE(UNSUPPORTEDMETHOD)'                      )
-         call chkout ( 'ZZDDHOPN'                                      )
          return
 
       end if
@@ -700,7 +687,6 @@
          call errch  ( '#', locfnm                                     )
          call errch  ( '#', arch                                       )
          call sigerr ( 'SPICE(UNSUPPORTEDARCH)'                        )
-         call chkout ( 'ZZDDHOPN'                                      )
          return
 
       end if
@@ -729,7 +715,6 @@
             //            'to handles.  As such, there is no room ' &
             //            'to open the requested scratch file.'     )
             call sigerr ( 'SPICE(UTFULL)'                           )
-            call chkout ( 'ZZDDHOPN'                                )
             return
 
          end if
@@ -754,7 +739,6 @@
             call setmsg ( 'The attempt to load the file has failed, ' &
             //            'because the filename is blank.'            )
             call sigerr ( 'SPICE(BLANKFILENAME)'                      )
-            call chkout ( 'ZZDDHOPN'                                  )
             return
 
          end if
@@ -784,10 +768,7 @@
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         if ( failed() ) then
-            call chkout ( 'ZZDDHOPN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Now perform some simple sanity checks before preparing to
@@ -803,7 +784,6 @@
             call setmsg ( 'The file ''#'' does not exist.' )
             call errch  ( '#', locfnm                      )
             call sigerr ( 'SPICE(FILENOTFOUND)'            )
-            call chkout ( 'ZZDDHOPN'                       )
             return
 
          end if
@@ -833,7 +813,6 @@
 !
                call setmsg ( 'INQUIRE failed.' )
                call sigerr ( 'SPICE(BUG)'      )
-               call chkout ( 'ZZDDHOPN'        )
                return
 
             end if
@@ -847,7 +826,6 @@
             call errch  ( '#', locfnm                               )
             call errint ( '#', loclun                               )
             call sigerr ( 'SPICE(IMPROPEROPEN)'                     )
-            call chkout ( 'ZZDDHOPN'                                )
             return
 
          end if
@@ -877,7 +855,6 @@
                call errch  ( '#', strarc(filarc)                       )
                call errch  ( '#', strarc(ftarc(findex))                )
                call sigerr ( 'SPICE(FILARCMISMATCH)'                   )
-               call chkout ( 'ZZDDHOPN'                                )
                return
 
             end if
@@ -896,7 +873,6 @@
                call setmsg ( 'File ''#'' already loaded.' )
                call errch  ( '#', locfnm                  )
                call sigerr ( 'SPICE(FILEOPENCONFLICT)'    )
-               call chkout ( 'ZZDDHOPN'                   )
                return
 
             end if
@@ -920,7 +896,6 @@
                call errch  ( '#', stramh(accmet)                   )
                call errch  ( '#', stramh(ftamh(findex))            )
                call sigerr ( 'SPICE(RWCONFLICT)'                   )
-               call chkout ( 'ZZDDHOPN'                            )
                return
 
             end if
@@ -932,7 +907,6 @@
 !
             handle = fthan ( findex )
 
-            call chkout( 'ZZDDHOPN' )
             return
 
          end if
@@ -955,7 +929,6 @@
          call errint ( '#', nft                                    )
          call errch  ( '#', locfnm                                 )
          call sigerr ( 'SPICE(FTFULL)'                             )
-         call chkout ( 'ZZDDHOPN'                                  )
          return
 
       end if
@@ -976,10 +949,7 @@
 !     Recall HANDLE was initialized to 0, and this invalid
 !     value is returned to the caller.
 !
-      if ( failed() ) then
-         call chkout ( 'ZZDDHOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Trim up the filename.
@@ -1306,7 +1276,6 @@
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         call chkout ( 'ZZDDHOPN' )
          return
 
       end if
@@ -1356,7 +1325,6 @@
 !
       handle = fthan( nft )
 
-      call chkout ( 'ZZDDHOPN' )
       return
 
 
@@ -1510,11 +1478,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHCLS' )
-      end if
+      if ( return() ) return
 
 !
 !     Do the initialization tasks.
@@ -1528,10 +1492,7 @@
 !        Check FAILED() only to trap the possibility of ZZDDHINI
 !        signaling SPICE(BUG).
 !
-         if ( failed() ) then
-            call chkout ( 'ZZDDHCLS' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear FIRST since we've done the initialization.
@@ -1549,10 +1510,8 @@
 !     Check to see whether we found the handle or not.
 !
       if ( findex == 0 ) then
-         call chkout ( 'ZZDDHCLS' )
          return
       else if ( fthan(findex) /= handle ) then
-         call chkout ( 'ZZDDHCLS' )
          return
       end if
 
@@ -1579,7 +1538,6 @@
          call errch  ( '%', tmpstr                                )
          call errch  ( '$', ftnam(findex)                         )
          call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
-         call chkout ( 'ZZDDHCLS'                                 )
          return
 
       end if
@@ -1595,7 +1553,6 @@
          call errch  ( '#', strarc( ftarc(findex) )                  )
          call errch  ( '#', ftnam(findex)                            )
          call sigerr ( 'SPICE(INVALIDACCESS)'                        )
-         call chkout ( 'ZZDDHCLS'                                    )
          return
 
       end if
@@ -1658,7 +1615,6 @@
             //            'delete file as requested.  File not ' &
             //            'currently present in the UNIT table. ' )
             call sigerr ( 'SPICE(FILENOTCONNECTED)'               )
-            call chkout ( 'ZZDDHCLS'                              )
             return
 
          end if
@@ -1683,7 +1639,6 @@
                //            'row with a zero-valued handle can be ' &
                //            'found.  This should never occur.'        )
                call sigerr ( 'SPICE(BUG)'                              )
-               call chkout ( 'ZZDDHCLS'                                )
                return
             end if
 
@@ -1712,7 +1667,6 @@
          end if
       end if
 
-      call chkout ( 'ZZDDHCLS' )
       return
 
 
@@ -1845,11 +1799,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHHLU' )
-      end if
+      if ( return() ) return
 
 !
 !     Do the initialization tasks.
@@ -1865,7 +1815,6 @@
 !
          if ( failed() ) then
             unit = 0
-            call chkout ( 'ZZDDHHLU' )
             return
          end if
 
@@ -1896,7 +1845,6 @@
          call setmsg ( 'There is no file loaded with handle = #' )
          call errint ( '#', handle                               )
          call sigerr ( 'SPICE(NOSUCHHANDLE)'                     )
-         call chkout ( 'ZZDDHHLU'                                )
          return
       end if
 
@@ -1925,7 +1873,6 @@
          call errch  ( '%', tmpstr                                )
          call errch  ( '$', ftnam(findex)                         )
          call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
-         call chkout ( 'ZZDDHHLU'                                 )
          return
 
       end if
@@ -1961,7 +1908,6 @@
 
             unit = 0
 
-            call chkout ( 'ZZDDHHLU' )
             return
          end if
 
@@ -1995,7 +1941,6 @@
             call setmsg ( 'Invalid access method. This error ' &
             //            'should never be signaled.'          )
             call sigerr ( 'SPICE(BUG)'                         )
-            call chkout ( 'ZZDDHHLU'                           )
             return
          end if
 
@@ -2025,7 +1970,6 @@
             call errch  ( '#', ftnam(findex)                      )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEOPENFAIL)'                   )
-            call chkout ( 'ZZDDHHLU'                              )
             return
 
          end if
@@ -2063,7 +2007,6 @@
             //            'available for locking in the unit table.' )
             call errch  ( '#', ftnam(findex)                         )
             call sigerr ( 'SPICE(HLULOCKFAILED)'                     )
-            call chkout ( 'ZZDDHHLU'                                 )
             return
 
          end if
@@ -2077,7 +2020,6 @@
 !
       unit = utlun(uindex)
 
-      call chkout ( 'ZZDDHHLU' )
       return
 
 
@@ -2193,9 +2135,7 @@
 !
 !     Standard SPICE discovery error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Do the initialization tasks.
@@ -2210,9 +2150,7 @@
 !        signaling SPICE(BUG).  No check out is performed, see the
 !        $Restrictions section of the entry point header for details.
 !
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear FIRST since we've done the initialization.
@@ -2226,9 +2164,7 @@
 !     empty and awaiting connections.  The state of the UTLCK is
 !     not significant.
 !
-      if ( handle == 0 ) then
-         return
-      end if
+      if ( handle == 0 ) return
 
 !
 !     Look up the handle in the unit table.
@@ -2259,24 +2195,20 @@
 !
       if ( findex == 0 ) then
 
-         call chkin  ( 'ZZDDHUNL'                                  )
          call setmsg ( 'HANDLE # was not found in the file table ' &
          //            'but was located in the unit table.  This ' &
          //            'error should never occur.'                 )
          call errint ( '#', handle                                 )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZDDHUNL'                                  )
          return
 
       else if ( fthan(findex) /= handle ) then
 
-         call chkin  ( 'ZZDDHUNL'                                  )
          call setmsg ( 'HANDLE # was not found in the file table ' &
          //            'but was located in the unit table.  This ' &
          //            'error should never occur.'                 )
          call errint ( '#', handle                                 )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZDDHUNL'                                  )
          return
 
       end if
@@ -2297,7 +2229,6 @@
 !
       if ( filarc /= ftarc(findex) ) then
 
-         call chkin  ( 'ZZDDHUNL'                                 )
          call setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be unlocked by routines in ' &
          //            'in the % system.'                         )
@@ -2305,7 +2236,6 @@
          call errch  ( '%', tmpstr                                )
          call errch  ( '$', ftnam(findex)                         )
          call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
-         call chkout ( 'ZZDDHUNL'                                 )
          return
 
       end if
@@ -2315,9 +2245,7 @@
 !     scratch access.  If it is, just return, since scratch files
 !     can not have their units unlocked.
 !
-      if ( ftamh(findex) == scrtch ) then
-         return
-      end if
+      if ( ftamh(findex) == scrtch ) return
 
       utlck(uindex) = .false.
 
@@ -2469,9 +2397,7 @@
 !        the possibility of ZZDDHINI signaling SPICE(BUG).  See
 !        $Restrictions for details.
 !
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear FIRST since we've done the initialization.
@@ -2637,9 +2563,7 @@
 !        the possibility of ZZDDHINI signaling SPICE(BUG).  See
 !        $Restrictions for details.
 !
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Clear FIRST since we've done the initialization.
@@ -2778,11 +2702,7 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHFNH' )
-      end if
+      if ( return() ) return
 
 !
 !     Do the initialization tasks.
@@ -2798,7 +2718,6 @@
 !
          if ( failed() ) then
             handle = 0
-            call chkout ( 'ZZDDHFNH' )
             return
          end if
 
@@ -2833,7 +2752,6 @@
          handle = 0
       end if
 
-      call chkout ( 'ZZDDHFNH' )
       return
 
 

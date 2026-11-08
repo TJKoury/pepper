@@ -194,9 +194,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure the number of records in the segment is at least as
@@ -209,12 +207,10 @@
 
       if ( tsize > nrec ) then
 
-         call chkin  ( 'ZZEKERD1'                                      )
          call setmsg ( 'Index size = # but column contains # records.' )
          call errint ( '#',  tsize                                     )
          call errint ( '#',  nrec                                      )
          call sigerr ( 'SPICE(SIZEMISMATCH)'                           )
-         call chkout ( 'ZZEKERD1'                                      )
          return
 
       end if

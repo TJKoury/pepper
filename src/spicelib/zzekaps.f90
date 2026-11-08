@@ -157,9 +157,7 @@
       end if
 
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Zero out the page's link count and forward pointer.

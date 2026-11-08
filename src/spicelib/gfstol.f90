@@ -315,9 +315,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     This routine wraps a call to ZZHOLDD with the appropriate ID and
@@ -330,12 +328,10 @@
 
       if ( value <= 0.0_wp ) then
 
-         call chkin  ( 'GFSTOL'                              )
          call setmsg ( 'Convergence tolerance must be ' &
                     // 'greater-than zero. Input VALUE = #.' )
          call errdp  ( '#', value                            )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'             )
-         call chkout ( 'GFSTOL'                              )
          return
 
       else

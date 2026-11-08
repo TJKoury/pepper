@@ -209,19 +209,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFRA' )
-      end if
+      if ( return () ) return
 
 !
 !     If the order vector has fewer than two elements, don't bother.
 !
-      if ( n < 2 ) then
-        call chkout ( 'DAFRA' )
-        return
-      end if
+      if ( n < 2 ) return
 
 !
 !     If IORDER is not an order vector, complain.
@@ -229,7 +222,6 @@
       if ( .not. isordv ( iorder, n ) ) then
          call setmsg ( 'Sorry, IORDER is not an order vector.' )
          call sigerr ( 'SPICE(DISORDER)' )
-         call chkout ( 'DAFRA' )
          return
       end if
 
@@ -248,7 +240,6 @@
       end do
 
       if ( failed() ) then
-         call chkout ( 'DAFRA' )
          return
 
       else if ( total < n ) then
@@ -256,7 +247,6 @@
          call errint ( '#', n )
          call errint ( '#', total )
          call sigerr ( 'SPICE(DISARRAY)' )
-         call chkout ( 'DAFRA' )
          return
       end if
 
@@ -377,6 +367,5 @@
         iorder(index) = iabs ( iorder(index) )
       end do
 
-      call chkout ( 'DAFRA' )
       return
       end

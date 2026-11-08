@@ -226,11 +226,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin( 'ZZGFSPQ' )
 
 !
 !     First check for bad inputs.
@@ -246,7 +243,6 @@
          call errint  ('#', targ2         )
          call errdp   ('#', r2            )
          call sigerr  ('SPICE(BADRADIUS)' )
-         call chkout  ('ZZGFSPQ'          )
          return
       end if
 
@@ -256,18 +252,12 @@
 !
       call spkezp ( targ1, et, ref, abcorr,  obs, pv1, lt )
 
-      if  (  failed() ) then
-         call chkout ( 'ZZGFSPQ' )
-         return
-      end if
+      if (  failed() ) return
 
 
        call spkezp ( targ2, et, ref, abcorr, obs, pv2, lt )
 
-      if (  failed() ) then
-         call chkout ( 'ZZGFSPQ' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     Compute the range to the objects of interest.
@@ -282,10 +272,7 @@
 
          ang1 = dasine( r1/range1, atol )
 
-         if (  failed() ) then
-            call chkout ( 'ZZGFSPQ' )
-            return
-         end if
+         if (  failed() ) return
 
       else
 
@@ -297,10 +284,7 @@
 
          ang2 = dasine ( r2/range2, atol )
 
-         if (  failed() ) then
-            call chkout ('ZZGFSPQ')
-            return
-         end if
+         if (  failed() ) return
 
       else
 
@@ -314,6 +298,5 @@
       theta = vsep ( pv1, pv2 )
       value = theta - ang1 - ang2
 
-      call chkout ('ZZGFSPQ')
       return
       end

@@ -130,8 +130,6 @@
       if ( return () ) then
          isopen = .false.
          return
-      else
-         call chkin ( 'ISOPEN' )
       end if
 
 !
@@ -142,7 +140,6 @@
          isopen = .false.
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
-         call chkout ( 'ISOPEN'                   )
          return
 
       end if
@@ -161,7 +158,6 @@
          call setmsg ( 'Value of IOSTAT was *.' )
          call errint ( '*', iostat              )
          call sigerr ( 'SPICE(INQUIREFAILED)'   )
-         call chkout ( 'ISOPEN'                 )
          return
 
       end if
@@ -181,6 +177,5 @@
 
       isopen = myopen
 
-      call chkout ( 'ISOPEN' )
       return
       end

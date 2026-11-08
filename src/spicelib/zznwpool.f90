@@ -167,11 +167,8 @@
       logical               return
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZNWPOOL' )
 
 !
 !     Fetch the agents watching VARNAM into the set NOTIFY.
@@ -186,6 +183,5 @@
       call unionc ( notify, agents, agtwrk )
       call copyc  ( agtwrk,         agents )
 
-      call chkout ( 'ZZNWPOOL' )
       return
       end

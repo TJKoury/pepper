@@ -381,11 +381,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCFMT' )
-      end if
+      if ( return () ) return
 
 !
 !     Determine which data type the spacecraft clock belongs to and
@@ -400,11 +396,9 @@
          call setmsg ( 'Clock type # is not supported. ' )
          call errint ( '#', type                         )
          call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-         call chkout ( 'SCFMT'                           )
          return
       end if
 
 
-      call chkout ( 'SCFMT' )
       return
       end

@@ -359,12 +359,10 @@
 !
       if ( iostat /= 0  ) then
 
-         call chkin  ( 'WRITLN'                                  )
          call setmsg ( 'Error Writing to file: #. IOSTAT = #.'   )
          call errfnm ( '#', unit                                 )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'                  )
-         call chkout ( 'WRITLN'                                  )
          return
 
       end if

@@ -467,11 +467,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGETELM' )
 
 !
 !     Initialize the error indicators and the elements to zero.
@@ -568,7 +565,6 @@
 
          ok = .false.
 
-         call chkout ( 'ZZGETELM' )
          return
       end if
 
@@ -593,7 +589,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -678,7 +673,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -697,7 +691,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
 
          end if
@@ -710,7 +703,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
 
       end if
@@ -728,7 +720,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
 
          end if
@@ -744,7 +735,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -759,7 +749,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -774,7 +763,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -790,7 +778,6 @@
 
             ok = .false.
 
-            call chkout ( 'ZZGETELM' )
             return
          end if
 
@@ -856,7 +843,6 @@
       elems ( kno    ) = no
       elems ( kepoch ) = epoch
 
-      call chkout ( 'ZZGETELM' )
       return
       end
 

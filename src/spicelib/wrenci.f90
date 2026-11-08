@@ -261,11 +261,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WRENCI' )
-      end if
+      if ( return () ) return
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
@@ -276,7 +272,6 @@
                        ' not positive: #.'                           )
          call errint ( '#', n                                        )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'WRENCI'                                      )
          return
 
       end if
@@ -326,7 +321,6 @@
                call errint ( '#', unit                            )
                call errint ( '#', iostat                          )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
-               call chkout ( 'WRENCI'                             )
                return
 
             end if
@@ -341,6 +335,5 @@
 
       end do
 
-      call chkout ( 'WRENCI' )
       return
       end

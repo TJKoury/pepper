@@ -275,11 +275,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'BODDEF' )
-      end if
+      if ( return() ) return
 
       call zzboddef ( name, code )
 
@@ -287,7 +283,6 @@
 !     No need for any error checking, since all we do is check out
 !     and return anyway. We leave the error checking to the caller.
 !
-      call chkout ( 'BODDEF' )
       return
 
       end

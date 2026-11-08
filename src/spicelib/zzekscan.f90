@@ -494,11 +494,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKSCAN' )
-      end if
+      if ( return () ) return
 
 !
 !     The first time through, set up our identifier character set.
@@ -618,7 +614,6 @@
                call repmi ( errmsg, '#', maxntk+1, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -667,7 +662,6 @@
                call repmi ( errmsg, '#', cptr, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -690,7 +684,6 @@
                call repmi  ( errmsg, '#', room,    errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -719,7 +712,6 @@
 
                scnerr = .true.
 
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -778,7 +770,6 @@
                call repmi ( errmsg, '#', cptr, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -801,7 +792,6 @@
                call repmi  ( errmsg, '#', maxnum+1, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -832,7 +822,6 @@
                call repmi  ( errmsg, '#', cptr+ptr-1, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -883,7 +872,6 @@
                call repmi ( errmsg, '#', cptr, errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -905,7 +893,6 @@
                call repmi  ( errmsg, '#', room,   errmsg )
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -1019,7 +1006,6 @@
                end if
 
                scnerr = .true.
-               call chkout ( 'ZZEKSCAN' )
                return
 
             end if
@@ -1037,6 +1023,5 @@
       scnerr  =  .false.
       errmsg  =  ' '
 
-      call chkout ( 'ZZEKSCAN' )
       return
       end

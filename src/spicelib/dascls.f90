@@ -425,11 +425,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASCLS' )
 
       if ( pass1 ) then
          call ssizei ( ftsize, fhset )
@@ -458,10 +455,7 @@
 !
       call dashof ( fhset )
 
-      if (  .not.  elemi( handle, fhset )  )  then
-         call chkout ( 'DASCLS' )
-         return
-      end if
+      if (  .not.  elemi( handle, fhset )  ) return
 
 !
 !     If the file is open for writing, flush any buffered
@@ -469,10 +463,7 @@
 !
       call dasham ( handle, method )
 
-      if ( failed() ) then
-         call chkout ( 'DASCLS' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( method == 'WRITE ') then
 !
@@ -487,10 +478,7 @@
 !
          call zzddhhlu ( handle, 'DAS', .false., unit )
 
-         if ( failed() ) then
-            call chkout ( 'DASCLS' )
-            return
-         end if
+         if ( failed() ) return
 
          inquire ( unit   = unit, &
                    named  = notscr, &
@@ -506,7 +494,6 @@
             call errint ( '#',  handle                          )
             call errint ( '#',  unit                            )
             call sigerr ( 'SPICE(INQUIREFAILED)'                )
-            call chkout ( 'DASCLS'                              )
             return
 
          end if
@@ -529,6 +516,5 @@
 !
       call dasllc ( handle )
 
-      call chkout ( 'DASCLS' )
       return
       end

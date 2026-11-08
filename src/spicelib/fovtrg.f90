@@ -606,11 +606,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'FOVTRG' )
 
 !
 !     Reject the target shape 'RAY'.
@@ -621,7 +618,6 @@
          //            'by this routine. Use the routine ' &
          //            'FOVRAY instead.'                       )
          call sigerr ( 'SPICE(INVALIDOPTION)'                  )
-         call chkout ( 'FOVTRG'                                )
          return
 
       end if
@@ -639,15 +635,11 @@
       call zzgffvin ( inst,   tshape, raydir, &
                       target, tframe, abcorr, obsrvr )
 
-      if ( failed() ) then
-         call chkout ( 'FOVTRG' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Calculate the visibility state.
 !
       call zzgffvst ( et, visibl )
 
-      call chkout ( 'FOVTRG' )
       return
       end

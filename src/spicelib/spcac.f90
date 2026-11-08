@@ -366,11 +366,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCAC' )
-      end if
+      if ( return () ) return
 
 !
 !     Before doing anything, determine if the file associated with
@@ -378,10 +374,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'SPCAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Rewind the comment file - we'll start the search for BMARK
@@ -401,10 +394,7 @@
 !     If the markers are not found, or if BMARK and EMARK are on
 !     successive lines, there is nothing to put in the comment area.
 !
-      if ( .not. found ) then
-         call chkout ( 'SPCAC' )
-         return
-      end if
+      if ( .not. found ) return
 
 !
 !     Adjust BLINE and ELINE so we are pointing to the group of lines
@@ -419,10 +409,7 @@
          eline = eline - 1
       end if
 
-      if ( bline > eline ) then
-         call chkout ( 'SPCAC' )
-         return
-      end if
+      if ( bline > eline ) return
 
 !
 !     Calculate the number of lines and the total number of characters
@@ -432,10 +419,7 @@
       lines = eline - bline + 1
       chars = countc ( unit, bline, eline, line )
 
-      if ( failed() ) then
-         call chkout ( 'SPCAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Read the file record to find out if the DAF contains any
@@ -453,10 +437,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      if ( failed() ) then
-         call chkout ( 'SPCAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Assign the value of NULL and EOT.  NULL gets appended to the
@@ -496,7 +477,6 @@
                call errint ( '*', iostat                              )
                call errfnm ( 'FILE', dafu                             )
                call sigerr ( 'SPICE(FILEREADFAILED)'                  )
-               call chkout ( 'SPCAC'                                  )
                return
             end if
 !
@@ -585,10 +565,7 @@
 
          call dafarr ( handle, nr )
 
-         if ( failed() ) then
-            call chkout ( 'SPCAC' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -617,7 +594,6 @@
             call errint ( '*', iostat                                 )
             call errfnm ( 'FILE', unit                                )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'SPCAC'                                     )
             return
          end if
 
@@ -638,7 +614,6 @@
             call errint ( '*', iostat                                 )
             call errfnm ( 'FILE', unit                                )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'SPCAC'                                     )
             return
          end if
 
@@ -683,7 +658,6 @@
                   call errint ( '*', iostat                           )
                   call errfnm ( 'FILE', dafu                          )
                   call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
-                  call chkout ( 'SPCAC'                               )
                   return
                end if
 
@@ -712,10 +686,8 @@
          call errint ( '*', iostat                                    )
          call errfnm ( 'FILE', dafu                                   )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
-         call chkout ( 'SPCAC'                                        )
          return
       end if
 
-      call chkout ( 'SPCAC' )
       return
       end

@@ -211,11 +211,8 @@
 !     Standard SPICE error handling.
 !
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZUNTNGL' )
 
       if ( nptr > maxcel ) then
 
@@ -225,7 +222,6 @@
          call errint ( '#1', nptr                           )
          call errint ( '#2', maxcel                         )
          call sigerr ( 'SPICE(BARRAYTOOSMALL)'              )
-         call chkout ( 'ZZUNTNGL'                           )
          return
 
       end if
@@ -260,7 +256,6 @@
             call errint ( '#1', ptrdex+2                     )
             call errint ( '#2', maxb                         )
             call sigerr ( 'SPICE(BARRAYTOOSMALL)'            )
-            call chkout ( 'ZZUNTNGL'                         )
             return
 
          end if
@@ -276,7 +271,6 @@
             call errint ( '#3', maxb                                )
             call errint ( '#4', ptrdex                              )
             call sigerr ( 'SPICE(BARRAYTOOSMALL)'                   )
-            call chkout ( 'ZZUNTNGL'                                )
             return
 
          end if
@@ -286,10 +280,7 @@
                          outlst(ptrdex + 1), &
                          outlst(ptrdex + 2)     )
 
-         if ( failed() ) then
-            call chkout ( 'ZZUNTNGL' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Increment pointer PTRDEX if we found any B-vals.
@@ -334,6 +325,5 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkout ( 'ZZUNTNGL' )
       return
       end

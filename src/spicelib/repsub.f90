@@ -199,11 +199,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'REPSUB' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the lengths of all the strings involved in this transaction.
@@ -221,7 +217,6 @@
 
          call errint ( '#', left )
          call sigerr ( 'SPICE(BEFOREBEGSTR)' )
-         call chkout ( 'REPSUB' )
          return
 
       else if ( right > inlen ) then
@@ -230,7 +225,6 @@
          call errint ( '#', right )
          call errint ( '#', inlen )
          call sigerr ( 'SPICE(PASTENDSTR)' )
-         call chkout ( 'REPSUB' )
          return
 
       else if ( right < left-1 ) then
@@ -239,7 +233,6 @@
          call errint ( '#', left  )
          call errint ( '#', right )
          call sigerr ( 'SPICE(BADSUBSTR)' )
-         call chkout ( 'REPSUB' )
          return
 
       end if
@@ -318,6 +311,5 @@
       end if
 
 
-      call chkout ( 'REPSUB' )
       return
       end

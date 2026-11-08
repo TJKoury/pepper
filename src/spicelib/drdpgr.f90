@@ -616,11 +616,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DRDPGR' )
 
 !
 !     Initialization.
@@ -651,7 +648,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', body                                  )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'DRDPGR'                                   )
          return
 
       end if
@@ -665,7 +661,6 @@
          call setmsg ( 'Equatorial radius was #.' )
          call errdp  ( '#', re                    )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-         call chkout ( 'DRDPGR'                   )
          return
 
       end if
@@ -680,7 +675,6 @@
          call setmsg ( 'Flattening coefficient was #.'  )
          call errdp  ( '#', f                           )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-         call chkout ( 'DRDPGR'                         )
          return
 
       end if
@@ -713,7 +707,6 @@
             call errch  ( '#', pmkvar                             )
             call errch  ( '#', kvalue                             )
             call sigerr ( 'SPICE(INVALIDOPTION)'                  )
-            call chkout ( 'DRDPGR'                                )
             return
 
          end if
@@ -740,7 +733,6 @@
             call errch  ( '#', pmkvar                                )
             call errch  ( '#', body                                  )
             call sigerr ( 'SPICE(MISSINGDATA)'                       )
-            call chkout ( 'DRDPGR'                                   )
             return
 
          end if
@@ -803,6 +795,5 @@
 
       end do
 
-      call chkout ( 'DRDPGR' )
       return
       end

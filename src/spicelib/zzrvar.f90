@@ -423,11 +423,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZRVAR' )
-      end if
+      if ( return() ) return
 !
 !     Initializations.
 !
@@ -466,10 +462,7 @@
 
          call rdkdat ( line, eof )
 
-         if ( eof ) then
-            call chkout ( 'ZZRVAR' )
-            return
-         end if
+         if ( eof ) return
 
 
 !
@@ -671,7 +664,6 @@
                call errch  ( '#', file(1:r1) )
                call errch  ( '#', line(1:r2) )
                call sigerr ( 'SPICE(BADVARASSIGN)' )
-               call chkout ( 'ZZRVAR' )
                return
 
             end if
@@ -703,7 +695,6 @@
                call errch  ( '#',        file(1 :r1) )
                call errint ( '#', ichar(line(at:at)) )
                call sigerr ( 'SPICE(NONPRINTINGCHAR)')
-               call chkout ( 'ZZRVAR' )
                return
             end if
 
@@ -763,7 +754,6 @@
                call errch  ( '#', file(1:r1) )
                call errch  ( '#', line(1:r2) )
                call sigerr ( 'SPICE(BADVARASSIGN)' )
-               call chkout ( 'ZZRVAR' )
                return
 
             end if
@@ -837,7 +827,6 @@
                call errint ( '#', number             )
                call errch  ( '#', file(1:r1)         )
                call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-               call chkout ( 'ZZRVAR' )
                return
 
             end if
@@ -994,7 +983,6 @@
                   call errint ( '#', number     )
                   call errch  ( '#', file(1:r1) )
                   call sigerr ( 'SPICE(BADVARASSIGN)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
                end if
@@ -1029,7 +1017,6 @@
                   call errint ( '#', number       )
                   call errch  ( '#', file  (1:r2) )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
                end if
@@ -1054,7 +1041,6 @@
                   call errint ( '#', number       )
                   call errch  ( '#', file  (1:r1) )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
                end if
@@ -1081,7 +1067,6 @@
                   call errint ( '#', number       )
                   call errch  ( '#', file  (1:r1) )
                   call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
 
@@ -1175,7 +1160,6 @@
                   call errint ( '#', number       )
                   call errch  ( '#', file  (1:r2) )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
                end if
@@ -1215,7 +1199,6 @@
                      call errch  ( '#', file  (1:r2) )
                      call errch  ( '#', varnam(1:r1) )
                      call sigerr ( 'SPICE(BADTIMESPEC)' )
-                     call chkout ( 'ZZRVAR' )
                      return
 
                   end if
@@ -1246,7 +1229,6 @@
                      call errch  ( '#', file            )
                      call errch  ( '#', error(1:lstnb)  )
                      call sigerr ( 'SPICE(BADTIMESPEC)' )
-                     call chkout ( 'ZZRVAR'             )
                      return
                   end if
 
@@ -1273,7 +1255,6 @@
                      call errch  ( '#',  file      )
                      call errch  ( '#', error(1:lstnb) )
                      call sigerr ( 'SPICE(NUMBEREXPECTED)' )
-                     call chkout ( 'ZZRVAR' )
                      return
                   end if
 
@@ -1300,7 +1281,6 @@
                   call errint ( '#', number       )
                   call errch  ( '#', file  (1:r1) )
                   call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  call chkout ( 'ZZRVAR' )
                   return
 
 
@@ -1381,7 +1361,6 @@
          call errint ( '#', number       )
          call errch  ( '#', file  (1:r1) )
          call sigerr ( 'SPICE(BADVARASSIGN)' )
-         call chkout ( 'ZZRVAR' )
          return
 
       end if
@@ -1393,6 +1372,5 @@
       name = varnam
 
 
-      call chkout ( 'ZZRVAR' )
       return
       end

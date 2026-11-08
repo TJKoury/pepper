@@ -1103,13 +1103,9 @@
 !
 !     Nobody has any business calling CKBSR directly.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'CKBSR' )
       call sigerr ( 'SPICE(CKBOGUSENTRY)' )
-      call chkout ( 'CKBSR' )
 
       return
 
@@ -1386,11 +1382,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKLPF' )
-      end if
+      if ( return () ) return
 
 !
 !     Don't allow a search to continue after loading a file; a new
@@ -1443,10 +1435,7 @@
 !
       call dafopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'CKLPF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine if the file is already in the table.
@@ -1560,7 +1549,6 @@
                           'the parameter FTSIZE.'                     )
             call errint ( '#', ftsize                                 )
             call sigerr ( 'SPICE(CKTOOMANYFILES)'                     )
-            call chkout ( 'CKLPF'                                     )
             return
 
          end if
@@ -1663,7 +1651,6 @@
       ftnum(nft) = next
 
 
-      call chkout ( 'CKLPF' )
       return
 
 
@@ -1878,11 +1865,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CKUPF' )
 
 !
 !     Don't allow a search to continue after unloading a file; a new
@@ -1915,10 +1899,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex == 0 ) then
-         call chkout ( 'CKUPF' )
-         return
-      end if
+      if ( findex == 0 ) return
 !
 !
 !     First get rid of the entry in the file table. Close the file
@@ -2022,7 +2003,6 @@
       end do
 
 
-      call chkout ( 'CKUPF' )
       return
 
 
@@ -2213,11 +2193,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKBSS' )
-      end if
+      if ( return () ) return
 
 !
 !     If we're starting a new search after passing through the
@@ -2257,7 +2233,6 @@
          call setmsg ( 'At least one CK file must be loaded ' // &
                        'by CKLPF before beginning a search.'       )
          call sigerr ( 'SPICE(NOLOADEDFILES)'                      )
-         call chkout ( 'CKBSS'                                     )
          return
 
       end if
@@ -2293,7 +2268,6 @@
       newsch = .true.
 
 
-      call chkout ( 'CKBSS' )
       return
 
 
@@ -2618,11 +2592,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKSNS' )
 
 !
 !     Initialize the segment list pointer to the saved value from
@@ -2805,7 +2776,6 @@
 
          call setmsg ( 'Must begin a search by calling CKBSS first.' )
          call sigerr ( 'SPICE(CALLCKBSSFIRST)' )
-         call chkout ( 'CKSNS'                 )
          return
 
       end if
@@ -2880,7 +2850,6 @@
                         savep  =  itbeg( iindex )
                         status = 'CHECK LIST'
 
-                        call chkout ( 'CKSNS' )
                         return
 
                      end if
@@ -3073,10 +3042,7 @@
 
             call dafbfs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'CKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'NEW SEGMENTS'
 
@@ -3101,10 +3067,7 @@
 
             call daffna ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'CKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -3120,10 +3083,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'CKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (       ( icd(1) == scinst ) &
                     .and. ( dcd(1) <= dcd(2) )  ) then
@@ -3171,10 +3131,7 @@
 
             call dafbbs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'CKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'OLD SEGMENTS'
 
@@ -3203,10 +3160,7 @@
 !
             call daffpa ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'CKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -3225,10 +3179,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'CKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (      ( icd(1) == scinst ) &
                    .and. ( dcd(1) <= dcd(2) )  ) then
@@ -3367,7 +3318,6 @@
 !
                      newsch = .false.
 
-                     call chkout ( 'CKSNS' )
                      return
 
                   end if
@@ -3593,10 +3543,7 @@
 
                call dafus ( descr, nd, ni, stdcd(1,new), sticd(1,new) )
 
-               if ( failed() ) then
-                  call chkout ( 'CKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              If the current list is empty, this append operation
@@ -3636,10 +3583,7 @@
 
                call dafus ( descr, nd, ni, stdcd(1,new), sticd(1,new) )
 
-               if ( failed() ) then
-                  call chkout ( 'CKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( itbeg(iindex) <= 0 ) then
 !
@@ -3890,7 +3834,6 @@
 !
                      newsch = .false.
 
-                     call chkout ( 'CKSNS' )
                      return
 
                   end if
@@ -3958,10 +3901,7 @@
                   call dafgs ( descr )
                   call dafus ( descr, nd, ni, dcd, icd )
 
-                  if ( failed() ) then
-                     call chkout ( 'CKSNS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
 
                   if ( scinst == icd(1) ) then
@@ -4057,7 +3997,6 @@
 !
                            newsch = .false.
 
-                           call chkout( 'CKSNS' )
                            return
 
                         end if
@@ -4148,7 +4087,6 @@
       newsch = .false.
 
 
-      call chkout ( 'CKSNS' )
       return
 
 

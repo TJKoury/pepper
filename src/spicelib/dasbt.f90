@@ -313,11 +313,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASBT' )
-      end if
+      if ( return () ) return
 !
 !     When converting a binary DAS file into its DAS transfer file
 !     equivalent, all of the data contained in the binary file is
@@ -465,7 +461,6 @@
 !        If an error occurred while opening the file check out and
 !        return to the caller.
 !
-         call chkout ( 'DASBT' )
          return
 
       end if
@@ -490,7 +485,6 @@
 !        out and return.
 !
          call dascls ( handle  )
-         call chkout ( 'DASBT' )
          return
 
       end if
@@ -513,7 +507,6 @@
          call errfnm ( '#', daslun                                   )
          call dascls ( handle                                        )
          call sigerr ( 'SPICE(BADDASFILE)'                           )
-         call chkout ( 'DASBT'                                       )
          return
 
       end if
@@ -531,7 +524,6 @@
          call errfnm ( '#', daslun                                   )
          call dascls ( handle                                        )
          call sigerr ( 'SPICE(BADDASFILE)'                           )
-         call chkout ( 'DASBT'                                       )
          return
 
       end if
@@ -556,7 +548,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DASBT'                                )
          return
 
        end if
@@ -576,7 +567,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DASBT'                                )
          return
 
       end if
@@ -597,7 +587,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DASBT'                                )
          return
 
       end if
@@ -615,7 +604,6 @@
 !        the binary file, then check out and return.
 !
          call dascls ( handle  )
-         call chkout ( 'DASBT' )
          return
 
       end if
@@ -633,7 +621,6 @@
 !        the binary file, then check out and return.
 !
          call dascls ( handle  )
-         call chkout ( 'DASBT' )
          return
 
       end if
@@ -693,7 +680,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DASBT'                                )
                return
 
             end if
@@ -712,7 +698,6 @@
 !              that we opened and then return to the caller.
 !
                call dascls ( handle  )
-               call chkout ( 'DASBT' )
                return
 
             end if
@@ -736,7 +721,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DASBT'                                )
                return
 
             end if
@@ -767,7 +751,6 @@
             call errfnm ( '#', xfrlun                             )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-            call chkout ( 'DASBT'                                 )
             return
 
          end if
@@ -794,7 +777,6 @@
 !        check out and return.
 !
          call dascls ( handle  )
-         call chkout ( 'DASBT' )
          return
 
       end if
@@ -841,7 +823,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DASBT'                                )
                return
 
             end if
@@ -868,7 +849,6 @@
 !              that we opened and then return to the caller.
 !
                call dascls ( handle  )
-               call chkout ( 'DASBT' )
                return
 
             end if
@@ -892,7 +872,6 @@
                call errfnm ( '#', xfrlun                             )
                call errint ( '#', iostat                             )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-               call chkout ( 'DASBT'                                 )
                return
 
             end if
@@ -924,7 +903,6 @@
             call errfnm ( '#', xfrlun                             )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-            call chkout ( 'DASBT'                                 )
             return
 
          end if
@@ -973,7 +951,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DASBT'                                )
                return
 
             end if
@@ -997,7 +974,6 @@
 !              that we opened and then return to the caller.
 !
                call dascls ( handle  )
-               call chkout ( 'DASBT' )
                return
 
             end if
@@ -1021,7 +997,6 @@
                call errfnm ( '#', xfrlun                             )
                call errint ( '#', iostat                             )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-               call chkout ( 'DASBT'                                 )
                return
 
             end if
@@ -1053,7 +1028,6 @@
             call errfnm ( '#', xfrlun                             )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-            call chkout ( 'DASBT'                                 )
             return
 
          end if
@@ -1102,7 +1076,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DASBT'                                )
                return
 
             end if
@@ -1126,7 +1099,6 @@
 !              that we opened and then return to the caller.
 !
                call dascls ( handle  )
-               call chkout ( 'DASBT' )
                return
 
             end if
@@ -1150,7 +1122,6 @@
                call errfnm ( '#', xfrlun                             )
                call errint ( '#', iostat                             )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-               call chkout ( 'DASBT'                                 )
                return
 
             end if
@@ -1182,7 +1153,6 @@
             call errfnm ( '#', xfrlun                             )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
-            call chkout ( 'DASBT'                                 )
             return
 
          end if
@@ -1193,6 +1163,5 @@
 !
       call dascls ( handle )
 
-      call chkout ( 'DASBT' )
       return
       end

@@ -465,7 +465,6 @@
 
       data                  first  / .true. /
 
-      call chkin  ( 'FRAMEX' )
       call setmsg ( 'A call has been made to the umbrella ' &
       //            'routine FRAMEX. This routine doesn''t do ' &
       //            'anything. It acts only as an umbrella ' &
@@ -473,7 +472,6 @@
       //            'probably indicates a misunderstanding in ' &
       //            'programming. ' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'FRAMEX' )
       return
 
 
@@ -653,9 +651,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     For efficiency, J2000 deserves special treatment.
@@ -665,7 +661,6 @@
          return
       end if
 
-      call chkin ( 'NAMFRM' )
 
 !
 !     Perform any needed first pass initializations.
@@ -691,10 +686,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'NAMFRM' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -751,10 +743,7 @@
             call prefix ( 'FRAME_', 0,                  pname )
             call gipool (  pname,   1, room, n, values, gotit )
 
-            if ( failed() ) then
-               call chkout ( 'NAMFRM' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( n == 1 .and. gotit ) then
 
@@ -784,7 +773,6 @@
 
       end if
 
-      call chkout ( 'NAMFRM' )
       return
 
 
@@ -972,9 +960,7 @@
 !
       frname = ' '
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     For efficiency, J2000 deserves special treatment.
@@ -984,7 +970,6 @@
          return
       end if
 
-      call chkin ( 'FRMNAM' )
 
 !
 !     Perform any needed first pass initializations.
@@ -1010,10 +995,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'FRMNAM' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -1082,7 +1064,6 @@
 
       end if
 
-      call chkout ( 'FRMNAM' )
       return
 
 
@@ -1347,9 +1328,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     For efficiency, J2000 deserves special treatment.
@@ -1362,7 +1341,6 @@
          return
       end if
 
-      call chkin ( 'FRINFO' )
 
 !
 !     Perform any needed first pass initializations.
@@ -1388,10 +1366,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'FRINFO' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -1470,7 +1445,6 @@
                                 'scalar-valued.'                      )
                   call errch  ( '#', pname                            )
                   call sigerr ( 'SPICE(INVALIDDIMENSION)'             )
-                  call chkout ( 'FRINFO'                              )
                   return
 
                end if
@@ -1484,10 +1458,7 @@
 !
                call zzdynbid ( lcfram, frcode, 'CENTER', cent )
 
-               if ( failed() ) then
-                  call chkout ( 'FRINFO' )
-                  return
-               end if
+               if ( failed() ) return
 
                found = .true.
 
@@ -1503,10 +1474,7 @@
                call zzdynvai ( lcfram, frcode, 'CLASS_ID', 1, n, values)
                clssid = values(1)
 
-               if ( failed() ) then
-                  call chkout ( 'FRINFO' )
-                  return
-               end if
+               if ( failed() ) return
 
 
 !              If we made it to this point, we successfully collected
@@ -1560,7 +1528,6 @@
 
       end if
 
-      call chkout ( 'FRINFO' )
       return
 
 
@@ -1747,11 +1714,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CIDFRM' )
 
 !
 !     Perform any needed first pass initializations.
@@ -1777,10 +1741,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'CIDFRM' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -1883,10 +1844,7 @@
                   call prefix ( 'FRAME_', 0,                  pname )
                   call gipool (  pname,   1, room, n, values, gotit )
 
-                  if ( failed() ) then
-                     call chkout ( 'CIDFRM' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( n == 1 .and. gotit ) then
 
@@ -1929,10 +1887,7 @@
 !
             call gipool ( lookup, 1, 1, n, values, gotit )
 
-            if ( failed() ) then
-               call chkout ( 'CIDFRM' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           We've got the frame ID, see if we already know about this
@@ -2015,7 +1970,6 @@
 !        One way or the other we've filled in the values at this
 !        point. Nothing left to do but check out and return.
 !
-         call chkout ( 'CIDFRM' )
          return
 
       end if
@@ -2030,7 +1984,6 @@
          frcode = 10013
          frname = 'IAU_EARTH'
          found  = .true.
-         call chkout ( 'CIDFRM' )
          return
 
       end if
@@ -2062,7 +2015,6 @@
 
       end if
 
-      call chkout ( 'CIDFRM' )
       return
 
 
@@ -2252,11 +2204,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CNMFRM' )
 
 !
 !     Perform any needed first pass initializations.
@@ -2282,10 +2231,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'CNMFRM' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -2390,10 +2336,7 @@
                   call prefix ( 'FRAME_', 0,                  pname )
                   call gipool (  pname,   1, room, n, values, gotit )
 
-                  if ( failed() ) then
-                     call chkout ( 'CNMFRM' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( n == 1 .and. gotit ) then
 
@@ -2436,10 +2379,7 @@
 !
             call gipool ( lookup, 1, 1, n, values, gotit )
 
-            if ( failed() ) then
-               call chkout ( 'CNMFRM' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           We've got the frame ID, see if we already know about this
@@ -2522,7 +2462,6 @@
 !        One way or the other we've filled in the values at this
 !        point. Nothing left to do but check out and return.
 !
-         call chkout ( 'CNMFRM' )
          return
 
       end if
@@ -2563,7 +2502,6 @@
 
       end if
 
-      call chkout ( 'CNMFRM' )
       return
 
 
@@ -2845,11 +2783,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CCIFRM' )
 
 !
 !     Perform any needed first pass initializations.
@@ -2875,10 +2810,7 @@
                          bnmlst, bnmpol, bnmnms, bnmidx, &
                          bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'CCIFRM' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -2906,7 +2838,6 @@
             cent   = center(i)
             found  = .true.
 
-            call chkout ( 'CCIFRM' )
             return
 
          end if
@@ -2937,10 +2868,7 @@
 
             call gipool ( kvbuff(i), 1, 1, n, kvclss, fnd )
 
-            if ( failed() ) then
-               call chkout ( 'CCIFRM' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 
@@ -2950,7 +2878,6 @@
                //            'associated with this keyword.'       )
                call errch  ( '#',  kvbuff(i)                       )
                call sigerr ( 'SPICE(INVALIDFRAMEDEF)'              )
-               call chkout ( 'CCIFRM'                              )
                return
 
             end if
@@ -2965,10 +2892,7 @@
 
                call gipool ( look2, 1, 1, n, kvclid, fnd )
 
-               if ( failed() ) then
-                  call chkout ( 'CCIFRM' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( .not. fnd ) then
 
@@ -2979,7 +2903,6 @@
                   //            'class ID assignment was not found.' )
                   call errch  ( '#',  kvbuff(i)                      )
                   call sigerr ( 'SPICE(INVALIDFRAMEDEF)'             )
-                  call chkout ( 'CCIFRM'                             )
                   return
 
                end if
@@ -3010,7 +2933,6 @@
                      //            'assignment was not found.'         )
                      call errch  ( '#',  kvbuff(i)                     )
                      call sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     call chkout ( 'CCIFRM'                            )
                      return
 
                   end if
@@ -3025,10 +2947,7 @@
 
                   call gipool ( look2, 1, 1, n, frcode, fnd )
 
-                  if ( failed() ) then
-                     call chkout ( 'CCIFRM' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( .not. fnd ) then
 
@@ -3038,7 +2957,6 @@
                      //            'assignment was not found.'         )
                      call errch  ( '#',  frname                        )
                      call sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     call chkout ( 'CCIFRM'                            )
                      return
 
                   end if
@@ -3064,7 +2982,6 @@
 !                 Exit here, whether or not we looked up the frame's
 !                 center successfully.
 !
-                  call chkout ( 'CCIFRM' )
                   return
 
                end if
@@ -3088,6 +3005,5 @@
 !     We drop down to this point only if no matching frame was found.
 !     The FOUND flag has already been set to .FALSE.
 !
-      call chkout ( 'CCIFRM' )
       return
       end

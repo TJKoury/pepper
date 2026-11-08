@@ -115,11 +115,8 @@
       real(wp)              mob
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZENUT80' )
 
 !
 !      Get nutation angles and their rates.  We're expecting
@@ -179,6 +176,5 @@
 
       call eul2xf ( eulang, 1, 3, 1, nutxf )
 
-      call chkout ( 'ZZENUT80' )
       return
       end

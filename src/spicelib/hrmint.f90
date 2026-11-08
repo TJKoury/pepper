@@ -267,20 +267,16 @@
 !
 !     Check in only if an error is detected.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No data, no interpolation.
 !
       if ( n < 1 ) then
 
-         call chkin  ( 'HRMINT'                              )
          call setmsg ( 'Array size must be positive; was #.' )
          call errint ( '#',  n                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                  )
-         call chkout ( 'HRMINT'                              )
          return
 
       end if
@@ -315,13 +311,11 @@
 
          if ( denom == 0.0_wp ) then
 
-            call chkin  ( 'HRMINT'                  )
             call setmsg ( 'XVALS(#) = XVALS(#) = #' )
             call errint ( '#',   i                  )
             call errint ( '#',   i+1                )
             call errdp  ( '#',   xvals(i)           )
             call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
-            call chkout ( 'HRMINT'                  )
             return
 
          end if
@@ -396,13 +390,11 @@
 
             if ( denom == 0.0_wp ) then
 
-               call chkin  ( 'HRMINT'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )
                call errint ( '#',   xi                 )
                call errint ( '#',   xij                )
                call errdp  ( '#',   xvals(xi)          )
                call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
-               call chkout ( 'HRMINT'                  )
                return
 
             end if

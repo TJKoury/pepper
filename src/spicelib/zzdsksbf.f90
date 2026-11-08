@@ -295,13 +295,9 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZDSKSBF'          )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZDSKSBF'          )
       return
 
 
@@ -455,11 +451,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZSBFXR' )
 
 
       if ( first ) then
@@ -495,10 +488,7 @@
                          stoff,  stctr,  strad                  )
       end if
 
-      if ( failed() ) then
-         call chkout ( 'ZZSBFXR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the index of the input body ID in the body table. If
@@ -517,10 +507,7 @@
                          btstsz, sthan,  stdscr, stdlad, stfree, &
                          stoff,  stctr,  strad                  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSBFXR' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        The new body's position in the body table is at the end.
 !
@@ -541,7 +528,6 @@
                       raydir,     xpt,        segidx,      locdc, &
                       locic,      found                               )
 
-      call chkout ( 'ZZSBFXR' )
       return
 
 
@@ -728,11 +714,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZSBFXRI' )
 
 
       if ( first ) then
@@ -768,10 +751,7 @@
                          stoff,  stctr,  strad                  )
       end if
 
-      if ( failed() ) then
-         call chkout ( 'ZZSBFXRI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the index of the input body ID in the body table. If
@@ -790,10 +770,7 @@
                          btstsz, sthan,  stdscr, stdlad, stfree, &
                          stoff,  stctr,  strad                  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSBFXRI' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        The new body's position in the body table is at the end.
 !
@@ -814,10 +791,7 @@
                       raydir,     xpt,        segidx,      dc, &
                       ic,         found                                )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSBFXRI' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( found ) then
 !
@@ -833,7 +807,6 @@
 
       end if
 
-      call chkout ( 'ZZSBFXRI' )
       return
 
 
@@ -983,11 +956,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSBFNRM' )
 
 !
 !     The following block of code is straight cut-and-paste from
@@ -1027,10 +997,7 @@
                          stoff,  stctr,  strad                  )
       end if
 
-      if ( failed() ) then
-         call chkout ( 'ZZSBFNRM' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the index of the input body ID in the body table. If
@@ -1048,10 +1015,7 @@
                          btstsz, sthan,  stdscr, stdlad, stfree, &
                          stoff,  stctr,  strad                  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSBFNRM' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        The new body's position in the body table is at the end.
 !
@@ -1071,7 +1035,6 @@
                       stdscr(1,j), stoff(1,j), stctr(1,j), strad(j), &
                       point,       normal                              )
 
-      call chkout ( 'ZZSBFNRM' )
       return
 
       end

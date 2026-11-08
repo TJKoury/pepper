@@ -427,11 +427,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -441,10 +438,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -486,7 +480,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'                )
-         call chkout ( rname                                )
          return
 
       end if
@@ -500,10 +493,7 @@
       call trgsub ( et,     ref,    trgctr, sttctr )
       call spkssb ( trgctr, et,     ref,    ctrssb )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       call vaddg  ( ctrssb, sttctr, 6,      ssbtrg )
       call vsubg  ( ssbtrg, stobs,  6,      starg  )
@@ -519,7 +509,6 @@
 !
          dlt = 0
 
-         call chkout ( rname )
          return
 
       end if
@@ -538,7 +527,6 @@
 !
 !        LT and DLT are both set, so we can return.
 !
-         call chkout ( rname )
          return
 
       end if
@@ -580,10 +568,7 @@
          call trgsub (         epoch,  ref, trgctr, sttctr )
          call spkssb ( trgctr, epoch,  ref,         ctrssb )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call vaddg  ( ctrssb, sttctr, 6,           ssbtrg )
          call vsubg  ( ssbtrg, stobs,  6,           starg  )
@@ -702,7 +687,6 @@
       //               'light time derivative cannot be ' &
       //               'computed.'                            )
          call sigerr ( 'SPICE(DIVIDEBYZERO)'                  )
-         call chkout ( rname                                  )
          return
 
       end if
@@ -720,6 +704,5 @@
                   -1.0_wp,              stobs(4),   starg(4) )
 
 
-      call chkout ( rname )
       return
       end

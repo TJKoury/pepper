@@ -151,11 +151,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKFRX' )
 
 !
 !     Determine the data type of the column, and look up the value
@@ -196,7 +193,6 @@
          call errint ( '#',     coldsc(ordidx)                      )
          call errint ( '#',     dtype                               )
          call sigerr ( 'SPICE(ITEMNOTFOUND)'                        )
-         call chkout ( 'ZZEKFRX'                                    )
          return
 
       end if
@@ -217,7 +213,6 @@
          call errint ( '#',     recno                                  )
          call errint ( '#',     coldsc(ordidx)                         )
          call sigerr ( 'SPICE(ITEMNOTFOUND)'                           )
-         call chkout ( 'ZZEKFRX'                                       )
          return
 
       end if
@@ -269,12 +264,10 @@
          call errint ( '#',     recno                               )
          call errint ( '#',     coldsc(ordidx)                      )
          call sigerr ( 'SPICE(ITEMNOTFOUND)'                        )
-         call chkout ( 'ZZEKFRX'                                    )
          return
 
       end if
 
 
-      call chkout ( 'ZZEKFRX' )
       return
       end

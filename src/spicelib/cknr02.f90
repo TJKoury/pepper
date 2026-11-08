@@ -398,11 +398,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKNR02' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -430,7 +426,6 @@
                        'descriptor shows type = #.'                   )
          call errint ( '#', icd ( 3 )                                 )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
-         call chkout ( 'CKNR02'                                       )
          return
       end if
 
@@ -483,6 +478,5 @@
       nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
 
-      call chkout ( 'CKNR02' )
       return
       end

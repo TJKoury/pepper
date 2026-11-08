@@ -289,11 +289,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'WNFILD' )
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -330,6 +327,5 @@
 
       end if
 
-      call chkout ( 'WNFILD' )
       return
       end

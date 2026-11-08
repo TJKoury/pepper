@@ -240,12 +240,10 @@
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
-         call chkin  ( 'ZZEKRD06'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
          call errint ( '#',  colidx                            )
          call errint ( '#',  ncols                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKRD06'                              )
          return
 
       end if
@@ -267,7 +265,6 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRD06'                                  )
          call setmsg ( 'String value has length #; output string '// &
                        'can hold only # characters.  COLUMN = #; '// &
                        'SEGNO = #; RECNO = #; EK = #'              )
@@ -278,7 +275,6 @@
          call errint ( '#',  recno                                 )
          call errhan ( '#',  handle                                )
          call sigerr ( 'SPICE(STRINGTRUNCATED)'                    )
-         call chkout ( 'ZZEKRD06'                                  )
          return
 
       end if
@@ -495,7 +491,6 @@
 
          call zzekcnam ( handle,   coldsc, column )
 
-         call chkin  ( 'ZZEKRD06'                                    )
          call setmsg ( 'Attempted to read uninitialized column '    // &
                        'entry.  SEGNO = #; COLUMN = #; RECNO = #; ' // &
                        'EK = #'                                      )
@@ -504,7 +499,6 @@
          call errint ( '#',  recno                                   )
          call errhan ( '#',  handle                                  )
          call sigerr ( 'SPICE(UNINITIALIZED)'                        )
-         call chkout ( 'ZZEKRD06'                                    )
          return
 
 
@@ -516,7 +510,6 @@
 
          call zzekcnam ( handle,   coldsc, column )
 
-         call chkin  ( 'ZZEKRD06'                                )
          call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLUMN =  #; RECNO = #; EK = #'          )
          call errint ( '#',  segdsc(snoidx)                      )
@@ -524,7 +517,6 @@
          call errint ( '#',  recno                               )
          call errhan ( '#',  handle                              )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKRD06'                                )
          return
 
       end if

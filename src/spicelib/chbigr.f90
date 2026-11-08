@@ -364,21 +364,17 @@
 !
 !     Test RETURN but don't check in. Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check the expansion degree.
 !
       if ( degp < 0 )  then
 
-         call chkin  ( 'CHBIGR'                                )
          call setmsg ( 'Expansion degree must be non-negative ' &
          //            'but was #.'                            )
          call errint ( '#', degp                               )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                  )
-         call chkout ( 'CHBIGR'                                )
          return
 
       end if
@@ -388,12 +384,10 @@
 !
       if ( x2s(2) <= 0.0_wp )  then
 
-         call chkin  ( 'CHBIGR'                            )
          call setmsg ( 'Interval radius must be positive ' &
          //            'but was #.'                        )
          call errdp  ( '#', x2s(2)                         )
          call sigerr ( 'SPICE(INVALIDRADIUS)'              )
-         call chkout ( 'CHBIGR'                            )
          return
 
       end if

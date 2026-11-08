@@ -183,12 +183,10 @@
 !
       if (  nrkeys  /=  ( mxkeyr + 1 )  ) then
 
-         call chkin  ( 'ZZEKTR13'                                 )
          call setmsg ( 'Number of keys in root = #; should be #.' )
          call errint ( '#',  nrkeys                               )
          call errint ( '#',  mxkeyr+1                             )
          call sigerr ( 'SPICE(BUG)'                               )
-         call chkout ( 'ZZEKTR13'                                 )
          return
 
       end if

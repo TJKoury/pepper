@@ -307,11 +307,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCTIKS' )
-      end if
+      if ( return () ) return
 
 !
 !     If the spacecraft clock type is supported by NAIF then
@@ -326,12 +322,10 @@
          call setmsg ( 'Clock type # is not supported.' )
          call errint ( '#', type                        )
          call sigerr ( 'SPICE(NOTSUPPORTED)'            )
-         call chkout ( 'SCTIKS'                         )
          return
 
       end if
 
-      call chkout ( 'SCTIKS' )
 
       return
       end

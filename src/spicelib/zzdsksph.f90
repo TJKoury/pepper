@@ -292,11 +292,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKSPH' )
 
       if ( first ) then
          call zzctruin ( ctr )
@@ -310,7 +307,6 @@
          call setmsg ( 'NSURF must be non-negative but was #.' )
          call errint ( '#', nsurf                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
-         call chkout ( 'ZZDSKSPH'                              )
          return
 
       end if
@@ -380,10 +376,7 @@
 !
          call zzdskbbl ( bodyid )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDSKSPH' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Fetch segment DSK descriptors for the indicated body and
@@ -406,10 +399,7 @@
          call zzdsksbd ( bodyid )
          call zzdsksns ( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDSKSPH' )
-            return
-         end if
+         if ( failed() ) return
 
          do while ( segfnd )
 
@@ -445,7 +435,6 @@
                      //            'for frame ID #.'                  )
                      call errint ( '#', framid                        )
                      call sigerr ( 'SPICE(NOFRAMEDATA)'               )
-                     call chkout ( 'ZZDSKSPH'                         )
                      return
 
                   end if
@@ -461,10 +450,7 @@
 
                      call frmnam ( framid, frname )
 
-                     if ( failed() ) then
-                        call chkout ( 'ZZDSKSPH' )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      if ( frname == ' ' ) then
 
@@ -472,7 +458,6 @@
                         //            'for frame ID #.'          )
                         call errint ( '#', framid                )
                         call sigerr ( 'SPICE(FRAMENAMENOTFOUND)' )
-                        call chkout ( 'ZZDSKSPH'                 )
                         return
 
                      end if
@@ -482,10 +467,7 @@
                      call spkgps ( frcent, midtim, frname, &
                                    bodyid, offset, lt     )
 
-                     if ( failed() ) then
-                        call chkout ( 'ZZDSKSPH' )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      offmag = vnorm( offset )
 
@@ -565,7 +547,6 @@
                   //            'currently supported.'        )
                   call errint ( '#', corsys                   )
                   call sigerr ( 'SPICE(NOTSUPPORTED)'         )
-                  call chkout ( 'ZZDSKSPH'                    )
                   return
 
                end if
@@ -620,10 +601,7 @@
             call zzdsksbd( bodyid )
             call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSPH' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -669,7 +647,6 @@
          call setmsg ( errmsg                   )
          call errint ( '#', bodyid              )
          call sigerr ( 'SPICE(DSKDATANOTFOUND)' )
-         call chkout ( 'ZZDSKSPH'               )
          return
 
       end if
@@ -692,6 +669,5 @@
 
       end if
 
-      call chkout ( 'ZZDSKSPH' )
       return
       end

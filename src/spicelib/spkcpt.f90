@@ -1035,11 +1035,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKCPT' )
 
 
 !
@@ -1060,6 +1057,5 @@
                     outref, refloc, abcorr, obsrvr, state, lt )
 
 
-      call chkout ( 'SPKCPT' )
       return
       end

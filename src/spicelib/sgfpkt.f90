@@ -225,11 +225,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SGFPKT' )
 !
 !     Perform the needed initialization
 !
@@ -239,10 +236,7 @@
       call sgmeta ( handle, descr, pktsz,  mypksz )
       call sgmeta ( handle, descr, pktbas, mypktb )
 
-      if ( failed() ) then
-         call chkout ( 'SGFPKT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Perform checks on the inputs for reasonableness.
@@ -258,7 +252,6 @@
          call errint ( '#', first                                 )
          call errint ( '#', last                                  )
          call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'                )
-         call chkout ( 'SGFPKT'                                   )
          return
 
       end if
@@ -271,7 +264,6 @@
          call errint ( '#', last                            )
          call errint ( '#', first                           )
          call sigerr ( 'SPICE(REQUESTOUTOFORDER)'           )
-         call chkout ( 'SGFPKT'                             )
          return
 
       end if
@@ -327,10 +319,7 @@
 
                call dafgda ( handle, b, e, values(voffst) )
 
-               if ( failed() ) then
-                  call chkout ( 'SGFPKT' )
-                  return
-               end if
+               if ( failed() ) return
 
             end do
 
@@ -352,10 +341,7 @@
          call sgmeta ( handle, descr, pdrbas, mypdrb )
          call sgmeta ( handle, descr, npdr,   mynpdr )
 
-         if ( failed() ) then
-            call chkout ( 'SGFPKT' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Each packet has a different size, so we need to fetch each one
 !        individually, keeping track of the ends and things. We assume
@@ -380,10 +366,7 @@
 !
             call dafgda( handle, b, e, dtemp )
 
-            if ( failed() ) then
-               call chkout ( 'SGFPKT' )
-               return
-            end if
+            if ( failed() ) return
 
             begin1 = int ( dtemp(1) )
             begin2 = int ( dtemp(2) )
@@ -400,10 +383,7 @@
 !
             call dafgda ( handle, b, e, values(voffst) )
 
-            if ( failed() ) then
-               call chkout ( 'SGFPKT' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           Compute the end for packet I and store it.
 !
@@ -414,7 +394,6 @@
 
       end if
 
-      call chkout ( 'SGFPKT' )
       return
 
       end

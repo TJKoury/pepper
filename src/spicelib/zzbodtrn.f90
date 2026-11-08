@@ -801,9 +801,7 @@
       if ( return() ) then
          return
       else
-         call chkin  ( 'ZZBODTRN'          )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'ZZBODTRN'          )
       end if
 
       return
@@ -1022,11 +1020,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODN2C' )
-      end if
+      if ( return() ) return
 
 !
 !     Assume we will not find the code we seek.
@@ -1055,10 +1049,7 @@
 !
          call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODN2C' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
@@ -1067,10 +1058,7 @@
                          dnmlst, dnmpol, dnmnms, dnmidx, &
                          didlst, didpol, didids, dididx  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODN2C' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
@@ -1078,10 +1066,7 @@
 !
          call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODN2C' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -1117,7 +1102,6 @@
 
             nodata = .true.
 
-            call chkout ( 'ZZBODN2C' )
             return
 
          end if
@@ -1146,7 +1130,6 @@
          if ( i /= 0 ) then
             code  = kercod( knmidx( i ) )
             found = .true.
-            call chkout ( 'ZZBODN2C' )
             return
          end if
 
@@ -1165,7 +1148,6 @@
 
       end if
 
-      call chkout ( 'ZZBODN2C' )
       return
 
 
@@ -1381,11 +1363,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODC2N' )
-      end if
+      if ( return() ) return
 
 !
 !     Assume we will not find the name we seek.
@@ -1414,10 +1392,7 @@
 !
          call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODC2N' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
@@ -1426,10 +1401,7 @@
                          dnmlst, dnmpol, dnmnms, dnmidx, &
                          didlst, didpol, didids, dididx  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODC2N' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
@@ -1437,10 +1409,7 @@
 !
          call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODC2N' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -1476,7 +1445,6 @@
 
             nodata = .true.
 
-            call chkout ( 'ZZBODC2N' )
             return
 
          end if
@@ -1499,7 +1467,6 @@
          if ( i /= 0 ) then
             name  = kernam(kididx(i))
             found = .true.
-            call chkout ( 'ZZBODC2N' )
             return
          end if
 
@@ -1560,7 +1527,6 @@
 
       end if
 
-      call chkout ( 'ZZBODC2N' )
       return
 
 
@@ -1825,11 +1791,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODDEF' )
-      end if
+      if ( return() ) return
 
 !
 !     On the first pass through this entry point, initialize the
@@ -1853,10 +1815,7 @@
 !
          call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODDEF' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
@@ -1865,10 +1824,7 @@
                          dnmlst, dnmpol, dnmnms, dnmidx, &
                          didlst, didpol, didids, dididx  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODDEF' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
@@ -1876,10 +1832,7 @@
 !
          call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODDEF' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -1900,7 +1853,6 @@
          //            'the NAIF_BODY_NAME array.'               )
          call errint ( '#', i                                    )
          call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
-         call chkout ( 'ZZBODDEF'                                )
          return
 
       end if
@@ -1965,7 +1917,6 @@
 
             defnam ( index ) = name
 
-            call chkout ( 'ZZBODDEF' )
             return
 
          end if
@@ -2000,7 +1951,6 @@
             call errch  ( '#', name                                 )
             call errint ( '#', defsiz                               )
             call sigerr ( 'SPICE(TOOMANYPAIRS)'                     )
-            call chkout ( 'ZZBODDEF'                                )
             return
 
          end if
@@ -2034,7 +1984,6 @@
                       dnmlst, dnmpol, dnmnms, dnmidx, &
                       didlst, didpol, didids, dididx  )
 
-      call chkout ( 'ZZBODDEF' )
       return
 
 
@@ -2155,11 +2104,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODKIK' )
-      end if
+      if ( return() ) return
 
 !
 !     On the first pass through this entry point, initialize the
@@ -2183,10 +2128,7 @@
 !
          call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODKIK' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Populate the initial built-in/BODDEF hashes.
@@ -2195,10 +2137,7 @@
                          dnmlst, dnmpol, dnmnms, dnmidx, &
                          didlst, didpol, didids, dididx  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODKIK' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
@@ -2206,10 +2145,7 @@
 !
          call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODKIK' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -2246,7 +2182,6 @@
 
             nodata = .true.
 
-            call chkout ( 'ZZBODKIK' )
             return
 
          end if
@@ -2255,7 +2190,6 @@
 
       end if
 
-      call chkout ( 'ZZBODKIK' )
       return
 
 
@@ -2351,11 +2285,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODRST' )
-      end if
+      if ( return() ) return
 
 !
 !     On the first pass through this entry point, initialize the
@@ -2379,10 +2309,7 @@
 !
          call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODRST' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
@@ -2391,10 +2318,7 @@
                          dnmlst, dnmpol, dnmnms, dnmidx, &
                          didlst, didpol, didids, dididx  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODRST' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
@@ -2402,10 +2326,7 @@
 !
          call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         if ( failed() ) then
-            call chkout ( 'ZZBODRST' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -2444,7 +2365,6 @@
 
       end if
 
-      call chkout ( 'ZZBODRST' )
       return
 
 
@@ -2617,9 +2537,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Check for updates to the kernel pool variables.
@@ -2631,7 +2549,6 @@
 !
 !        Check in because ZZBODKER can fail.
 !
-         call chkin ( 'ZZBCTRCK' )
 
 !
 !        Conservatively increment the ZZBODTRN state counter in
@@ -2650,14 +2567,12 @@
 
             nodata = .true.
 
-            call chkout ( 'ZZBCTRCK' )
             return
 
          end if
 
          nodata = .false.
 
-         call chkout ( 'ZZBCTRCK' )
 
       end if
 

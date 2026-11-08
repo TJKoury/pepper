@@ -496,11 +496,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW09' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -512,7 +508,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW09'                                    )
          return
 
       end if
@@ -527,7 +522,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW09'                                    )
          return
 
       end if
@@ -545,7 +539,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW09'                                )
             return
 
          end if
@@ -561,7 +554,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW09'                                  )
          return
 
       end if
@@ -578,7 +570,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW09'                                        )
          return
 
       end if
@@ -596,7 +587,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
-         call chkout ( 'SPKW09'                                        )
          return
 
       end if
@@ -616,7 +606,6 @@
             call errint ( '#',  i                                     )
             call errdp  ( '#',  epochs(i-1)                           )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
-            call chkout ( 'SPKW09'                                    )
             return
          else
             maxtim = epochs(i)
@@ -634,7 +623,6 @@
          call errdp  ( '#',  first                                    )
          call errdp  ( '#',  epochs(1)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW09'                                       )
          return
 
       else if (  epochs(n) < last ) then
@@ -643,7 +631,6 @@
          call errdp  ( '#',  last                                     )
          call errdp  ( '#',  epochs(n)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW09'                                       )
          return
 
       end if
@@ -676,10 +663,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW09' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     The type 9 segment structure is eloquently described by this
 !     diagram from the SPK Required Reading:
@@ -738,6 +722,5 @@
       end if
 
 
-      call chkout ( 'SPKW09' )
       return
       end

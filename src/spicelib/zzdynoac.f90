@@ -231,11 +231,8 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDYNOAC' )
 
 !
 !     Nothing found yet.
@@ -250,10 +247,7 @@
 !
       call intstr ( frcode, cdestr )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDYNOAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the lengths of the input frame code, name and item.
@@ -318,7 +312,6 @@
             call errint ( '#',  reqnam                              )
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            call chkout ( 'ZZDYNOAC'                                )
             return
 
 
@@ -328,7 +321,6 @@
 !           and the frame name-based variable name is too long to
 !           look up.
 !
-            call chkout ( 'ZZDYNOAC' )
             return
 
          end if
@@ -345,7 +337,6 @@
 !
 !           The FOUND flag is set appropriately.
 !
-            call chkout ( 'ZZDYNOAC' )
             return
 
          end if
@@ -372,7 +363,6 @@
          call errch  ( '#',  kvname                                 )
          call errch  ( '#',  frname                                 )
          call sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
-         call chkout ( 'ZZDYNOAC'                                   )
          return
 
       end if
@@ -391,7 +381,6 @@
          call errint ( '#',  maxn                                   )
          call errint ( '#',  n                                      )
          call sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
-         call chkout ( 'ZZDYNOAC'                                   )
          return
 
       end if
@@ -407,13 +396,11 @@
                        'indicated it was present in pool.'  )
          call errch  ( '#',  kvname                         )
          call sigerr ( 'SPICE(BUG)'                         )
-         call chkout ( 'ZZDYNOAC'                           )
          return
 
       end if
 
 
-      call chkout ( 'ZZDYNOAC' )
       return
       end
 

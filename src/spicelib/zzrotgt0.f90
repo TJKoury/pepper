@@ -183,11 +183,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZROTGT0' )
 
 !
 !     Get all the needed information about this frame.
@@ -199,7 +196,6 @@
          call cleard ( 9, rotate )
          outfrm = 0
 
-         call chkout ( 'ZZROTGT0' )
          return
 
       end if
@@ -279,7 +275,6 @@
          call errint ( '#', type  )
          call errch  ( '#', versn )
          call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         call chkout ( 'ZZROTGT0'                  )
          return
 
       end if
@@ -296,6 +291,5 @@
 
       end if
 
-      call chkout ( 'ZZROTGT0' )
       return
       end

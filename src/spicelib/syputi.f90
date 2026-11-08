@@ -232,11 +232,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYPUTI' )
-      end if
+      if ( return () ) return
 
 !
 !     Check to see if the number of values is a valid quantity.
@@ -245,7 +241,6 @@
          call setmsg ( 'SYPUTI: The dimension of the values array is' // &
                        'less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
-         call chkout ( 'SYPUTI' )
          return
       end if
 
@@ -341,6 +336,5 @@
       end if
 
 
-      call chkout ( 'SYPUTI' )
       return
       end

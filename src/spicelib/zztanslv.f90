@@ -433,11 +433,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZTANSLV' )
 
 
 !
@@ -448,7 +445,6 @@
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
-         call chkout ( 'ZZTANSLV'                              )
          return
 
       end if
@@ -464,7 +460,6 @@
          call errdp  ( '#', start                )
          call errdp  ( '#', finish               )
          call sigerr ( 'SPICE(BOUNDSOUTOFORDER)' )
-         call chkout ( 'ZZTANSLV'                )
          return
 
       end if
@@ -484,7 +479,6 @@
          call errdp  ( '#1', tol                                 )
          call errdp  ( '#2', start                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'                 )
-         call chkout ( 'ZZTANSLV'                                )
          return
 
       end if
@@ -505,7 +499,6 @@
          call errdp  ( '#1', tol                                 )
          call errdp  ( '#2', finish                              )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'                 )
-         call chkout ('ZZTANSLV'                                 )
          return
 
       end if
@@ -522,7 +515,6 @@
             //            'must be positive.'                 )
             call errdp  ( '#1', step                          )
             call sigerr ( 'SPICE(INVALIDCONSTSTEP)'           )
-            call chkout ('ZZTANSLV'                           )
             return
 
          end if
@@ -537,7 +529,6 @@
             //            'the search will advance.'        )
             call errdp  ( '#1', step                        )
             call sigerr ( 'SPICE(INVALIDCONSTSTEP)'         )
-            call chkout ('ZZTANSLV'                         )
             return
 
          end if
@@ -575,10 +566,7 @@
 !
       call udcond ( curx, cursta, xpoint )
 
-      if ( failed() ) then
-         call chkout (  'ZZTANSLV' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( cursta ) then
          call vequ ( xpoint, prvpnt )
@@ -646,10 +634,7 @@
 
             call udstep ( curx, xstep )
 
-            if ( failed() ) then
-               call chkout (  'ZZTANSLV' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -664,10 +649,7 @@
 !
          call udcond ( curx, cursta, xpoint )
 
-         if ( failed() ) then
-            call chkout (  'ZZTANSLV' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( cursta ) then
             call vequ ( xpoint, prvpnt )
@@ -694,10 +676,7 @@
 
                call udstep ( curx, xstep )
 
-               if ( failed() ) then
-                  call chkout (  'ZZTANSLV' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -708,10 +687,7 @@
 !
             call udcond ( curx, cursta, xpoint )
 
-            if ( failed() ) then
-               call chkout ( 'ZZTANSLV' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( cursta ) then
 !
@@ -759,7 +735,6 @@
                call errdp  ( '#',  x1                                  )
                call errdp  ( '#',  x2                                  )
                call sigerr ( 'SPICE(INVALIDSTEP)'                      )
-               call chkout ( 'ZZTANSLV'                                )
                return
 
             end if
@@ -803,7 +778,6 @@
                   call errdp  ( '#1', tol              )
                   call errint ( '#2', mxloop           )
                   call sigerr ( 'SPICE(NOCONVERGENCE)' )
-                  call chkout ( 'ZZTANSLV'             )
                   return
 
                end if
@@ -818,10 +792,7 @@
 !              Check for an error signal. The default refinement
 !              routine, GFREFN, does not include error checks.
 !
-               if ( failed() ) then
-                  call chkout (  'ZZTANSLV' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Check whether T is between X1 and X2.  If
@@ -913,10 +884,7 @@
 
                call zzwninsd ( begin, trnstn, contxt, result )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZTANSLV' )
-                  return
-               end if
+               if ( failed() ) return
 
             else
 !
@@ -962,7 +930,6 @@
                   //            'point saved.'                        )
                   call errdp  ( '#', trnstn                           )
                   call sigerr ( 'SPICE(BUG)'                          )
-                  call chkout ( 'ZZTANSLV'                            )
                   return
 
                end if
@@ -980,7 +947,6 @@
                //            'RESULT) 3-vectors; this size is #.'    )
                call errint ( '#', sized(result)                      )
                call sigerr ( 'SPICE(ARRAYTOOSMALL)'                  )
-               call chkout ( 'ZZTANSLV'                              )
                return
 
             end if
@@ -1018,7 +984,6 @@
          endflg(2) = .true.
       end if
 
-      call chkout (  'ZZTANSLV' )
       return
       end
 

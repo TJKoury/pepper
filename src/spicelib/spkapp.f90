@@ -812,11 +812,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKAPP' )
-      end if
+      if ( return () ) return
 
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -840,7 +836,6 @@
                           'not supported.'                         )
             call errch  ( '#', abcorr                              )
             call sigerr ( 'SPICE(SPKINVALIDOPTION)'                )
-            call chkout ( 'SPKAPP'                                 )
             return
 
          end if
@@ -879,7 +874,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( 'SPKAPP'                             )
          return
 
       end if
@@ -970,6 +964,5 @@
       end if
 
 
-      call chkout ( 'SPKAPP' )
       return
       end

@@ -301,11 +301,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'WNINSD' )
 
 !
 !     Get the size and cardinality of the window.
@@ -322,7 +319,6 @@
          call errdp  ( '*', left  )
          call errdp  ( '*', right )
          call sigerr ( 'SPICE(BADENDPOINTS)' )
-         call chkout ( 'WNINSD' )
          return
 
 !
@@ -344,7 +340,6 @@
 
          end if
 
-         call chkout ( 'WNINSD' )
          return
 
       end if
@@ -396,7 +391,6 @@
 
             call excess ( 2, 'window' )
             call sigerr ( 'SPICE(WINDOWEXCESS)' )
-            call chkout ( 'WNINSD' )
             return
 
          end if
@@ -449,6 +443,5 @@
 
       end if
 
-      call chkout ( 'WNINSD' )
       return
       end

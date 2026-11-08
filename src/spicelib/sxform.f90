@@ -230,11 +230,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SXFORM' )
 
 !
 !     Initialization.
@@ -287,6 +284,5 @@
 
       end if
 
-      call chkout ( 'SXFORM' )
       return
       end

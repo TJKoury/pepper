@@ -192,7 +192,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'WNCOMD' )
 
 
 !
@@ -214,7 +213,6 @@
          call setmsg ( 'WNCOMD: Left endpoint may not exceed right' // &
                        ' endpoint.' )
          call sigerr ( 'SPICE(BADENDPOINTS)' )
-         call chkout ( 'WNCOMD' )
          return
       end if
 
@@ -231,7 +229,6 @@
 
          call wninsd ( left, right, result )
 
-         call chkout ( 'WNCOMD' )
          return
 
       end if
@@ -294,7 +291,6 @@
          call wninsd ( window(i), right, result )
       end if
 
-      call chkout ( 'WNCOMD' )
 
       return
       end

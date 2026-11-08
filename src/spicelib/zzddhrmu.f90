@@ -157,9 +157,7 @@
 !     First check to see if NUT is 0.  If so, just return, as there
 !     are no rows to remove.
 !
-      if ( nut == 0 ) then
-         return
-      end if
+      if ( nut == 0 ) return
 
 !
 !     Check to see if we found the UINDEX in the unit table.
@@ -167,14 +165,12 @@
 !
       if ( ( uindex > nut ) .or. ( uindex < 1 ) ) then
 
-         call chkin  ( 'ZZDDHRMU'                                     )
          call setmsg ( 'Attempt to remove row # from the unit table ' &
          //            'failed because valid row indices range from ' &
          //            '1 to NUT.'                                    )
          call errint ( '#', uindex                                    )
          call errint ( '#', nut                                       )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
-         call chkout ( 'ZZDDHRMU'                                     )
          return
 
       end if

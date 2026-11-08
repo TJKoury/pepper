@@ -286,9 +286,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Handle the case when we are looking at the same file and segment
@@ -329,14 +327,12 @@
                  ( ( mnemon > metasz ) .and. &
                    ( mnemon /= nmeta  ) )           ) then
 
-               call chkin ( 'SGMETA' )
                value = -1
                call setmsg ( 'The item requested, #, is not one of the' &
                //            ' recognized meta data items associated' &
                //            ' with this generic segment.'             )
                call errint ( '#',   mnemon                             )
                call sigerr ( 'SPICE(UNKNOWNMETAITEM)'                  )
-               call chkout ( 'SGMETA'                                  )
                return
 
             end if
@@ -359,16 +355,12 @@
 !     we need to fetch them.  First check in.
 !
 
-      call chkin ( 'SGMETA' )
 
       if ( handle /= lsthan ) then
 
          call dafhsf ( handle, nd,  ni )
 
-         if ( failed () ) then
-            call chkout ( 'SGMETA' )
-            return
-         end if
+         if ( failed () ) return
 
          niovr2 = ni / 2
 
@@ -406,10 +398,7 @@
 !
       call dafgda ( handle, end, end, dmtasz )
 
-      if ( failed () ) then
-         call chkout ( 'SGMETA' )
-         return
-      end if
+      if ( failed () ) return
 
       metasz = nint ( dmtasz )
 !
@@ -431,7 +420,6 @@
          call errint ( '#',   metasz                               )
          call errint ( '#',   mnmeta                               )
          call sigerr ( 'SPICE(INVALIDMETADATA)'                    )
-         call chkout ( 'SGMETA'                                    )
          return
 
 !
@@ -474,10 +462,7 @@
 
       call dafgda ( handle, begmta, endmta, xmeta )
 
-      if ( failed () ) then
-         call chkout ( 'SGMETA' )
-         return
-      end if
+      if ( failed () ) return
 
 !
 !     Convert all of the meta data values into integers.
@@ -526,7 +511,6 @@
          //            ' with this generic segment.'               )
          call errint ( '#',   mnemon                               )
          call sigerr ( 'SPICE(UNKNOWNMETAITEM)'                    )
-         call chkout ( 'SGMETA'                                    )
          return
 
       end if
@@ -537,6 +521,5 @@
 !
       value = meta ( mnemon )
 
-      call chkout ( 'SGMETA' )
       return
       end

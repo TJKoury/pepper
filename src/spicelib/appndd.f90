@@ -240,11 +240,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'APPNDD' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -272,6 +268,5 @@
       end if
 
 
-      call chkout ( 'APPNDD' )
       return
       end

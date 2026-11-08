@@ -786,11 +786,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'GETFOV' )
 
       kwboun = 'INS#_FOV_BOUNDARY'
       kwbore = 'INS#_BORESIGHT'
@@ -823,7 +820,6 @@
          call errch  ( '#', kword(1:rtrim(kword))                    )
          call errint ( '#', instid                                   )
          call sigerr ( 'SPICE(FRAMEMISSING)'                         )
-         call chkout ( 'GETFOV'                                      )
          return
 
       end if
@@ -846,7 +842,6 @@
          call errch  ( '#', kword(1:rtrim(kword))                      )
          call errint ( '#', instid                                     )
          call sigerr ( 'SPICE(SHAPEMISSING)'                           )
-         call chkout ( 'GETFOV'                                        )
          return
 
       end if
@@ -873,7 +868,6 @@
          call errch  ( '#', kword(1:rtrim(kword))                     )
          call errint ( '#', instid                                    )
          call sigerr ( 'SPICE(SHAPENOTSUPPORTED)'                     )
-         call chkout ( 'GETFOV'                                       )
          return
 
       end if
@@ -896,7 +890,6 @@
          call errch  ( '#', kword(1:rtrim(kword))                     )
          call errint ( '#', instid                                    )
          call sigerr ( 'SPICE(BORESIGHTMISSING)'                      )
-         call chkout ( 'GETFOV'                                       )
          return
 
       end if
@@ -915,7 +908,6 @@
          call errch  ( '#', kword(1:rtrim(kword))                    )
          call errint ( '#', i                                        )
          call sigerr ( 'SPICE(BADBORESIGHTSPEC)'                     )
-         call chkout ( 'GETFOV'                                      )
          return
 
       else if ( type /= 'N' ) then
@@ -926,7 +918,6 @@
          //            'vector of three strings. '                   )
          call errch  ( '#', kword(1:rtrim(kword))                    )
          call sigerr ( 'SPICE(BADBORESIGHTSPEC)'                     )
-         call chkout ( 'GETFOV'                                      )
          return
 
       end if
@@ -942,7 +933,6 @@
          //            'variable, is the zero vector.'               )
          call errch  ( '#', kword(1:rtrim(kword))                    )
          call sigerr ( 'SPICE(ZEROBORESIGHT)'                        )
-         call chkout ( 'GETFOV'                                      )
          return
 
       end if
@@ -983,7 +973,6 @@
             call errch  ( '#', kword(1:rtrim(kword))                  )
             call errint ( '#', instid                                 )
             call sigerr ( 'SPICE(BOUNDARYMISSING)'                    )
-            call chkout ( 'GETFOV'                                    )
             return
 
          end if
@@ -1001,7 +990,6 @@
             //            'variable of the GETFOV subroutine.'        )
             call errch  ( '#', kword(1:rtrim(kword))                  )
             call sigerr ( 'SPICE(BOUNDARYTOOBIG)'                     )
-            call chkout ( 'GETFOV'                                    )
             return
 
          end if
@@ -1020,7 +1008,6 @@
             //            'without reminder. '                        )
             call errch  ( '#', kword(1:rtrim(kword))                  )
             call sigerr ( 'SPICE(BADBOUNDARY)'                        )
-            call chkout ( 'GETFOV'                                    )
             return
 
          end if
@@ -1042,7 +1029,6 @@
             call errch  ( '#', kword(1:rtrim(kword))            )
             call errint ( '#', n                                )
             call sigerr ( 'SPICE(BADBOUNDARY)'                  )
-            call chkout ( 'GETFOV'                              )
             return
 
          else if ( shape == 'ELLIPSE'     .and. n /= 2 ) then
@@ -1055,7 +1041,6 @@
             call errch  ( '#', kword(1:rtrim(kword))             )
             call errint ( '#', n                                 )
             call sigerr ( 'SPICE(BADBOUNDARY)'                   )
-            call chkout ( 'GETFOV'                               )
             return
 
          else if ( shape == 'RECTANGLE' .and. n /= 4 ) then
@@ -1068,7 +1053,6 @@
             call errch  ( '#', kword(1:rtrim(kword))              )
             call errint ( '#', n                                  )
             call sigerr ( 'SPICE(BADBOUNDARY)'                    )
-            call chkout ( 'GETFOV'                                )
             return
 
          else if ( shape == 'POLYGON' .and. n < 3 ) then
@@ -1081,7 +1065,6 @@
             call errch  ( '#', kword(1:rtrim(kword))            )
             call errint ( '#', n                                )
             call sigerr ( 'SPICE(BADBOUNDARY)'                  )
-            call chkout ( 'GETFOV'                              )
             return
 
          end if
@@ -1107,7 +1090,6 @@
             call errch  ( '#', kword(1:rtrim(kword))                )
             call errint ( '#', instid                               )
             call sigerr ( 'SPICE(SHAPENOTSUPPORTED)'                )
-            call chkout ( 'GETFOV'                                  )
             return
 
          end if
@@ -1131,7 +1113,6 @@
             call errch  ( '#', kword(1:rtrim(kword))                  )
             call errint ( '#', instid                                 )
             call sigerr ( 'SPICE(REFVECTORMISSING)'                   )
-            call chkout ( 'GETFOV'                                    )
             return
 
          end if
@@ -1150,7 +1131,6 @@
             call errch  ( '#', kword(1:rtrim(kword))              )
             call errint ( '#', i                                  )
             call sigerr ( 'SPICE(BADREFVECTORSPEC)'               )
-            call chkout ( 'GETFOV'                                )
             return
 
          else if ( type /= 'N' ) then
@@ -1161,7 +1141,6 @@
             //            'a vector of three strings. '             )
             call errch  ( '#', kword(1:rtrim(kword))                )
             call sigerr ( 'SPICE(BADREFVECTORSPEC)'                 )
-            call chkout ( 'GETFOV'                                  )
             return
 
          end if
@@ -1183,7 +1162,6 @@
             //            'ANGLES FOV specification.'                )
             call errch  ( '#', kword(1:rtrim(kword))                 )
             call sigerr ( 'SPICE(BADREFVECTORSPEC)'                  )
-            call chkout ( 'GETFOV'                                   )
             return
 
          end if
@@ -1207,7 +1185,6 @@
             call errch  ( '#', kword(1:rtrim(kword))             )
             call errint ( '#', instid                            )
             call sigerr ( 'SPICE(REFANGLEMISSING)'               )
-            call chkout ( 'GETFOV'                               )
             return
 
          end if
@@ -1231,7 +1208,6 @@
             call errch  ( '#', kword(1:rtrim(kword))             )
             call errint ( '#', instid                            )
             call sigerr ( 'SPICE(UNITSMISSING)'                  )
-            call chkout ( 'GETFOV'                               )
             return
 
          end if
@@ -1241,10 +1217,7 @@
 !
          call convrt ( refang, angunt, 'RADIANS', tmpang )
 
-         if ( failed() ) then
-            call chkout ( 'GETFOV' )
-            return
-         end if
+         if ( failed() ) return
 
          refang = tmpang
 
@@ -1267,7 +1240,6 @@
                call errint ( '#', instid                          )
                call errint ( '#', room                            )
                call sigerr ( 'SPICE(BOUNDARYTOOBIG)'              )
-               call chkout ( 'GETFOV'                             )
                return
             end if
 
@@ -1312,7 +1284,6 @@
                call errch  ( '#', kword(1:rtrim(kword))                )
                call errint ( '#', instid                               )
                call sigerr ( 'SPICE(CROSSANGLEMISSING)'                )
-               call chkout ( 'GETFOV'                                  )
                return
 
             end if
@@ -1322,10 +1293,7 @@
 !
             call convrt ( crsang, angunt, 'RADIANS', tmpang )
 
-            if ( failed() ) then
-               call chkout ( 'GETFOV' )
-               return
-            end if
+            if ( failed() ) return
 
             crsang = tmpang
 !
@@ -1342,7 +1310,6 @@
                call errint ( '#', instid                           )
                call errint ( '#', room                             )
                call sigerr ( 'SPICE(BOUNDARYTOOBIG)'               )
-               call chkout ( 'GETFOV'                              )
                return
             end if
 
@@ -1402,7 +1369,6 @@
                call errch  ( '#', kword(1:rtrim(kword))                )
                call errint ( '#', instid                               )
                call sigerr ( 'SPICE(CROSSANGLEMISSING)'                )
-               call chkout ( 'GETFOV'                                  )
                return
 
             end if
@@ -1412,10 +1378,7 @@
 !
             call convrt ( crsang, angunt, 'RADIANS', tmpang )
 
-            if ( failed() ) then
-               call chkout ( 'GETFOV' )
-               return
-            end if
+            if ( failed() ) return
 
             crsang = tmpang
 !
@@ -1432,7 +1395,6 @@
                call errint ( '#', instid                            )
                call errint ( '#', room                              )
                call sigerr ( 'SPICE(BOUNDARYTOOBIG)'                )
-               call chkout ( 'GETFOV'                               )
                return
             end if
 
@@ -1516,7 +1478,6 @@
                //            'degrees.'                            )
                call errint ( '#', instid                           )
                call sigerr ( 'SPICE(BADBOUNDARY)'                  )
-               call chkout ( 'GETFOV'                              )
                return
 
             end if
@@ -1569,7 +1530,6 @@
             //            'for the ANGLES specification that ' &
             //            'passed the shape check.'            )
             call sigerr ( 'SPICE(BUG)'                         )
-            call chkout ( 'GETFOV'                             )
             return
 
          end if
@@ -1582,7 +1542,6 @@
          //            'information.'                                 )
          call errch  ( '#', spec                                      )
          call sigerr ( 'SPICE(UNSUPPORTEDSPEC)'                       )
-         call chkout ( 'GETFOV'                                       )
          return
 
       end if
@@ -1590,7 +1549,6 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkout ( 'GETFOV' )
       return
 
       end

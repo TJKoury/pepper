@@ -164,11 +164,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFWCR' )
-      end if
+      if ( return () ) return
 
       call zzddhhlu ( handle, 'DAF', .false., unit )
 
@@ -204,6 +200,5 @@
          end if
       end if
 
-      call chkout ( 'DAFWCR' )
       return
       end

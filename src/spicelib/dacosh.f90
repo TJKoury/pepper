@@ -138,7 +138,6 @@
          dacosh = 0.0_wp
          return
       else
-         call chkin ( 'DACOSH' )
          dacosh = 0.0_wp
       end if
 
@@ -151,7 +150,6 @@
          call setmsg ( 'DACOSH: Invalid argument, X is less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
 
-         call chkout ( 'DACOSH' )
          return
       end if
 !
@@ -163,6 +161,5 @@
       dacosh = dlog (x + x * dsqrt (1.0_wp - (1.0_wp/x)/x) )
 
 
-      call chkout ( 'DACOSH' )
       return
       end

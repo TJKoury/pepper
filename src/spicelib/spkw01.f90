@@ -284,11 +284,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW01' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -300,7 +296,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW01'                                    )
          return
 
       end if
@@ -313,7 +308,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW01'                                  )
          return
 
       end if
@@ -331,7 +325,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW01'                                )
             return
 
          end if
@@ -347,7 +340,6 @@
                        'must be at least one.'                       )
          call errint ( '#', n                                        )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                         )
-         call chkout ( 'SPKW01'                                      )
          return
 
       end if
@@ -362,7 +354,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW01'                                    )
          return
 
       end if
@@ -382,7 +373,6 @@
             call errint ( '#',  i                                     )
             call errdp  ( '#',  epochs(i-1)                           )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
-            call chkout ( 'SPKW01'                                    )
             return
          else
             maxtim = epochs(i)
@@ -401,7 +391,6 @@
          call errdp  ( '#',  last                                     )
          call errdp  ( '#',  epochs(n)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW01'                                       )
          return
 
       end if
@@ -419,10 +408,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW01' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -479,6 +465,5 @@
       end if
 
 
-      call chkout ( 'SPKW01' )
       return
       end

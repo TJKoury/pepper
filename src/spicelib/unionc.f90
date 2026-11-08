@@ -191,7 +191,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'UNIONC' )
 
 !
 !     Make sure output set elements are long enough.
@@ -207,7 +206,6 @@
 
          call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         call chkout ( 'UNIONC' )
          return
 
       end if
@@ -327,7 +325,6 @@
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-      call chkout ( 'UNIONC' )
 
       return
       end

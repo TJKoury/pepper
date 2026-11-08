@@ -208,11 +208,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR20' )
 !
 !     Unpack the segment descriptor.
 !
@@ -345,6 +342,5 @@
          record(i) = record(i) * (dscale/tscale)
       end do
 
-      call chkout ( 'SPKR20' )
       return
       end

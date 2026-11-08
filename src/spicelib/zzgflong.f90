@@ -1065,11 +1065,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin  ( 'ZZGFLONG' )
-      end if
+      if ( return () ) return
 
 !
 !     Overview
@@ -1254,7 +1250,6 @@
          call errint ( '#', nw                                    )
          call errint ( '#', nwmax                                 )
          call sigerr ( 'SPICE(TOOFEWWINDOWS)'                     )
-         call chkout ( 'ZZGFLONG'                                 )
          return
 
       end if
@@ -1304,7 +1299,6 @@
                      'ABSMAX.'                                        )
          call errch  ( '#',  relate                                   )
          call sigerr ('SPICE(NOTRECOGNIZED)'                          )
-         call chkout ( 'ZZGFLONG'                                     )
          return
 
       end if
@@ -1317,7 +1311,6 @@
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
-         call chkout ( 'ZZGFLONG'                     )
          return
 
       end if
@@ -1337,7 +1330,6 @@
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'ZZGFLONG'                            )
          return
 
       end if
@@ -1354,7 +1346,6 @@
                           'comparison operators except ABSMAX and ' // &
                           'ABSMIN' )
             call sigerr ( 'SPICE(INVALIDVALUE)'                     )
-            call chkout ( 'ZZGFLONG'                                )
             return
 
          end if
@@ -1384,10 +1375,7 @@
                       ref,    abcorr, obsrvr, dref, &
                       dvec,   nrmsys, nrmcrd )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFLONG' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We've done the basic error checking. Empty the result window and
@@ -1397,7 +1385,6 @@
 
          call scardd ( 0, result )
 
-         call chkout ( 'ZZGFLONG' )
          return
 
       end if
@@ -1425,7 +1412,6 @@
 !
                call scardd( 0, result )
 
-               call chkout ( 'ZZGFLONG' )
                return
 
             else if ( uop == '>' ) then
@@ -1438,7 +1424,6 @@
 !
                call copyd ( cnfine, result )
 
-               call chkout ( 'ZZGFLONG' )
                return
 
             end if
@@ -1460,7 +1445,6 @@
 !
                call copyd ( cnfine, result )
 
-               call chkout ( 'ZZGFLONG' )
                return
 
             else if ( uop == '>' ) then
@@ -1470,7 +1454,6 @@
 !
                call scardd( 0, result )
 
-               call chkout ( 'ZZGFLONG' )
                return
 
             end if
@@ -1544,10 +1527,7 @@
          call namfrm ( ref,    frcode )
          call frinfo ( frcode, refctr,  class, clssid, found )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFLONG'                       )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. found ) then
 
@@ -1558,7 +1538,6 @@
             call errch  ( '#', ref                                )
             call errint ( '#', frcode                             )
             call sigerr ( 'SPICE(BUG)'                            )
-            call chkout ( 'ZZGFLONG'                              )
             return
 
          end if
@@ -1624,7 +1603,6 @@
                call setmsg ( 'Unexpected UOP value: #' )
                call errch  ( '#', uop                  )
                call sigerr ( 'SPICE(BUG)'              )
-               call chkout ( 'ZZGFLONG'                )
                return
 
             end if
@@ -1772,19 +1750,13 @@
 
          end if
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Handle interrupts if necessary.
 !
          if ( bail ) then
-            if ( udbail() ) then
-               call chkout ( 'ZZGFLONG' )
-               return
-            end if
+            if ( udbail() ) return
          end if
 
 !
@@ -1826,7 +1798,6 @@
 !
 !        All done.
 !
-         call chkout ( 'ZZGFLONG' )
          return
 
       end if
@@ -1882,10 +1853,7 @@
 !        Handle interrupts if necessary.
 !
          if ( bail ) then
-            if ( udbail() ) then
-               call chkout ( 'ZZGFLONG' )
-               return
-            end if
+            if ( udbail() ) return
          end if
 
 !
@@ -1925,10 +1893,7 @@
 !        Handle interrupts if necessary.
 !
          if ( bail ) then
-            if ( udbail() ) then
-               call chkout ( 'ZZGFLONG' )
-               return
-            end if
+            if ( udbail() ) return
          end if
 
 !
@@ -1993,10 +1958,7 @@
 !           Handle interrupts if necessary.
 !
             if ( bail ) then
-               if ( udbail() ) then
-                  call chkout ( 'ZZGFLONG' )
-                  return
-               end if
+               if ( udbail() ) return
             end if
 
          end do
@@ -2009,7 +1971,6 @@
 !
 !        End of the LOCMIN and LOCMAX cases. RESULT is set.
 !
-         call chkout ( 'ZZGFLONG' )
          return
 
       end if
@@ -2095,10 +2056,7 @@
       total = 2
 
       if ( bail ) then
-         if ( udbail() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( udbail() ) return
       end if
 
 !
@@ -2141,10 +2099,7 @@
       total = total + 2
 
       if ( bail ) then
-         if ( udbail() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( udbail() ) return
       end if
 
 !
@@ -2188,16 +2143,10 @@
       total = total + 2
 
       if ( bail ) then
-         if ( udbail() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( udbail() ) return
       end if
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFLONG' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -2295,7 +2244,6 @@
             call setmsg ( 'Unexpected coordinate # (0)' )
             call errch  ( '#', nrmcrd                   )
             call sigerr ( 'SPICE(BUG)'                  )
-            call chkout ( 'ZZGFLONG'                    )
             return
 
          end if
@@ -2361,10 +2309,7 @@
             end if
 
             if ( bail ) then
-               if ( udbail() ) then
-                  call chkout ( 'ZZGFLONG' )
-                  return
-               end if
+               if ( udbail() ) return
             end if
 
 
@@ -2384,7 +2329,6 @@
 !
 !           The result we have is the final result.
 !
-            call chkout ( 'ZZGFLONG' )
             return
 
          end if
@@ -2560,10 +2504,7 @@
 
          end do
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( failed() ) return
 
 
 !
@@ -2755,10 +2696,7 @@
 
          end if
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFLONG' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Search sector S to find times when the relation
@@ -2825,10 +2763,7 @@
 !        7 + 0:2 passes done for adjusted extrema.
 !
          if ( bail ) then
-            if ( udbail() ) then
-               call chkout ( 'ZZGFLONG' )
-               return
-            end if
+            if ( udbail() ) return
          end if
 
 !
@@ -2879,6 +2814,5 @@
 
       end if
 
-      call chkout (  'ZZGFLONG' )
       return
       end

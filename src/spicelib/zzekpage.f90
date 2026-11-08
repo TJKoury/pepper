@@ -283,17 +283,13 @@
 !
 !-&
 
-      call chkin ( 'ZZEKPGIN' )
 
 !
 !     The file must be open for write access.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKPGIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find out which addresses are already in use.  A file containing
@@ -312,7 +308,6 @@
          call errint ( '#',  lastd                                   )
          call errint ( '#',  lasti                                   )
          call sigerr ( 'SPICE(DASNOTEMPTY)'                          )
-         call chkout ( 'ZZEKPGIN'                                    )
          return
 
       end if
@@ -349,7 +344,6 @@
 !     Since the integer fill value is zero, and since zero is
 !     interpreted as null pointer, all pointers are initialized.
 !
-      call chkout ( 'ZZEKPGIN' )
       return
 
 
@@ -468,17 +462,13 @@
 !
 !-&
 
-      call chkin ( 'ZZEKPGAN' )
 
 !
 !     Validate the file.
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKPGAN' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( type == chr ) then
@@ -527,12 +517,10 @@
          call setmsg ( 'The data type code # was not recognized.' )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'                       )
-         call chkout ( 'ZZEKPGAN'                                 )
          return
 
       end if
 
-      call chkout ( 'ZZEKPGAN' )
       return
 
 
@@ -645,17 +633,13 @@
 !-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
 !
 !-&
-      call chkin ( 'ZZEKPGAL' )
 
 !
 !     Validate the file.
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKPGAL' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( type == chr ) then
@@ -828,12 +812,10 @@
          call setmsg ( 'The data type code # was not recognized.' )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'                       )
-         call chkout ( 'ZZEKPGAL'                                 )
          return
 
       end if
 
-      call chkout ( 'ZZEKPGAL' )
       return
 
 
@@ -946,17 +928,13 @@
 !-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
 !
 !-&
-      call chkin ( 'ZZEKPGFR' )
 
 !
 !     Check the file.
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKPGFR' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( type == chr ) then
@@ -973,7 +951,6 @@
             call errint ( '#',  p                                   )
             call errint ( '#',  npc                                 )
             call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-            call chkout ( 'ZZEKPGFR'                                )
             return
 
          end if
@@ -1014,7 +991,6 @@
             call errint ( '#',  p                                   )
             call errint ( '#',  npd                                 )
             call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-            call chkout ( 'ZZEKPGFR'                                )
             return
 
          end if
@@ -1056,7 +1032,6 @@
             call errint ( '#',  p                                   )
             call errint ( '#',  npi                                 )
             call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-            call chkout ( 'ZZEKPGFR'                                )
             return
 
          end if
@@ -1087,12 +1062,10 @@
          call setmsg ( 'The data type code # was not recognized.' )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'                       )
-         call chkout ( 'ZZEKPGFR'                                 )
          return
 
       end if
 
-      call chkout ( 'ZZEKPGFR' )
       return
 
 
@@ -1207,12 +1180,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npc )  ) then
 
-         call chkin  ( 'ZZEKPGRC'                           )
          call setmsg ( 'CHR page = #; valid range is [1:#]' )
          call errint ( '#', p                               )
          call errint ( '#', npc                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGRC'                           )
          return
 
       end if
@@ -1337,12 +1308,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npd )  ) then
 
-         call chkin  ( 'ZZEKPGRD'                           )
          call setmsg ( 'DP page = #; valid range is [1:#]'  )
          call errint ( '#', p                               )
          call errint ( '#', npd                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGRD'                           )
          return
 
       end if
@@ -1461,12 +1430,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npi )  ) then
 
-         call chkin  ( 'ZZEKPGRI'                           )
          call setmsg ( 'INT page = #; valid range is [1:#]' )
          call errint ( '#', p                               )
          call errint ( '#', npi                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGRI'                           )
          return
 
       end if
@@ -1592,9 +1559,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find out how many character pages are in use.
@@ -1603,12 +1568,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npc )  ) then
 
-         call chkin  ( 'ZZEKPGWC'                           )
          call setmsg ( 'CHR page = #; valid range is [1:#]' )
          call errint ( '#', p                               )
          call errint ( '#', npc                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGWC'                           )
          return
 
       end if
@@ -1618,12 +1581,10 @@
 
       if ( l < pgsizc ) then
 
-         call chkin  ( 'ZZEKPGWC'                                    )
          call setmsg ( 'Input CHR page size = #; valid size is [#:]' )
          call errint ( '#', l                                        )
          call errint ( '#', pgsizc                                   )
          call sigerr ( 'SPICE(STRINGTOOSHORT)'                       )
-         call chkout ( 'ZZEKPGWC'                                    )
          return
 
       end if
@@ -1747,9 +1708,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find out how many d.p. pages are in use.
@@ -1758,12 +1717,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npd )  ) then
 
-         call chkin  ( 'ZZEKPGWD'                           )
          call setmsg ( 'DP page = #; valid range is [1:#]'  )
          call errint ( '#', p                               )
          call errint ( '#', npd                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGWD'                           )
          return
 
       end if
@@ -1887,9 +1844,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find out how many integer pages are in use.
@@ -1898,12 +1853,10 @@
 
       if (  ( p < 1 )  .or.  ( p > npi )  ) then
 
-         call chkin  ( 'ZZEKPGWI'                           )
          call setmsg ( 'INT page = #; valid range is [1:#]' )
          call errint ( '#', p                               )
          call errint ( '#', npi                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'ZZEKPGWI'                           )
          return
 
       end if
@@ -2030,11 +1983,9 @@
 
       else
 
-         call chkin  ( 'ZZEKPGBS'                                 )
          call setmsg ( 'The data type code # was not recognized.' )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'                       )
-         call chkout ( 'ZZEKPGBS'                                 )
          return
 
       end if
@@ -2173,11 +2124,9 @@
 
       else
 
-         call chkin  ( 'ZZEKPGPG'                                 )
          call setmsg ( 'The data type code # was not recognized.' )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'                       )
-         call chkout ( 'ZZEKPGPG'                                 )
          return
 
       end if
@@ -2298,7 +2247,6 @@
 !-&
 
 
-      call chkin ( 'ZZEKPGST' )
 
 
       if (  eqstr( stat, 'N_C_ALLOC' )  ) then
@@ -2335,12 +2283,10 @@
          call setmsg ( 'Statistic # is not supported.' )
          call errch  ( '#',  stat                      )
          call sigerr ( 'SPICE(INVALIDOPTION)'          )
-         call chkout ( 'ZZEKPGST'                      )
          return
 
       end if
 
-      call chkout ( 'ZZEKPGST' )
       return
 
       end

@@ -131,9 +131,7 @@
 
       call zzeksdsc ( handle, segno, segdsc )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 
       stype = segdsc ( ektidx )
@@ -144,14 +142,12 @@
 
          if ( zzekrp2n == 0 ) then
 
-            call chkin  ( 'ZZEKRP2N'                              )
             call setmsg ( 'Record having pointer # not found in ' // &
                           'segment # of file #'                   )
             call errint ( '#',  recptr                            )
             call errint ( '#',  segno                             )
             call errhan ( '#',  handle                            )
             call sigerr ( 'SPICE(BUG)'                            )
-            call chkout ( 'ZZEKRP2N'                              )
 
          end if
 
@@ -162,14 +158,12 @@
 
       else
 
-         call chkin  ( 'ZZEKRP2N'                                    )
          call setmsg ( 'Segment type # is not supported.  SEGNO = #.'// &
                        ' File = #.'                                  )
          call errint ( '#',  stype                                   )
          call errint ( '#',  segno                                   )
          call errhan ( '#',  handle                                  )
          call sigerr ( 'SPICE(BUG)'                                  )
-         call chkout ( 'ZZEKRP2N'                                    )
 
       end if
 

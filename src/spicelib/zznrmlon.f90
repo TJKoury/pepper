@@ -190,11 +190,9 @@
 !
       if ( tol < 0.0_wp ) then
 
-         call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Tolerance must be non-negative but was #.' )
          call errdp  ( '#', tol                                    )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'ZZNRMLON'                                  )
          return
 
       end if
@@ -206,7 +204,6 @@
       if (      ( inmin < -pi2-tol ) &
            .or. ( inmin >  pi2+tol )  ) then
 
-         call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
          //            ' = # (deg). The minimum allowed value is ' &
          //            ' -2*pi - TOL = # (radians), = # (deg).'    )
@@ -215,7 +212,6 @@
          call errdp  ( '#',   -pi2  - tol                          )
          call errdp  ( '#', ( -pi2  - tol ) * dpr()                )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'ZZNRMLON'                                  )
          return
 
       end if
@@ -225,13 +221,11 @@
 !
       if ( inmin == inmax ) then
 
-         call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
          //            ' = # (deg), is equal to upper bound.'      )
          call errdp  ( '#', inmin                                  )
          call errdp  ( '#', inmin * dpr()                          )
          call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                   )
-         call chkout ( 'ZZNRMLON'                                  )
          return
 
       end if
@@ -248,7 +242,6 @@
       if (      ( inmax < -pi2-tol ) &
            .or. ( inmax >  pi2+tol )  ) then
 
-         call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude upper bound INMAX = # (radians), ' &
          //            ' = # (deg). The minimum allowed value is ' &
          //            ' -2*pi - TOL = # (radians), = # (deg).'    )
@@ -257,7 +250,6 @@
          call errdp  ( '#',   -pi2  - tol                          )
          call errdp  ( '#', ( -pi2  - tol ) * dpr()                )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'ZZNRMLON'                                  )
          return
 
       end if
@@ -325,7 +317,6 @@
 !
       if ( outmin == outmax ) then
 
-         call chkin  ( 'ZZNRMLON'                                     )
          call setmsg ( 'After adjustment, input longitude lower ' &
          //            'bound INMIN = # (radians),  = # (deg), ' &
          //            'is equal to adjusted longitude upper bound. ' &
@@ -338,7 +329,6 @@
          call errdp  ( '#', inmax                                     )
          call errdp  ( '#', inmax * dpr()                             )
          call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                      )
-         call chkout ( 'ZZNRMLON'                                     )
          return
 
       end if

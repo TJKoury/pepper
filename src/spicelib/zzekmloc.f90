@@ -167,12 +167,10 @@
 !
       if (  ( segno < 1 ) .or. ( segno > nseg )  )  then
 
-         call chkin  ( 'ZZEKMLOC'                                )
          call setmsg ( 'Segment number = #; valid range is 1:#.' )
          call errint ( '#',  segno                               )
          call errint ( '#',  nseg                                )
          call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-         call chkout ( 'ZZEKMLOC'                                )
          return
 
       end if

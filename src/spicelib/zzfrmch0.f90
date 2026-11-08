@@ -338,11 +338,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZFRMCH0')
 !
 !     Do the obvious thing first.  If FRAME1 and FRAME2 are the
 !     same then we simply return the identity matrix.
@@ -360,7 +357,6 @@
 
          end do
 
-         call chkout ( 'ZZFRMCH0' )
          return
 
       end if
@@ -370,10 +366,7 @@
 !
       call frinfo ( frame1, cent, class, clssid, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZFRMCH0' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -381,7 +374,6 @@
          //            'for a reference frame. ' )
          call errint ( '#', frame1 )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-         call chkout ( 'ZZFRMCH0' )
          return
 
       end if
@@ -389,10 +381,7 @@
 
       call frinfo ( frame2, cent, class, clssid, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZFRMCH0' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -400,7 +389,6 @@
          //            'for a reference frame. ' )
          call errint ( '#', frame2 )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-         call chkout ( 'ZZFRMCH0' )
          return
 
       end if
@@ -425,10 +413,7 @@
          call zzfrmgt0 ( frame(node),     et, &
                          trans(1,1,node), frame(node+1), found )
 
-         if ( failed() ) then
-           call chkout ( 'ZZFRMCH0' )
-           return
-         end if
+         if ( failed() ) return
 
          if ( found ) then
 !
@@ -459,10 +444,7 @@
 !
          call zzfrmgt0( frame(node), et, trans(1,1,node), relto, found )
 
-         if ( failed() ) then
-            call chkout ( 'ZZFRMCH0' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( found  ) then
 !
@@ -532,7 +514,6 @@
 !        matrices.
 !
          call zzmsxf (  trans, node-1, xform )
-         call chkout ( 'ZZFRMCH0' )
          return
 
       end if
@@ -593,10 +574,7 @@
 !
             call zzfrmgt0 ( this, et, trans2(1,1,put), relto, found )
 
-            if ( failed() ) then
-               call chkout ( 'ZZFRMCH0' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( found ) then
                this   = relto
@@ -613,10 +591,7 @@
 !
             call zzfrmgt0 ( this, et, tempxf, relto, found )
 
-            if ( failed() ) then
-               call chkout ( 'ZZFRMCH0' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( found ) then
 !
@@ -708,7 +683,6 @@
 !           unfortunate situation could arise if a frame kernel
 !           is corrupted.
 !
-            call chkout ( 'ZZFRMCH0' )
             return
 
          end if
@@ -718,7 +692,6 @@
 !
          call setmsg ( errmsg                  )
          call sigerr ( 'SPICE(NOFRAMECONNECT)' )
-         call chkout ( 'ZZFRMCH0'              )
          return
 
       end if
@@ -746,7 +719,6 @@
       call invstm ( trans2(1,1,get), trans(1,1,cmnode) )
       call zzmsxf ( trans,   cmnode, xform             )
 
-      call chkout ( 'ZZFRMCH0' )
       return
 
       end

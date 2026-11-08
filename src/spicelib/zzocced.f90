@@ -547,11 +547,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZOCCED' )
 
 !
 !     Extract the radii of the targets from the semi-axis vectors.
@@ -585,7 +582,6 @@
          call errdp  ( '#',  minrad(1)                              )
          call errdp  ( '#',  minrad(2)                              )
          call sigerr ( 'SPICE(BADAXISLENGTH)'                       )
-         call chkout ( 'ZZOCCED'                                    )
          return
 
       end if
@@ -610,7 +606,6 @@
                           'the viewing point.'                 )
             call errint ( '#',  i                              )
             call sigerr ( 'SPICE(NOTDISJOINT)'                 )
-            call chkout ( 'ZZOCCED'                            )
             return
 
          end if
@@ -633,7 +628,6 @@
             call errint ( '#',  i                                 )
             call errdp  ( '#',  det ( rmat(1,1,i) )               )
             call sigerr ( 'SPICE(NOTAROTATION)'                   )
-            call chkout ( 'ZZOCCED'                               )
             return
 
          end if
@@ -655,7 +649,6 @@
          call setmsg ( 'Targets must be non-intersecting, but  '     // &
                        'spheres inscribed in the targets intersect.' )
          call sigerr ( 'SPICE(NOTDISJOINT)'                          )
-         call chkout ( 'ZZOCCED'                                     )
          return
 
       end if
@@ -687,7 +680,6 @@
             call errint ( '#',  i                                )
             call errdp  ( '#',  level                            )
             call sigerr ( 'SPICE(NOTDISJOINT)'                   )
-            call chkout ( 'ZZOCCED'                              )
             return
 
          end if
@@ -703,10 +695,7 @@
 
          minang(i) = dasine ( minrad(i)/dist(i), atol )
 
-         if ( failed() ) then
-            call chkout ( 'ZZOCCED' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The situation is a bit more complicated for the maximum
@@ -721,10 +710,7 @@
 !
             maxang(i) = dasine ( maxrad(i)/dist(i), atol )
 
-            if ( failed() ) then
-               call chkout ( 'ZZOCCED' )
-               return
-            end if
+            if ( failed() ) return
 
          else
 !
@@ -822,7 +808,6 @@
 
          zzocced = noocc
 
-         call chkout ( 'ZZOCCED' )
          return
 
       end if
@@ -936,7 +921,6 @@
 !
 !              We've found the occultation type, so we're done.
 !
-               call chkout ( 'ZZOCCED' )
                return
 
             end if
@@ -959,7 +943,6 @@
 !
             zzocced = s * partl2
 
-            call chkout ( 'ZZOCCED' )
             return
 
          end if
@@ -1095,10 +1078,7 @@
 !
       call zzasryel ( 'MIN', xlimb, xview, raydir, minsep, minpt )
 
-      if ( failed() ) then
-         call chkout ( 'ZZOCCED' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the angular radius of the unit sphere centered at
@@ -1113,10 +1093,7 @@
 !
       uasize = dasine ( 1.0_wp/bigr, atol )
 
-      if ( failed() ) then
-         call chkout ( 'ZZOCCED' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     At this point, UASIZE is the angular size of the unit sphere
@@ -1131,7 +1108,6 @@
 !
          zzocced = noocc
 
-         call chkout ( 'ZZOCCED' )
          return
 
       end if
@@ -1265,10 +1241,7 @@
 !
             maxang(smlidx) = dasine ( majlen/xdist(smlidx), atol )
 
-            if ( failed() ) then
-               call chkout ( 'ZZOCCED' )
-               return
-            end if
+            if ( failed() ) return
 
          else
 !
@@ -1388,7 +1361,6 @@
 
             end if
 
-            call chkout ( 'ZZOCCED' )
             return
 
          end if
@@ -1404,7 +1376,6 @@
 !
             zzocced = s * partl2
 
-            call chkout ( 'ZZOCCED' )
             return
 
          end if
@@ -1418,10 +1389,7 @@
 !
          call zzasryel ( 'MAX', xlimb, xview, raydir, maxsep, maxpt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZOCCED' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( abs(maxsep) <= uasize ) then
@@ -1480,7 +1448,6 @@
 !     ZZOCCED has been set.
 !
 
-      call chkout ( 'ZZOCCED' )
       return
       end
 

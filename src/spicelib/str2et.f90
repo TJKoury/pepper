@@ -819,11 +819,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'STR2ET' )
 
 !
 !     Collect the current defaults.
@@ -853,7 +850,6 @@
 
          call setmsg ( error )
          call sigerr ( 'SPICE(UNPARSEDTIME)' )
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -873,7 +869,6 @@
          call errch  ( '#', modify(system)   )
          call errch  ( '#', modify(zone)     )
          call sigerr ( 'SPICE(TIMECONFLICT)' )
-         call chkout ( 'STR2ET'              )
          return
 
       end if
@@ -907,7 +902,6 @@
             //            'specification. '       )
             call errch  ( '#', modify(zone)(3:)   )
             call sigerr ( 'SPICE(TIMEZONEERROR)'  )
-            call chkout ( 'STR2ET' )
             return
          end if
 
@@ -933,7 +927,6 @@
          call ttrans ( type, 'TDB', tvec )
          et = tvec(1)
 
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -1055,7 +1048,6 @@
 
          call setmsg ( error )
          call sigerr ( 'SPICE(BADTIMESTRING)' )
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -1080,7 +1072,6 @@
             //            'calendar representation of #. ' )
             call errch  ( '#', modify(system) )
             call sigerr ( 'SPICE(BADTIMESTRING)' )
-            call chkout ( 'STR2ET' )
             return
 
          end if
@@ -1096,7 +1087,6 @@
          call setmsg ( 'The Year may be abbreviated only if the ' &
          //            'year belongs to the Christian Era (A.D.) ' )
          call sigerr ( 'SPICE(BADTIMESTRING)' )
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -1233,14 +1223,12 @@
          call ttrans ( forml, 'FORMAL', tvec )
          call ttrans ( 'TDT',  'TDB',    tvec )
          et = tvec(1)
-         call chkout ( 'STR2ET' )
          return
 
       else if ( modify(system) == 'TDB' ) then
 
          call ttrans ( forml, 'FORMAL', tvec(1) )
          et = tvec(1)
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -1295,7 +1283,6 @@
 !
          call ttrans ( type, 'TDB', tvec )
          et = tvec(1)
-         call chkout ( 'STR2ET' )
          return
 
       end if
@@ -1452,7 +1439,6 @@
 
       call setmsg ( error  )
       call sigerr ( 'SPICE(BADTIMESTRING)' )
-      call chkout ( 'STR2ET' )
       return
 
 

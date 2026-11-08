@@ -572,11 +572,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKIFLD' )
-      end if
+      if ( return () ) return
 
 !
 !     Check out NROWS.
@@ -586,7 +582,6 @@
          call setmsg ( 'Number of rows must be > 0, was #. ' )
          call errint ( '#',  nrows                           )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                 )
-         call chkout ( 'EKIFLD'                              )
          return
 
       end if
@@ -596,10 +591,7 @@
 !
       call ekbseg ( handle, tabnam, ncols, cnames, decls, segno )
 
-      if ( failed() ) then
-         call chkout ( 'EKIFLD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fill the number of rows into the (file's) segment descriptor.
@@ -632,12 +624,10 @@
          call setmsg ( 'Segment type # is not currently supported.' )
          call errint ( '#', stype                                   )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'EKIFLD'                                     )
          return
 
       end if
 
 
-      call chkout ( 'EKIFLD' )
       return
       end

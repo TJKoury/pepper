@@ -258,11 +258,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASRCR' )
 
 !
 !     Make sure this DAS file is open for writing.  Signal an error if
@@ -275,10 +272,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      if ( failed() ) then
-         call chkout ( 'DASRCR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     It's a mistake to use a negative value of N.
@@ -289,7 +283,6 @@
                        'non-negative.  Actual number requested was #.' )
          call errint ( '#',  n                                         )
          call sigerr ( 'SPICE(DASINVALIDCOUNT)'                        )
-         call chkout ( 'DASRCR'                                        )
          return
 
       end if
@@ -498,6 +491,5 @@
                     lastrc, &
                     lastwd )
 
-      call chkout ( 'DASRCR' )
       return
       end

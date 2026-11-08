@@ -269,11 +269,8 @@
       integer(ip)           nstdel
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKSBR' )
 
 
       if ( needed > stsize ) then
@@ -288,7 +285,6 @@
          call errint ( '#', stsize                               )
          call errint ( '#', needed                               )
          call sigerr ( 'SPICE(SEGTABLETOOSMALL)'                 )
-         call chkout ( 'ZZDSKSBR'                                )
          return
 
       end if
@@ -301,7 +297,6 @@
          call setmsg ( 'Body table size must be at least 1 but is #.' )
          call errint ( '#', maxbod                                    )
          call sigerr ( 'SPICE(INVALIDTABLESIZE)'                      )
-         call chkout ( 'ZZDSKSBR'                                     )
          return
 
       end if
@@ -347,7 +342,6 @@
             call errint ( '#', needed                                 )
             call errint ( '#', stsize                                 )
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'ZZDSKSBR'                                  )
             return
 
          end if
@@ -404,6 +398,5 @@
 
       end if
 
-      call chkout ( 'ZZDSKSBR' )
       return
       end

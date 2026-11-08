@@ -234,32 +234,26 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( ( dlon < 0.0_wp ) .or. ( dlon >= pi() ) )  then
 
-         call chkin  ( 'ZZCHRLAT'                          )
          call setmsg ( 'The input longitude extent was #; ' &
          //            'this value must be in the range ' &
          //            '[0 : pi ) radians.'                )
          call errdp  ( '#', dlon                           )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'            )
-         call chkout ( 'ZZCHRLAT'                          )
          return
 
       end if
 
       if (  abs(midlat)  >  ( halfpi()+angmrg )  ) then
 
-         call chkin  ( 'ZZCHRLAT'                          )
          call setmsg ( 'The input latitude was #; this ' &
          //            'value must be in the interval ' &
          //            '-pi/2 : pi/2 (radians).'           )
          call errdp  ( '#', midlat                         )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'            )
-         call chkout ( 'ZZCHRLAT'                          )
          return
 
       end if

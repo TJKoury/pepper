@@ -1047,9 +1047,7 @@
       if ( unit >= minlun .and. unit <= maxlun ) then
 
          do i = 1, nresv
-            if ( unit == resnum(i) ) then
-               return
-            end if
+            if ( unit == resnum(i) ) return
          end do
 
          resvd ( unit ) = .false.

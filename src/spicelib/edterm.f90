@@ -877,11 +877,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'EDTERM' )
 
 !
 !     Initialization.
@@ -911,7 +908,6 @@
          //            'ID code.'                               )
          call errch  ( '#',  fixref                             )
          call sigerr ( 'SPICE(NOTRANSLATION)'                   )
-         call chkout ( 'EDTERM'                                 )
          return
 
       end if
@@ -926,7 +922,6 @@
          call errch  ( '#',  fixref                             )
          call errint ( '#',  frcode                             )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'EDTERM'                                 )
          return
 
       end if
@@ -943,7 +938,6 @@
          //            'ID code.'                               )
          call errch  ( '#',  target                             )
          call sigerr ( 'SPICE(NOTRANSLATION)'                   )
-         call chkout ( 'EDTERM'                                 )
          return
 
       end if
@@ -957,7 +951,6 @@
          //            'ID code.'                               )
          call errch  ( '#',  source                             )
          call sigerr ( 'SPICE(NOTRANSLATION)'                   )
-         call chkout ( 'EDTERM'                                 )
          return
 
       end if
@@ -971,7 +964,6 @@
          //            'ID code.'                               )
          call errch  ( '#',  obsrvr                             )
          call sigerr ( 'SPICE(NOTRANSLATION)'                   )
-         call chkout ( 'EDTERM'                                 )
          return
 
       end if
@@ -987,7 +979,6 @@
          call errch  ( '#',  fixref                              )
          call errch  ( '#',  target                              )
          call sigerr ( 'SPICE(INVALIDFIXREF)'                    )
-         call chkout ( 'EDTERM'                                  )
          return
 
       end if
@@ -997,20 +988,14 @@
 !
       call zzgftreb ( trgid, trgrad )
 
-      if ( failed() ) then
-         call chkout ( 'EDTERM' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Look up the radii associated with the light source.
 !
       call zzgftreb ( srcid, srcrad )
 
-      if ( failed() ) then
-         call chkout ( 'EDTERM' )
-         return
-      end if
+      if ( failed() ) return
 
       r = max ( srcrad(1), srcrad(2), srcrad(3) )
 
@@ -1021,10 +1006,7 @@
       call spkezp   ( trgid, et,     fixref, abcorr, &
                       obsid, trgpos, lttarg         )
 
-      if ( failed() ) then
-         call chkout( 'EDTERM' )
-         return
-      end if
+      if ( failed() ) return
 
       call zzcorepc ( abcorr, et,    lttarg, trgepc )
 
@@ -1040,6 +1022,5 @@
                       r,      srcpos,    npts,      trmpts     )
 
 
-      call chkout ( 'EDTERM' )
       return
       end

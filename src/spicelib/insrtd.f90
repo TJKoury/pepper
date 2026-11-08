@@ -248,11 +248,8 @@
 !
 !     Set up the error processing.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'INSRTD' )
 
 !
 !     What are the size and cardinality of the set?
@@ -305,6 +302,5 @@
 
       end if
 
-      call chkout ( 'INSRTD' )
       return
       end

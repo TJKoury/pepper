@@ -577,11 +577,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( rname )
-      end if
+      if ( return () ) return
 
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -591,10 +587,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -636,7 +629,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( rname                                )
          return
 
       end if
@@ -649,10 +641,7 @@
 !
       call zzspkgo1 ( targ,   et,    ref, ssb,  ssbtrg, ssblt )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       call vsubg  ( ssbtrg, stobs, 6,   starg  )
 
@@ -667,7 +656,6 @@
 !
          dlt = 0
 
-         call chkout ( rname )
          return
 
       end if
@@ -686,7 +674,6 @@
 !
 !        LT and DLT are both set, so we can return.
 !
-         call chkout ( rname )
          return
 
       end if
@@ -726,10 +713,7 @@
 
          call zzspkgo1 ( targ, epoch, ref, ssb, ssbtrg, ssblt )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call vsubg  ( ssbtrg, stobs, 6, starg )
 
@@ -846,7 +830,6 @@
       //               'light time derivative cannot be ' &
       //               'computed.'                            )
          call sigerr ( 'SPICE(DIVIDEBYZERO)'                  )
-         call chkout ( rname                                  )
          return
 
       end if
@@ -864,6 +847,5 @@
                   -1.0_wp,              stobs(4),   starg(4) )
 
 
-      call chkout ( rname )
       return
       end

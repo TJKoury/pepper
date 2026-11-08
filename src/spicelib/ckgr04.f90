@@ -298,11 +298,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKGR04' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpack descriptor and check segment data type. Signal an error
@@ -315,7 +311,6 @@
                        'Passed  descriptor shows type = #.'          )
          call errint ( '#', icd( 3 )                                 )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                      )
-         call chkout ( 'CKGR04'                                      )
          return
       end if
 
@@ -331,7 +326,6 @@
          call errint ( '#', recno                                    )
          call errint ( '#', nrec                                     )
          call sigerr ( 'SPICE(CKNONEXISTREC)'                        )
-         call chkout ( 'CKGR04'                                      )
          return
       end if
 
@@ -370,7 +364,6 @@
 !
 !     All done.
 !
-      call chkout ( 'CKGR04' )
 
       return
 

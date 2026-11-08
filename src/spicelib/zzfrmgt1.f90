@@ -192,11 +192,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZFRMGT1' )
 
 !
 !     On the first pass, initialize the identity matrix.
@@ -223,7 +220,6 @@
          call cleard ( 36, xform )
          outfrm = 0
 
-         call chkout ( 'ZZFRMGT1' )
          return
 
       end if
@@ -295,7 +291,6 @@
          //            'recursion level 1.'                      )
          call errint ( '#', infrm                                )
          call sigerr ( 'SPICE(RECURSIONTOODEEP)'                 )
-         call chkout ( 'ZZFRMGT1'                                )
          return
 
       else if ( type == swtch ) then
@@ -319,7 +314,6 @@
          call errint ( '#', type  )
          call errch  ( '#', versn )
          call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         call chkout ( 'ZZFRMGT1'                  )
          return
 
       end if
@@ -336,6 +330,5 @@
 
       end if
 
-      call chkout ( 'ZZFRMGT1' )
       return
       end

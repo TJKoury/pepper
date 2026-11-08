@@ -1213,11 +1213,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKCVT' )
 
 !
 !     Counter initialization is done separately.
@@ -1247,10 +1244,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( 'SPKCVT')
-            return
-         end if
+         if ( failed() ) return
 
          uselt  = attblk( ltidx  )
          xmit   = attblk( xmtidx )
@@ -1272,7 +1266,6 @@
          call setmsg ( 'Could not map body name # to an ID code.' )
          call errch  ( '#',  trgctr                               )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKCVT'                                   )
          return
 
       end if
@@ -1288,7 +1281,6 @@
          call setmsg ( 'Could not map body name # to an ID code.' )
          call errch  ( '#',  obsrvr                               )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKCVT'                                   )
          return
 
       end if
@@ -1309,7 +1301,6 @@
          //            'loaded.'                                       )
          call errch  ( '#', outref                                     )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'                           )
-         call chkout ( 'SPKCVT'                                        )
          return
 
       end if
@@ -1328,7 +1319,6 @@
          //            '''OBSERVER'', ''TARGET'', and ''CENTER''.' )
          call errch  ( '#',  refloc                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
-         call chkout ( 'SPKCVT'                                    )
          return
 
       end if
@@ -1357,7 +1347,6 @@
          call zzspkfzt ( zzcvxsta, et,     outref, &
                          abcorr,   obscde, state,  lt )
 
-         call chkout ( 'SPKCVT' )
          return
 
       end if
@@ -1396,10 +1385,7 @@
 
             call frmchg ( j2code, orfcde, et, xtrans )
 
-            if ( failed() ) then
-               call chkout ( 'SPKCVT')
-               return
-            end if
+            if ( failed() ) return
 
             call mxvg ( xtrans,  j2stat,  6,  6, state )
 
@@ -1440,10 +1426,7 @@
          call zzspkfat ( zzcvxsta, et,     'J2000', &
                          abcorr,   obscde, j2stat,  lt, dlt )
 
-         if ( failed() ) then
-            call chkout ( 'SPKCVT')
-            return
-         end if
+         if ( failed() ) return
 
 
          if (  orfcde == j2code ) then
@@ -1460,10 +1443,7 @@
 !
             call frmchg ( j2code,  orfcde,  et + s*lt,  xtrans )
 
-            if ( failed() ) then
-               call chkout ( 'SPKCVT')
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Adjust the transformation to account for the rate of change
@@ -1488,11 +1468,9 @@
          //            'not recognized. [Coding error].'      )
          call errch  ( '#',  refloc                           )
          call sigerr ( 'SPICE(BUG)'                           )
-         call chkout ( 'SPKCVT'                               )
          return
 
       end if
 
-      call chkout ( 'SPKCVT' )
       return
       end

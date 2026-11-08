@@ -264,11 +264,8 @@
       data                  names / kvsfbd, kvsfcd, kvsfnm /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSRFKER' )
 
 !
 !     The primary functions performed inline in this routine are
@@ -288,10 +285,7 @@
 !
          call swpool ( 'ZZSRFTRN', nnames, names )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSRFKER' )
-            return
-         end if
+         if ( failed() ) return
 
          pass1 = .false.
 
@@ -311,10 +305,7 @@
       call dtpool ( kvsfcd, fndcde, ncode, cdtype )
       call dtpool ( kvsfbd, fndbod, nbody, bdtype )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSRFKER' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The variables must all be present or all be absent.
@@ -352,7 +343,6 @@
          end if
 
          call sigerr ( 'SPICE(BADSURFACEMAP)' )
-         call chkout ( 'ZZSRFKER'             )
          return
 
       end if
@@ -362,10 +352,7 @@
 !
       extker = fndnam .and. fndcde .and. fndbod
 
-      if ( .not. extker ) then
-         call chkout ( 'ZZSRFKER' )
-         return
-      end if
+      if ( .not. extker ) return
 
 !
 !     Make sure the kernel variables aren't larger than our arrays.
@@ -388,7 +375,6 @@
          call errch  ( '#', kvsfbd                             )
          call errch  ( '#', bdtype                             )
          call sigerr ( 'SPICE(BADVARIABLETYPE)'                )
-         call chkout ( 'ZZSRFKER'                              )
          return
 
       end if
@@ -411,7 +397,6 @@
          call errint ( '#', nbody                              )
          call errint ( '#', mxnsrf                             )
          call sigerr ( 'SPICE(TOOMANYSURFACES)'                )
-         call chkout ( 'ZZSRFKER'                              )
          return
 
       end if
@@ -427,7 +412,6 @@
          call errch  ( '#', kvsfbd                                   )
          call errint ( '#', nbody                                    )
          call sigerr ( 'SPICE(ARRAYSIZEMISMATCH)'                    )
-         call chkout ( 'ZZSRFKER'                                    )
          return
 
       end if
@@ -441,10 +425,7 @@
       call gipool ( kvsfcd, 1, mxnsrf, ncode, kersid, fndcde )
       call gipool ( kvsfbd, 1, mxnsrf, nbody, kerbid, fndbod )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSRFKER' )
-         return
-      end if
+      if ( failed() ) return
 
 
       nkvar = nname
@@ -463,7 +444,6 @@
             //            'the NAIF_SURFACE_NAME array.'            )
             call errint ( '#', i                                    )
             call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
-            call chkout ( 'ZZSRFKER'                                )
             return
 
          end if
@@ -479,6 +459,5 @@
                       nroom,  snmhls, snmpol, snmidx, &
                       sidhls, sidpol, sididx         )
 
-      call chkout ( 'ZZSRFKER' )
       return
       end

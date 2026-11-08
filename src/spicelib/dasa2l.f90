@@ -699,12 +699,10 @@
 !
       if (  ( type < char ) .or. ( type > int )  ) then
 
-         call chkin    ( 'DASA2L'                         )
          call setmsg ( 'Invalid data type: #. File was #' )
          call errint ( '#',  type                         )
          call errhan ( '#',  handle                       )
          call sigerr ( 'SPICE(DASINVALIDTYPE)'            )
-         call chkout ( 'DASA2L'                           )
          return
 
       end if
@@ -965,7 +963,6 @@
 !
          tbhan(fidx) = 0
 
-         call chkin    ( 'DASA2L'                                 )
          call setmsg ( 'ADDRSS was #; valid range for type # is ' &
          //            '# to #.  File was #'                      )
          call errint ( '#',  addrss                               )
@@ -974,7 +971,6 @@
          call errint ( '#',  mxaddr                               )
          call errhan ( '#',  handle                               )
          call sigerr ( 'SPICE(DASNOSUCHADDRESS)'                  )
-         call chkout ( 'DASA2L'                                   )
          return
 
       end if
@@ -1119,7 +1115,6 @@
 !
                tbhan(fidx) = 0
 
-               call chkin  ( 'DASA2L'                               )
                call setmsg ( 'Directory record # in DAS file with ' &
                //            'handle # is probably corrupted. No ' &
                //            'high cluster address at or above the ' &
@@ -1132,7 +1127,6 @@
                call errint ( '#', hiaddr                            )
                call errint ( '#', type                              )
                call sigerr ( 'SPICE(BADDASDIRECTORY)'               )
-               call chkout ( 'DASA2L'                               )
                return
 
             end if

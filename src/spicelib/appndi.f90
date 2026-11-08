@@ -235,11 +235,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'APPNDI' )
-      end if
+      if ( return () ) return
 
 !
 !     Check to see if the cell can accommodate the addition of a
@@ -266,6 +262,5 @@
       end if
 
 
-      call chkout ( 'APPNDI' )
       return
       end

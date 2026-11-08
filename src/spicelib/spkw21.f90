@@ -324,11 +324,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKW21' )
 
 !
 !     Make sure the difference line size is within limits.
@@ -345,7 +342,6 @@
          call errint ( '#',  dlsize                            )
          call errint ( '#',  maxdsz                            )
          call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
-         call chkout ( 'SPKW21'                                )
          return
 
       end if
@@ -360,7 +356,6 @@
          call errint ( '#',  dlsize                            )
          call errint ( '#',  mindsz                            )
          call sigerr ( 'SPICE(DIFFLINETOOSMALL)'               )
-         call chkout ( 'SPKW21'                                )
          return
 
       end if
@@ -375,7 +370,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW21'                                    )
          return
 
       end if
@@ -388,7 +382,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW21'                                  )
          return
 
       end if
@@ -406,7 +399,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW21'                                )
             return
 
          end if
@@ -422,7 +414,6 @@
                        'must be at least one.'                       )
          call errint ( '#', n                                        )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                         )
-         call chkout ( 'SPKW21'                                      )
          return
 
       end if
@@ -438,7 +429,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW21'                                    )
          return
 
       end if
@@ -458,7 +448,6 @@
             call errint ( '#',  i                                     )
             call errdp  ( '#',  epochs(i-1)                           )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
-            call chkout ( 'SPKW21'                                    )
             return
 
          end if
@@ -479,7 +468,6 @@
          call errdp  ( '#',  last                                     )
          call errdp  ( '#',  epochs(n)                                )
          call sigerr ( 'SPICE(COVERAGEGAP)'                           )
-         call chkout ( 'SPKW21'                                       )
          return
 
       end if
@@ -507,7 +495,6 @@
                call errint ( '#',  j-1                                )
                call errint ( '#',  i                                  )
                call sigerr ( 'SPICE(ZEROSTEP)'                        )
-               call chkout ( 'SPKW21'                                 )
                return
 
             end if
@@ -528,10 +515,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW21' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The type 21 segment structure is shown below:
@@ -582,6 +566,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW21' )
       return
       end

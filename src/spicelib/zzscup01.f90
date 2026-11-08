@@ -395,11 +395,8 @@
       logical               update
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSCUP01' )
 !
 !     Reinitialize local database if the kernel pool has been
 !     updated. The call below syncs POLCTR.
@@ -454,7 +451,6 @@
 !
                prvsc = 0
 
-               call chkout ( 'ZZSCUP01' )
                return
 
             end if
@@ -484,6 +480,5 @@
 
       end if
 
-      call chkout ( 'ZZSCUP01' )
       return
       end

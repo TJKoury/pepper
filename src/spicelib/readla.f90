@@ -259,11 +259,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'READLA' )
-      end if
+      if ( return () ) return
 !
 !     Check to see if the maximum number of lines is positive.
 !
@@ -273,7 +269,6 @@
                        ' line array was not positive. It was: #.'    )
          call errint ( '#', maxlin                                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'READLA'                                      )
          return
 
       end if
@@ -296,7 +291,6 @@
 !           been set, so we need to set the number of lines that have
 !           been correctly read from the file and return.
 !
-            call chkout ( 'READLA' )
             return
 
          end if
@@ -319,7 +313,6 @@
 
       eof = myeof
 
-      call chkout ( 'READLA' )
       return
 
       end

@@ -379,11 +379,9 @@
 !
 !     This routine should never be called directly.
 !
-      call chkin  ( 'ZZGFFVU' )
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'ZZGFFVU' )
       return
 
 
@@ -809,11 +807,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFFVIN' )
 
 !
 !     To avoid portability problems, initialize all
@@ -849,7 +844,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFFVIN'                                 )
          return
 
       end if
@@ -875,7 +869,6 @@
          //            '''#'', is not recognized.'       )
             call errch  ( '#', tshape                    )
          call sigerr ( 'SPICE(INVALIDSHAPE)'             )
-         call chkout ( 'ZZGFFVIN'                        )
          return
 
       end if
@@ -909,7 +902,6 @@
             //            'version of the SPICE Toolkit. '           )
             call errch  ( '#', target                                )
             call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-            call chkout ( 'ZZGFFVIN'                                 )
             return
 
          end if
@@ -930,7 +922,6 @@
             call errch  ( '#', obsrvr                       )
             call errch  ( '#', target                       )
             call sigerr ( 'SPICE(BODIESNOTDISTINCT)'        )
-            call chkout ( 'ZZGFFVIN'                        )
             return
 
          end if
@@ -953,7 +944,6 @@
             //            'point, but the associated ' &
             //            'frame name is blank.'           )
             call sigerr ( 'SPICE(INVALIDFRAME)'            )
-            call chkout ( 'ZZGFFVIN'                       )
             return
 
          end if
@@ -965,7 +955,6 @@
             call setmsg ( 'The target frame name # is not recognized.' )
             call errch  ( '#',  tframe                                 )
             call sigerr ( 'SPICE(INVALIDFRAME)'                        )
-            call chkout ( 'ZZGFFVIN'                                   )
             return
 
          end if
@@ -994,7 +983,6 @@
             //            'error.'                                  )
             call errch  ( '#',  target                              )
             call sigerr ( 'SPICE(FRAMEINFONOTFOUND)'                )
-            call chkout ( 'ZZGFFVIN'                                )
             return
 
          end if
@@ -1016,7 +1004,6 @@
                call errch  ( '#',  target                       )
                call errint ( '#',  frcent                       )
                call sigerr ( 'SPICE(INVALIDFRAME)'              )
-               call chkout ( 'ZZGFFVIN'                         )
                return
 
             end if
@@ -1035,10 +1022,7 @@
 !
          call zzprscor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVIN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Reject aberration correction flags calling for any type of
@@ -1056,7 +1040,6 @@
             //            'rays.'                                  )
             call errch  ( '#', abcorr                              )
             call sigerr ( 'SPICE(INVALIDOPTION)'                   )
-            call chkout ( 'ZZGFFVIN'                               )
             return
 
          end if
@@ -1078,10 +1061,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVIN' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -1102,10 +1082,7 @@
 !
          call zzgftreb ( svtarg, svtrad )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVIN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Checks of radii have been completed.
@@ -1132,7 +1109,6 @@
             call setmsg ( 'Input ray direction was the zero vector; ' &
             //            'this vector must be non-zero.'            )
             call sigerr ( 'SPICE(ZEROVECTOR)'                        )
-            call chkout ( 'ZZGFFVIN'                                 )
             return
 
          end if
@@ -1155,7 +1131,6 @@
          //            'kernel.'                                  )
          call errch  ( '#', inst                                  )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFFVIN'                                 )
          return
 
       end if
@@ -1172,10 +1147,7 @@
       call getfov ( svinst, maxvrt, svishp, &
                     svifrm, bsite,  svnvrt, svbnds )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFFVIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Scale boresight vector to unit length.
@@ -1208,10 +1180,7 @@
 
          call zzfovaxi ( inst,  svnvrt, svbnds, svfaxi )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVIN' )
-            return
-         end if
+         if ( failed() ) return
 
       else
 
@@ -1244,7 +1213,6 @@
          call errdp  ( '#',  svarad*dpr()                )
          call errdp  ( '#',  (halfpi()-atol)*dpr()       )
          call sigerr ( 'SPICE(FOVTOOWIDE)'               )
-         call chkout ( 'ZZGFFVIN'                        )
          return
 
       end if
@@ -1315,7 +1283,6 @@
                call errint ( '#', nxpts                     )
                call errch  ( '#', inst                      )
                call sigerr ( 'SPICE(DEGENERATECASE)'        )
-               call chkout ( 'ZZGFFVIN'                     )
                return
 
             end if
@@ -1334,7 +1301,6 @@
                call errint ( '*', i                    )
                call errch  ( '@', inst                 )
                call sigerr ( 'SPICE(DEGENERATECASE)'   )
-               call chkout ( 'ZZGFFVIN'                )
                return
 
             end if
@@ -1507,7 +1473,6 @@
                call errint ( '#', nxpts                             )
                call errch  ( '#', inst                              )
                call sigerr ( 'SPICE(DEGENERATECASE)'                )
-               call chkout ( 'ZZGFFVIN'                             )
                return
 
             end if
@@ -1522,7 +1487,6 @@
 
       end if
 
-      call chkout ( 'ZZGFFVIN' )
       return
 
 
@@ -1646,11 +1610,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFFVST' )
 
 !
 !     Initialize the state output.
@@ -1685,10 +1646,7 @@
          call pxform ( svtfrm,  'J2000', ettarg, m1 )
          call pxform ( 'J2000', svifrm,  time,   m2 )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVST' )
-            return
-         end if
+         if ( failed() ) return
 
          call mxm ( m2, m1, insmat )
 
@@ -1792,7 +1750,6 @@
             call errch  ( '#',  svtnam                              )
             call errch  ( '#',  svishp                              )
             call sigerr ( 'SPICE(INVALIDSHAPE)'                     )
-            call chkout ( 'ZZGFFVST'                                )
             return
 
          end if
@@ -1821,10 +1778,7 @@
 !
             call pxform ( svtfrm, svifrm, time, insmat )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFFVST' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Transform the ray's direction vector to the instrument
@@ -1848,10 +1802,7 @@
 !
                call pxform ( svifrm, 'J2000', time, m1 )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZGFFVST' )
-                  return
-               end if
+               if ( failed() ) return
 
                call mxv ( m1, dir, vtemp )
 
@@ -1898,19 +1849,13 @@
 
             call pxform ( 'J2000', svifrm, time,  m1 )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFFVST' )
-               return
-            end if
+            if ( failed() ) return
 
             call mxv ( m1, vtemp, dir )
 
          end if
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFFVST' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The observer-target direction vector DIR is set.
@@ -1969,7 +1914,6 @@
                //            'somehow it does, we have a serious ' &
                //            'problem.'                           )
                call sigerr ( 'SPICE(BUG)'                         )
-               call chkout ( 'ZZGFFVST'                           )
                return
 
             else
@@ -2043,7 +1987,6 @@
                   call errch  ( '#',  svinam                       )
                   call errch  ( '#',  svishp                       )
                   call sigerr ( 'SPICE(INVALIDSHAPE)'              )
-                  call chkout ( 'ZZGFFVST'                         )
                   return
 
                end if
@@ -2067,6 +2010,5 @@
 !     We've processed all target representation/FOV shape cases.
 !
 
-      call chkout ( 'ZZGFFVST' )
       return
       end

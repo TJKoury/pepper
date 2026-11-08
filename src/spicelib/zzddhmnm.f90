@@ -218,11 +218,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHMNM' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -236,10 +232,7 @@
 !        Check FAILED() to handle the unlikely event that
 !        ZZDDHINI signaled SPICE(BUG).
 !
-         if ( failed() ) then
-            call chkout ( 'ZZDDHMNM' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Do not perform initialization tasks again.
@@ -282,10 +275,7 @@
 !
             call zzddhppf ( unit, daf, bff )
 
-            if ( failed() ) then
-               call chkout ( 'ZZDDHMNM' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           If the file is in a non-native format, we will need to read
@@ -304,10 +294,7 @@
 !
                supidx = isrchi ( bff, numsup, supbff )
 
-               if ( supidx == 0 ) then
-                  call chkout ( 'ZZDDHMNM' )
-                  return
-               end if
+               if ( supidx == 0 ) return
 
 !
 !              Read the first record as characters and do translation.
@@ -316,10 +303,7 @@
 
                call zzxlatei ( bff, strbuf, nints, intarr )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZDDHMNM' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -378,7 +362,6 @@
 
       zzddhmnm = mnm
 
-      call chkout ( 'ZZDDHMNM' )
 
       return
       end

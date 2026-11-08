@@ -207,9 +207,7 @@
 !
 !     This routine checks in only if an error is discovered.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Find the unitized cross product of SPAN1 and SPAN2; this is our
@@ -218,10 +216,8 @@
       call ucrss (  span1,  span2,  plane(nmlpos)  )
 
       if (  vzero ( plane(nmlpos) )  ) then
-         call chkin  ( 'PSV2PL'                         )
          call setmsg ( 'Spanning vectors are parallel.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'          )
-         call chkout ( 'PSV2PL'                         )
          return
       end if
 

@@ -264,11 +264,8 @@
 !
       zzwind = 0
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZWIND' )
 
 !
 !     Check the number of sides of the polygon.
@@ -278,7 +275,6 @@
          call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
          call errint ( '#',  n                                      )
          call sigerr ( 'SPICE(DEGENERATECASE)'                      )
-         call chkout ( 'ZZWIND'                                     )
          return
 
       end if
@@ -295,7 +291,6 @@
 
          call setmsg ( 'Plane''s normal vector is zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'               )
-         call chkout ( 'ZZWIND'                          )
          return
 
       end if
@@ -380,6 +375,5 @@
 !
       zzwind = nint ( atotal / twopi() )
 
-      call chkout ( 'ZZWIND' )
       return
       end

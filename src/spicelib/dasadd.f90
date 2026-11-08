@@ -377,10 +377,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
-      call chkin ( 'DASADD' )
+      if ( return () ) return
 
 
 !
@@ -396,10 +393,7 @@
                     lastrc, &
                     lastwd )
 
-      if ( failed() ) then
-         call chkout ( 'DASADD' )
-         return
-      end if
+      if ( failed() ) return
 
       lastd  =  lastla(dp)
 
@@ -510,6 +504,5 @@
 !
       call dascud ( handle, dp, nwritn )
 
-      call chkout ( 'DASADD' )
       return
       end

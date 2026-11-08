@@ -410,7 +410,6 @@
 !     Perform the consistency checks first.
 !
       if ( ncount /= nnames ) then
-         call chkin ( 'ZZFDAT' )
          call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &
          //           'the current version of ZZFDAT. Check to ' &
@@ -418,12 +417,10 @@
          //           'versions of ZZFDAT and the routines that ' &
          //           'make use of it.' )
          call sigerr ( 'SPICE(VERSIONMISMATCH1)'  )
-         call chkout ( 'ZZFDAT' )
          return
       end if
 
       if ( maxbfr < nnames ) then
-         call chkin ( 'ZZFDAT' )
          call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &
          //           'the current version of ZZFDAT. Check to ' &
@@ -431,7 +428,6 @@
          //           'versions of ZZFDAT and the routines that ' &
          //           'make use of it.' )
          call sigerr ( 'SPICE(VERSIONMISMATCH2)' )
-         call chkout ( 'ZZFDAT' )
          return
       end if
 

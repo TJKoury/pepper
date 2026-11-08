@@ -495,11 +495,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CKW04A' )
-      end if
+      if ( return() ) return
 
 !
 !     First, check if the number of coefficient sets and epochs
@@ -519,7 +515,6 @@
             call errhan ( '#', handle                                )
             call errint ( '#', pktsiz( k )                           )
             call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
-            call chkout ( 'CKW04A'                                   )
             return
 
          end if
@@ -541,7 +536,6 @@
             call errint ( '#', ck4rsz - 1                            )
             call errint ( '#', pktsiz( k )                           )
             call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
-            call chkout ( 'CKW04A'                                   )
             return
 
          end if
@@ -605,7 +599,6 @@
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 !
-      call chkout ( 'CKW04A' )
 
       return
 

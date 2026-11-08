@@ -141,17 +141,13 @@
 
 
 
-      call chkin ( 'ZZEKPGCH' )
 
 !
 !     Check whether the DAS is opened for the specified access method.
 !
       call dassih ( handle, access )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKPGCH' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure the DAS file is of the right type.
@@ -167,7 +163,6 @@
          call errint ( '#',   id                                     )
          call errint ( '#',   archid                                 )
          call sigerr ( 'SPICE(WRONGARCHITECTURE)'                    )
-         call chkout ( 'ZZEKPGCH'                                    )
          return
 
       end if
@@ -196,7 +191,6 @@
          call errint ( '#',   lastc                                  )
          call errint ( '#',   topc                                   )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
-         call chkout ( 'ZZEKPGCH'                                    )
          return
 
       else if ( lastd > topd ) then
@@ -206,7 +200,6 @@
          call errint ( '#',   lastd                                  )
          call errint ( '#',   topd                                   )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
-         call chkout ( 'ZZEKPGCH'                                    )
          return
 
       else if ( lasti > topi ) then
@@ -216,12 +209,10 @@
          call errint ( '#',   lasti                                  )
          call errint ( '#',   topi                                   )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
-         call chkout ( 'ZZEKPGCH'                                    )
          return
 
       end if
 
 
-      call chkout ( 'ZZEKPGCH' )
       return
       end

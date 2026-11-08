@@ -194,16 +194,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKSSB' )
-      end if
+      if ( return () ) return
 
       bary = 0
 
       call spkgeo ( targ, et, ref, bary, starg, lt )
 
-      call chkout ( 'SPKSSB' )
       return
       end

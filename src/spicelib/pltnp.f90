@@ -233,9 +233,7 @@
       logical               in2
       logical               in3
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Use discovery check-in.

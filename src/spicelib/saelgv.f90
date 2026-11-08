@@ -233,11 +233,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SAELGV' )
-      end if
+      if ( return () ) return
 
 !
 !        Let the notation
@@ -402,7 +398,6 @@
          call cleard ( 3, smajor )
          call cleard ( 3, sminor )
 
-         call chkout ( 'SAELGV' )
          return
 
       end if
@@ -452,6 +447,5 @@
       call vsclip ( scale, sminor )
 
 
-      call chkout ( 'SAELGV' )
       return
       end

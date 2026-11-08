@@ -364,11 +364,8 @@
       integer(ip)           ibuff  ( ibfsiz )
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKB02' )
 
       dpbase = dladsc ( dbsidx )
       ibase  = dladsc ( ibsidx )
@@ -402,6 +399,5 @@
 
       voxsiz = dbuff ( ixvxsz - dskdsz )
 
-      call chkout ( 'DSKB02' )
       return
       end

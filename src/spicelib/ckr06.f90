@@ -444,11 +444,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKR06' )
 
 !
 !     Start with a parameter compatibility check on the first
@@ -519,7 +516,6 @@
          //            'data are not available, but such data were ' &
          //            'requested.'                                    )
          call sigerr ( 'SPICE(NOAVDATA)'                               )
-         call chkout ( 'CKR06'                                         )
          return
 
       end if
@@ -533,7 +529,6 @@
          //           'was actually *.'                      )
          call errdp ( '*',  tol                              )
          call sigerr( 'SPICE(NEGATIVETOL)'                   )
-         call chkout( 'CKR06'                                )
          return
 
       end if
@@ -548,7 +543,6 @@
 !        The request time is too far outside the segment's coverage
 !        interval for any pointing to satisfy the request.
 !
-         call chkout ( 'CKR06' )
          return
 
       end if
@@ -775,7 +769,6 @@
             //           'data in a type 6 data segment.'       )
             call errint( '*',  type                             )
             call sigerr( 'SPICE(WRONGCKTYPE)'                   )
-            call chkout( 'CKR06'                                )
             return
 
          end if
@@ -793,10 +786,7 @@
 !
          call dafgda ( handle, eaddr-1, eaddr, contrl )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
          isel   = nint ( contrl(1) )
          n      = nint ( contrl(2) )
@@ -889,10 +879,7 @@
 !
                call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               if ( failed() ) then
-                  call chkout( 'CKR06' )
-                  return
-               end if
+               if ( failed() ) return
 
                remain = ndir - nread
 !
@@ -909,10 +896,7 @@
 !
                   call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  if ( failed() ) then
-                     call chkout( 'CKR06' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   remain = remain - nread
 
@@ -959,10 +943,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout( 'CKR06' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Find the index of the first epoch greater than T; this is
@@ -984,7 +965,6 @@
                call setmsg ( 'IVEIX = #.' )
                call errint ( '#', iveix   )
                call sigerr ( 'SPICE(BUG)' )
-               call chkout ( 'CKR06'      )
                return
 
             end if
@@ -1037,10 +1017,7 @@
 !
                call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               if ( failed() ) then
-                  call chkout( 'CKR06' )
-                  return
-               end if
+               if ( failed() ) return
 !
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
@@ -1055,10 +1032,7 @@
 !
                   call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  if ( failed() ) then
-                     call chkout( 'CKR06' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   remain = remain - nread
 
@@ -1106,10 +1080,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout( 'CKR06' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Find the index of the last interval boundary less than T.
@@ -1129,7 +1100,6 @@
                call setmsg ( 'IVBIX = #.' )
                call errint ( '#', ivbix   )
                call sigerr ( 'SPICE(BUG)' )
-               call chkout ( 'CKR06'      )
                return
 
             end if
@@ -1159,10 +1129,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+2, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
          minib = nint ( buffer(1) ) + baddr - 1
 !
@@ -1177,10 +1144,7 @@
 !
          call dafgda ( handle, minie-ctrlsz+1, minie, contrl )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Fetch the control area parameters for the mini-segment.
@@ -1203,10 +1167,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+1, lstepc )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Determine whether the request time is in a gap.
@@ -1222,7 +1183,6 @@
 !              We're out of luck. We can't find pointing for this
 !              request. FOUND is already .FALSE., so just return.
 !
-               call chkout ( 'CKR06' )
                return
 
             else
@@ -1235,10 +1195,7 @@
                call dafgda ( handle, ivbas+miniix, &
                                      ivbas+miniix+1, mintim )
 
-               if ( failed() ) then
-                  call chkout ( 'CKR06' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              See whether T is close enough to a stored epoch for
@@ -1250,7 +1207,6 @@
 !                 We can't find pointing for T. FOUND is already
 !                 .FALSE., so just return.
 !
-                  call chkout ( 'CKR06' )
                   return
 
                end if
@@ -1277,7 +1233,6 @@
 !                    T is too far from LSTEPC. We're done. FOUND is
 !                    already .FALSE., so just return.
 !
-                     call chkout ( 'CKR06' )
                      return
 
                   end if
@@ -1320,10 +1275,7 @@
 
                      call dafgda ( handle, bufbas+1, bufbas+2, buffer )
 
-                     if ( failed() ) then
-                        call chkout ( 'CKR06' )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      minib = nint ( buffer(1) ) + baddr - 1
 !
@@ -1339,10 +1291,7 @@
                      call dafgda ( handle, minie-ctrlsz+1, &
                                            minie,          contrl )
 
-                     if ( failed() ) then
-                        call chkout ( 'CKR06' )
-                        return
-                     end if
+                     if ( failed() ) return
 
 !
 !                    Fetch the control area parameters for the
@@ -1377,10 +1326,7 @@
 
                      call dafgda ( handle, bufbas+1, bufbas+1, lstepc )
 
-                     if ( failed() ) then
-                        call chkout ( 'CKR06' )
-                        return
-                     end if
+                     if ( failed() ) return
 
                   end if
 
@@ -1415,10 +1361,7 @@
 !
          call dafgda ( handle, ivbas+miniix, ivbas+miniix+1, mintim )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        From this point onward, we'll work with the mini-segment
@@ -1435,7 +1378,6 @@
             call errint ( '#',  subtyp                                 )
             call errint ( '#',  miniix                                 )
             call sigerr ( 'SPICE(INVALIDSUBTYPE)'                      )
-            call chkout ( 'CKR06'                                      )
             return
 
          end if
@@ -1456,7 +1398,6 @@
             call errint ( '#',  subtyp                                 )
             call errint ( '#',  miniix                                 )
             call sigerr ( 'SPICE(INVALIDVALUE)'                        )
-            call chkout ( 'CKR06'                                      )
             return
 
          end if
@@ -1470,7 +1411,6 @@
             call errint ( '#',  subtyp                             )
             call errint ( '#',  miniix                             )
             call sigerr ( 'SPICE(INVALIDVALUE)'                    )
-            call chkout ( 'CKR06'                                  )
             return
 
          end if
@@ -1485,10 +1425,7 @@
 !        The test below is done for safety. No SPICE errors
 !        should ever be detected at this point.
 !
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If we made it this far, we did so without a SPICE error. We
@@ -1582,10 +1519,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'CKR06' )
-            return
-         end if
+         if ( failed() ) return
 
          do while (       ( buffer(nread) < t ) &
                     .and. ( remain        > 0 )  )
@@ -1598,10 +1532,7 @@
 !
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout ( 'CKR06' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -1648,10 +1579,7 @@
 
       call dafgda ( handle, timbas+begidx, timbas+endidx, buffer )
 
-      if ( failed() ) then
-         call chkout ( 'CKR06' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find two adjacent epochs bounding the request epoch.  The request
@@ -1740,16 +1668,12 @@
                     bufbas+nrcpkt, &
                     record( ctrlsz + nrcpkt*pktsiz + 1 )  )
 
-      if ( failed() ) then
-         call chkout ( 'CKR06' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Indicate pointing was found.
 !
       found = .true.
       svfnd = .true.
 
-      call chkout ( 'CKR06' )
       return
       end

@@ -183,11 +183,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZROTGT1' )
 
 !
 !     Get all the needed information about this frame.
@@ -199,7 +196,6 @@
          call cleard ( 9, rotate )
          outfrm = 0
 
-         call chkout ( 'ZZROTGT1' )
          return
 
       end if
@@ -249,7 +245,6 @@
          //            'recursion level 1.'                      )
          call errint ( '#', infrm                                )
          call sigerr ( 'SPICE(RECURSIONTOODEEP)'                 )
-         call chkout ( 'ZZROTGT1'                                )
          return
 
       else if ( type == swtch ) then
@@ -273,7 +268,6 @@
          call errint ( '#', type  )
          call errch  ( '#', versn )
          call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         call chkout ( 'ZZROTGT1'                  )
          return
 
       end if
@@ -290,6 +284,5 @@
 
       end if
 
-      call chkout ( 'ZZROTGT1' )
       return
       end

@@ -184,13 +184,9 @@
 !     lying in the plane is considered a non-intersection case,
 !     by the way.)
 !
-      if ( ( vtxcon > const ) .and. ( dircon > 0.0_wp ) ) then
-         return
-      end if
+      if ( ( vtxcon > const ) .and. ( dircon > 0.0_wp ) ) return
 
-      if ( ( vtxcon < const ) .and. ( dircon < 0.0_wp ) ) then
-         return
-      end if
+      if ( ( vtxcon < const ) .and. ( dircon < 0.0_wp ) ) return
 
 
       if ( vtxcon == const ) then
@@ -232,16 +228,12 @@
 !
 !        H  <=  MAXD * LPAR
 !
-      if ( h > (maxd * lpar) ) then
-         return
-      end if
+      if ( h > (maxd * lpar) ) return
 
 !
 !     For safety, return if we could have a divide-by-zero error.
 !
-      if ( lpar == 0.0_wp ) then
-         return
-      end if
+      if ( lpar == 0.0_wp ) return
 
 !
 !     Still being here means we can compute XPT, provided

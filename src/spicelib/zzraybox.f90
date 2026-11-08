@@ -168,9 +168,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No intercept has been found yet.
@@ -182,11 +180,9 @@
 !
       if ( vzero(raydir) ) then
 
-         call chkin  ( 'ZZRAYBOX'                                      )
          call setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
          call sigerr ( 'SPICE(ZEROVECTOR)'                             )
-         call chkout ( 'ZZRAYBOX'                                      )
          return
 
       end if
@@ -198,14 +194,12 @@
 !
       if (  min( extent(1), extent(2), extent(3) ) <= 0.0_wp ) then
 
-         call chkin  ( 'ZZRAYBOX'                                    )
          call setmsg ( 'All box extents should be strictly positive ' &
          //            'but the extents were #, #, #.'               )
          call errdp  ( '#',  extent(1)                               )
          call errdp  ( '#',  extent(2)                               )
          call errdp  ( '#',  extent(3)                               )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                      )
-         call chkout ( 'ZZRAYBOX'                                    )
          return
 
       end if
@@ -371,9 +365,7 @@
 !     We should have a positive value of T for at least one
 !     coordinate. However, if we don't, there's no intersection.
 !
-      if ( maxt < 0.0_wp ) then
-         return
-      end if
+      if ( maxt < 0.0_wp ) return
 
 !
 !     Compute the candidate intercept. Note that we're now working
@@ -403,12 +395,7 @@
 !              Ith component of XPT is outside these bounds,
 !              the ray misses the box.
 !
-               if (      ( xpt(i) < 0.0_wp      ) &
-                    .or. ( xpt(i) > extent(i) ) ) then
-
-                  return
-
-               end if
+               if (      ( xpt(i) < 0.0_wp      ) .or. ( xpt(i) > extent(i) ) ) return
 
             else
 !

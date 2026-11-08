@@ -149,9 +149,7 @@
 !     Compare squares of magnitudes, rather than magnitudes, for
 !     efficiency.
 !
-      if ( pmag2 > r2 ) then
-         return
-      end if
+      if ( pmag2 > r2 ) return
 
       s     = sqrt (  max( 0.0_wp,  r2-pmag2 )  )
 

@@ -175,11 +175,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS05' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the number of records in the segment. While we're at it,
@@ -262,6 +258,5 @@
       call dafada ( gm,                           1 )
       call dafada ( real( rec(2) - rec(1) + 1, wp ), 1 )
 
-      call chkout ( 'SPKS05' )
       return
       end

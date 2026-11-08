@@ -466,11 +466,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin( 'TRGSEP' )
 
 !
 !     Argument check and initialization.
@@ -482,7 +479,6 @@
 
       if ( failed () ) then
          trgsep = 0.0_wp
-         call chkout ('TRGSEP')
          return
       end if
 
@@ -496,10 +492,8 @@
 
       if ( failed () ) then
          trgsep = 0.0_wp
-         call chkout ('TRGSEP')
          return
       end if
 
-      call chkout ('TRGSEP')
       return
       end

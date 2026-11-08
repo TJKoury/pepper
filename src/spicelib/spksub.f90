@@ -239,11 +239,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKSUB' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the descriptor.
@@ -272,7 +268,6 @@
          call errdp  ( '#', omega                    )
          call sigerr ( 'SPICE(SPKNOTASUBSET)'        )
 
-         call chkout ( 'SPKSUB' )
          return
       end if
 
@@ -376,10 +371,8 @@
          call errint ( '#', type                           )
          call sigerr ( 'SPICE(SPKTYPENOTSUPP)'             )
 
-         call chkout ( 'SPKSUB' )
          return
       end if
 
-      call chkout ( 'SPKSUB' )
       return
       end

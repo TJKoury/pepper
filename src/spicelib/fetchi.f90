@@ -185,8 +185,6 @@
       if ( return () ) then
          fetchi = 0
          return
-      else
-         call chkin ( 'FETCHI' )
       end if
 
 !
@@ -207,6 +205,5 @@
       end if
 
 
-      call chkout ( 'FETCHI' )
       return
       end

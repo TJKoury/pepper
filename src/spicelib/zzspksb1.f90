@@ -166,16 +166,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZSPKSB1' )
-      end if
+      if ( return () ) return
 
       bary = 0
 
       call zzspkgo1 ( targ, et, ref, bary, starg, lt )
 
-      call chkout ( 'ZZSPKSB1' )
       return
       end

@@ -1895,11 +1895,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 !
 !     Nothing has been found yet.
@@ -1928,10 +1925,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Set logical flags indicating the attributes of the requested
 !        correction:
@@ -1978,7 +1972,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1998,7 +1991,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2015,7 +2007,6 @@
                        'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( rname                                        )
          return
 
       end if
@@ -2027,10 +2018,7 @@
 
       call frinfo ( fxfcde, fxcent, fxclss, fxtyid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2040,7 +2028,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -2057,7 +2044,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fxcent                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2070,7 +2056,6 @@
          call setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
          call sigerr ( 'SPICE(ZEROVECTOR)'                             )
-         call chkout ( rname                                           )
          return
 
       end if
@@ -2082,10 +2067,7 @@
 
       call frinfo ( dfrcde, dcentr, dclass, dtypid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2095,7 +2077,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  dref                                )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -2130,10 +2111,7 @@
 !
          call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
@@ -2151,7 +2129,6 @@
             //            'string was <#>.'                      )
             call errch  ( '#', shpstr                            )
             call sigerr ( 'SPICE(BUG)'                           )
-            call chkout ( rname                                  )
             return
 
          end if
@@ -2170,7 +2147,6 @@
             call errch  ( '#', subtyp                                 )
             call errch  ( '#', method                                 )
             call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
-            call chkout ( rname                                       )
             return
 
          end if
@@ -2213,7 +2189,6 @@
          //            'string was <#>.'                      )
          call errch  ( '#', shpstr                            )
          call sigerr ( 'SPICE(BUG)'                           )
-         call chkout ( rname                                  )
          return
 
       end if
@@ -2227,6 +2202,5 @@
                       dfrcde,  dclass,   dcentr,   dvec, &
                       spoint,  trgepc,   srfvec,   found  )
 
-      call chkout ( rname )
       return
       end

@@ -377,9 +377,7 @@
       if ( return () ) then
          return
       else
-         call chkin  ( 'DAFRWD' )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'DAFRWD' )
       end if
 
       return
@@ -551,9 +549,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Assume that the record will be found until proven otherwise.
@@ -824,9 +820,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Assume that the record will be found until proven otherwise.
@@ -1203,9 +1197,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Assume that the record will be found until proven otherwise.
@@ -1222,13 +1214,11 @@
 
          found = .false.
 
-         call chkin  ( 'DAFRDR'                                 )
          call setmsg ( 'The binary file format for file ''#'' ' &
          //            'is not native. This routine operates ' &
          //            'only on files of the native format.'    )
          call errhan ( '#', handle                              )
          call sigerr ( 'SPICE(UNSUPPORTEDBFF)'                  )
-         call chkout ( 'DAFRDR'                                 )
          return
       end if
 
@@ -1476,11 +1466,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFWDR' )
-      end if
+      if ( return () ) return
 
 !
 !     No fair writing to a read-only file!
@@ -1489,7 +1475,6 @@
          call setmsg ( 'Attempt was made to write to a read-only file.')
          call sigerr ( 'SPICE(DAFILLEGWRITE)' )
 
-         call chkout ( 'DAFWDR' )
          return
       end if
 
@@ -1546,7 +1531,6 @@
          call sigerr ( 'SPICE(DAFDPWRITEFAIL)' )
       end if
 
-      call chkout ( 'DAFWDR' )
       return
 
 

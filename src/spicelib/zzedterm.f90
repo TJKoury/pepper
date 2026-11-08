@@ -284,11 +284,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZEDTERM' )
 
 !
 !     Check the terminator type.
@@ -310,7 +307,6 @@
          //            'PENUMBRAL but was actually #.'     )
          call errch  ( '#',  type                          )
          call sigerr ( 'SPICE(NOTSUPPORTED)'               )
-         call chkout ( 'ZZEDTERM'                          )
          return
 
       end if
@@ -324,7 +320,6 @@
          //            ' = #.'                                        )
          call errint ( '#',  npts                                     )
          call sigerr ( 'SPICE(INVALIDSIZE)'                           )
-         call chkout ( 'ZZEDTERM'                                     )
          return
 
       end if
@@ -341,7 +336,6 @@
          call errdp  ( '#', b                                      )
          call errdp  ( '#', c                                      )
          call sigerr ( 'SPICE(INVALIDAXISLENGTH)'                  )
-         call chkout ( 'ZZEDTERM'                                  )
          return
 
       end if
@@ -355,7 +349,6 @@
          //            'actual radius was #.'                    )
          call errdp  ( '#', srcrad                               )
          call sigerr ( 'SPICE(INVALIDRADIUS)'                    )
-         call chkout ( 'ZZEDTERM'                                )
          return
 
       end if
@@ -382,7 +375,6 @@
          call errdp  ( '#', srcrad + rmax                          )
          call errdp  ( '#', d                                      )
          call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                    )
-         call chkout ( 'ZZEDTERM'                                  )
          return
 
       end if
@@ -599,6 +591,5 @@
 
       end do
 
-      call chkout ( 'ZZEDTERM' )
       return
       end

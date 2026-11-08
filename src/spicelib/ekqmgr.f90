@@ -1021,11 +1021,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKQMGR' )
-      end if
+      if ( return () ) return
 
 !
 !     Never come here.
@@ -1033,7 +1029,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      call chkout ( 'EKQMGR' )
       return
 
 
@@ -1459,11 +1454,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKLEF' )
-      end if
+      if ( return () ) return
 
 !
 !     Here's a brief overview of what follows:
@@ -1538,10 +1529,7 @@
 !
       call ekopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKLEF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Check to see whether the named EK has already been loaded.
@@ -1559,7 +1547,6 @@
 !
             call dascls ( handle )
 
-            call chkout ( 'EKLEF' )
             return
 
          end if
@@ -1594,7 +1581,6 @@
          call errhan ( '#', handle                                     )
          call ekcls  ( handle                                          )
          call sigerr ( 'SPICE(EKFILETABLEFULL)'                        )
-         call chkout ( 'EKLEF'                                         )
          return
 
       end if
@@ -1618,7 +1604,6 @@
          call errhan ( '#', handle                                     )
          call ekcls  ( handle                                          )
          call sigerr ( 'SPICE(EKSEGTABLEFULL)'                         )
-         call chkout ( 'EKLEF'                                         )
          return
 
       else if ( nseg < 1 ) then
@@ -1627,7 +1612,6 @@
          call errhan ( '#',  handle                                    )
          call ekcls  ( handle                                          )
          call sigerr ( 'SPICE(EKNOSEGMENTS)'                           )
-         call chkout ( 'EKLEF'                                         )
          return
 
       end if
@@ -2484,7 +2468,6 @@
 
             call ekcls  (  handle )
 
-            call chkout ( 'EKLEF' )
             return
 
          end if
@@ -2497,7 +2480,6 @@
 !     necessary to reflect the presence of the new file.
 !
 
-      call chkout ( 'EKLEF' )
       return
 
 
@@ -2753,11 +2735,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKUEF' )
-      end if
+      if ( return () ) return
 
 !
 !     On the first pass through this routine, initialize the tables,
@@ -2798,10 +2776,7 @@
 
       end do
 
-      if ( .not. fnd ) then
-         call chkout ( 'EKUEF' )
-         return
-      end if
+      if ( .not. fnd ) return
 
 !
 !     If we got to here, HANDLE points to a loaded EK file.  It's
@@ -2836,7 +2811,6 @@
 !
             call ekcls  ( handle )
 
-            call chkout ( 'EKUEF' )
             return
 
          end if
@@ -3043,7 +3017,6 @@
 !
       call ekcls  ( handle )
 
-      call chkout ( 'EKUEF' )
       return
 
 
@@ -3484,11 +3457,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKTNAM' )
-      end if
+      if ( return () ) return
 
       if ( first ) then
 !
@@ -3515,7 +3484,6 @@
       if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKTNAM'                             )
          return
       end if
 
@@ -3545,7 +3513,6 @@
       end if
 
 
-      call chkout ( 'EKTNAM' )
       return
 
 
@@ -3926,11 +3893,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKCCNT' )
-      end if
+      if ( return () ) return
 
 !
 !     On the first pass through this routine, initialize the tables,
@@ -3979,7 +3942,6 @@
          call setmsg ( 'The table # is not currently loaded.' )
          call errch  ( '#',  table                            )
          call sigerr ( 'SPICE(TABLENOTLOADED)'                )
-         call chkout ( 'EKCCNT'                               )
          return
 
       else
@@ -3996,7 +3958,6 @@
 
       end if
 
-      call chkout ( 'EKCCNT' )
       return
 
 
@@ -4405,11 +4366,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKCII' )
-      end if
+      if ( return () ) return
 
 !
 !     On the first pass through this routine, initialize the tables,
@@ -4457,7 +4414,6 @@
          call setmsg ( 'The table # is not currently loaded.' )
          call errch  ( '#',  table                            )
          call sigerr ( 'SPICE(TABLENOTLOADED)'                )
-         call chkout ( 'EKCII'                                )
          return
 
       end if
@@ -4497,7 +4453,6 @@
                attdsc(6) = ifalse
             end if
 
-            call chkout ( 'EKCII' )
             return
          else
             col = lnknxt ( col, ctpool )
@@ -4517,7 +4472,6 @@
       call errint ( '#',  cindex                                       )
       call sigerr ( 'SPICE(INVALIDINDEX)'                              )
 
-      call chkout ( 'EKCII' )
       return
 
 
@@ -4691,11 +4645,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKSRCH' )
-      end if
+      if ( return () ) return
 
 !
 !     There nothing to search if no files are loaded.  A sure
@@ -4704,7 +4654,6 @@
       if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKSRCH'                             )
          return
       end if
 
@@ -4788,7 +4737,6 @@
             call setmsg ( 'The table # is not currently loaded.' )
             call errch  ( '#',   frmtab(i)                       )
             call sigerr ( 'SPICE(INVALIDTABLENAME)'              )
-            call chkout ( 'EKSRCH'                               )
             return
          end if
 
@@ -5407,7 +5355,6 @@
             call errch  ( '#', colnam                                  )
             call errint ( '#', tabidx                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'EKSRCH'                                     )
             return
          end if
 
@@ -5435,7 +5382,6 @@
       end if
 
 
-      call chkout ( 'EKSRCH' )
       return
 
 
@@ -5948,19 +5894,15 @@
 !
 !     Use discovery check-in for speed.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     The request doesn't make sense if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
       if ( fthead <= 0 ) then
-         call chkin  ( 'EKNELT'                             )
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKNELT'                             )
          return
       end if
 
@@ -5969,13 +5911,11 @@
 !
       if (  ( row < 1 ) .or. ( row > unrows )  ) then
 
-         call chkin  ( 'EKNELT'                                        )
          call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
          call errint ( '#',  unrows                                    )
          call errint ( '#',  row                                       )
          call sigerr ( 'SPICE(INVALIDINDEX)'                           )
-         call chkout ( 'EKNELT'                                        )
          return
 
       end if
@@ -5984,13 +5924,11 @@
 !     Make sure the SELECT clause column index is valid.
 !
       if (  ( selidx < 1 ) .or. ( selidx > nsel )  ) then
-         call chkin  ( 'EKNELT'                                   )
          call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
          call errint ( '#', selidx                                )
          call errint ( '#', ntab                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                      )
-         call chkout ( 'EKNELT'                                   )
          return
       end if
 
@@ -6715,11 +6653,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKGC' )
-      end if
+      if ( return () ) return
 
 !
 !     Nothing found yet.
@@ -6733,7 +6667,6 @@
       if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKGC'                               )
          return
       end if
 
@@ -6747,7 +6680,6 @@
          call errint ( '#',  unrows                                    )
          call errint ( '#',  row                                       )
          call sigerr ( 'SPICE(INVALIDINDEX)'                           )
-         call chkout ( 'EKGC'                                          )
          return
 
       end if
@@ -6759,7 +6691,6 @@
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'EKGC'                               )
          return
       end if
 
@@ -6772,7 +6703,6 @@
          call errint ( '#', selidx                                )
          call errint ( '#', ntab                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                      )
-         call chkout ( 'EKGC'                                     )
          return
       end if
 
@@ -6794,7 +6724,6 @@
          call errch  ( '#', ctnams( colptr )            )
          call errch  ( '#', chtype( cttyps(colptr) )    )
          call sigerr ( 'SPICE(INVALIDTYPE)'             )
-         call chkout ( 'EKGC'                           )
          return
 
       end if
@@ -6854,7 +6783,6 @@
 
 
 
-      call chkout ( 'EKGC' )
       return
 
 
@@ -7700,11 +7628,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKGD' )
-      end if
+      if ( return () ) return
 
 !
 !     Nothing found yet.
@@ -7718,7 +7642,6 @@
       if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKGD'                               )
          return
       end if
 
@@ -7732,7 +7655,6 @@
          call errint ( '#',  unrows                                    )
          call errint ( '#',  row                                       )
          call sigerr ( 'SPICE(INVALIDINDEX)'                           )
-         call chkout ( 'EKGD'                                          )
          return
 
       end if
@@ -7744,7 +7666,6 @@
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'EKGD'                               )
          return
       end if
 
@@ -7757,7 +7678,6 @@
          call errint ( '#', selidx                                )
          call errint ( '#', ntab                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                      )
-         call chkout ( 'EKGD'                                     )
          return
       end if
 
@@ -7780,7 +7700,6 @@
          call errch  ( '#', ctnams( colptr )          )
          call errch  ( '#', chtype( cttyps(colptr) )  )
          call sigerr ( 'SPICE(INVALIDTYPE)'           )
-         call chkout ( 'EKGD'                         )
          return
 
       end if
@@ -7838,7 +7757,6 @@
                      found          )
 
 
-      call chkout ( 'EKGD' )
       return
 
 
@@ -8508,11 +8426,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKGI' )
-      end if
+      if ( return () ) return
 
 !
 !     Nothing found yet.
@@ -8526,7 +8440,6 @@
       if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
-         call chkout ( 'EKGI'                               )
          return
       end if
 
@@ -8540,7 +8453,6 @@
          call errint ( '#',  unrows                                    )
          call errint ( '#',  row                                       )
          call sigerr ( 'SPICE(INVALIDINDEX)'                           )
-         call chkout ( 'EKGI'                                          )
          return
 
       end if
@@ -8552,7 +8464,6 @@
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
-         call chkout ( 'EKGI'                               )
          return
       end if
 
@@ -8565,7 +8476,6 @@
          call errint ( '#', selidx                                )
          call errint ( '#', ntab                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                      )
-         call chkout ( 'EKGI'                                     )
          return
       end if
 
@@ -8587,7 +8497,6 @@
          call errch  ( '#', ctnams( colptr )          )
          call errch  ( '#', chtype( cttyps(colptr) )  )
          call sigerr ( 'SPICE(INVALIDTYPE)'           )
-         call chkout ( 'EKGI'                         )
          return
 
       end if
@@ -8645,6 +8554,5 @@
                      found           )
 
 
-      call chkout ( 'EKGI' )
       return
       end

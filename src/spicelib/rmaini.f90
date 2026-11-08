@@ -121,11 +121,9 @@
 !     Take care of the zero-denominator case first
 !
       if ( denom == 0.0_wp ) then
-         call chkin  ( 'RMAINI'                                       )
          call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
          call sigerr ( 'SPICE(DIVIDEBYZERO)'                          )
-         call chkout ( 'RMAINI'                                       )
          return
       end if
 

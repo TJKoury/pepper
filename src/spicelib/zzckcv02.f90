@@ -192,11 +192,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZCKCV02' )
-      end if
+      if ( return() ) return
 
 !
 !     Check tolerance value.
@@ -207,7 +203,6 @@
                        'was #.'                                       )
          call errdp  ( '#',  tol                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZCKCV02'                                     )
          return
 
       end if
@@ -228,7 +223,6 @@
                           'values are SCLK and TDB.'                )
             call errch  ( '#',  timsys                              )
             call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-            call chkout ( 'ZZCKCV02'                                )
             return
 
          end if
@@ -299,6 +293,5 @@
 
       end do
 
-      call chkout ( 'ZZCKCV02' )
       return
       end

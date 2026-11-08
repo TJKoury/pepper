@@ -422,11 +422,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKFFLD' )
-      end if
+      if ( return () ) return
 
 !
 !     Read in the segment descriptor, and get the segment's type.
@@ -454,11 +450,9 @@
          call setmsg ( 'Segment type # is not currently supported.' )
          call errint ( '#', stype                                   )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'EKFFLD'                                     )
          return
 
       end if
 
-      call chkout ( 'EKFFLD' )
       return
       end

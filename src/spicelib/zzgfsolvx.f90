@@ -432,11 +432,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFSOLVX' )
 
 !
 !     Check the convergence tolerance.
@@ -446,7 +443,6 @@
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
-         call chkout ( 'ZZGFSOLVX'                             )
          return
 
       end if
@@ -460,7 +456,6 @@
          call setmsg ( 'Bad time interval result, '      // &
                        'START > FINISH.'                  )
          call sigerr ( 'SPICE(BADTIMECASE)'               )
-         call chkout ( 'ZZGFSOLVX'                        )
          return
 
       end if
@@ -504,10 +499,7 @@
 !
       call udfunb ( udfuns, curtim, curste )
 
-      if ( failed() ) then
-         call chkout (  'ZZGFSOLVX' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If the system is in the state of interest, record the initial
@@ -554,10 +546,7 @@
 
             call udstep ( curtim, timest )
 
-            if ( failed() ) then
-               call chkout (  'ZZGFSOLVX' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -573,10 +562,7 @@
 !
          call udfunb ( udfuns, curtim,  curste )
 
-         if ( failed() ) then
-            call chkout (  'ZZGFSOLVX' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        While the state remains unchanged and the interval is not
@@ -591,10 +577,7 @@
 !           First check for an interrupt signal if checking is enabled.
 !
             if ( bail )  then
-               if ( udbail () ) then
-                  call chkout (  'ZZGFSOLVX' )
-                  return
-               end if
+               if ( udbail () ) return
             end if
 
 !
@@ -625,10 +608,7 @@
 
                call udstep ( curtim, timest )
 
-               if ( failed() ) then
-                  call chkout (  'ZZGFSOLVX' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -639,10 +619,7 @@
 !
             call udfunb ( udfuns, curtim,  curste )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFSOLVX' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Loop back to see if the state has changed.
@@ -686,7 +663,6 @@
             if ( t1 > t2) then
                call setmsg ( 'Bad time interval result, T1 > T2.' )
                call sigerr ( 'SPICE(BADTIMECASE)' )
-               call chkout ( 'ZZGFSOLVX'           )
                return
             end if
 
@@ -728,16 +704,12 @@
                   call errdp  ( '#1', tol          )
                   call errint ( '#2', mxloop       )
                   call sigerr ( 'SPICE(NOCONVERG)' )
-                  call chkout ( 'ZZGFSOLVX'        )
                   return
                end if
 
 
                if ( bail )  then
-                  if ( udbail () ) then
-                     call chkout (  'ZZGFSOLVX' )
-                     return
-                  end if
+                  if ( udbail () ) return
                end if
 
 !
@@ -750,10 +722,7 @@
 !              Check for an error signal. The default refinement
 !              routine, GFREFN, does not include error checks.
 !
-               if ( failed() ) then
-                  call chkout ( 'ZZGFSOLVX' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Check whether T is between T1 and T2.  If
@@ -893,7 +862,6 @@
 !
 !     Check-out then return.
 !
-      call chkout (  'ZZGFSOLVX' )
       return
       end
 

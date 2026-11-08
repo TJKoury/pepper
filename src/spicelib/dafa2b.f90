@@ -195,11 +195,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFA2B' )
-      end if
+      if ( return () ) return
 
 !
 !     Open the ASCII file for reading. If an error occurs, then check
@@ -208,12 +204,7 @@
 !
       call txtopr ( ascii, unit )
 
-      if ( failed () ) then
-
-         call chkout ( 'DAFA2B' )
-         return
-
-      end if
+      if ( failed () ) return
 
 !
 !     Call DAFT2B to perform the conversion. If it fails, then just
@@ -225,7 +216,6 @@
       if ( failed() ) then
 
          close       ( unit     )
-         call chkout ( 'DAFA2B' )
          return
 
       end if
@@ -235,6 +225,5 @@
 !
       close ( unit )
 
-      call chkout ( 'DAFA2B' )
       return
       end

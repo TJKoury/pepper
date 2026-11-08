@@ -307,11 +307,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLAFPS' )
 
 !
 !     Nothing found yet.
@@ -327,7 +324,6 @@
 !
 !        There is no segment preceding the input segment.
 !
-         call chkout ( 'DLAFPS' )
          return
 
       end if
@@ -339,6 +335,5 @@
 
       found = .true.
 
-      call chkout ( 'DLAFPS' )
       return
       end

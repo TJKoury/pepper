@@ -327,15 +327,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCLU01' )
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'SCLU01' )
       return
 
 
@@ -598,11 +594,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCLI01' )
 
 !
 !     Form the name of the kernel pool data item, and do the lookup.
@@ -630,7 +623,6 @@
          call errint ( '#',  n                            )
          call errint ( '#',  maxnv                        )
          call sigerr ( 'SPICE(ARRAYTOOSMALL)'             )
-         call chkout ( 'SCLI01'                           )
          return
 
       end if
@@ -645,17 +637,13 @@
          call errch  ( '#', tmpnam                           )
          call errint ( '#', sc                               )
          call sigerr ( 'SPICE(BADKERNELVARTYPE)'             )
-         call chkout ( 'SCLI01'                              )
          return
 
       end if
 
       call gipool ( tmpnam, 1, maxnv, n, ival, found )
 
-      if ( failed() ) then
-         call chkout ( 'SCLI01' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure we found what we were looking for, if the item
@@ -670,7 +658,6 @@
 
          if (  name == namlst(sysidx)  ) then
 
-            call chkout ( 'SCLI01' )
             return
 
          else
@@ -678,7 +665,6 @@
             call setmsg (  nfdmsg                    )
             call errch  ( '#', tmpnam                )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
-            call chkout ( 'SCLI01'                   )
             return
 
          end if
@@ -716,7 +702,6 @@
             call repmi  (  errmsg, '#', ub(i),  errmsg )
             call setmsg (  errmsg                      )
             call sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
-            call chkout ( 'SCLI01'                     )
             return
 
          end if
@@ -743,7 +728,6 @@
             call repmi  (  errmsg, '#', ival(1), errmsg )
             call setmsg (  errmsg                       )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
-            call chkout ( 'SCLI01'                      )
             return
 
          end if
@@ -759,7 +743,6 @@
             call repmi  (  errmsg, '#', ival(1), errmsg )
             call setmsg (  errmsg                       )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
-            call chkout ( 'SCLI01'                      )
             return
 
          end if
@@ -775,14 +758,12 @@
             call repmi  (  errmsg, '#', ival(1), errmsg )
             call setmsg (  errmsg                       )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
-            call chkout ( 'SCLI01'                      )
             return
 
          end if
 
       end if
 
-      call chkout ( 'SCLI01' )
       return
 
 
@@ -1079,11 +1060,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCLD01' )
 
 !
 !     Form the name of the kernel pool datum, and do the lookup.
@@ -1107,7 +1085,6 @@
          call errint ( '#',  n                               )
          call errint ( '#',  maxnv                           )
          call sigerr ( 'SPICE(ARRAYTOOSMALL)'                )
-         call chkout ( 'SCLD01'                              )
          return
 
       end if
@@ -1122,7 +1099,6 @@
          call errch  ( '#', tmpnam                           )
          call errint ( '#', sc                               )
          call sigerr ( 'SPICE(BADKERNELVARTYPE)'             )
-         call chkout ( 'SCLD01'                              )
          return
 
       end if
@@ -1133,7 +1109,6 @@
 !
 !        This code should be unreachable but is provided for safety.
 !
-         call chkout ( 'SCLD01' )
          return
       end if
 !
@@ -1148,7 +1123,6 @@
          call setmsg (  nfdmsg                    )
          call errch  ( '#', tmpnam                )
          call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
-         call chkout ( 'SCLD01'                   )
          return
 
       end if
@@ -1191,7 +1165,6 @@
             call repmi  (  errmsg, '#', ub(i),  errmsg )
             call setmsg (  errmsg                      )
             call sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
-            call chkout ( 'SCLD01'                     )
             return
 
          end if
@@ -1208,7 +1181,6 @@
             call errch  ( '#', tmpnam                    )
             call errint ( '#', n                         )
             call sigerr ( 'SPICE(INVALIDSIZE)'           )
-            call chkout ( 'SCLD01'                       )
             return
 
          end if
@@ -1228,7 +1200,6 @@
                call repmd  (  errmsg, '#', dval(i), 14, errmsg )
                call setmsg (  errmsg                           )
                call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
-               call chkout ( 'SCLD01'                          )
                return
             end if
 
@@ -1249,17 +1220,13 @@
 
          call gipool ( kvname, 1, 1, nf, nfield, found )
 
-         if ( failed() ) then
-            call chkout ( 'SCLD01')
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. found ) then
 
             call setmsg ( 'Field count was not found for SCLK #.' )
             call errint ( '#', sc                    )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
-            call chkout ( 'SCLD01'                   )
             return
 
          end if
@@ -1282,13 +1249,11 @@
             call errint ( '#', nfield          )
             call errint ( '#', sc              )
             call sigerr ( 'SPICE(INVALIDSIZE)' )
-            call chkout ( 'SCLD01'             )
             return
 
          end if
 
       end if
 
-      call chkout ( 'SCLD01' )
       return
       end

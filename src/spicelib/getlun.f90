@@ -185,11 +185,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'GETLUN' )
-      end if
+      if ( return () ) return
 
 
 
@@ -207,7 +203,6 @@
 !
          call setmsg ( 'No free logical units are available.' )
          call sigerr ( 'SPICE(NOFREELOGICALUNIT)' )
-         call chkout ( 'GETLUN' )
          return
 
       else if ( unit < 0 ) then
@@ -223,11 +218,9 @@
 
          unit = 0
 
-         call chkout ( 'GETLUN' )
          return
 
       end if
 
-      call chkout ( 'GETLUN' )
       return
       end

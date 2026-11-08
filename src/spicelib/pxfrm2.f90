@@ -635,11 +635,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'PXFRM2' )
 
 !
 !     Initialization.
@@ -710,7 +707,6 @@
 
       end if
 
-      call chkout ( 'PXFRM2' )
       return
 
       end

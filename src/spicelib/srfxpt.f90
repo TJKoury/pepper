@@ -1166,11 +1166,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SRFXPT' )
 
 !
 !     Nothing has been found yet.
@@ -1208,7 +1205,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SRFXPT'                                   )
          return
 
       end if
@@ -1226,7 +1222,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SRFXPT'                                   )
          return
 
       end if
@@ -1243,7 +1238,6 @@
                        'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( 'SRFXPT'                                     )
          return
 
       end if
@@ -1314,7 +1308,6 @@
                        'the FRAMES Required Reading for details.'   )
          call errch  ( '#', target                                  )
          call sigerr ( 'SPICE(NOFRAME)'                             )
-         call chkout ( 'SRFXPT'                                     )
          return
 
       end if
@@ -1365,10 +1358,7 @@
 !
       call zznamfrm ( svctr3, svdref, svrefc, dref, refcde )
 
-      if ( failed() ) then
-         call chkout ( 'SRFXPT' )
-         return
-      end if
+      if ( failed() ) return
 
       call frinfo ( refcde, center, type, typeid, fnd )
 
@@ -1380,7 +1370,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  dref                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'SRFXPT'                                  )
          return
 
       end if
@@ -1428,10 +1417,7 @@
          call spkezp ( center, et, 'J2000', loccor, obscde, &
                        rpos,   ltcent                       )
 
-         if ( failed() ) then
-            call chkout ( 'SRFXPT' )
-            return
-         end if
+         if ( failed() ) return
 
          refepc  =  et  +  s * ltcent
 
@@ -1457,10 +1443,7 @@
 !
       call pxform ( dref, 'J2000', refepc,  r2jmat )
 
-      if ( failed() ) then
-         call chkout ( 'SRFXPT' )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( r2jmat, dvec, j2dir )
 
@@ -1470,10 +1453,7 @@
 !
       call pxform ( 'J2000', frname,  trgepc,  j2tmat )
 
-      if ( failed() ) then
-         call chkout ( 'SRFXPT' )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( j2tmat, j2dir, trgdir )
 
@@ -1595,10 +1575,7 @@
 !
          call zzgftreb ( trgcde, radii )
 
-         if ( failed() ) then
-            call chkout ( 'SRFXPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Make an easy test to see whether we can quit now because
@@ -1618,7 +1595,6 @@
 !
             call setmsg ( 'Observer-target distance is zero.' )
             call sigerr ( 'SPICE(DIVIDEBYZERO)'               )
-            call chkout ( 'SRFXPT'                            )
             return
 
          end if
@@ -1638,7 +1614,6 @@
 !              for a solution to exist, even with a better light time
 !              estimate.
 !
-               call chkout ( 'SRFXPT' )
                return
 
             end if
@@ -1651,10 +1626,7 @@
          call surfpt ( obspos, trgdir, radii(1), radii(2), radii(3), &
                        spoint, found                                 )
 
-         if ( failed() ) then
-            call chkout ( 'SRFXPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If we're not using light time corrections, we're almost
@@ -1668,7 +1640,6 @@
                dist  =  vdist ( obspos, spoint )
             end if
 
-            call chkout ( 'SRFXPT' )
             return
 
          end if
@@ -1714,10 +1685,7 @@
 !
                call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-               if ( failed() ) then
-                  call chkout ( 'SRFXPT' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Find the position of the observer relative to the target.
@@ -1727,10 +1695,7 @@
                call vsub   ( ssbost,  ssbtst, j2pos         )
                call pxform ( 'J2000', frname, trgepc, xform )
 
-               if ( failed() ) then
-                  call chkout ( 'SRFXPT' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Convert the observer's position relative to the target
@@ -1757,10 +1722,7 @@
 !
 !           If there's still no intercept, we're done.
 !
-            if ( .not. found ) then
-               call chkout ( 'SRFXPT' )
-               return
-            end if
+            if ( .not. found ) return
 
          end if
 
@@ -1812,10 +1774,7 @@
 !
             call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-            if ( failed() ) then
-               call chkout ( 'SRFXPT' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           Find the position of the observer relative to the target.
 !           Convert this vector from the J2000 frame to the target
@@ -1824,10 +1783,7 @@
             call vsub   ( ssbost,  ssbtst, j2pos         )
             call pxform ( 'J2000', frname, trgepc, xform )
 
-            if ( failed() ) then
-               call chkout ( 'SRFXPT' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Convert the observer's position relative to the target from
@@ -1851,10 +1807,7 @@
 !
 !           If there's no intercept, we're done.
 !
-            if ( .not. found ) then
-                call chkout ( 'SRFXPT' )
-               return
-            end if
+            if ( .not. found ) return
 
 !
 !           Compute the distance between intercept and observer.
@@ -1891,7 +1844,6 @@
          call setmsg ( 'The computation method # was not recognized. ' )
          call errch  ( '#',  method                                    )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
-         call chkout ( 'SRFXPT'                                        )
          return
 
       end if
@@ -1899,6 +1851,5 @@
 !
 !     FOUND, SPOINT, TRGEPC, and DIST have been set at this point.
 !
-      call chkout ( 'SRFXPT' )
       return
       end

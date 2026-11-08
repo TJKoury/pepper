@@ -180,8 +180,6 @@
       if ( return() ) then
          sydimi = 0
          return
-      else
-         call chkin ( 'SYDIMI' )
       end if
 
 
@@ -207,6 +205,5 @@
       end if
 
 
-      call chkout ( 'SYDIMI' )
       return
       end

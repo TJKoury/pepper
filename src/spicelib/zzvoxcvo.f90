@@ -136,15 +136,12 @@
       integer(ip)           i
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       do i = 1, 3
 
          if ( nvox(i) < 1 ) then
 
-            call chkin  ( 'ZZVOXCVO' )
 
             call setmsg ( 'Voxel grid dimensions must be positive ' &
             //            'but were # # #.'                        )
@@ -153,7 +150,6 @@
             call errint ( '#', nvox(3)                             )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
 
-            call chkout ( 'ZZVOXCVO' )
             return
 
          end if
@@ -165,7 +161,6 @@
 
          if ( ( vixyz(i) < 1 ) .or. ( vixyz(i) > nvox(i) ) ) then
 
-            call chkin  ( 'ZZVOXCVO' )
 
             call setmsg ( 'Voxel grid coordinates must be inside ' &
             //            'grid having dimensions # x # x # ' &
@@ -178,7 +173,6 @@
             call errint ( '#', vixyz(3)                            )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
 
-            call chkout ( 'ZZVOXCVO' )
             return
 
          end if
@@ -188,14 +182,12 @@
 
       if ( cgrscl < 1 ) then
 
-         call chkin  ( 'ZZVOXCVO' )
 
          call setmsg ( 'Coarse voxel grid scale must be positive ' &
          //            'but was #.'                               )
          call errint ( '#', nvox(1)                               )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
 
-         call chkout ( 'ZZVOXCVO' )
          return
 
       end if

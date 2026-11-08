@@ -352,11 +352,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKW15')
 
 !
 !     Fetch the various entities from the inputs and put them into
@@ -419,7 +416,6 @@
          //            '#.'                    )
          call errdp  ( '#', p                  )
          call sigerr ( 'SPICE(BADLATUSRECTUM)' )
-         call chkout ( 'SPKW15'                )
          return
 
       else if ( ecc < 0.0_wp ) then
@@ -430,7 +426,6 @@
          //            'to the type 15 evaluator was #. ' )
          call errdp  ( '#',   ecc                )
          call sigerr ( 'SPICE(BADECCENTRICITY)'  )
-         call chkout ( 'SPKW15'                  )
          return
 
       else if ( gm  <= 0.0_wp ) then
@@ -441,7 +436,6 @@
          //            'supplied was #. '        )
          call errdp  ( '#', gm                   )
          call sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
-         call chkout ( 'SPKW15'                  )
          return
 
       else if ( vzero(tp) ) then
@@ -451,7 +445,6 @@
          //            'cause of this problem is an uninitialized ' &
          //            'vector.'            )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKW15'             )
          return
 
       else if ( vzero(pa) ) then
@@ -460,7 +453,6 @@
          //            'had length zero. The most likely cause ' &
          //            'of this problem is an uninitialized vector.' )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKW15'             )
          return
 
       else if ( vzero(pv) ) then
@@ -470,7 +462,6 @@
          //            'cause of this problem is an uninitialized ' &
          //            'vector. '           )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKW15'             )
          return
 
 
@@ -481,7 +472,6 @@
          //            'supplied was #. '  )
          call errdp  ( '#', radius         )
          call sigerr ( 'SPICE(BADRADIUS)'  )
-         call chkout ( 'SPKW15'            )
          return
 
       end if
@@ -502,7 +492,6 @@
          //            'between them is # degrees. '         )
          call errdp  ( '#',     angle        )
          call sigerr ( 'SPICE(BADINITSTATE)' )
-         call chkout ( 'SPKW15'              )
          return
 
       end if
@@ -514,7 +503,6 @@
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW15'                                  )
          return
 
       end if
@@ -532,7 +520,6 @@
             //            'code #.'                               )
             call errint ( '#',   value                            )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW15'                                )
             return
 
          end if
@@ -546,20 +533,14 @@
       call spkpds ( body,  center, frame, type, first, last, &
                     descr        )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW15' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Begin a new segment.
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW15' )
-         return
-      end if
+      if ( failed() ) return
 
       call dafada ( record, datsiz )
 
@@ -567,6 +548,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW15' )
       return
       end

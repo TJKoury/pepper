@@ -194,8 +194,6 @@
       if ( return() ) then
          ordd = 0
          return
-      else
-         call chkin ( 'ORDD' )
       end if
 
 !
@@ -203,6 +201,5 @@
 !
       ordd = bsrchd ( item, cardd(set), set(1) )
 
-      call chkout ( 'ORDD' )
       return
       end

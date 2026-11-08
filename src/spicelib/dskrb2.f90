@@ -551,11 +551,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKRB2' )
 
 
       if ( corsys == latsys ) then
@@ -624,10 +621,7 @@
 
             call recgeo ( vrtces(1,i), re, f, lon, lat, alt )
 
-            if ( failed() ) then
-               call chkout ( 'DSKRB2' )
-               return
-            end if
+            if ( failed() ) return
 
             mxcor3 = max( mxcor3, alt )
 
@@ -656,10 +650,7 @@
 
             call recgeo ( center, re, f, lon, lat, alt )
 
-            if ( failed() ) then
-               call chkout ( 'DSKRB2' )
-               return
-            end if
+            if ( failed() ) return
 
             mncor3 = min (  mncor3,  ( alt - maxd )  )
 
@@ -671,11 +662,9 @@
          call setmsg ( 'Coordinate system # is not supported.' )
          call errint ( '#', corsys                             )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
-         call chkout ( 'DSKRB2'                                )
          return
 
       end if
 
-      call chkout ( 'DSKRB2' )
       return
       end

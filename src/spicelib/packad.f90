@@ -207,11 +207,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PACKAD' )
-      end if
+      if ( return () ) return
 
 !
 !     First, determine how many items to transfer.
@@ -228,7 +224,6 @@
             call errint ( '*', i                )
             call errint ( '*', pack(i)          )
             call sigerr ( 'SPICE(INVALIDINDEX)' )
-            call chkout ( 'PACKAD' )
             return
          end if
 
@@ -242,6 +237,5 @@
       end do
 
 
-      call chkout ( 'PACKAD' )
       return
       end

@@ -160,9 +160,7 @@
       end do
 
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the pages.

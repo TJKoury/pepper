@@ -177,8 +177,6 @@
       if ( return () ) then
         bodfnd = .false.
         return
-      else
-        call chkin ( 'BODFND' )
       end if
 
 
@@ -202,6 +200,5 @@
 !
       bodfnd = found
 
-      call chkout ( 'BODFND' )
       return
       end

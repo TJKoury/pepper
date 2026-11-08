@@ -553,11 +553,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WRENCC' )
-      end if
+      if ( return () ) return
 
       if ( first ) then
 !
@@ -589,7 +585,6 @@
                        ' not positive: #.'                           )
          call errint ( '#', n                                        )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'WRENCC'                                      )
          return
 
       end if
@@ -724,7 +719,6 @@
                call errint ( '#', unit                           )
                call errint ( '#', iostat                         )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
-               call chkout ( 'WRENCC'                            )
                return
 
             end if
@@ -788,13 +782,11 @@
             call errint ( '#', unit                           )
             call errint ( '#', iostat                         )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
-            call chkout ( 'WRENCC'                            )
             return
 
          end if
 
       end if
 
-      call chkout ( 'WRENCC' )
       return
       end

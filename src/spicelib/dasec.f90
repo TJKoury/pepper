@@ -449,11 +449,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASEC' )
-      end if
+      if ( return () ) return
 !
 !     If this is the first time that this routine has been called,
 !     we need to initialize the character value of the end-of-line
@@ -483,12 +479,7 @@
 !
       call dassih ( handle, 'READ' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASEC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check for a nonpositive BUFFER size.
 !
@@ -497,7 +488,6 @@
          call setmsg ( 'The output buffer size was not positive: #.' )
          call errint ( '#', bufsiz                                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'DASEC'                                       )
          return
 
       end if
@@ -507,12 +497,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASEC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Get the length of a single character string in the buffer.
 !
@@ -561,12 +546,7 @@
                        nresvr, nresvc, &
                        ncomr,  ncomc   )
 
-         if ( failed() ) then
-
-            call chkout ( 'DASEC' )
-            return
-
-         end if
+         if ( failed() ) return
 !
 !        If the number of comment characters, NCOMC, is equal to zero,
 !        then we have no comments to read, so set the number of comments
@@ -576,7 +556,6 @@
 
             n    = 0
             done = .true.
-            call chkout ( 'DASEC' )
             return
 
          end if
@@ -640,7 +619,6 @@
                   call errint ( '#', linlen                           )
                   call errint ( '#', i                                )
                   call sigerr ( 'SPICE(COMMENTTOOLONG)'               )
-                  call chkout ( 'DASEC'                               )
                   return
 
                end if
@@ -677,7 +655,6 @@
                call errint ( '#',ncomc                              )
                call errfnm ( '#',daslun                             )
                call sigerr ( 'SPICE(BADDASCOMMENTAREA)'             )
-               call chkout ( 'DASEC'                                )
                return
 
             end if
@@ -760,7 +737,6 @@
                              ' and another file could not be added.'  )
                call errint ( '#',ftsize                               )
                call sigerr ( 'SPICE(FILETABLEFULL)'                   )
-               call chkout ( 'DASEC'                                  )
                return
 
             end if
@@ -787,6 +763,5 @@
 
       end if
 
-      call chkout ( 'DASEC' )
       return
       end

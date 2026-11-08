@@ -925,11 +925,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFTFOV' )
 
 !
 !     Reject the target shape 'RAY'.
@@ -940,7 +937,6 @@
          //            'by this routine. Use the routine ' &
          //            'GFRFOV instead.'                       )
          call sigerr ( 'SPICE(INVALIDOPTION)'                  )
-         call chkout ( 'GFTFOV'                                )
          return
 
       end if
@@ -961,7 +957,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
-         call chkout ( 'GFTFOV'                                )
          return
 
       end if
@@ -994,6 +989,5 @@
                     obsrvr, tol,    gfstep, gfrefn, rpt,    gfrepi, &
                     gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
-      call chkout ( 'GFTFOV' )
       return
       end

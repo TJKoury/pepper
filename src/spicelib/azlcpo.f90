@@ -840,11 +840,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'AZLCPO' )
 
 !
 !     Get the center of motion ID code here, since it will be
@@ -864,7 +861,6 @@
          //            'Toolkit.'                                 )
          call errch  ( '#', obsctr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'AZLCPO'                                   )
          return
 
       end if
@@ -875,10 +871,7 @@
       call namfrm ( obsref, fxfcde )
       call frinfo ( fxfcde, center, frclss, clssid, found )
 
-      if ( failed() ) then
-         call chkout ( 'AZLCPO' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -888,7 +881,6 @@
          //            'not been loaded.'                        )
          call errch  ( '#',  obsref                              )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'                     )
-         call chkout ( 'AZLCPO'                                  )
          return
 
       end if
@@ -906,7 +898,6 @@
          call errch  ( '#',  obsctr                               )
          call errint ( '#',  center                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( 'AZLCPO'                                   )
          return
 
       end if
@@ -959,10 +950,7 @@
 !
             call zzgftreb ( obscde, radii )
 
-            if ( failed() ) then
-               call chkout ( 'AZLCPO' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           The observer's position does not need to be located on
@@ -993,7 +981,6 @@
          call setmsg ( 'The computation method # was not recognized. ' )
          call errch  ( '#',  method                                    )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
-         call chkout ( 'AZLCPO'                                        )
          return
 
       end if
@@ -1006,10 +993,7 @@
       call spkcpo ( target, et,     obsref, refloc, abcorr, &
                     obspos, obsctr, obsref, state,  lt     )
 
-      if ( failed() ) then
-         call chkout ( 'AZLCPO' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     STATE is expressed with respect to the reference frame
@@ -1028,13 +1012,9 @@
       call dazldr ( lhsta(1),  lhsta(2),  lhsta(3), &
                     azccw,     elplsz,    jacobi    )
 
-      if ( failed() ) then
-         call chkout( 'AZLCPO' )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( jacobi, lhsta(4), azlsta(4) )
 
-      call chkout ( 'AZLCPO' )
       return
       end

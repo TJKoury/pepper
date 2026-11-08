@@ -235,8 +235,6 @@
       if ( return() ) then
          elemc = .false.
          return
-      else
-         call chkin ( 'ELEMC' )
       end if
 !
 !     Just a binary search.
@@ -244,6 +242,5 @@
       elemc = ( bsrchc ( item, cardc ( a ), a(1) ) /= 0 )
 
 
-      call chkout ( 'ELEMC' )
       return
       end

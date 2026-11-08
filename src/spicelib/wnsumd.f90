@@ -353,9 +353,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Get the cardinality (number of endpoints) of the window.
@@ -367,12 +365,10 @@
 !
       if ( .not. even( card ) ) then
 
-         call chkin  ( 'WNSUMD' )
          call setmsg ( 'Input window has odd cardinality. A valid ' &
                   //   'SPICE window must have even element ' &
                   //   'cardinality.' )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'WNSUMD' )
          return
 
       end if

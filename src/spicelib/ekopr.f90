@@ -200,21 +200,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKOPR' )
-      end if
+      if ( return () ) return
 
 !
 !     Open the file as a DAS file.
 !
       call dasopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Nothing doing unless the architecture is correct.  This file
@@ -223,6 +216,5 @@
       call zzekpgch ( handle, 'READ' )
 
 
-      call chkout ( 'EKOPR' )
       return
       end

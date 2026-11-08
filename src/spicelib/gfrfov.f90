@@ -915,11 +915,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFRFOV' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -937,7 +934,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
-         call chkout ( 'GFRFOV'                                )
          return
 
       end if
@@ -968,6 +964,5 @@
                     obsrvr, tol,    gfstep, gfrefn, rpt,    gfrepi, &
                     gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
-      call chkout ( 'GFRFOV' )
       return
       end

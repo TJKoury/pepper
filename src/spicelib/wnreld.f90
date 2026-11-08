@@ -281,7 +281,6 @@
          wnreld = .false.
          return
       else
-         call chkin ( 'WNRELD' )
          wnreld = .false.
       end if
 
@@ -365,12 +364,10 @@
                        'recognized.'                              )
          call errch  ( '*', op                   )
          call sigerr ( 'SPICE(INVALIDOPERATION)' )
-         call chkout ( 'WNRELD' )
          return
 
       end if
 
 
-      call chkout ( 'WNRELD' )
       return
       end

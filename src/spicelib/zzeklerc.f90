@@ -180,9 +180,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -193,11 +191,9 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLERC '                )
          call setmsg ( 'Column # is not indexed.' )
          call errch  ( '#',  column               )
          call sigerr ( 'SPICE(NOTINDEXED)'        )
-         call chkout ( 'ZZEKLERC '                )
          return
 
       end if
@@ -211,12 +207,10 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLERC '                              )
          call setmsg ( 'Column # should be CHR but has type #.' )
          call errch  ( '#',  column                             )
          call errint ( '#',  dtype                              )
          call sigerr ( 'SPICE(INVALIDTYPE)'                     )
-         call chkout ( 'ZZEKLERC '                              )
          return
 
       end if
@@ -236,12 +230,10 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLERC '                  )
          call setmsg ( 'Column # has index type #.' )
          call errch  ( '#',  column                 )
          call errint ( '#',  itype                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'         )
-         call chkout ( 'ZZEKLERC '                  )
          return
 
       end if

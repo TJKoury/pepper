@@ -456,13 +456,9 @@
 !
 !     Nobody has any business calling ZZDSKBSR directly.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZDSKBSR' )
       call sigerr ( 'SPICE(DSKBOGUSENTRY)' )
-      call chkout ( 'ZZDSKBSR' )
 
       return
 
@@ -609,11 +605,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZDSKLSF' )
 
       if ( pass1 ) then
 !
@@ -651,10 +644,7 @@
 !
       call dasopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDSKLSF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine if the file is already in the table.
@@ -755,7 +745,6 @@
                           'any files that are not needed.'            )
             call errint ( '#', ftsize                                 )
             call sigerr ( 'SPICE(DSKTOOMANYFILES)'                    )
-            call chkout ( 'ZZDSKLSF'                                  )
             return
 
          end if
@@ -855,7 +844,6 @@
       fthan(nft) = handle
       ftnum(nft) = next
 
-      call chkout ( 'ZZDSKLSF' )
       return
 
 
@@ -973,11 +961,8 @@
 !     None.
 !
 !-&
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKUSF' )
 
       if ( pass1 ) then
 !
@@ -1011,10 +996,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex == 0 ) then
-         call chkout ( 'ZZDSKUSF' )
-         return
-      end if
+      if ( findex == 0 ) return
 !
 !
 !     First get rid of the entry in the file table. Close the file
@@ -1090,7 +1072,6 @@
       end do
 
 
-      call chkout ( 'ZZDSKUSF' )
       return
 
 
@@ -1220,11 +1201,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZDSKBSS' )
 
 
       if ( pass1 ) then
@@ -1251,7 +1229,6 @@
          call setmsg ( 'At least one DSK file must have been loaded ' &
          //            'by ZZDSKLSF before a search can be started.' )
          call sigerr ( 'SPICE(NOLOADEDDSKFILES)'                     )
-         call chkout ( 'ZZDSKBSS'                                    )
          return
 
       end if
@@ -1286,7 +1263,6 @@
 !
       savep  = -1
 
-      call chkout ( 'ZZDSKBSS' )
       return
 
 
@@ -1483,11 +1459,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZDSKSNS' )
 
 
       if ( pass1 ) then
@@ -1658,7 +1631,6 @@
          call setmsg ( 'Must begin a search by calling ZZDSKBSS ' &
          //            'first.'                                   )
          call sigerr ( 'SPICE(CALLZZDSKBSSFIRST)'                 )
-         call chkout ( 'ZZDSKSNS'                                 )
          return
 
       end if
@@ -1817,10 +1789,7 @@
             begsch = .true.
             call dlabfs (  fthan( findex ),  dlalds,  fnd  )
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'NEW SEGMENTS'
 
@@ -1867,10 +1836,7 @@
 
             end if
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -1937,10 +1903,7 @@
             begsch = .true.
             call dlabbs (  fthan( findex ),  dlalds,  fnd )
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'OLD SEGMENTS'
 
@@ -1988,10 +1951,7 @@
             end if
 
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSNS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2011,10 +1971,7 @@
 !
                call dskgd ( fthan(findex), dlalds, dsklds )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZDSKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (  nint( dsklds(ctridx) )  ==  svbody  ) then
 !
@@ -2070,7 +2027,6 @@
 !
                   savep = stpool ( forwrd, p )
 
-                  call chkout ( 'ZZDSKSNS' )
                   return
 
                end if
@@ -2253,7 +2209,6 @@
                   //            '#. Current state is ADD TO END.'    )
                   call errint ( '#', svbody                          )
                   call sigerr ( 'SPICE(BUFFEROVERFLOW)'              )
-                  call chkout ( 'ZZDSKSNS'                           )
                   return
 
                else
@@ -2370,10 +2325,7 @@
                call movei ( dlalds, dladsz, stdlad(1,new) )
                call moved ( dsklds, dskdsz, stdskd(1,new) )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZDSKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              If the current list is empty, this append operation
@@ -2416,10 +2368,7 @@
                call movei ( dlalds, dladsz, stdlad(1,new) )
                call moved ( dsklds, dskdsz, stdskd(1,new) )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZDSKSNS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( btbeg(bindex) <= 0 ) then
 !
@@ -2469,7 +2418,6 @@
       found = .false.
 
 
-      call chkout ( 'ZZDSKSNS' )
       return
 
 
@@ -2603,14 +2551,10 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKCHK' )
 
       call zzctrchk ( dskctr, usrctr, update )
 
-      call chkout ( 'ZZDSKCHK' )
       return
       end

@@ -369,11 +369,8 @@
 !
 !     Initial values
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKBUX' )
 
 !
 !     Check the incoming segment count.
@@ -385,7 +382,6 @@
          //            'body # having been loaded.'            )
          call errint ( '#',  bodyid                            )
          call sigerr ( 'SPICE(NODSKSEGMENTS)'                  )
-         call chkout ( 'ZZDSKBUX'                              )
          return
 
       end if
@@ -420,10 +416,7 @@
 !
       call zzdsksph ( bodyid, nsurf, srflst, minrad, maxrad )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDSKBUX' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Scale up the bounding sphere to avoid round-off difficulties.
 !     We'll use this value in the loop below.
@@ -456,7 +449,6 @@
 !           It would be highly unusual for the SURFPT call to
 !           fail to produce an intercept. Check anyway.
 !
-            call chkout ( 'ZZDSKBUX' )
             return
 
          end if
@@ -546,10 +538,7 @@
 !
                   call refchg ( fixfid, segfid, et, xform )
 
-                  if ( failed() ) then
-                     call chkout ( 'ZZDSKBUX' )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 Transform the local copy of the ray to the segment's
@@ -598,10 +587,7 @@
                call zzrytelt ( segvtx, segdir, dskbuf(1,i), &
                                sgmarg, nxpts,  xpt         )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZDSKBUX' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( nxpts > 0 ) then
 !
@@ -616,7 +602,6 @@
                      //            'input ray. Buffer size is #.'      )
                      call errint ( '#', maxhit                         )
                      call sigerr ( 'SPICE(BUFFERTOOSMALL)'             )
-                     call chkout ( 'ZZDSKBUX'                          )
                      return
 
                   end if
@@ -648,10 +633,7 @@
 !
 !     Leave now if no segments were hit.
 !
-      if ( nhit == 0 ) then
-         call chkout ( 'ZZDSKBUX' )
-         return
-      end if
+      if ( nhit == 0 ) return
 
 !
 !     Find the order of the segments on the hit list, where
@@ -722,10 +704,7 @@
                          segvtx,    segdir,      srfx,  dc, &
                          ic,        xfnd                   )
 
-         if ( failed() ) then
-            call chkout( 'ZZDSKBUX' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( xfnd ) then
@@ -869,6 +848,5 @@
 !
 !     FOUND and XPT are set.
 !
-      call chkout ( 'ZZDSKBUX' )
       return
       end

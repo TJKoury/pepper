@@ -1919,14 +1919,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check into the error subsystem.
 !
-      call chkin ( 'GFPOSC' )
 
 !
 !     Confirm minimum window sizes.
@@ -1937,7 +1934,6 @@
          //            'at least 2 and an even value.'            )
          call errint ( '#',  mw                                    )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFPOSC'                                    )
          return
 
       end if
@@ -1949,7 +1945,6 @@
          //            'at least 2.'                               )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFPOSC'                                    )
          return
 
       end if
@@ -2036,7 +2031,6 @@
                     nobail,   gfbail,   result )
 
 
-      call chkout ( 'GFPOSC' )
       return
 
       end

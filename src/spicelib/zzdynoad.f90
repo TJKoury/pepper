@@ -233,11 +233,8 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDYNOAD' )
 
 !
 !     Nothing found yet.
@@ -252,10 +249,7 @@
 !
       call intstr ( frcode, cdestr )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDYNOAD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the lengths of the input frame code, name and item.
@@ -320,7 +314,6 @@
             call errint ( '#',  reqnam                              )
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            call chkout ( 'ZZDYNOAD'                                )
             return
 
 
@@ -330,7 +323,6 @@
 !           and the frame name-based variable name is too long to
 !           look up.
 !
-            call chkout ( 'ZZDYNOAD' )
             return
 
          end if
@@ -347,7 +339,6 @@
 !
 !           The FOUND flag is set appropriately.
 !
-            call chkout ( 'ZZDYNOAD' )
             return
 
          end if
@@ -374,7 +365,6 @@
          call errch  ( '#',  kvname                                 )
          call errch  ( '#',  frname                                 )
          call sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
-         call chkout ( 'ZZDYNOAD'                                   )
          return
 
       end if
@@ -393,7 +383,6 @@
          call errint ( '#',  maxn                                   )
          call errint ( '#',  n                                      )
          call sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
-         call chkout ( 'ZZDYNOAD'                                   )
          return
 
       end if
@@ -409,12 +398,10 @@
                        'indicated it was present in pool.'  )
          call errch  ( '#',  kvname                         )
          call sigerr ( 'SPICE(BUG)'                         )
-         call chkout ( 'ZZDYNOAD'                           )
          return
 
       end if
 
-      call chkout ( 'ZZDYNOAD' )
       return
       end
 

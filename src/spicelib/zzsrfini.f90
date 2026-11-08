@@ -236,7 +236,6 @@
 !
       if ( maxval < nvals ) then
 
-         call chkin  ( 'ZZSRFINI'                                )
          call setmsg ( 'There is an inconsistency between the ' &
          //            'number of input bodies and the size of ' &
          //            'the output hashes. The number of input ' &
@@ -245,7 +244,6 @@
          call errint ( '#', nvals                                )
          call errint ( '#', maxval                               )
          call sigerr ( 'SPICE(BUG1)'                             )
-         call chkout ( 'ZZSRFINI'                                )
          return
 
       end if
@@ -343,13 +341,11 @@
 
             if ( full ) then
 
-               call chkin  ( 'ZZSRFINI'                          )
                call setmsg ( 'Could not add name # body ID # ' &
                //            'to the hash.'                      )
                call errch  ( '#', nornam(i)                      )
                call errint ( '#', bodies(i)                      )
                call sigerr ( 'SPICE(BUG2)'                       )
-               call chkout ( 'ZZSRFINI'                          )
                return
 
             else
@@ -458,13 +454,11 @@
 
                if ( full ) then
 
-                  call chkin  ( 'ZZSRFINI'                             )
                   call setmsg ( 'Could not add surface ID # body ID # ' &
                   //            'to the hash.'                         )
                   call errint ( '#', codes(i)                          )
                   call errint ( '#', bodies(i)                         )
                   call sigerr ( 'SPICE(BUG3)'                          )
-                  call chkout ( 'ZZSRFINI'                             )
                   return
 
                else

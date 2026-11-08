@@ -727,9 +727,7 @@
       call zzeksdsc (  handle,  segno,  segdsc          )
       call zzekcdsc (  handle,  segdsc, column, coldsc  )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This column had better be of double precision or `time' type.
@@ -738,7 +736,6 @@
 
       if (  ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
-         call chkin  ( 'EKACED'                                        )
          call setmsg ( 'Column # is of type #; EKACED only works ' &
          //            'with d.p. or time columns.  RECNO = #; SEGNO ' &
          //            '= #; EK = #.'                                  )
@@ -748,7 +745,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
-         call chkout ( 'EKACED'                                        )
          return
 
       end if
@@ -785,7 +781,6 @@
 !
          segno  =  segdsc ( snoidx )
 
-         call chkin  ( 'EKACED'                                       )
          call setmsg ( 'Class # from input column descriptor is not ' &
          //            'a supported d.p. class.  COLUMN = #; ' &
          //            'RECNO = #; SEGNO = #; EK = #.'                )
@@ -795,7 +790,6 @@
          call errint ( '#',  segno                                    )
          call errhan ( '#',  handle                                   )
          call sigerr ( 'SPICE(NOCLASS)'                               )
-         call chkout ( 'EKACED'                                       )
          return
 
       end if

@@ -300,11 +300,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLABBS' )
 
 !
 !     Nothing found yet.
@@ -322,7 +319,6 @@
 !        If the pointer THIS is null, there are no segments in the
 !        file.
 !
-         call chkout ( 'DLABBS' )
          return
 
       end if
@@ -334,6 +330,5 @@
 
       found = .true.
 
-      call chkout ( 'DLABBS' )
       return
       end

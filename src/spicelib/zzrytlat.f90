@@ -295,9 +295,7 @@
 !
       call zzinlat ( vertex, bounds, 2*margin, 0, inside )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( inside ) then
 !
@@ -324,9 +322,7 @@
       call zznrmlon( bounds(west,lonidx), bounds(east,lonidx), angmrg, &
                      minlon,              maxlon                       )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       minlat = bounds( south, latidx )
       maxlat = bounds( north, latidx )
@@ -375,9 +371,7 @@
 !
       call zzinlat ( srfx, bounds, margin, radidx, xin )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( xin ) then
@@ -434,9 +428,7 @@
          call incnsg ( origin, z,  angle, vertex, &
                        endpt2, nx, srfx,  xpt2    )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
          if ( nx >= 1 ) then
 !
@@ -444,9 +436,7 @@
 !
             call zzinlat ( srfx, bounds, margin, latidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 !
@@ -485,9 +475,7 @@
 !
                call zzinlat ( xpt2, bounds, margin, latidx, xin )
 
-               if ( failed() ) then
-                  return
-               end if
+               if ( failed() ) return
 
 
                if ( xin ) then
@@ -536,9 +524,7 @@
          call incnsg ( origin, z,  angle, vertex, &
                        endpt2, nx, srfx,  xpt2    )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( nx >= 1 ) then
@@ -547,9 +533,7 @@
 !
             call zzinlat ( srfx, bounds, margin, latidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 !
@@ -588,9 +572,7 @@
 !
                call zzinlat ( xpt2, bounds, margin, latidx, xin )
 
-               if ( failed() ) then
-                  return
-               end if
+               if ( failed() ) return
 
                if ( xin ) then
 !
@@ -657,9 +639,7 @@
 !
             call zzinlat ( srfx, bounds, margin, lonidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 
             if ( xin ) then
@@ -713,9 +693,7 @@
 !
             call zzinlat ( srfx, bounds, margin, lonidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 !
@@ -768,9 +746,7 @@
 !
             call zzinlat ( srfx, bounds, margin, radidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 
@@ -805,9 +781,7 @@
 
             call zzinlat ( srfx, bounds, margin, radidx, xin )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 

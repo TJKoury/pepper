@@ -422,11 +422,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKAPPR' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually write anything, do every error
@@ -437,10 +433,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'EKAPPR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Look up the integer metadata page and page base for the segment.
@@ -449,10 +442,7 @@
 !
       call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      if ( failed() ) then
-         call chkout ( 'EKAPPR' )
-         return
-      end if
+      if ( failed() ) return
 
       call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
@@ -469,6 +459,5 @@
       call ekinsr ( handle, segno, recno )
 
 
-      call chkout ( 'EKAPPR' )
       return
       end

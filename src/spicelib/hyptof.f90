@@ -193,11 +193,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'HYPTOF' )
-      end if
+      if ( return () ) return
 
       if ( first ) then
          first  = .false.
@@ -206,7 +202,6 @@
 
       if ( ecc < 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
-         call chkout ( 'HYPTOF'            )
          return
       end if
 
@@ -223,7 +218,6 @@
 !
       if ( ma == 0.0_wp ) then
          f = 0.0_wp
-         call chkout ( 'HYPTOF' )
          return
       else
          m = abs ( ma )
@@ -397,6 +391,5 @@
       end if
 
 
-      call chkout ( 'HYPTOF' )
       return
       end

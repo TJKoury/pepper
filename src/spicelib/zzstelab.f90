@@ -239,9 +239,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     In the discussion below, the dot product of vectors X and Y
@@ -395,7 +393,6 @@
 !        C will be used as a divisor later (in the computation
 !        of DPHI), so we'll put a stop to the problem here.
 !
-         call chkin  ( 'ZZSTELAB'                               )
          call setmsg ( 'Cosine of the aberration angle is 0; ' &
          //            'this cannot occur for realistic ' &
          //            'observer velocities. This case can ' &
@@ -404,7 +401,6 @@
          //            'in a later computation, so it must not ' &
          //            'be equal to zero.'                      )
         call sigerr ( 'SPICE(DIVIDEBYZERO)'                     )
-        call chkout ( 'ZZSTELAB'                                )
         return
 
       end if

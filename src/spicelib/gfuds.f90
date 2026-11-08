@@ -1062,11 +1062,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin( 'GFUDS' )
 
 
 !
@@ -1079,7 +1076,6 @@
          call errint ( '#',  nw                                      )
          call errint ( '#',  nwuds                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
-         call chkout ( 'GFUDS'                                       )
          return
 
       end if
@@ -1094,7 +1090,6 @@
          //            'at least 2 and an even value.'            )
          call errint ( '#',  mw                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
-         call chkout ( 'GFUDS'                                    )
          return
 
       end if
@@ -1109,7 +1104,6 @@
          //            'at least 2 and an even value.'             )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFUDS'                                     )
          return
 
       end if
@@ -1150,6 +1144,5 @@
                       nobail, gfbail,    result   )
 
 
-      call chkout( 'GFUDS' )
 
       end

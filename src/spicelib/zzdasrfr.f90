@@ -277,11 +277,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZDASRFR' )
 
 !
 !     On the first pass through this routine, get the integer code of
@@ -291,10 +288,7 @@
 
          call zzddhnfc ( natbff )
 
-         if ( failed () ) then
-            call chkout ( 'ZZDASRFR' )
-            return
-         end if
+         if ( failed () ) return
 
          first = .false.
 
@@ -310,10 +304,7 @@
 !
       call zzddhppf ( unit, das, ibff )
 
-      if ( failed () ) then
-         call chkout ( 'ZZDASRFR' )
-         return
-      end if
+      if ( failed () ) return
 
       if ( ibff == natbff ) then
 !
@@ -335,7 +326,6 @@
             call errfnm ( '#', unit                                  )
             call errint ( '#', iostat                                )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                 )
-            call chkout ( 'ZZDASRFR'                                 )
             return
 
          end if
@@ -367,7 +357,6 @@
             call errint ( '#', iostat                               )
             call errint ( '#', ibff                                 )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                )
-            call chkout ( 'ZZDASRFR'                                )
             return
 
          end if
@@ -388,6 +377,5 @@
 
       end if
 
-      call chkout ( 'ZZDASRFR' )
       return
       end

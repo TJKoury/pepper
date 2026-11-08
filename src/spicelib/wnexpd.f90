@@ -170,11 +170,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WNEXPD' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -207,7 +203,6 @@
 
       if ( card == 0 ) then
          call scardd ( 0, window )
-         call chkout ( 'WNEXPD'  )
          return
       end if
 
@@ -241,6 +236,5 @@
       window(i) = window(j)
       call scardd ( i, window )
 
-      call chkout ( 'WNEXPD' )
       return
       end

@@ -210,9 +210,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 
       if (   eqstr ( action, 'READ' )   ) then
@@ -225,7 +223,6 @@
 
          if ( iostat /= 0 ) then
 
-            call chkin  ( 'DASIOD'                                     )
             call setmsg ( 'Could not read DAS double precision '      // &
                           'record. File = # Record number = #. '      // &
                           'IOSTAT = #.'                                )
@@ -233,7 +230,6 @@
             call errint ( '#', recno                                   )
             call errint ( '#', iostat                                  )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
-            call chkout ( 'DASIOD'                                     )
             return
 
          end if
@@ -250,7 +246,6 @@
 
          if ( iostat /= 0 ) then
 
-            call chkin  ( 'DASIOD'                                     )
             call setmsg ( 'Could not write DAS double precision '     // &
                           'record. File = # Record number = #. '      // &
                           'IOSTAT = #.'                                )
@@ -258,7 +253,6 @@
             call errint ( '#', recno                                   )
             call errint ( '#', iostat                                  )
             call sigerr ( 'SPICE(DASFILEWRITEFAILED)'                  )
-            call chkout ( 'DASIOD'                                     )
             return
 
          end if
@@ -268,11 +262,9 @@
 !
 !        The requested action is a little too weird.
 !
-         call chkin  ( 'DASIOD'                                )
          call setmsg ( 'Action was #; should be READ or WRITE' )
          call errch  ( '#', action                             )
          call sigerr ( 'SPICE(UNRECOGNIZEDACTION)'             )
-         call chkout ( 'DASIOD'                                )
          return
 
       end if

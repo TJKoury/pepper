@@ -299,11 +299,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKE02' )
-      end if
+      if ( return () ) return
 
 !
 !     Copy the returned encoded SCLK time into CLKOUT.
@@ -377,6 +373,5 @@
       end if
 
 
-      call chkout ( 'CKE02' )
       return
       end

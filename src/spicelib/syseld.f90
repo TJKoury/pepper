@@ -230,11 +230,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYSELD' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -280,6 +276,5 @@
       end if
 
 
-      call chkout ( 'SYSELD' )
       return
       end

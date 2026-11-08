@@ -190,7 +190,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'DIFFD' )
 
 
 !
@@ -294,7 +293,6 @@
       end if
 
 
-      call chkout ( 'DIFFD' )
 
       return
       end

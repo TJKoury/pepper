@@ -928,11 +928,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( rname )
 
       if ( first ) then
 !
@@ -954,10 +951,7 @@
       call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
                       target, trgcde, fnd    )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( .not. fnd ) then
@@ -971,7 +965,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -983,10 +976,7 @@
 
       call frinfo ( fixfid, fxcent, fxclss, fxclid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -996,7 +986,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -1013,7 +1002,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fxcent                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1049,10 +1037,7 @@
          call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, lmbtyp, trmtyp )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
@@ -1070,7 +1055,6 @@
             //            'string was <#>.'                      )
             call errch  ( '#', shpstr                            )
             call sigerr ( 'SPICE(BUG)'                           )
-            call chkout ( rname                                  )
             return
 
          end if
@@ -1089,7 +1073,6 @@
             call errch  ( '#', subtyp                                 )
             call errch  ( '#', method                                 )
             call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
-            call chkout ( rname                                       )
             return
 
          end if
@@ -1120,10 +1103,7 @@
 !
          call zzbodvcd ( trgcde, 'RADII', 3, svctr3, n, svradi )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if (  min( svradi(1), svradi(2), svradi(3) ) <= 0.0_wp ) then
 
@@ -1134,7 +1114,6 @@
             call errdp  ( '#',  svradi(2)                       )
             call errdp  ( '#',  svradi(3)                       )
             call sigerr ( 'SPICE(BADAXISLENGTH)'                )
-            call chkout ( rname                                 )
             return
 
          end if
@@ -1180,7 +1159,6 @@
                call errint ( '#', i                             )
                call errdp  ( '#', level                         )
                call sigerr ( 'SPICE(POINTNOTONSURFACE)'         )
-               call chkout ( rname                              )
                return
 
             end if
@@ -1188,10 +1166,7 @@
             call surfnm ( svradi(1),   svradi(2),  svradi(3), &
                           srfpts(1,i), normls(1,i)            )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 
          end do
@@ -1209,10 +1184,7 @@
             call zzsbfnrm ( trgcde, nsurf,       srflst,     et, &
                             fixfid, srfpts(1,i), normls(1,i)     )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Make sure normals have unit length.
@@ -1229,11 +1201,9 @@
          //            'or DSK.'                               )
          call errch  ( '#', method                             )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
-         call chkout ( rname                                   )
          return
 
       end if
 
-      call chkout ( rname )
       return
       end

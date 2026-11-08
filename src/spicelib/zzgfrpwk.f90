@@ -256,9 +256,7 @@
       data                  svunit / 6       /
 
 
-      call chkin  ( 'ZZGFRPWK'          )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFRPWK'          )
       return
 
 
@@ -419,11 +417,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZGFTSWK' )
 
 !
 !     On the first pass, obtain the logical unit for
@@ -495,7 +490,6 @@
 
       end if
 
-      call chkout  ( 'ZZGFTSWK' )
       return
 
 
@@ -589,20 +583,14 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZGFWKIN' )
 
       svincr = incr
       done   = done  + incr
       calls  = calls + 1
 
-      if ( entire == 0 ) then
-         call chkout  ( 'ZZGFWKIN' )
-         return
-      end if
+      if ( entire == 0 ) return
 
       if ( calls >= check ) then
 
@@ -648,7 +636,6 @@
 
       end if
 
-      call chkout  ( 'ZZGFWKIN' )
       return
 
 

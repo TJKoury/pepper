@@ -210,10 +210,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
-      call chkin ( 'SYTRND' )
+      if ( return () ) return
 
 
 !
@@ -267,6 +264,5 @@
       end if
 
 
-      call chkout ( 'SYTRND' )
       return
       end

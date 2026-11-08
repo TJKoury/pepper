@@ -251,11 +251,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'PCKE20' )
 
 !
 !     Call evaluation routine to get Euler angles
@@ -268,6 +265,5 @@
 !
       eulang(3) = mod ( eulang(3), twopi() )
 
-      call chkout ( 'PCKE20' )
       return
       end

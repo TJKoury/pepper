@@ -170,11 +170,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WNEXTD' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -207,6 +203,5 @@
 
       end if
 
-      call chkout ( 'WNEXTD' )
       return
       end

@@ -317,11 +317,8 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZTWOVXF' )
 
 
 !
@@ -336,7 +333,6 @@
          call errint ( '#', indexa       )
          call errint ( '#', indexp       )
          call sigerr ( 'SPICE(BADINDEX)' )
-         call chkout ( 'ZZTWOVXF'        )
          return
 
       else if ( indexa == indexp ) then
@@ -346,7 +342,6 @@
                        'different.'                                   )
          call errint ( '#', indexa             )
          call sigerr ( 'SPICE(UNDEFINEDFRAME)' )
-         call chkout ( 'ZZTWOVXF'              )
          return
 
       end if
@@ -427,11 +422,9 @@
                        'states AXDEF and PLNDEF are '           // &
                        'linearly dependent.'                    )
          call sigerr ( 'SPICE(DEPENDENTVECTORS)'                )
-         call chkout ( 'ZZTWOVXF'                               )
          return
 
       end if
 
-      call chkout ( 'ZZTWOVXF' )
       return
       end

@@ -153,11 +153,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSCLK')
 
       if ( first ) then
          first = .false.
@@ -217,7 +214,6 @@
 !        The test for an SCLK will not have changed either.
 !
          zzsclk = elemi( sclkid, passed )
-         call chkout ( 'ZZSCLK' )
          return
 
       end if
@@ -260,7 +256,6 @@
 !           that have passed the test.
 !
             call removi ( sclkid, passed )
-            call chkout ( 'ZZSCLK' )
             return
          end if
 
@@ -277,6 +272,5 @@
 !     As far as we can tell, everything looks ok.
 !
       zzsclk = .true.
-      call chkout ( 'ZZSCLK' )
       return
       end

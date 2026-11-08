@@ -174,11 +174,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'WRITLA' )
 
 !
 !     Check to see if the maximum number of lines is positive.
@@ -189,7 +186,6 @@
                        ' positive. It was #.'                        )
          call errint ( '#', numlin                                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'WRITLA'                                      )
          return
 
       end if
@@ -208,14 +204,12 @@
 !           If the write failed, an appropriate error message has
 !           already been set, so we simply need to return.
 !
-            call chkout ( 'WRITLA' )
             return
 
          end if
 
       end do
 
-      call chkout ( 'WRITLA' )
       return
 
       end

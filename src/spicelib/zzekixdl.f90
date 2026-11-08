@@ -128,11 +128,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKIXDL' )
 
 
       idxtyp  =  coldsc ( ixtidx )
@@ -163,7 +160,6 @@
             call setmsg ( 'The index type # is not supported.' )
             call errint ( '#',   idxtyp                        )
             call sigerr ( 'SPICE(INVALIDTYPE)'                 )
-            call chkout ( 'ZZEKIXDL'                           )
             return
 
          end if
@@ -182,11 +178,9 @@
          call errint ( '#',  recno                           )
          call errint ( '#',  coldsc(ordidx)                  )
          call sigerr ( 'SPICE(BUG)'                          )
-         call chkout ( 'ZZEKIXDL'                            )
          return
 
       end if
 
-      call chkout ( 'ZZEKIXDL' )
       return
       end

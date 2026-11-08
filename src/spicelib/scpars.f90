@@ -458,11 +458,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCPARS' )
 
 !
 !     This routine handles errors in two different ways.
@@ -485,17 +482,13 @@
 
       dtype = sctype ( sc )
 
-      if ( failed() ) then
-         call chkout ( 'SCPARS' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( dtype /= 1 )  then
 
          call setmsg ( 'Clock type # is not supported.' )
          call errint ( '#', dtype                       )
          call sigerr ( 'SPICE(NOTSUPPORTED)'            )
-         call chkout ( 'SCPARS'                         )
          return
 
       end if
@@ -512,7 +505,6 @@
 !        Missing partition data should be caught by the earlier SCTYPE
 !        call, which accesses the type 1 SCLK database.
 !
-         call chkout ( 'SCPARS' )
          return
 
       end if
@@ -527,7 +519,6 @@
          call errint ( '#', sc               )
          call errint ( '#', mxpart           )
          call sigerr ( 'SPICE(TOOMANYPARTS)' )
-         call chkout ( 'SCPARS'              )
          return
 
       end if
@@ -541,7 +532,6 @@
 
          msg   = 'Input spacecraft clock string is blank.'
 
-         call chkout ( 'SCPARS' )
          return
 
       end if
@@ -562,7 +552,6 @@
 
          call repmc ( msg, '#', sclkch, msg )
 
-         call chkout ( 'SCPARS' )
          return
 
       end if
@@ -571,7 +560,6 @@
 
          msg = 'SCLK string ends with slash.'
 
-         call chkout ( 'SCPARS' )
          return
 
       end if
@@ -588,7 +576,6 @@
 !        Missing SCLK data should be caught by the earlier SCTYPE call,
 !        which accesses the type 1 SCLK database.
 !
-         call chkout ( 'SCPARS' )
          return
       end if
 
@@ -599,7 +586,6 @@
 
          error = .true.
          msg   =  psmsg
-         call chkout ( 'SCPARS' )
          return
 
       end if
@@ -661,7 +647,6 @@
 
             call repmc ( msg, '#', sclkch, msg )
 
-            call chkout ( 'SCPARS' )
             return
 
          else if ( part <= 0 .or. part > nparts ) then
@@ -679,7 +664,6 @@
 
             call repmi ( msg, '#', nparts, msg )
 
-            call chkout ( 'SCPARS' )
             return
 
          else if ( ticks < pstart( part )   .or. &
@@ -697,7 +681,6 @@
 
             call repmi ( msg, '#', part, msg )
 
-            call chkout ( 'SCPARS' )
             return
 
          end if
@@ -728,7 +711,6 @@
 
             call repmi ( msg, '#', sc, msg )
 
-            call chkout ( 'SCPARS' )
             return
 
          end if
@@ -751,7 +733,6 @@
 
       msg   = ' '
 
-      call chkout ( 'SCPARS' )
       return
 
       end

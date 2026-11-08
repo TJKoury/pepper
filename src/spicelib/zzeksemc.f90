@@ -241,16 +241,12 @@
 
       call zzekreqi ( eqryi, 'NAMES_RESOLVED', irsolv )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( irsolv == ifalse ) then
 
-         call chkin  ( 'ZZEKSEMC'                                   )
          call setmsg ( 'Encoded query has not had names resolved.'  )
          call sigerr ( 'SPICE(UNRESOLVEDNAMES)'                     )
-         call chkout ( 'ZZEKSEMC'                                   )
          return
 
       end if
@@ -258,17 +254,13 @@
 
       call zzekreqi ( eqryi, 'TIMES_RESOLVED', trsolv )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( trsolv == ifalse ) then
 
-         call chkin  ( 'ZZEKSEMC'                                   )
          call setmsg ( 'Encoded query has not had time values '     // &
                        'resolved.'                                  )
          call sigerr ( 'SPICE(UNRESOLVEDTIMES)'                     )
-         call chkout ( 'ZZEKSEMC'                                   )
          return
 
       end if
@@ -435,9 +427,7 @@
 !           operator is `IS NULL' or `IS NOT NULL', there are no
 !           further semantic checks to be made.
 !
-            if ( nulval ) then
-               return
-            end if
+            if ( nulval ) return
 
 !
 !           Get the data type of the value on the RHS.

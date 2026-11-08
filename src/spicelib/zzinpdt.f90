@@ -371,11 +371,8 @@
       data                  hpi   / -1.0_wp  /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZINPDT' )
 
       if ( first ) then
 
@@ -401,7 +398,6 @@
          call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
          call errint ( '#', exclud                                  )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         call chkout ( 'ZZINPDT'                                    )
          return
 
       end if
@@ -424,7 +420,6 @@
          call zzinpdt0 ( p,      lon, &
                          bounds, corpar, exclud, inside )
 
-         call chkout ( 'ZZINPDT' )
          return
 
       else if ( margin < 0.0_wp ) then
@@ -432,7 +427,6 @@
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINPDT'                                )
          return
 
       end if
@@ -480,10 +474,7 @@
          call zzpdcmpl ( re, f, p, amnlat, relmin )
          call zzpdcmpl ( re, f, p, amxlat, relmax )
 
-         if ( failed() ) then
-            call chkout ( 'ZZINPDT' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( ( relmin == lt ) .or. ( relmax == gt ) ) then
@@ -491,7 +482,6 @@
 !           The latitude of P is strictly outside of the element's
 !           latitude bounds.
 !
-            call chkout ( 'ZZINPDT' )
             return
          end if
 
@@ -523,12 +513,7 @@
 
          call zzinpdt0 ( p, lon, altbds, corpar, lonidx, alpass )
 
-         if ( .not. alpass ) then
-
-            call chkout ( 'ZZINPDT' )
-            return
-
-         end if
+         if ( .not. alpass ) return
 
       end if
 
@@ -547,10 +532,7 @@
          call zznrmlon ( bounds(lower,lonidx),  bounds(upper,lonidx), &
                          angmrg,       minlon,  maxlon               )
 
-         if ( failed() ) then
-            call chkout ( 'ZZINPDT' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Set the margin to be used for longitude interval
 !        inclusion tests.
@@ -571,10 +553,7 @@
          call zzpdcmpl ( re, f, p,  hpi-latmrg, relmax )
          call zzpdcmpl ( re, f, p, -hpi+latmrg, relmin )
 
-         if ( failed() ) then
-            call chkout ( 'ZZINPDT' )
-            return
-         end if
+         if ( failed() ) return
 
          if (       ( relmax /= gt ) &
               .and. ( relmin /= lt )  ) then
@@ -641,12 +620,7 @@
             end if
 
 
-            if ( ( lon < amnlon ) .or. ( lon > amxlon ) ) then
-
-               call chkout ( 'ZZINPDT' )
-               return
-
-            end if
+            if ( ( lon < amnlon ) .or. ( lon > amxlon ) ) return
 
          else
 
@@ -693,6 +667,5 @@
 !
       inside = .true.
 
-      call chkout ( 'ZZINPDT' )
       return
       end

@@ -231,11 +231,7 @@
 !
 !     Standard obligatory error handling stuff.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin  ( 'IDW2AT' )
-      end if
+      if ( return() ) return
 !
 !     Check to see if we got a blank string for the ID word. If we did,
 !     set the architecture and type to unknown.
@@ -246,7 +242,6 @@
          arch = '?'
          type = '?'
 
-         call chkout ( 'IDW2AT' )
          return
 
       end if
@@ -269,7 +264,6 @@
          arch = '?'
          type = '?'
 
-         call chkout ( 'IDW2AT' )
          return
 
       end if
@@ -385,7 +379,6 @@
 
       end if
 
-      call chkout ( 'IDW2AT' )
       return
 
       end

@@ -296,11 +296,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKINSR' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually write anything, do every error
@@ -311,10 +307,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'EKINSR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Look up the integer metadata page and page base for the segment.
@@ -323,10 +316,7 @@
 !
       call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      if ( failed() ) then
-         call chkout ( 'EKINSR' )
-         return
-      end if
+      if ( failed() ) return
 
       call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
@@ -350,7 +340,6 @@
          call errint ( '#',  size                                    )
          call errint ( '#',  ipsize                                  )
          call sigerr ( 'SPICE(BUG)'                                  )
-         call chkout ( 'EKINSR'                                      )
          return
 
       end if
@@ -367,7 +356,6 @@
          call errint ( '#',  recno                              )
          call errint ( '#',  nrec+1                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                    )
-         call chkout ( 'EKINSR'                                 )
          return
 
       end if
@@ -475,6 +463,5 @@
       call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 
-      call chkout ( 'EKINSR' )
       return
       end

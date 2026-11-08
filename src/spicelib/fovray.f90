@@ -454,11 +454,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'FOVRAY' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -473,15 +470,11 @@
       call zzgffvin ( inst,   ryshap, raydir, ' ', &
                       rframe, abcorr, obsrvr )
 
-      if ( failed() ) then
-         call chkout ( 'FOVRAY' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Calculate the visibility state.
 !
       call zzgffvst ( et, visibl )
 
-      call chkout ( 'FOVRAY' )
       return
       end

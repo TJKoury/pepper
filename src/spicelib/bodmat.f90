@@ -367,11 +367,7 @@
 !
 !     Standard SPICE Error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'BODMAT' )
-      end if
+      if ( return () ) return
 
 !
 !     Get 6x6 state transformation from TISBOD. If succeeded, pull out
@@ -379,10 +375,7 @@
 !
       call tisbod ( 'J2000', body, et, tsipm )
 
-      if ( failed() ) then
-         call chkout ( 'BODMAT' )
-         return
-      end if
+      if ( failed() ) return
 
       do  i = 1, 3
          do   j  = 1, 3
@@ -390,6 +383,5 @@
          end do
       end do
 
-      call chkout ( 'BODMAT' )
       return
       end

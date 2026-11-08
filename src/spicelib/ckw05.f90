@@ -661,11 +661,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKW05' )
-      end if
+      if ( return () ) return
 
 !
 !     Make sure that the number of packets is positive.
@@ -676,7 +672,6 @@
                        'Number of packets supplied:  #'                )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWPACKETS)'                          )
-         call chkout ( 'CKW05'                                         )
          return
 
       end if
@@ -691,7 +686,6 @@
                        'intervals for type 5.'                     )
          call errint ( '#', nints                                  )
          call sigerr ( 'SPICE(INVALIDNUMINTS)'                     )
-         call chkout ( 'CKW05'                                     )
          return
 
       end if
@@ -707,7 +701,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'CKW05'                                     )
          return
 
       end if
@@ -720,7 +713,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'CKW05'                                   )
          return
 
       end if
@@ -738,7 +730,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'CKW05'                                 )
             return
 
          end if
@@ -756,7 +747,6 @@
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
          call sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
-         call chkout ( 'CKW05'                                 )
          return
 
       end if
@@ -776,7 +766,6 @@
             call errint ( '#', i-1                              )
             call errdp  ( '#', sclkdp(i-1)                      )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
-            call chkout ( 'CKW05'                               )
             return
 
          end if
@@ -798,7 +787,6 @@
             call errint ( '#', i-1                              )
             call errdp  ( '#', starts(i-1)                      )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
-            call chkout ( 'CKW05'                               )
             return
 
          end if
@@ -823,7 +811,6 @@
             call errint ( '#', i                                      )
             call errdp  ( '*', starts(i)                              )
             call sigerr ( 'SPICE(INVALIDSTARTTIME)'                   )
-            call chkout ( 'CKW05'                                     )
             return
 
          end if
@@ -861,7 +848,6 @@
          call setmsg ( 'CK type 5 subtype <#> is not supported.' )
          call errint ( '#', subtyp                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'CKW05'                                   )
          return
 
       end if
@@ -883,7 +869,6 @@
             //            'zero.'                                    )
             call errint ( '#', i                                     )
             call sigerr ( 'SPICE(ZEROQUATERNION)'                    )
-            call chkout ( 'CKW05'                                    )
             return
 
          end if
@@ -901,7 +886,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'CKW05'                                         )
          return
 
       end if
@@ -919,7 +903,6 @@
                        'interpolation.'                                )
          call errint ( '#', degree                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'CKW05'                                         )
          return
 
       end if
@@ -954,7 +937,6 @@
          call errdp  ( '#', begtim                                 )
          call errdp  ( '#', endtim                                 )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'CKW05'                                     )
          return
 
       end if
@@ -973,7 +955,6 @@
                        'time #.'                                  )
          call errdp  ( '#',  begtim                               )
          call sigerr ( 'SPICE(EMPTYSEGMENT)'                      )
-         call chkout ( 'CKW05'                                    )
          return
 
       else if (  sclkdp(i+1)  >  endtim  ) then
@@ -983,7 +964,6 @@
          call errdp  ( '#',  begtim                                 )
          call errdp  ( '#',  endtim                                 )
          call sigerr ( 'SPICE(EMPTYSEGMENT)'                        )
-         call chkout ( 'CKW05'                                      )
          return
 
       end if
@@ -995,7 +975,6 @@
 
          call setmsg ( 'The SCLK rate RATE was zero.'  )
          call sigerr ( 'SPICE(INVALIDVALUE)'           )
-         call chkout ( 'CKW05'                         )
          return
 
       end if
@@ -1010,10 +989,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'CKW05' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -1121,6 +1097,5 @@
       end if
 
 
-      call chkout ( 'CKW05' )
       return
       end

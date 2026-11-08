@@ -435,11 +435,7 @@
 !
 !     Standard SPICE Error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'TIPBOD' )
-      end if
+      if ( return () ) return
 
 !
 !     Get 6x6 state transformation from TISBOD. If succeeded, pull out
@@ -447,10 +443,7 @@
 !
       call tisbod ( ref, body, et, tsipm )
 
-      if ( failed() ) then
-         call chkout ( 'TIPBOD' )
-         return
-      end if
+      if ( failed() ) return
 
       do  i = 1, 3
          do   j  = 1, 3
@@ -458,6 +451,5 @@
          end do
       end do
 
-      call chkout ( 'TIPBOD' )
       return
       end

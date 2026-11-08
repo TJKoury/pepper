@@ -319,11 +319,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW18' )
-      end if
+      if ( return () ) return
 
 !
 !     Set the packet size, which is a function of the subtype.
@@ -341,7 +337,6 @@
          call setmsg ( 'Unexpected SPK type 18 subtype requested: #' )
          call errint ( '#',  subtyp                                  )
          call sigerr ( 'SPICE(INVALIDVALUE)'                         )
-         call chkout ( 'SPKW18'                                      )
          return
 
       end if
@@ -365,7 +360,6 @@
                        'here may indicate that the code needs to '  // &
                        'updated to handle new subtypes.'            )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'SPKW18'                                     )
          return
 
       end if
@@ -381,7 +375,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW18'                                    )
          return
 
       end if
@@ -394,7 +387,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW18'                                  )
          return
 
       end if
@@ -412,7 +404,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW18'                                )
             return
 
          end if
@@ -430,7 +421,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW18'                                        )
          return
 
       end if
@@ -448,7 +438,6 @@
                        'interpolation.'                                )
          call errint ( '#', degree                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW18'                                        )
          return
 
       end if
@@ -463,7 +452,6 @@
                        '18.  Number of packets supplied:  #'           )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
-         call chkout ( 'SPKW18'                                        )
          return
 
       end if
@@ -479,7 +467,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW18'                                    )
          return
 
       end if
@@ -499,7 +486,6 @@
             call errint ( '#',  i                                     )
             call errdp  ( '#',  epochs(i-1)                           )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
-            call chkout ( 'SPKW18'                                    )
             return
          else
             maxtim = epochs(i)
@@ -517,7 +503,6 @@
          call errdp  ( '#',  first                                    )
          call errdp  ( '#',  epochs(1)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW18'                                       )
          return
 
       else if (  epochs(n) < last ) then
@@ -526,7 +511,6 @@
          call errdp  ( '#',  last                                     )
          call errdp  ( '#',  epochs(n)                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
-         call chkout ( 'SPKW18'                                       )
          return
 
       end if
@@ -545,10 +529,7 @@
 
       call namfrm ( frame, ic(3) )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW18' )
-         return
-      end if
+      if ( failed() ) return
 
       ic(4) = dtype
 
@@ -562,10 +543,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW18' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -627,6 +605,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW18' )
       return
       end

@@ -241,16 +241,12 @@
 !
       call zzektrui ( handle, tree, lkey, lval, overfl )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If the insertion didn't result in an overflow, we're done.
 !
-      if ( .not. overfl ) then
-         return
-      end if
+      if ( .not. overfl ) return
 
 !
 !     Handle node overflows, as required.

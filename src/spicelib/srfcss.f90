@@ -356,11 +356,8 @@
       integer(ip)           bodyid
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SRFCSS' )
 
 !
 !     No name has been found yet.
@@ -372,10 +369,7 @@
 !
       call bods2c ( bodstr, bodyid, isname )
 
-      if ( failed() ) then
-         call chkout ( 'SRFCSS' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( isname ) then
 !
@@ -384,10 +378,7 @@
 !
          call zzsrfc2n ( code, bodyid, srfstr, isname )
 
-         if ( failed() ) then
-            call chkout ( 'SRFCSS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -402,6 +393,5 @@
 
       end if
 
-      call chkout ( 'SRFCSS' )
       return
       end

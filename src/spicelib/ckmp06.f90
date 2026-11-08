@@ -554,11 +554,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKMP06' )
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -592,7 +589,6 @@
          //            'descriptor shows type = #.'                   )
          call errint ( '#', ic( 3 )                                   )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
-         call chkout ( 'CKMP06'                                       )
          return
 
       end if
@@ -607,10 +603,7 @@
 
       call dafgda ( handle, eaddr, eaddr, dpdata )
 
-      if ( failed() ) then
-         call chkout ( 'CKMP06' )
-         return
-      end if
+      if ( failed() ) return
 
       nintvl = nint ( dpdata(1) )
 
@@ -621,7 +614,6 @@
          call errint ( '#', nintvl                                    )
          call errint ( '#', msno                                      )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
-         call chkout ( 'CKMP06'                                       )
          return
 
       end if
@@ -658,10 +650,7 @@
 !
       call dafgda ( handle, ptrbas+msno+1, ptrbas+msno+1, buffer )
 
-      if ( failed() ) then
-         call chkout( 'CKMP06' )
-         return
-      end if
+      if ( failed() ) return
 
       minie = ( baddr - 1 )  +  nint( buffer(1) )  -  1
 
@@ -670,10 +659,7 @@
 !
       call dafgda ( handle, minie-mctlsz+1, minie, buffer )
 
-      if ( failed() ) then
-         call chkout( 'CKMP06' )
-         return
-      end if
+      if ( failed() ) return
 
       rate   =       buffer(1)
       subtyp = nint( buffer(2) )
@@ -690,6 +676,5 @@
 
       call dafgda ( handle, epaddr, epaddr, lstepc )
 
-      call chkout ( 'CKMP06' )
       return
       end

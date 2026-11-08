@@ -222,9 +222,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     The first number in the record is the record size.  Following it
@@ -237,12 +235,10 @@
 
       if ( ncof < 1 ) then
 
-         call chkin  ( 'SPKE03'                                     )
          call setmsg ( 'The input record''s coefficient count NCOF ' &
          //            'should be positive but was #.'              )
          call errint ( '#', ncof                                    )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-         call chkout ( 'SPKE03'                                     )
          return
 
       end if
@@ -252,12 +248,10 @@
 !
       if ( record(3) <= 0.0_wp )  then
 
-         call chkin  ( 'SPKE03'                            )
          call setmsg ( 'Interval radius must be positive ' &
          //            'but was #.'                        )
          call errdp  ( '#', record(3)                      )
          call sigerr ( 'SPICE(INVALIDRADIUS)'              )
-         call chkout ( 'SPKE03'                            )
          return
 
       end if

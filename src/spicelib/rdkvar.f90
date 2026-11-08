@@ -254,11 +254,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RDKVAR' )
-      end if
+      if ( return() ) return
 
 !
 !     No variable yet.
@@ -284,10 +280,7 @@
 
          call rdkdat ( line, eof )
 
-         if ( eof ) then
-            call chkout ( 'RDKVAR' )
-            return
-         end if
+         if ( eof ) return
 
 !
 !        Replace commas with blanks. We make no distinctions between
@@ -355,7 +348,6 @@
                   error  =  'Encountered : ' // cvalue(2: )
                   call setmsg ( error    )
                   call sigerr ( 'SPICE(DATEEXPECTED)' )
-                  call chkout ( 'RDKVAR' )
                   return
                end if
 
@@ -367,7 +359,6 @@
                   error =  'Encountered : ' // cvalue
                   call setmsg ( error    )
                   call sigerr ( 'SPICE(NUMBEREXPECTED)' )
-                  call chkout ( 'RDKVAR' )
                   return
                end if
 
@@ -395,6 +386,5 @@
       name = varnam
 
 
-      call chkout ( 'RDKVAR' )
       return
       end

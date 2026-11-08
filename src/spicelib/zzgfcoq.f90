@@ -504,11 +504,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFCOQ' )
 
 !
 !     No result was found yet.
@@ -528,7 +525,6 @@
          call setmsg ( 'The coordinate system # is not supported.' )
          call errch  ( '#',  crdsys                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
-         call chkout ( 'ZZGFCOQ'                                   )
          return
 
       end if
@@ -550,7 +546,6 @@
          call errch  ( '#',  crdnam                               )
          call errch  ( '#',  crdsys                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'ZZGFCOQ'                                  )
          return
 
       end if
@@ -622,17 +617,13 @@
 !
 !        Without an intercept, there's nothing left to do here.
 !
-         if ( .not. found ) then
-            call chkout ( 'ZZGFCOQ' )
-            return
-         end if
+         if ( .not. found ) return
 
       else
 
          call setmsg ( 'The coordinate quantity # is not recognized.' )
          call errch  ( '#',  vecdef                                   )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
-         call chkout ( 'ZZGFCOQ'                                      )
          return
 
       end if
@@ -641,10 +632,7 @@
 !     If we already encountered an error while trying to compute
 !     the vector of interest, return now.
 !
-      if (  failed() ) then
-          call chkout (  'ZZGFCOQ' )
-          return
-      end if
+      if (  failed() ) return
 
 !
 !     At this point we assume the vector whose coordinate is
@@ -695,7 +683,6 @@
          call setmsg ( 'The coordinate system # is not supported.' )
          call errch  ( '#',  crdsys                                )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZGFCOQ'                                   )
          return
 
       end if
@@ -713,6 +700,5 @@
 !
       found = .true.
 
-      call chkout  ( 'ZZGFCOQ' )
       return
       end

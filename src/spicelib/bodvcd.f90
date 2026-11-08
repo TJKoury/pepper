@@ -315,11 +315,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-        return
-      else
-        call chkin ( 'BODVCD' )
-      end if
+      if ( return () ) return
 
 !
 !     Construct the variable name from BODY and ITEM.
@@ -342,7 +338,6 @@
                        'kernel pool.'                              )
          call errch  ( '#', varnam                                 )
          call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                  )
-         call chkout ( 'BODVCD'                                    )
          return
 
       end if
@@ -356,7 +351,6 @@
                        'are not of numeric type.'             )
          call errch  ( '#', varnam                            )
          call sigerr ( 'SPICE(TYPEMISMATCH)'                  )
-         call chkout ( 'BODVCD'                               )
          return
 
       end if
@@ -374,7 +368,6 @@
          call errint ( '#', dim                                    )
          call errint ( '#', maxn                                   )
          call sigerr ( 'SPICE(ARRAYTOOSMALL)'                      )
-         call chkout ( 'BODVCD'                                    )
          return
 
       end if
@@ -385,6 +378,5 @@
 !
       call gdpool ( varnam, 1, maxn, dim, values, found )
 
-      call chkout ( 'BODVCD' )
       return
       end

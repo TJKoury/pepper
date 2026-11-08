@@ -612,11 +612,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( rname )
 
 !
 !     Nothing found yet.
@@ -631,7 +628,6 @@
          call setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
          call sigerr ( 'SPICE(ZEROVECTOR)'                             )
-         call chkout ( rname                                           )
          return
 
       end if
@@ -712,10 +708,7 @@
 
       call spkezp ( trgcde, et, fixref, loccor, obscde, tpos, lt )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Negate the target's position to obtain the position of the
@@ -775,10 +768,7 @@
          call spkezp ( dcentr, et, 'J2000', abcorr, obscde, &
                        rpos,   ltcent                       )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          refepc  =  et  +  s * ltcent
 
@@ -804,10 +794,7 @@
 !
       call refchg ( dfrcde, j2code, refepc, r2jmat )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( r2jmat, dvec, j2dir )
 
@@ -824,10 +811,7 @@
 !
       call pxform ( 'J2000', fixref,  trgepc,  j2tmat )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( j2tmat, j2dir, trgdir )
 
@@ -845,10 +829,7 @@
 !
       call spkssb ( obscde, et, 'J2000', ssbost )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If we're using stellar aberration correction, at this point we'll
@@ -995,7 +976,6 @@
          call errint ( '#', obscde                         )
          call errint ( '#', trgcde                         )
          call sigerr ( 'SPICE(NOSEPARATION)'               )
-         call chkout ( rname                               )
          return
 
       end if
@@ -1015,7 +995,6 @@
 !           for a solution to exist, even with a better light time
 !           estimate.
 !
-            call chkout ( rname )
             return
 
          end if
@@ -1028,10 +1007,7 @@
 !
       call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If we found an intercept, and if we're not using light time
@@ -1042,7 +1018,6 @@
 
          call vsub ( spoint, obspos, srfvec )
 
-         call chkout ( rname )
          return
 
       end if
@@ -1077,10 +1052,7 @@
 
             call udnear ( obspos, trgdir, et, pnear, rayalt )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             lt =  vdist ( obspos, pnear ) / clight()
 
@@ -1096,10 +1068,7 @@
 !
             call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Find the position of the observer relative to the target.
@@ -1109,10 +1078,7 @@
             call vsub   ( ssbost,  ssbtst, j2pos         )
             call pxform ( 'J2000', fixref, trgepc, xform )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Convert the observer's position relative to the target
@@ -1132,10 +1098,7 @@
 !
             call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             i = i + 1
 
@@ -1144,10 +1107,7 @@
 !
 !        If there's still no intercept, we're done.
 !
-         if ( .not. found ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( .not. found ) return
 
       end if
 
@@ -1191,10 +1151,7 @@
 !
          call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Find the position of the observer relative to the target.
@@ -1207,10 +1164,7 @@
          call vsub   ( ssbost,  ssbtst, j2pos         )
          call pxform ( 'J2000', fixref, trgepc, xform )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Convert the observer's position relative to the target from
@@ -1230,10 +1184,7 @@
 !
          call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If there's no intercept, try to get an estimate of the
@@ -1262,7 +1213,6 @@
 !
 !              We're not going to find an intercept.
 !
-               call chkout ( rname )
                return
 
             end if
@@ -1324,6 +1274,5 @@
 !
       call vscl ( srflen, udir, srfvec )
 
-      call chkout ( rname )
       return
       end

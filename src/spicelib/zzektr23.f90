@@ -322,7 +322,6 @@
 
       if (  ( lsib /= left ) .or. ( rsib /= right )  ) then
 
-         call chkin  ( 'ZZEKTR23'                               )
          call setmsg ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
                        'inconsistent. LEFT = #; RIGHT = #; '   // &
                        'PARENT = #; PKIDX = #; LSIB derived '  // &
@@ -334,7 +333,6 @@
          call errint ( '#',   lsib                              )
          call errint ( '#',   rsib                              )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'ZZEKTR23'                               )
          return
 
       end if
@@ -349,14 +347,12 @@
 !
       if (  sum  /=  ( 2*mxkeyc + 1 )  ) then
 
-         call chkin  ( 'ZZEKTR23'                                    )
          call setmsg ( 'Number of keys in LEFT = #; number of keys '// &
                        'in right = #; but sum should be #.'          )
          call errint ( '#',  left                                    )
          call errint ( '#',  right                                   )
          call errint ( '#',  2*mxkeyc+1                              )
          call sigerr ( 'SPICE(BUG)'                                  )
-         call chkout ( 'ZZEKTR23'                                    )
          return
 
       end if

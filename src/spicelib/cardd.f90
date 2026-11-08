@@ -166,8 +166,6 @@
       if ( return() ) then
          cardd = 0
          return
-      else
-         call chkin ( 'CARDD' )
       end if
 
 !
@@ -184,7 +182,6 @@
          call setmsg ( 'Invalid cell size.  The size was #.')
          call errint ( '#', int( cell(-1) ) )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'CARDD' )
          return
 
       else if ( int( cell(0) ) < 0  ) then
@@ -193,7 +190,6 @@
                        'was #.'      )
          call errint ( '#', int( cell(0) )  )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'CARDD' )
          return
 
       else if ( int(cell(0)) > int(cell(-1))  ) then
@@ -204,13 +200,11 @@
          call errint ( '#', int(cell( 0))  )
          call errint ( '#', int(cell(-1))  )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'CARDD' )
          return
 
 
       end if
 
 
-      call chkout ( 'CARDD' )
       return
       end

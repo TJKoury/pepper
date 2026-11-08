@@ -298,31 +298,25 @@
 !
 !     This routine uses discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check the vertex and plate counts.
 !
       if ( nv < 4 ) then
 
-         call chkin  ( 'PLTVOL'                                      )
          call setmsg ( 'At least 4 vertices are needed, but NV = #.' )
          call errint ( '#',  nv                                      )
          call sigerr ( 'SPICE(TOOFEWVERTICES)'                       )
-         call chkout ( 'PLTVOL'                                      )
          return
 
       end if
 
       if ( np < 4 ) then
 
-         call chkin  ( 'PLTVOL'                                    )
          call setmsg ( 'At least 4 plates are needed, but NP = #.' )
          call errint ( '#',  np                                    )
          call sigerr ( 'SPICE(TOOFEWPLATES)'                       )
-         call chkout ( 'PLTVOL'                                    )
          return
 
       end if
@@ -337,7 +331,6 @@
             if (      ( plates(j,i) < 1  ) &
                  .or. ( plates(j,i) > nv )  ) then
 
-               call chkin  ( 'PLTVOL'                                  )
                call setmsg ( 'Vertex indices must be in the range ' &
                //            '[1, NV] for all SPICE language versions. ' &
                //            'The input value of NV was #. Vertex ' &
@@ -349,7 +342,6 @@
                call errint ( '#',  i                                   )
                call errint ( '#',  plates(j,i)                         )
                call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
-               call chkout ( 'PLTVOL'                                  )
                return
 
             end if

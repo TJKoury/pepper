@@ -169,8 +169,6 @@
       if ( return () ) then
          wnincd = .false.
          return
-      else
-         call chkin ( 'WNINCD' )
       end if
 
 !
@@ -186,7 +184,6 @@
 
          if ( left >= window(i)  .and.  right <= window(i+1) ) then
             wnincd = .true.
-            call chkout ( 'WNINCD' )
             return
          end if
 
@@ -194,6 +191,5 @@
 
       wnincd = .false.
 
-      call chkout ( 'WNINCD' )
       return
       end

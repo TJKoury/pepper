@@ -215,11 +215,8 @@
 !
 !     Standard Spice Error Handling.
 !
-      if (return() ) then
-         return
-      end if
+      if (return() ) return
 
-      call chkin('SPKR17')
 !
 !     Unpack the segment descriptor.
 !
@@ -237,7 +234,6 @@
                       'data in a type # data segment.')
          call errint ('#', type                       )
          call sigerr ('SPICE(WRONGSPKTYPE)'           )
-         call chkout ('SPKR17'                        )
          return
 
       end if
@@ -256,7 +252,6 @@
          call errint ( '#',   end-begin+1         )
          call errint ( '#',   diff+1              )
          call sigerr ( 'SPICE(MALFORMEDSEGMENT)'  )
-         call chkout ( 'SPKR17'                   )
          return
 
       end if
@@ -265,6 +260,5 @@
 !     Read the data for the record.
 !
       call dafgda ( handle, begin, end, record )
-      call chkout ('SPKR17')
       return
       end

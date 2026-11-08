@@ -222,11 +222,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYPUTC' )
-      end if
+      if ( return () ) return
 
 !
 !     Check to see if the number of values is a valid quantity.
@@ -235,7 +231,6 @@
          call setmsg ( 'SYPUTC: The dimension of the values array is' // &
                        'less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
-         call chkout ( 'SYPUTC' )
          return
       end if
 
@@ -331,6 +326,5 @@
 
 
 
-      call chkout ( 'SYPUTC' )
       return
       end

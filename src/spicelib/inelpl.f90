@@ -305,11 +305,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'INELPL' )
 
 !
 !     Check the input plane.
@@ -320,7 +317,6 @@
 
          call setmsg ( 'Input SPICE plane has zero normal vector.' )
          call sigerr ( 'SPICE(INVALIDPLANE)'                       )
-         call chkout ( 'INELPL'                                    )
          return
 
       else if ( inpcon < 0.0_wp ) then
@@ -331,7 +327,6 @@
          //            'constants.'                                )
          call errdp  ( '#',  inpcon                                )
          call sigerr ( 'SPICE(INVALIDPLANE)'                       )
-         call chkout ( 'INELPL'                                    )
          return
 
       end if
@@ -363,7 +358,6 @@
             call errdp  ( '#',  sminor(3)                             )
             call errdp  ( '#',  sep                                   )
             call sigerr ( 'SPICE(INVALIDELLIPSE)'                     )
-            call chkout ( 'INELPL'                                    )
             return
 
          end if
@@ -402,7 +396,6 @@
 !
 !        Return now; this simplifies the logic to follow.
 !
-         call chkout ( 'INELPL' )
          return
 
       end if
@@ -465,7 +458,6 @@
             nxpts = 0
          end if
 
-         call chkout ( 'INELPL' )
          return
 
       end if
@@ -506,7 +498,6 @@
       if (  vnormg( v, 2 )  <  const  )   then
 
          nxpts = 0
-         call chkout ( 'INELPL' )
          return
 
       end if
@@ -578,6 +569,5 @@
                     dsin(angle2),  sminor,    xpt2 )
 
 
-      call chkout ( 'INELPL' )
       return
       end

@@ -162,11 +162,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WNCOND' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -175,6 +171,5 @@
       call wnexpd ( -left, -right, window )
 
 
-      call chkout ( 'WNCOND' )
       return
       end

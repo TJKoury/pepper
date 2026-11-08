@@ -251,11 +251,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin( 'ZZSEPQ' )
 
 !
 !     First check for bad inputs.
@@ -271,7 +268,6 @@
          call errint  ('#3', bod2         )
          call errdp   ('#4', r2            )
          call sigerr  ('SPICE(BADRADIUS)' )
-         call chkout  ('ZZSEPQ'          )
          return
       end if
 
@@ -281,18 +277,12 @@
 !
       call spkezp ( bod1, et, ref, abcorr,  obs, pv1, lt )
 
-      if  (  failed() ) then
-         call chkout ( 'ZZSEPQ' )
-         return
-      end if
+      if (  failed() ) return
 
 
        call spkezp ( bod2, et, ref, abcorr, obs, pv2, lt )
 
-      if (  failed() ) then
-         call chkout ( 'ZZSEPQ' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     Compute the range to the objects of interest.
@@ -307,10 +297,7 @@
 
          ang1 = dasine( r1/range1, atol )
 
-         if (  failed() ) then
-            call chkout ( 'ZZSEPQ' )
-            return
-         end if
+         if (  failed() ) return
 
       else
 
@@ -323,7 +310,6 @@
          call errdp   ('#3', range1        )
          call errdp   ('#4', r1             )
          call sigerr  ('SPICE(INSIDEBODY)' )
-         call chkout  ('ZZSEPQ'             )
          return
 
       end if
@@ -332,10 +318,7 @@
 
          ang2 = dasine ( r2/range2, atol )
 
-         if (  failed() ) then
-            call chkout ('ZZSEPQ')
-            return
-         end if
+         if (  failed() ) return
 
       else
 
@@ -348,7 +331,6 @@
          call errdp   ('#3', range2        )
          call errdp   ('#4', r2             )
          call sigerr  ('SPICE(INSIDEBODY)' )
-         call chkout  ('ZZSEPQ'             )
          return
 
       end if
@@ -359,6 +341,5 @@
       theta = vsep( pv1, pv2 )
       zzsepq = theta - ang1 - ang2
 
-      call chkout ('ZZSEPQ')
       return
       end

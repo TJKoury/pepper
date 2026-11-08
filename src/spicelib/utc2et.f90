@@ -392,11 +392,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'UTC2ET' )
 !
 !     So far we have no errors, the type of input is unknown.
 !
@@ -415,7 +412,6 @@
       if ( .not. succes ) then
          call setmsg ( error )
          call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
-         call chkout ( 'UTC2ET' )
          return
       end if
 
@@ -434,7 +430,6 @@
 
             call setmsg ( error )
             call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
-            call chkout ( 'UTC2ET' )
             return
 
          else if ( modify(zone) /= ' ' ) then
@@ -445,7 +440,6 @@
             call repmc  ( error, '#', modify(zone), error )
             call setmsg ( error )
             call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
-            call chkout ( 'UTC2ET' )
             return
 
          else if ( modify(ampm) /= ' ' ) then
@@ -455,7 +449,6 @@
             //      'routine STR2ET.'
             call setmsg ( error )
             call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
-            call chkout ( 'UTC2ET' )
             return
 
          end if
@@ -517,13 +510,11 @@
          //            'UTC2ET. ' )
          call errch  ( '#', type )
          call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
-         call chkout ( 'UTC2ET' )
          return
 
       end if
 
 
-      call chkout ( 'UTC2ET' )
       return
 
       end

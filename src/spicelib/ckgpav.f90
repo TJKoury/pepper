@@ -1010,11 +1010,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKGPAV' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -1040,10 +1036,7 @@
 !
 !     If the tolerance is less than zero, we go no further.
 !
-      if ( tol < 0.0_wp ) then
-         call chkout ( 'CKGPAV' )
-         return
-      end if
+      if ( tol < 0.0_wp ) return
 
 !
 !     Begin a search for this instrument and time, and get the first
@@ -1113,10 +1106,7 @@
 !              If FRMCHG detects that the reference frame is invalid
 !              then return from this routine with FOUND equal to false.
 !
-               if ( failed () ) then
-                  call chkout ( 'CKGPAV' )
-                  return
-               end if
+               if ( failed () ) return
 !
 !              First transform the attitude information. Get the
 !              rotation and angular velocity associated with the
@@ -1253,7 +1243,6 @@
 
             found = .true.
 
-            call chkout ( 'CKGPAV' )
             return
 
          end if
@@ -1263,6 +1252,5 @@
       end do
 
 
-      call chkout ( 'CKGPAV' )
       return
       end

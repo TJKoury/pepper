@@ -274,11 +274,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'WNFLTD' )
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -310,6 +307,5 @@
 
       call scardd ( i, window )
 
-      call chkout ( 'WNFLTD' )
       return
       end

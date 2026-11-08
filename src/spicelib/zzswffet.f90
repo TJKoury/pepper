@@ -466,11 +466,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSWFFET' )
 
 !
 !     No result found yet.
@@ -512,7 +509,6 @@
 
          call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         call chkout ( 'ZZSWFFET' )
          return
 
       end if
@@ -532,7 +528,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout( 'ZZSWFFET' )
             return
 
          end if
@@ -550,7 +545,6 @@
             call errint ( '#', framid           )
             call errint ( '#', fid              )
             call sigerr ( 'SPICE(BADFRAMESPEC)' )
-            call chkout ( 'ZZSWFFET'            )
             return
 
          end if
@@ -581,7 +575,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout ( 'ZZSWFFET' )
             return
 
          end if
@@ -603,7 +596,6 @@
 !
          call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         call chkout ( 'ZZSWFFET' )
          return
 
       end if
@@ -642,7 +634,6 @@
             call errch  ( '#', kvnams(i)                              )
             call errint ( '#', framid                                 )
             call sigerr ( 'SPICE(MISSINGFRAMEVAR)'                    )
-            call chkout ( 'ZZSWFFET'                                  )
             return
 
          end if
@@ -665,7 +656,6 @@
 !
          call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         call chkout ( 'ZZSWFFET' )
          return
 
       end if
@@ -703,7 +693,6 @@
             call errint ( '#', nstart            )
             call errint ( '#', nstop             )
             call sigerr ( 'SPICE(COUNTMISMATCH)' )
-            call chkout ( 'ZZSWFFET'             )
             return
 
          end if
@@ -752,7 +741,6 @@
             end if
 
             call sigerr ( 'SPICE(PARTIALFRAMESPEC)' )
-            call chkout ( 'ZZSWFFET'                )
             return
 
          end if
@@ -809,7 +797,6 @@
             call errint ( '#', nbases                )
             call errint ( '#', maxbas                )
             call sigerr ( 'SPICE(TOOMANYBASEFRAMES)' )
-            call chkout ( 'ZZSWFFET'                 )
             return
 
          end if
@@ -856,7 +843,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout( 'ZZSWFFET' )
             return
 
          end if
@@ -880,7 +866,6 @@
 !
                call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-               call chkout( 'ZZSWFFET' )
                return
 
             end if
@@ -897,7 +882,6 @@
                call errch ( '#', basnam                )
                call errint( '#', framid                )
                call sigerr( 'SPICE(FRAMENAMENOTFOUND)' )
-               call chkout( 'ZZSWFFET'                 )
                return
 
             end if
@@ -916,7 +900,6 @@
          call errch  ( '#', kvalgn  )
          call errch  ( '#', bastyp  )
          call sigerr ( 'SPICE(BUG)' )
-         call chkout( 'ZZSWFFET'    )
          return
 
       end if
@@ -937,7 +920,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout ( 'ZZSWFFET' )
             return
 
          end if
@@ -951,7 +933,6 @@
             call errint ( '#', baslst(j)                    )
             call errint ( '#', framid                       )
             call sigerr ( 'SPICE(FRAMEINFONOTFOUND)'        )
-            call chkout ( 'ZZSWFFET' )
             return
 
          end if
@@ -1007,7 +988,6 @@
             call errch  ( '#', kvstrt  )
             call errch  ( '#', strtyp  )
             call sigerr ( 'SPICE(BUG)' )
-            call chkout( 'ZZSWFFET'    )
             return
 
          end if
@@ -1016,7 +996,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout( 'ZZSWFFET' )
             return
 
          end if
@@ -1062,7 +1041,6 @@
             call errch  ( '#', kvstop  )
             call errch  ( '#', stptyp  )
             call sigerr ( 'SPICE(BUG)' )
-            call chkout( 'ZZSWFFET'    )
             return
 
          end if
@@ -1071,7 +1049,6 @@
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            call chkout( 'ZZSWFFET' )
             return
          end if
 
@@ -1100,7 +1077,6 @@
                call etcal  ( stops(j),  timstr      )
                call errch  ( '#',       timstr      )
                call sigerr ( 'SPICE(BADTIMEBOUNDS)' )
-               call chkout ( 'ZZSWFFET'             )
                return
 
             end if
@@ -1147,6 +1123,5 @@
 !
       free = free + nbases
 
-      call chkout ( 'ZZSWFFET' )
       return
       end

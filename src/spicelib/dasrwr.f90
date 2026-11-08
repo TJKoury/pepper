@@ -412,11 +412,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASRWR' )
-      end if
+      if ( return () ) return
 
 !
 !     Never come here.
@@ -424,7 +420,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      call chkout ( 'DASRWR' )
       return
 
 
@@ -651,7 +646,6 @@
             .or.  ( last  < 1   ) &
             .or.  ( last  > nwd )    )  then
 
-         call chkin  ( 'DASRRD' )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
@@ -662,7 +656,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASRRD' )
          return
 
       end if
@@ -671,9 +664,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last < first ) then
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -733,7 +724,6 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      call chkin ( 'DASRRD' )
 
       if (  usedd == bufszd ) then
 !
@@ -752,20 +742,14 @@
 !
             call zzddhhlu ( hnbufd(node), 'DAS', .false., wrunit )
 
-            if ( failed() ) then
-               call chkout ( 'DASRRD' )
-               return
-            end if
+            if ( failed() ) return
 
             call dasiod ( 'WRITE', &
                            wrunit, &
                            rnbufd(    node ), &
                            rcbufd( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASRRD' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -785,10 +769,7 @@
 !
       call zzdasgrd ( handle, recno, rcbufd(1,node) )
 
-      if ( failed() ) then
-         call chkout ( 'DASRRD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -813,7 +794,6 @@
                     datad                     )
 
 
-      call chkout ( 'DASRRD' )
       return
 
 
@@ -1038,7 +1018,6 @@
             .or.  ( last  < 1   ) &
             .or.  ( last  > nwi )    )  then
 
-         call chkin  ( 'DASRRI'      )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
@@ -1049,7 +1028,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASRRI' )
          return
 
       end if
@@ -1058,9 +1036,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last < first ) then
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -1121,7 +1097,6 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      call chkin ( 'DASRRI' )
 
       if (  usedi == bufszi ) then
 !
@@ -1143,10 +1118,7 @@
                           rnbufi(    node ), &
                           rcbufi( 1, node )   )
 
-            if ( failed() ) then
-               call chkout ( 'DASRRI' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -1166,10 +1138,7 @@
 !
       call zzdasgri ( handle,  recno,  rcbufi(1,node)  )
 
-      if ( failed() ) then
-         call chkout ( 'DASRRI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -1194,7 +1163,6 @@
                     datai                     )
 
 
-      call chkout ( 'DASRRI' )
       return
 
 
@@ -1415,7 +1383,6 @@
             .or.  ( last  < 1   ) &
             .or.  ( last  > nwc )    )  then
 
-         call chkin  ( 'DASRRC' )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
@@ -1426,7 +1393,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASRRC' )
          return
 
       end if
@@ -1435,9 +1401,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last < first ) then
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -1490,7 +1454,6 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      call chkin ( 'DASRRC' )
 
       if (  usedc == bufszc ) then
 !
@@ -1512,10 +1475,7 @@
                             rnbufc( node ), &
                             rcbufc( node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASRRC' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -1537,10 +1497,7 @@
 
       call dasioc ( 'READ',  unit,  recno, rcbufc(node) )
 
-      if ( failed() ) then
-         call chkout ( 'DASRRC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -1562,7 +1519,6 @@
 !
       datac  =  rcbufc( node ) ( first : last )
 
-      call chkout ( 'DASRRC' )
       return
 
 
@@ -1749,21 +1705,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASWRD' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASWRD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -1815,7 +1765,6 @@
 
             end if
 
-            call chkout ( 'DASWRD' )
             return
 
          end if
@@ -1859,10 +1808,7 @@
                             rnbufd(    node ), &
                             rcbufd( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWRD' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -1889,7 +1835,6 @@
 
       headd = node
 
-      call chkout ( 'DASWRD' )
       return
 
 
@@ -2075,21 +2020,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASWRI' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASWRI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -2141,7 +2080,6 @@
 
             end if
 
-            call chkout ( 'DASWRI' )
             return
 
          end if
@@ -2184,10 +2122,7 @@
                             rnbufi(    node ), &
                             rcbufi( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWRI' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -2216,7 +2151,6 @@
 
       headi = node
 
-      call chkout ( 'DASWRI' )
       return
 
 
@@ -2403,21 +2337,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASWRC' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASWRC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -2469,7 +2397,6 @@
 
             end if
 
-            call chkout ( 'DASWRC' )
             return
 
          end if
@@ -2512,10 +2439,7 @@
                            rnbufc( node ), &
                            rcbufc( node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWRC' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -2542,7 +2466,6 @@
 
       headc = node
 
-      call chkout ( 'DASWRC' )
       return
 
 
@@ -2762,21 +2685,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASURD' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASURD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -2809,7 +2726,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASURD' )
          return
 
       end if
@@ -2817,10 +2733,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last < first ) then
-         call chkout ( 'DASURD' )
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether double precision record number RECNO from file HANDLE
@@ -2859,7 +2772,6 @@
 
             end if
 
-            call chkout ( 'DASURD' )
             return
 
          end if
@@ -2904,10 +2816,7 @@
                            rnbufd(    node ), &
                            rcbufd( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASURD' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -2919,10 +2828,7 @@
 !
       call zzdasgrd ( handle, recno, rcbufd(1,node) )
 
-      if ( failed() ) then
-         call chkout ( 'DASURD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful, so set the record number, handle,
@@ -2947,7 +2853,6 @@
       call moved (  datad,  last-first+1,  rcbufd( first, node )  )
 
 
-      call chkout ( 'DASURD' )
       return
 
 
@@ -3168,21 +3073,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASURI' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASURI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -3215,7 +3114,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASURI' )
          return
 
       end if
@@ -3223,10 +3121,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last < first ) then
-         call chkout ( 'DASURI' )
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether integer record number RECNO from file HANDLE is
@@ -3265,7 +3160,6 @@
 
             end if
 
-            call chkout ( 'DASURI' )
             return
 
          end if
@@ -3308,10 +3202,7 @@
                            rnbufi(    node ), &
                            rcbufi( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASURI' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -3322,10 +3213,7 @@
 !
       call zzdasgri ( handle,   recno, rcbufi(1,node) )
 
-      if ( failed() ) then
-         call chkout ( 'DASURI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful, so set the record number, handle,
@@ -3350,7 +3238,6 @@
       call movei (  datai,  last-first+1,  rcbufi( first, node )  )
 
 
-      call chkout ( 'DASURI' )
       return
 
 
@@ -3576,21 +3463,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASURC' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASURC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -3624,7 +3505,6 @@
          call errhan ( '#',  handle                                    )
          call errint ( '#',  recno                                     )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'DASURC' )
          return
 
       end if
@@ -3632,10 +3512,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last < first ) then
-         call chkout ( 'DASURC' )
-         return
-      end if
+      if ( last < first ) return
 
 !
 !     See whether character record number RECNO from file HANDLE is
@@ -3674,7 +3551,6 @@
 
             end if
 
-            call chkout ( 'DASURC' )
             return
 
          end if
@@ -3718,10 +3594,7 @@
                            rnbufc( node ), &
                            rcbufc( node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASURC' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -3734,10 +3607,7 @@
 
       call dasioc ( 'READ',  unit,  recno, rcbufc(node) )
 
-      if ( failed() ) then
-         call chkout ( 'DASURC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The read was successful, so set the record number, handle,
@@ -3761,7 +3631,6 @@
 !
       rcbufc ( node )  ( first : last )   =   datac
 
-      call chkout ( 'DASURC' )
       return
 
 
@@ -4214,21 +4083,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASWBR' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DASWBR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -4248,10 +4111,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., wrunit )
 
-      if ( failed() ) then
-         call chkout ( 'DASWBR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     For each buffer, find the records belonging to this file, and
@@ -4273,10 +4133,7 @@
                            rnbufd(    node ), &
                            rcbufd( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWBR' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           The record is no longer in use; return it to the
@@ -4325,10 +4182,7 @@
                            rnbufi(    node ), &
                            rcbufi( 1, node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWBR' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           The record is no longer in use; return it to the
@@ -4377,10 +4231,7 @@
                            rnbufc( node ), &
                            rcbufc( node )  )
 
-            if ( failed() ) then
-               call chkout ( 'DASWBR' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           The record is no longer in use; return it to the
@@ -4410,6 +4261,5 @@
 
       end do
 
-      call chkout ( 'DASWBR' )
       return
       end

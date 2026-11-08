@@ -140,9 +140,7 @@
 !
 !     Standard SPICE discovery error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     First check the case when the unit table is completely empty.
@@ -263,12 +261,10 @@
       if ( .not. done ) then
 
          uindex = 0
-         call chkin  ( 'ZZDDHGTU' )
          call setmsg ( 'The unit table is full and all entries are ' &
          //            'locked.  This should never happen. Contact ' &
          //            'NAIF.'                                       )
          call sigerr ( 'SPICE(BUG)'                                  )
-         call chkout ( 'ZZDDHGTU'                                    )
          return
 
       end if

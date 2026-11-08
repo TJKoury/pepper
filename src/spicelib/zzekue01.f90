@@ -164,11 +164,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKUE01' )
 
 !
 !     Is this file handle valid--is the file open for paged write
@@ -176,10 +173,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKUE01' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Compute the data pointer location.
@@ -214,7 +208,6 @@
             call errint ( '#',  segdsc(snoidx)                        )
             call errint ( '#',  idxtyp                                )
             call sigerr ( 'SPICE(INVALIDTYPE)'                        )
-            call chkout ( 'ZZEKUE01'                                  )
             return
 
          end if
@@ -274,7 +267,6 @@
                call errint ( '#',  segdsc(snoidx)                     )
                call errint ( '#',  idxtyp                             )
                call sigerr ( 'SPICE(INVALIDTYPE)'                     )
-               call chkout ( 'ZZEKUE01'                               )
                return
 
             end if
@@ -314,11 +306,9 @@
          call errint ( '#',  recno                               )
          call errhan ( '#',  handle                              )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKUE01'                                )
          return
 
       end if
 
-      call chkout ( 'ZZEKUE01' )
       return
       end

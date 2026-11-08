@@ -1778,11 +1778,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFOCLT' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -1800,7 +1797,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
-         call chkout ( 'GFOCLT'                                )
          return
 
       end if
@@ -1834,7 +1830,6 @@
                     bail,    gfbail,  cnfine,  result )
 
 
-      call chkout ( 'GFOCLT' )
 
       return
       end

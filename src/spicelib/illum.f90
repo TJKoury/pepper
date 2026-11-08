@@ -717,11 +717,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ILLUM' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -753,7 +749,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ILLUM'                                    )
          return
 
       end if
@@ -771,7 +766,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ILLUM'                                    )
          return
 
       end if
@@ -786,7 +780,6 @@
          call errch  ( '#', target                   )
          call errch  ( '#', obsrvr                   )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'    )
-         call chkout ( 'ILLUM'                       )
          return
 
       end if
@@ -806,7 +799,6 @@
                        'the FRAMES Required Reading for details.'   )
          call errch  ( '#', target                                  )
          call sigerr ( 'SPICE(NOFRAME)'                             )
-         call chkout ( 'ILLUM'                                      )
          return
 
       end if
@@ -859,10 +851,7 @@
 !
       call zzgftreb ( trgcde, radii )
 
-      if ( failed() ) then
-         call chkout ( 'ILLUM' )
-         return
-      end if
+      if ( failed() ) return
 
       call surfnm ( radii(1), radii(2), radii(3), spoint, normal )
 
@@ -874,6 +863,5 @@
       solar   =  vsep ( normal, offsun )
       emissn  =  vsep ( normal, offobs )
 
-      call chkout ( 'ILLUM' )
       return
       end

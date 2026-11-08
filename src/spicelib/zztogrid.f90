@@ -159,17 +159,13 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( voxsiz <= 0.0_wp ) then
 
-         call chkin  ( 'ZZTOGRID'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )
          call errdp  ( '#',  voxsiz                          )
          call sigerr ( 'SPICE(NONPOSITIVEVALUE)'             )
-         call chkout ( 'ZZTOGRID'                            )
          return
 
       end if

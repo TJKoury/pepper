@@ -413,11 +413,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLABNS' )
 
 !
 !     Make sure the input handle refers to a DAS file that
@@ -425,10 +422,7 @@
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DLABNS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Look up the pointers to the first and last DLA segment
@@ -511,6 +505,5 @@
 !     DASADI should be used to append data to the segment.
 !
 
-      call chkout ( 'DLABNS' )
       return
       end

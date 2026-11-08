@@ -425,6 +425,7 @@ DOCS = {
     "pepper_math": "Vectors, matrices, rotations, quaternions, coordinate systems, "
                    "planes, ellipses and other numerical routines.",
     "pepper_strings": "Character string operations.",
+    "pepper_errors": "Error message texts (the explanations of SPICE short error messages).",
 }
 
 MODULES_ORDER = list(MODULES)

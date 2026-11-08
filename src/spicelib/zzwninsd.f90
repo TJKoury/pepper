@@ -170,11 +170,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZWNINSD' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the size and cardinality of the window.
@@ -198,7 +194,6 @@
          call errdp  ( '#2', right )
          call sigerr ( 'SPICE(BADENDPOINTS)' )
 
-         call chkout ( 'ZZWNINSD' )
          return
 
       else if ( card == 0  .or.  left > window(card) ) then
@@ -229,7 +224,6 @@
 
          end if
 
-         call chkout ( 'ZZWNINSD' )
          return
 
       end if
@@ -293,7 +287,6 @@
             call errint ( '#2', card )
             call sigerr ( 'SPICE(WINDOWEXCESS)' )
 
-            call chkout ( 'ZZWNINSD' )
             return
 
          end if
@@ -346,7 +339,6 @@
 
       end if
 
-      call chkout ( 'ZZWNINSD' )
 
       return
       end

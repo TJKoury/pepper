@@ -1,6 +1,23 @@
+!> Error message texts (the explanations of SPICE short error messages).
+!>
+!> The procedures keep SPICELIB's names, arguments and documentation. They
+!> have no saved state and do not signal SPICE errors. Moved here from
+!> src/spicelib by tools/modularize.py; the external procedures with the
+!> original interface are in src/legacy/pepper_legacy_errors.f90.
+module pepper_errors
+
+   implicit none
+
+   private
+
+   public :: expln
+
+contains
+
 !$Procedure EXPLN ( Get Explanation for Short Error Message )
 
-       subroutine expln ( msg, expl )
+       !> Return the explanation of a short error message.
+       elemental subroutine expln ( msg, expl )
 
 ! $ Abstract
 !
@@ -18,16 +35,9 @@
 
       implicit none
 
-      character(*)                  msg
-      character(*)                  expl
+      character(*), intent(in) :: msg  !! A short error message.
+      character(*), intent(out) :: expl  !! The explanation of the short error message.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MSG        I   A short error message.
-!     EXPL       O   The explanation of the short error message.
-!
 ! $ Detailed_Input
 !
 !     MSG      is a "short" error message.
@@ -367,4 +377,6 @@
 
       end if
 
-      end
+      end subroutine expln
+
+end module pepper_errors

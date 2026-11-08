@@ -353,7 +353,6 @@
          return
       end if
 
-      call chkin ( 'UNITIM' )
 
 
       if ( first ) then
@@ -424,7 +423,6 @@
             nodata = .true.
             unitim = 0.0_wp
 
-            call chkout ( 'UNITIM' )
             return
 
          end if
@@ -466,7 +464,6 @@
             call errch  ( ', #', '.' )
             call sigerr ( 'SPICE(MISSINGTIMEINFO)' )
 
-            call chkout ( 'UNITIM' )
             unitim = epoch
 
             return
@@ -508,7 +505,6 @@
          call errch  ( '#', myin            )
          call errch  ( '#', myout           )
          call sigerr ( 'SPICE(BADTIMETYPE)' )
-         call chkout ( 'UNITIM'             )
 
          unitim = epoch
          return
@@ -523,7 +519,6 @@
 
          unitim = mytime
 
-         call chkout ( 'UNITIM' )
          return
       end if
 
@@ -747,6 +742,5 @@
 
       unitim = mytime
 
-      call chkout ( 'UNITIM' )
       return
       end

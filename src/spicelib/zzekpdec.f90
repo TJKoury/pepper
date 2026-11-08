@@ -363,11 +363,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKPDEC' )
-      end if
+      if ( return () ) return
 
 !
 !     Start with a clean slate.
@@ -468,7 +464,6 @@
             call errch  ( '#',  attkey( reqkey(i) )              )
             call errch  ( '#',  decl                             )
             call sigerr ( 'SPICE(BADCOLUMDECL)'                  )
-            call chkout ( 'ZZEKPDEC'                             )
             return
 
          end if
@@ -500,7 +495,6 @@
                         'follow "DATATYPE" keyword in declaration #.'  )
          call errch  ( '#', decl                                       )
          call sigerr ( 'SPICE(BADCOLUMNDECL)'                          )
-         call chkout ( 'ZZEKPDEC'                                      )
          return
       end if
 
@@ -547,7 +541,6 @@
             call errch  ( '#', tokens(tokloc)                          )
             call errch  ( '#', decl                                    )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -574,7 +567,6 @@
                call errch  ( '#',  tokens(tokloc)(11:)                 )
                call errch  ( '#',  decl                                )
                call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
-               call chkout ( 'ZZEKPDEC'                                )
                return
 
             end if
@@ -590,7 +582,6 @@
          call errch  ( '#', tokens(tokloc)                             )
          call errch  ( '#', decl                                       )
          call sigerr ( 'SPICE(BADCOLUMNDECL)'                          )
-         call chkout ( 'ZZEKPDEC'                                      )
          return
 
       end if
@@ -610,7 +601,6 @@
                            '"SIZE" keyword in declaration #.'          )
             call errch  ( '#', decl                                    )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -630,7 +620,6 @@
                                  'column in  declaration #.'      )
                   call errch  ( '#', decl                         )
                   call sigerr ( 'SPICE(BADCOLUMNDECL)'            )
-                  call chkout ( 'ZZEKPDEC'                        )
                   return
 
                end if
@@ -652,7 +641,6 @@
                call errch  ( '#',  tokens(tokloc)                      )
                call errch  ( '#',  decl                                )
                call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
-               call chkout ( 'ZZEKPDEC'                                )
                return
 
             end if
@@ -719,7 +707,6 @@
                            '"NULLS_OK" keyword in declaration #.'      )
             call errch  ( '#', decl                                    )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -739,7 +726,6 @@
             call errch  ( '#',  tokens(tokloc)                         )
             call errch  ( '#',  decl                                   )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -769,7 +755,6 @@
                            '"INDEXED" keyword in declaration #.'       )
             call errch  ( '#', decl                                    )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -787,7 +772,6 @@
                              'Declaration was #.'                      )
                call errch  ( '#',  decl                                )
                call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
-               call chkout ( 'ZZEKPDEC'                                )
                return
 
             end if
@@ -805,7 +789,6 @@
             call errch  ( '#',  tokens(tokloc)                         )
             call errch  ( '#',  decl                                   )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -835,7 +818,6 @@
                            '"FIXED_COUNT" keyword in declaration #.'   )
             call errch  ( '#', decl                                    )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -870,7 +852,6 @@
                              'scalar column declaration #. '           )
                call errch  ( '#',  decl                                )
                call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
-               call chkout ( 'ZZEKPDEC'                                )
                return
 
             end if
@@ -887,7 +868,6 @@
             call errch  ( '#',  tokens(tokloc)                         )
             call errch  ( '#',  decl                                   )
             call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
-            call chkout ( 'ZZEKPDEC'                                   )
             return
 
          end if
@@ -896,6 +876,5 @@
       end if
 
 
-      call chkout ( 'ZZEKPDEC' )
       return
       end

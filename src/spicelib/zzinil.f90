@@ -214,11 +214,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZINIL' )
 
 
 !
@@ -310,7 +307,6 @@
           //           'coded in zzsgp4.inc.'                         )
          call errint ( '#', opmode                                    )
          call sigerr ( 'SPICE(UNKNOWNMODE)'                           )
-         call chkout ( 'ZZINIL'                                       )
          return
 
       end if
@@ -324,7 +320,6 @@
          gsto= gsto + twopi()
       end if
 
-      call chkout ( 'ZZINIL' )
 
       return
       end

@@ -72,7 +72,7 @@ All SPICE state belongs to one object, **`type(pepper_spice)`** (the instance). 
   - The kernel registry (`keeper`), the kernel pool, the open-file table and DAF/DAS file summaries, segment directories, and body/frame/SCLK definitions from kernels.
   - It changes only through load/unload/pool-write calls, and every change bumps a **generation counter**.
 - **In the context (one per thread, cheap):** a pointer to its instance plus all per-call mutable state.
-  - Error status, message and traceback; all memo caches, which are valid while their stored generation matches the instance's; segment-selection buffers; DAF/DAS record caches; scratch space; GF search state.
+  - Error status and messages; all memo caches, which are valid while their stored generation matches the instance's; segment-selection buffers; DAF/DAS record caches; scratch space; GF search state.
 
 How it's used:
 
@@ -113,10 +113,10 @@ Start with (a); measure; move to (b) or (c) if contention shows. All three are p
 
 ### Error handling
 
-SPICELIB's error system is global and touched everywhere: `sigerr`/`failed`/`return`/`chkin`/`chkout`, actions `ABORT`/`RETURN`/`REPORT`, and an output device. It moves into the context:
+SPICELIB's error system is global and touched everywhere: `sigerr`/`failed`/`return`/`chkin`/`chkout`, actions `ABORT`/`RETURN`/`REPORT`, and an output device. It moves into the context, without the traceback:
 
-- Each routine that can signal an error is a type-bound procedure of the context (public API) or takes the context as its first argument (internal routines). The rewrite is mechanical: `if (return()) return` → `if (ctx%failed()) return`, `call chkin('X')` → `call ctx%chkin('X')`, and so on.
-- The traceback stays per context, so error messages keep the call chain. It could later be made optional for speed.
+- Each routine that can signal an error is a type-bound procedure of the context (public API) or takes the context as its first argument (internal routines). The rewrite is mechanical: `if (return()) return` → `if (ctx%failed()) return`, `call sigerr(...)` → `call ctx%sigerr(...)`, and so on.
+- **No traceback** (decision): `chkin`/`chkout` are removed entirely (done in phase 2). The legacy layer keeps no-op `chkin`/`chkout`/`qcktrc`/... so existing callers still link; the traceback is always empty.
 - The default action for the new API is `RETURN`: the caller checks `ctx%failed()` and gets the message from the context (and resets it), not `ABORT`. A library must not stop a multi-threaded program. Routines get **no** extra `stat`/`errmsg` arguments; the context is the error channel. The legacy layer keeps SPICELIB's defaults.
 - Purely numerical routines that never signal errors (most vector/matrix math) do not get a context and become `pure`/`elemental` where possible.
 
@@ -125,7 +125,7 @@ SPICELIB's error system is global and touched everywhere: `sigerr`/`failed`/`ret
 One module per subsystem, plus a `pepper` module that re-exports the public API. Large implementations go in submodules (interface in the module, code in submodules) to keep recompilation cascades small. Proposed modules:
 
 - **Basics:** `pepper_kinds` (`ip`, `wp`), `pepper_constants`, `pepper_arrays` (search, sort and other array operations), `pepper_math` (vectors/matrices/quaternions/coordinates/planes/ellipses; pure), `pepper_strings`, `pepper_cells` (cells/sets/windows).
-- **Infrastructure:** `pepper_errors`, `pepper_context` (`pepper_spice`, `pepper_context`), `pepper_pool`, `pepper_kernel_mgr`, `pepper_daf_io`, `pepper_daf`, `pepper_das`, `pepper_dla`.
+- **Infrastructure:** `pepper_errors`, `pepper_instance` (types `pepper_spice` and `pepper_context`; a module cannot have the name of its type), `pepper_pool`, `pepper_kernel_mgr`, `pepper_daf_io`, `pepper_daf`, `pepper_das`, `pepper_dla`.
 - **Ephemeris, orientation and time:** `pepper_spk`, `pepper_pck`, `pepper_ck`, `pepper_frames`, `pepper_bodies`, `pepper_time`, `pepper_sclk`.
 - **Geometry and search:** `pepper_geometry` (illumination, occultation, limbs, ...), `pepper_dsk`, `pepper_gf`, `pepper_ek`.
 
@@ -146,7 +146,7 @@ Each umbrella routine becomes a module (or part of one):
 
 - Queries are bound to the context: `call ctx%spkezr(targ, et, ref, abcorr, obs, state, lt)`, `call ctx%str2et(utc, et)`, `call ctx%pxform(from, to, et, rot)`.
 - Loading and setup are bound to the instance: `call spice%furnsh(file)`, `call spice%unload(file)`, `call spice%kclear()`, pool writes.
-- The bindings are declared in the type's module (`pepper_context`) as separate module procedure interfaces; the implementations live in submodules per subsystem (`pepper_spk`, `pepper_time`, ...). So the type definition grows, but changing an implementation recompiles only its submodule.
+- The bindings are declared in the type's module (`pepper_instance`) as separate module procedure interfaces; the implementations live in submodules per subsystem (`pepper_spk`, `pepper_time`, ...). So the type definition grows, but changing an implementation recompiles only its submodule.
 - Bindings are `non_overridable` (dispatch can then be resolved statically).
 - Internal routines (`zz*` and helpers) are not bound: they are private module procedures taking `class(pepper_context)` as their first argument.
 - Pure numerical routines (vectors, matrices, quaternions, ...) are not bound either: they are plain `pure`/`elemental` module procedures (`vcrss`, `mxv`, ...) since they need no state.
@@ -213,7 +213,14 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
    - Not moved yet: cells/sets/windows (they signal errors, so they need the context: phase 2), `chbase` (platform-dependent), and stateless routines that belong to a subsystem (DAF/DAS/EK/CK/GF/DSK internals), which move with their subsystem.
    - Follow-up cleanups (all of `src/`, verified by identical object files): `character(...)` instead of the obsolescent `character*...`, and `==`, `/=`, `<`, `<=`, `>`, `>=` instead of `.eq.` ... `.ge.` (`tools/modernize_syntax.py`).
    - Known issue: many string routines document "OUT may overwrite IN" (same variable passed for both). Fortran does not allow that aliasing; it works in practice, as it did before. Calls inside the modules pass a copy (`(string)`); the legacy interface keeps accepting it.
-2. **Instance, context and errors:** `pepper_spice` (initially only an owner of contexts), `pepper_context`, the error/traceback system in the context, the default instance and context for the legacy layer, then the routines that only depend on the error system (cells/sets/windows and others: about 270 files, see `pixi run inventory`). Establish the mechanical rewrite pattern (type-bound procedure or `ctx` argument, `ctx%failed()`, ...) used in all later phases.
+2. **Instance, context and errors:** `pepper_spice` (initially only an owner of contexts), `pepper_context`, the error system in the context, the default instance and context for the legacy layer, then the routines that only depend on the error system (cells/sets/windows and others: about 270 files, see `pixi run inventory`). Establish the mechanical rewrite pattern (type-bound procedure or `ctx` argument, `ctx%failed()`, ...) used in all later phases.
+
+   *Progress:*
+   - **Traceback removed:** all 7281 `chkin`/`chkout` calls deleted from `src/spicelib` (1053 files), with the `if (return()) then / return / else / end if` blocks they leave collapsed to `if (return()) return` (`tools/remove_traceback.py`). `trcpkg` is gone; `src/legacy/pepper_legacy_traceback.f90` has no-op stubs. tspice does not depend on the traceback.
+   - **`src/pepper_instance.f90`:** `type(pepper_spice)` (the instance; `new_context()`) and `type(pepper_context)` with the error system per context: `failed`, `sigerr`, `setmsg`, `errch`, `errdp`, `errint`, `reset`, `getmsg`, `erract`, with SPICELIB's semantics (first error kept under RETURN, markers, actions). Native contexts default to RETURN and print nothing; REPORT/ABORT/DEFAULT print to `error_unit`. A *legacy* context forwards to SPICELIB's global error routines, so the legacy interface behaves exactly as before (`erract`/`errprt`/`errdev`, output, abort). `src/legacy/pepper_legacy_context.f90` holds the default instance and its legacy context (the only global state). `expln` moved to `pepper_errors`. Test: `test/core/test_context.f90`.
+   - **Documentation:** every moved procedure has a `!>` docstring (from its NAIF Abstract) and a `!!` comment on every argument (from its Brief_I/O row); the Brief_I/O sections are removed (their other text moved into the docstring). The legacy wrappers are documented the same way (`tools/document_procedures.py`).
+   - **Next:** move the routines that only depend on the error system (starting with cells/sets/windows) into modules: each gets the context (type-bound for the public ones, a `ctx` argument for internal ones), error calls become `ctx%...`, and the legacy wrappers pass `legacy_context()`.
+   - Note: with the legacy context, `ctx%failed()` replaces `return()`; they differ only under the REPORT and IGNORE actions (after an error, a moved routine returns instead of continuing).
 3. **Kernels:** kernel pool, kernel management (`furnsh`/`unload`/`kclear`), body and frame name tables (built-in tables as `parameter`s) into `pepper_spice`; the generation counter in place of watchers and `zzctr`.
 4. **File layer:** the DAF/DAS/DLA handle manager (in the instance) and record caches (per context), `pepper_daf_io` with strategy (a), `newunit`.
 5. **Ephemeris, orientation, time (the main use case):** SPK, PCK, CK, frames (including dynamic frames), time (`str2et`/`et2utc`/`deltet`/`unitim`/`timout`), SCLK.

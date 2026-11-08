@@ -294,18 +294,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKSCA' )
-      end if
+      if ( return () ) return
 
 !
 !     This routine should never be called directly.
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'ZZEKSCA' )
       return
 
 
@@ -534,18 +529,14 @@
 
          call dasops ( scrhan )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
 !
 !     Go back if there's no data to write.
 !
-      if ( n < 1 ) then
-         return
-      end if
+      if ( n < 1 ) return
 
 !
 !     Add as much data as possible to our big array.
@@ -560,16 +551,12 @@
 
          t      = t + numadd
 
-         if ( numadd == n ) then
-            return
-         end if
+         if ( numadd == n ) return
 
          remain = n - numadd
          start  = 1 + numadd
 
-         if ( remain == 0 ) then
-            return
-         end if
+         if ( remain == 0 ) return
 
       else
 
@@ -615,9 +602,7 @@
          remain  =  remain - numadd
          t       =  t      + numadd
 
-         if ( remain == 0 ) then
-            return
-         end if
+         if ( remain == 0 ) return
 
       end if
 
@@ -758,9 +743,7 @@
 
          call dasops ( scrhan )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -769,12 +752,10 @@
 !
       if ( n < 0 ) then
 
-         call chkin  ( 'ZZEKSPOP'                             )
          call setmsg ( 'Pop count must be non-negative; '    // &
                        'call requests popping # elements.'    )
          call errint ( '#', n                                 )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                  )
-         call chkout ( 'ZZEKSPOP'                             )
          return
 
 !
@@ -783,13 +764,11 @@
 !
       else if ( n > t ) then
 
-         call chkin  ( 'ZZEKSPOP'                                      )
          call setmsg ( 'EK stack pointer = #; call requests popping ' // &
                        '# items.'                                      )
          call errint ( '#', t                                          )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         call chkout ( 'ZZEKSPOP'                                      )
          return
 
       end if
@@ -956,9 +935,7 @@
 
          call dasops ( scrhan )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -968,12 +945,10 @@
 !
       if ( n < 0 ) then
 
-         call chkin  ( 'ZZEKSDEC'                               )
          call setmsg ( 'Decrement value must be non-negative; ' // &
                        'call requests decrement by #.'          )
          call errint ( '#', n                                   )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'ZZEKSDEC'                               )
          return
 
 !
@@ -982,13 +957,11 @@
 !
       else if ( n > t ) then
 
-         call chkin  ( 'ZZEKSDEC'                               )
          call setmsg ( 'EK stack pointer = #; call requests  ' // &
                        'decrement by #.'                        )
          call errint ( '#', t                                   )
          call errint ( '#', n                                   )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'ZZEKSDEC'                               )
          return
 
       end if
@@ -1135,22 +1108,18 @@
 !
       if (  ( beg < 1 ) .or. ( beg > t )  ) then
 
-         call chkin  ( 'ZZEKSUPD'                                    )
          call setmsg ( 'Start address BEG was #; valid range is 1:#' )
          call errint ( '#',  beg                                     )
          call errint ( '#',  t                                       )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
-         call chkout ( 'ZZEKSUPD'                                    )
          return
 
       else if (  ( end < 1 ) .or. ( end > t  )  ) then
 
-         call chkin  ( 'ZZEKSUPD'                                    )
          call setmsg ( 'End address END was #; valid range is 1:#'   )
          call errint ( '#',  end                                     )
          call errint ( '#',  t                                       )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
-         call chkout ( 'ZZEKSUPD'                                    )
          return
 
       else if ( beg > end ) then
@@ -1330,22 +1299,18 @@
 !
       if (  ( beg < 1 ) .or. ( beg > t  )  ) then
 
-         call chkin  ( 'ZZEKSRD'                                     )
          call setmsg ( 'Start address BEG was #; valid range is 1:#' )
          call errint ( '#',  beg                                     )
          call errint ( '#',  t                                       )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
-         call chkout ( 'ZZEKSRD'                                     )
          return
 
       else if (  ( end < 1 ) .or. ( end > t  )  ) then
 
-         call chkin  ( 'ZZEKSRD'                                     )
          call setmsg ( 'End address END was #; valid range is 1:#'   )
          call errint ( '#',  end                                     )
          call errint ( '#',  t                                       )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
-         call chkout ( 'ZZEKSRD'                                     )
          return
 
       else if ( beg > end ) then

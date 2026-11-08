@@ -474,11 +474,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKR03' )
-      end if
+      if ( return () ) return
 
 !
 !     Start off with FOUND equal to false just in case a SPICELIB error
@@ -513,7 +509,6 @@
                        'Type is #'                                 )
          call errint ( '#', icd(3)                                 )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
-         call chkout ( 'CKR03'                                     )
          return
 
       end if
@@ -535,7 +530,6 @@
             call setmsg ( 'Segment does not contain angular velocity '// &
                           'data.'                                      )
             call sigerr ( 'SPICE(NOAVDATA)'                            )
-            call chkout ( 'CKR03'                                      )
             return
 
          end if
@@ -602,10 +596,7 @@
 !     any DAF file and the error action is not set to ABORT. You need
 !     need to do this only after the first call to DAFGDA.
 !
-      if ( failed() ) then
-         call chkout ( 'CKR03' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     To find the times that bracket the request time we will first
@@ -773,7 +764,6 @@
 
             end if
 
-            call chkout ( 'CKR03' )
             return
 
          else
@@ -835,7 +825,6 @@
 
          end if
 
-         call chkout ( 'CKR03' )
          return
 
       else
@@ -1134,7 +1123,6 @@
 
       end if
 
-      call chkout ( 'CKR03' )
 
       return
       end

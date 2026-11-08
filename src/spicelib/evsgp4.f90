@@ -373,11 +373,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'EVSGP4' )
 
 !
 !     Evaluate TLE.
@@ -388,10 +385,7 @@
 !
       call xxsgp4i ( geophs, elems, afspc )
 
-      if ( failed() ) then
-          call chkout ( 'EVSGP4' )
-          return
-      end if
+      if ( failed() ) return
 
 !
 !     Calculate time from epoch in minutes.
@@ -404,15 +398,11 @@
 !
       call xxsgp4e ( t1, state )
 
-      if ( failed() ) then
-         call chkout ( 'EVSGP4' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Checkout, then return.
 !
-      call chkout ( 'EVSGP4' )
       return
 
       end

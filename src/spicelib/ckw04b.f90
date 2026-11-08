@@ -326,11 +326,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CKW04B' )
-      end if
+      if ( return() ) return
 
 !
 !     Create a descriptor for the segment we are about to write. First
@@ -350,7 +346,6 @@
          call setmsg ( 'The reference frame # is not supported.' )
          call errch  ( '#', ref                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
-         call chkout ( 'CKW04B'                                  )
          return
       end if
 
@@ -386,7 +381,6 @@
             call setmsg ( 'The segment identifier contains '      // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'CKW04B'                                )
             return
 
          end if
@@ -401,7 +395,6 @@
          call setmsg ( 'Segment identifier contains more than '   // &
                        '40 characters.'                           )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                      )
-         call chkout ( 'CKW04B'                                   )
          return
 
       end if
@@ -422,7 +415,6 @@
 !     No need to check FAILED() here, since all we do after this
 !     point is checking out.
 !
-      call chkout ( 'CKW04B' )
 
       return
 

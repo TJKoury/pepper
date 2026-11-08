@@ -200,11 +200,7 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'TWOVEC' )
-      end if
+      if ( return() ) return
 
 !
 !     Check for obvious bad inputs.
@@ -219,7 +215,6 @@
          call errint ( '#', indexa  )
          call errint ( '#', indexp  )
          call sigerr ( 'SPICE(BADINDEX)' )
-         call chkout (     'TWOVEC' )
          return
 
       else if   ( indexa == indexp )  then
@@ -230,7 +225,6 @@
 
          call errint ( '#', indexa  )
          call sigerr ( 'SPICE(UNDEFINEDFRAME)' )
-         call chkout (     'TWOVEC' )
          return
 
       end if
@@ -289,6 +283,5 @@
       call xpose ( mout,     mtemp )
       call moved ( mtemp, 9, mout  )
 
-      call chkout ( 'TWOVEC' )
       return
       end

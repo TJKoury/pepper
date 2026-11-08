@@ -175,10 +175,8 @@
 !
       if ( .not. svinit ) then
 
-         call chkin  ( 'GFSTEP'                           )
          call setmsg ( 'Step size was never initialized.' )
          call sigerr ( 'SPICE(NOTINITIALIZED)'            )
-         call chkout ( 'GFSTEP'                           )
          return
 
       end if
@@ -301,11 +299,9 @@
 !
       if ( step <= 0.0_wp ) then
 
-         call chkin  ( 'GFSSTP'                                       )
          call setmsg ( 'Step has value #; step size must be positive.')
          call errdp  ( '#',  step                                     )
          call sigerr ( 'SPICE(INVALIDSTEP)'                           )
-         call chkout ( 'GFSSTP'                                       )
          return
 
       end if

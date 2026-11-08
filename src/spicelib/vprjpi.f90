@@ -273,9 +273,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the planes.
@@ -290,28 +288,24 @@
 !
       if (  .not.  approx( vnorm(projn), 1.0_wp, magtol )  ) then
 
-         call chkin  ( 'VPRJPI' )
          call setmsg ( 'Normal vector of plane containing input ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The input plane is invalid. '             )
          call errdp  ( '#',  vnorm(projn) - 1.0_wp                  )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
-         call chkout ( 'VPRJPI' )
          return
 
       end if
 
       if (  .not.  approx( vnorm(invn), 1.0_wp, magtol )  ) then
 
-         call chkin  ( 'VPRJPI' )
          call setmsg ( 'Normal vector of plane containing output ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The output plane is invalid. '            )
          call errdp  ( '#',  vnorm(invn) - 1.0_wp                   )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
-         call chkout ( 'VPRJPI' )
          return
 
       end if

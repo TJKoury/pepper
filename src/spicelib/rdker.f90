@@ -376,11 +376,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RDKER' )
-      end if
+      if ( return() ) return
 
 !
 !     Calling RDKER directly is a serious breach of protocol.
@@ -396,7 +392,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      call chkout ( 'RDKER' )
       return
 
 
@@ -575,11 +570,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RDKNEW' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the data delimiters if it hasn't been done already.
@@ -660,7 +651,6 @@
       file = kernel
 
 
-      call chkout ( 'RDKNEW' )
       return
 
 
@@ -859,11 +849,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RDKDAT' )
-      end if
+      if ( return() ) return
 
 !
 !     If the previous call detected the end of the file,
@@ -871,7 +857,6 @@
 !
       if ( status == endoff ) then
          eof = .true.
-         call chkout ( 'RDKDAT' )
          return
       end if
 
@@ -916,7 +901,6 @@
          if ( eof ) then
             status = endoff
             call cltext ( file )
-            call chkout ( 'RDKDAT' )
             return
 
          else if ( line == begtxt ) then
@@ -930,7 +914,6 @@
       end do
 
 
-      call chkout ( 'RDKDAT' )
       return
 
 

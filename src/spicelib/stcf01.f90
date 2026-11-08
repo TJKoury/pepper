@@ -258,11 +258,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STCF01' )
-      end if
+      if ( return () ) return
 
 !
 !     Query templates.
@@ -323,10 +319,8 @@
                        'Error message: # '                  )
          call errch  ( '#', errmsg                          )
          call sigerr ( 'SPICE(QUERYFAILURE)'                )
-         call chkout ( 'STCF01' )
          return
       end if
 
-      call chkout ( 'STCF01' )
       return
       end

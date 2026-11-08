@@ -326,11 +326,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKE06' )
 
 !
 !     Given that our nominally type 6 input record is actually a
@@ -339,6 +336,5 @@
 !
       call cke05 ( needav, record, cmat, av, clkout )
 
-      call chkout ( 'CKE06' )
       return
       end

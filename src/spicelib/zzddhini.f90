@@ -149,9 +149,7 @@
 !
 !     Standard SPICE error handling with discovery check in/out.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Populate the STR### arrays.
@@ -178,13 +176,11 @@
 
       if ( natbff == 0 ) then
 
-         call chkin  ( 'ZZDDHINI'                                   )
          call setmsg ( 'The binary file format, ''#'', is not ' &
          //            'supported by this version of the toolkit. ' &
          //            'This is a serious problem, contact NAIF.'   )
          call errch  ( '#', tmpstr                                  )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'ZZDDHINI'                                   )
          return
 
       end if
@@ -228,14 +224,12 @@
 !
             if ( supbff(i) == 0 ) then
 
-               call chkin  ( 'ZZDDHINI'                             )
                call setmsg ( 'The binary file format, ''#'', is ' &
                //            'not supported by this version of ' &
                //            'the toolkit. This is a serious ' &
                //            'problem, contact NAIF.            '   )
                call errch  ( '#', tmpstr                            )
                call sigerr ( 'SPICE(BUG)'                           )
-               call chkout ( 'ZZDDHINI'                             )
                return
 
             end if

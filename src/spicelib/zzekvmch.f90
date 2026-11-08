@@ -388,7 +388,6 @@
 
                   if ( .not. found ) then
 
-                     call chkin  ( 'ZZEKVMCH'                       )
                      call setmsg ( 'EK = #; COLIDX = #; ROW = #; ' // &
                                    'ELTIDX  = #.  Column entry  '  // &
                                    'element was not found.' )
@@ -397,7 +396,6 @@
                      call errint ( '#',  rows(i)                    )
                      call errint ( '#',  elts(i)                    )
                      call sigerr ( 'SPICE(INVALIDINDEX)'            )
-                     call chkout ( 'ZZEKVMCH'                       )
                      return
 
                   end if
@@ -437,7 +435,6 @@
 
                   if ( .not. found ) then
 
-                     call chkin  ( 'ZZEKVMCH'                       )
                      call setmsg ( 'EK = #; COLIDX = #; ROW = #; ' // &
                                    'ELTIDX  = #.  Column entry  '  // &
                                    'element was not found.' )
@@ -446,7 +443,6 @@
                      call errint ( '#',  rows(i)                    )
                      call errint ( '#',  elts(i)                    )
                      call sigerr ( 'SPICE(INVALIDINDEX)'            )
-                     call chkout ( 'ZZEKVMCH'                       )
                      return
 
                   end if
@@ -474,12 +470,10 @@
 !
                zzekvmch  =  .false.
 
-               call chkin  ( 'ZZEKVMCH'                            )
                call setmsg ( 'The relational operator # was not ' // &
                              'recognized.'                         )
                call errint ( '#',  ops(n)                          )
                call sigerr ( 'SPICE(UNNATURALRELATION)'            )
-               call chkout ( 'ZZEKVMCH'                            )
                return
 
             end if

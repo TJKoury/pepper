@@ -118,7 +118,6 @@
 !     signaled, so it does not return upon entry after a SPICE error
 !     occurs.
 !
-      call chkin ( 'ZZSWFCLN' )
 
       framat = 0
 
@@ -129,6 +128,5 @@
       call cleari   ( maxfrm, basbeg )
       call zzhsiini ( maxfrm, hdfram, frpool )
 
-      call chkout ( 'ZZSWFCLN' )
       return
       end

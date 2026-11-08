@@ -102,12 +102,10 @@
 
          zzhashi = 0
 
-         call chkin  ( 'ZZHASHI'                                     )
          call setmsg ( 'The input hash function divisor was not '    // &
                        'a positive number. It was #.'                )
          call errint ( '#', m                                        )
          call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
-         call chkout ( 'ZZHASHI'                                     )
          return
 
       end if

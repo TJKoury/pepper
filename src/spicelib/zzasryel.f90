@@ -500,11 +500,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZASRYEL' )
-      end if
+      if ( return () ) return
 
 !
 !     Decide whether we're looking for a minimum or maximum.
@@ -525,7 +521,6 @@
          call setmsg ( 'Extremum specifier # was not recognized.' )
          call errch  ( '#',  extrem                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'ZZASRYEL'                                 )
          return
 
       end if
@@ -547,7 +542,6 @@
          call errdp  ( '#', a                              )
          call errdp  ( '#', b                              )
          call sigerr ( 'SPICE(INVALIDAXISLENGTH)'          )
-         call chkout ( 'ZZASRYEL'                          )
          return
 
       end if
@@ -557,10 +551,7 @@
 !
       call psv2pl ( center, smajor, sminor, eplane )
 
-      if ( failed() ) then
-         call chkout ( 'ZZASRYEL' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The ray's direction vector must be non-zero.
@@ -569,7 +560,6 @@
 
          call setmsg ( 'Ray''s direction vector must be non-zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                         )
-         call chkout ( 'ZZASRYEL'                                  )
          return
 
       end if
@@ -585,7 +575,6 @@
 
          call setmsg ( 'Viewing point is in the plane of the ellipse.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
-         call chkout ( 'ZZASRYEL'                                    )
          return
 
       end if
@@ -608,7 +597,6 @@
 !
          call setmsg ( 'Ray lies in the plane of the ellipse.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                 )
-         call chkout ( 'ZZASRYEL'                              )
          return
 
       end if
@@ -917,6 +905,5 @@
       angle  =  vsep( diff,  udir ) * asign
 
 
-      call chkout ( 'ZZASRYEL' )
       return
       end

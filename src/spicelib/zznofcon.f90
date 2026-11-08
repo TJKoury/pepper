@@ -312,11 +312,8 @@
 !     Because this routine might cause a SPICE error to be
 !     signaled, we have to check in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZNOFCON' )
 
 !
 !     Capture input IDs in arrays.
@@ -349,10 +346,7 @@
       call frmnam ( endps(1),    bname(1) )
       call frmnam ( endps(2),    bname(2) )
 
-      if ( failed() ) then
-         call chkout ( 'ZZNOFCON' )
-         return
-      end if
+      if ( failed() ) return
 
       do i = 1, 2
 
@@ -419,10 +413,7 @@
 !
                call frinfo ( endps(i), center, class, clssid, found )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZNOFCON' )
-                  return
-               end if
+               if ( failed() ) return
 
 
 
@@ -495,10 +486,7 @@
 !
             call frinfo ( frames(i), center, class, clssid, found )
 
-            if ( failed() ) then
-               call chkout ( 'ZZNOFCON' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if ( found ) then
@@ -614,6 +602,5 @@
 
       end if
 
-      call chkout ( 'ZZNOFCON' )
       return
       end

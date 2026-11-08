@@ -329,9 +329,7 @@
 !     we could have invalid inputs to our arithmetic computations
 !     if a SPICE error condition exists upon entry.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Perform some preliminary checks.
@@ -342,7 +340,6 @@
            .or. ( b <= 0.0_wp ) &
            .or. ( c <= 0.0_wp )  ) then
 
-         call chkin  ( 'EDNMPT'                               )
          call setmsg ( 'All ellipsoid semi-axis lengths must ' &
          //            'be strictly positive. Lengths were: ' &
          //            'A = #; B = #; C = #'                  )
@@ -350,7 +347,6 @@
          call errdp  ( '#',  b                                )
          call errdp  ( '#',  c                                )
          call sigerr ( 'SPICE(BADAXISLENGTH)'                 )
-         call chkout ( 'EDNMPT'                               )
          return
 
       end if
@@ -372,7 +368,6 @@
            .or. ( sb <= 0.0_wp ) &
            .or. ( sc <= 0.0_wp )  ) then
 
-         call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scaled semi-axis lengths must be ' &
          //            'strictly positive. Scaled lengths were: ' &
          //            'SA = #; SB = #; SC = #'                   )
@@ -380,7 +375,6 @@
          call errdp  ( '#',  sb                                   )
          call errdp  ( '#',  sc                                   )
          call sigerr ( 'SPICE(AXISUNDERFLOW)'                     )
-         call chkout ( 'EDNMPT'                                   )
          return
 
       end if
@@ -390,11 +384,9 @@
 !
       if ( vzero(normal) ) then
 
-         call chkin  ( 'EDNMPT'                                       )
          call setmsg ( 'The input normal vector was the zero vector. ' &
          //            'There is no solution.'                        )
          call sigerr ( 'SPICE(ZEROVECTOR)'                            )
-         call chkout ( 'EDNMPT'                                       )
          return
 
       end if
@@ -438,12 +430,10 @@
 
       if ( arg <= 0.0_wp ) then
 
-         call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scale factor LAMBDA must be positive, ' &
          //            'but reciprocal of square of LAMBDA is #.' )
          call errdp  ( '#', arg                                   )
          call sigerr ( 'SPICE(DEGENERATECASE)'                    )
-         call chkout ( 'EDNMPT'                                   )
          return
 
       end if

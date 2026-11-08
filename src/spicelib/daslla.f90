@@ -233,11 +233,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASLLA' )
 
 
 !
@@ -258,6 +255,5 @@
       lastd = lastla(dp )
       lasti = lastla(int)
 
-      call chkout ( 'DASLLA' )
       return
       end

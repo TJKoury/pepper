@@ -707,7 +707,6 @@
 
 
 
-      call chkin  ( 'KEEPER' )
       call setmsg ( 'The routine KEEPER is an umbrella for a ' &
       //            'collection of entry points that manage the ' &
       //            'loading, tracking and unloading of SPICE ' &
@@ -715,7 +714,6 @@
       //            'directly. It is likely that a programming ' &
       //            'error has been made. ' )
       call sigerr ( 'SPICE(BOGUSENTRY)'  )
-      call chkout ( 'KEEPER' )
       return
 
 
@@ -1337,11 +1335,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'FURNSH')
 
       if ( first ) then
 
@@ -1368,7 +1363,6 @@
          call errint ( '@', rtrim(file)                               )
          call errint ( '@', filsiz                                    )
          call sigerr ( 'SPICE(FILENAMETOOLONG)'                       )
-         call chkout ( 'FURNSH'                                       )
          return
 
       end if
@@ -1388,7 +1382,6 @@
 
          call errint ( '#', maxfil )
          call sigerr ( 'SPICE(NOMOREROOM)'  )
-         call chkout ( 'FURNSH' )
          return
 
       end if
@@ -1408,10 +1401,7 @@
 
       call zzldker ( file, nofile, thstyp, myhand )
 
-      if ( failed() ) then
-         call chkout ( 'FURNSH' )
-         return
-      end if
+      if ( failed() ) return
 
 
       loaded = loaded + 1
@@ -1429,7 +1419,6 @@
 !        Nothing to do.  None of the control variables
 !        were set in FILE.
 !
-         call chkout ( 'FURNSH' )
          return
 
       end if
@@ -1464,7 +1453,6 @@
                call errint ( '#', size                              )
                call errint ( '#', filsiz                            )
                call sigerr ( 'SPICE(PATHTOOLONG)'                   )
-               call chkout ( 'FURNSH'                               )
                return
 
             end if
@@ -1474,10 +1462,7 @@
 
          end do
 
-         if ( failed() ) then
-            call chkout ( 'FURNSH' )
-            return
-         end if
+         if ( failed() ) return
 
          npvals = i - 1
 
@@ -1488,7 +1473,6 @@
             call errint ( '#', npaths                             )
             call errint ( '#', npvals                             )
             call sigerr ( 'SPICE(PATHMISMATCH)'                   )
-            call chkout ( 'FURNSH'                                )
             return
 
          end if
@@ -1529,7 +1513,6 @@
             call errint ( '#', fnmlen                               )
             call errint ( '#', filsiz                               )
             call sigerr ( 'SPICE(FILENAMETOOLONG)'                  )
-            call chkout ( 'FURNSH'                                  )
             return
 
          end if
@@ -1546,7 +1529,6 @@
 
             call errint ( '#', maxfil )
             call sigerr ( 'SPICE(NOMOREROOM)'  )
-            call chkout ( 'FURNSH' )
             return
 
          end if
@@ -1620,7 +1602,6 @@
                      call errint ( '#', fnmlen + n                    )
                      call errint ( '#', filsiz                        )
                      call sigerr ( 'SPICE(FILENAMETOOLONG)'           )
-                     call chkout ( 'FURNSH'                           )
                      return
 
                   end if
@@ -1652,10 +1633,7 @@
 
          call zzldker( fil2ld, nofile, thstyp, myhand )
 
-         if ( failed() ) then
-            call chkout ( 'FURNSH' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( thstyp == 'TEXT' ) then
 !
@@ -1692,7 +1670,6 @@
                call errch  ( '#', file   )
                call errch  ( '#', fil2ld )
                call sigerr ( 'SPICE(RECURSIVELOADING)' )
-               call chkout ( 'FURNSH' )
                return
             end if
 
@@ -1727,7 +1704,6 @@
 
       call cvpool ( 'FURNSH', update )
 
-      call chkout ( 'FURNSH' )
       return
 
 
@@ -2017,7 +1993,6 @@
          return
       end if
 
-      call chkin  ( 'KTOTAL' )
 !
 !     Parse KIND to see which kernels are of interest.
 !
@@ -2037,7 +2012,6 @@
 
          if ( eqstr( kind(b:e), 'ALL' ) )then
             count = loaded
-            call chkout ( 'KTOTAL' )
             return
          else
             dock   = dock   .or. eqstr ( kind(b:e), 'CK' )
@@ -2073,7 +2047,6 @@
 
       end do
 
-      call chkout ( 'KTOTAL' )
       return
 
 
@@ -2424,9 +2397,7 @@
       handle =  0
       found  = .false.
 
-      if ( which < 1 .or. which > loaded ) then
-         return
-      end if
+      if ( which < 1 .or. which > loaded ) return
 !
 !     Parse KIND to see which kernels are of interest.
 !
@@ -3061,11 +3032,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'KCLEAR' )
 
 !
 !     Unloading all kernels is actually much less work than
@@ -3131,7 +3099,6 @@
       call cvpool ( 'FURNSH', update )
 
 
-      call chkout ( 'KCLEAR' )
       return
 
 
@@ -3629,11 +3596,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'UNLOAD' )
 
 
       didspk = .false.
@@ -3665,10 +3629,7 @@
 !
 !     If we didn't locate the requested file, there is nothing to do.
 !
-      if ( .not. gotit ) then
-         call chkout ( 'UNLOAD' )
-         return
-      end if
+      if ( .not. gotit ) return
 
 !
 !     We need to know what type of file we've got so that we
@@ -4043,7 +4004,6 @@
 
       end if
 
-      call chkout ( 'UNLOAD' )
       return
 
       end

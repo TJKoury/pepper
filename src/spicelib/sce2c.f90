@@ -254,11 +254,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCE2C' )
-      end if
+      if ( return () ) return
 
 !
 !     Just hand off the conversion to the appropriate routine.
@@ -272,12 +268,10 @@
          call setmsg ( 'Clock type # is not supported.' )
          call errint ( '#', sctype ( sc )               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'            )
-         call chkout ( 'SCE2C'                          )
          return
 
       end if
 
 
-      call chkout ( 'SCE2C' )
       return
       end

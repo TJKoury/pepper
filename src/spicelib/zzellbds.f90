@@ -342,38 +342,32 @@
 !
       if ( b <= 0.0_wp ) then
 
-         call chkin  ( 'ZZELLBDS'                                )
          call setmsg ( 'This routine requires B > 0, but B = #.' )
          call errdp  ( '#',  b                                   )
          call sigerr ( 'SPICE(NONPOSITIVERADIUS)'                )
-         call chkout ( 'ZZELLBDS'                                )
          return
 
       end if
 
       if ( b > a ) then
 
-         call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires A >= B, but A = #; ' &
          //            'B = #.'                                   )
          call errdp  ( '#',  a                                    )
          call errdp  ( '#',  b                                    )
          call sigerr ( 'SPICE(RADIIOUTOFORDER)'                   )
-         call chkout ( 'ZZELLBDS'                                 )
          return
 
       end if
 
       if ( ( b + hmin ) <= 0.0_wp ) then
 
-         call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires B + HMIN > 0, but ' &
          //            'B = #; HMIN = #, B+HMIN = #.'             )
          call errdp  ( '#',  b                                    )
          call errdp  ( '#',  hmin                                 )
          call errdp  ( '#',  b + hmin                             )
          call sigerr ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
-         call chkout ( 'ZZELLBDS'                                 )
          return
 
       end if
@@ -382,7 +376,6 @@
 
          if (  ( b + (a/b)*hmin ) <= 0.0_wp ) then
 
-            call chkin  ( 'ZZELLBDS'                                 )
             call setmsg ( 'For oblate spheroids and HMIN < 0, ' &
             //            'This routine requires B + (A/B)HMIN > 0, ' &
             //            'but A = #, B = #; HMIN = #, ' &
@@ -392,7 +385,6 @@
             call errdp  ( '#',  hmin                                 )
             call errdp  ( '#',  b + (a/b)*hmin                       )
             call sigerr ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
-            call chkout ( 'ZZELLBDS'                                 )
             return
 
          end if
@@ -402,13 +394,11 @@
 
       if ( hmin > hmax ) then
 
-         call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires HMAX >= HMIN, but ' &
          //            'HMIN = #; HMAX = #.'                      )
          call errdp  ( '#',  hmin                                 )
          call errdp  ( '#',  hmax                                 )
          call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                  )
-         call chkout ( 'ZZELLBDS'                                 )
          return
 
       end if

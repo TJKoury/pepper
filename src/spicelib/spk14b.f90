@@ -406,11 +406,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SPK14B' )
-      end if
+      if ( return() ) return
 !
 !     First, check the degree of the polynomial to be sure that it is
 !     not negative.
@@ -423,7 +419,6 @@
                        ' equal to zero.'                          )
          call errint ( '#', chbdeg                                )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
-         call chkout ( 'SPK14B'                                   )
          return
 
       end if
@@ -432,12 +427,7 @@
 !
       call spkpds ( body,  center, frame, type, first, last, descr )
 
-      if ( failed() ) then
-
-         call chkout ( 'SPK14B' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     We've got a valid descriptor, so compute a few things and begin
 !     the segment.
@@ -461,7 +451,6 @@
 !     Leave it up to the caller.
 !
 
-      call chkout ( 'SPK14B' )
       return
 
       end

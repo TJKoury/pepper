@@ -200,9 +200,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( first ) then
 
@@ -226,7 +224,6 @@
           .or. ( abs(b) > big ) &
           .or. ( abs(c) > big ) ) then
 
-         call chkin  ( 'ZZBQUAD'                                      )
          call setmsg ( 'Coefficients must have magnitude less than ' &
          //            'or equal to #, but were A = #; B = #; C = #.' )
          call errdp  ( '#',  big                                      )
@@ -234,7 +231,6 @@
          call errdp  ( '#',  b                                        )
          call errdp  ( '#',  c                                        )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZBQUAD'                                      )
          return
 
       end if
@@ -244,13 +240,11 @@
 !
       if ( abs(ub) > big ) then
 
-         call chkin  ( 'ZZBQUAD'                                      )
          call setmsg ( 'Upper bounds must have magnitude less than ' &
          //            'or equal to #, but was #.'                    )
          call errdp  ( '#',  big                                      )
          call errdp  ( '#',  ub                                       )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZBQUAD'                                      )
          return
 
       end if
@@ -260,11 +254,9 @@
 !
       if ( ub <= 0.0_wp ) then
 
-         call chkin  ( 'ZZBQUAD'                                 )
          call setmsg ( 'Upper bound must be positive but was #.' )
          call errdp  ( '#',  ub                                  )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         call chkout ( 'ZZBQUAD'                                 )
          return
 
       end if

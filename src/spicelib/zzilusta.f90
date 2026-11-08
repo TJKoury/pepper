@@ -226,11 +226,8 @@
       logical               xmit
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZILUSTA' )
 
 !
 !     For now, only ellipsoids are supported as target shapes.
@@ -240,7 +237,6 @@
          call setmsg ( 'The computation method # was not recognized. ' )
          call errch  ( '#',  method                                    )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
-         call chkout ( 'ZZILUSTA'                                      )
          return
 
       end if
@@ -253,7 +249,6 @@
          call setmsg ( 'The input normal vector must not be zero, ' &
          //            'but sadly, it was.'                       )
          call sigerr ( 'SPICE(ZEROVECTOR)'                        )
-         call chkout ( 'ZZILUSTA'                                 )
          return
 
       end if
@@ -279,10 +274,7 @@
       call spkcpo ( illum,  etsurf, iref,   'OBSERVER', abcorr, &
                     spoint, target, fixref, srcsta,     ltsrc  )
 
-      if ( failed() ) then
-         call chkout( 'ZZILUSTA' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We will need to transform the state of the normal vector to
@@ -300,10 +292,7 @@
 !
       call zzvalcor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZILUSTA' )
-         return
-      end if
+      if ( failed() ) return
 
       uselt = attblk( ltidx  )
       xmit  = attblk( xmtidx )
@@ -315,7 +304,6 @@
          //            'this routine.'                                )
          call errch  ( '#', abcorr                                    )
          call sigerr ( 'SPICE(INVALIDOPTION)'                         )
-         call chkout ( 'ZZILUSTA' )
          return
 
       end if
@@ -399,7 +387,6 @@
       emista( 2 ) =  dvsep ( nrmsta, obssta )
 
 
-      call chkout ( 'ZZILUSTA' )
       return
       end
 

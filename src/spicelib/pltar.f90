@@ -281,20 +281,16 @@
 !
 !     This routine uses discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check the vertex and plate counts.
 !
       if ( np < 0 ) then
 
-         call chkin  ( 'PLTAR'                                        )
          call setmsg ( 'Plate count must be non-negative but NP = #.' )
          call errint ( '#',  np                                       )
          call sigerr ( 'SPICE(BADPLATECOUNT)'                         )
-         call chkout ( 'PLTAR'                                        )
          return
 
       end if
@@ -311,11 +307,9 @@
 
       if ( nv < 3 ) then
 
-         call chkin  ( 'PLTAR'                                       )
          call setmsg ( 'At least 3 vertices are needed, but NV = #.' )
          call errint ( '#',  nv                                      )
          call sigerr ( 'SPICE(TOOFEWVERTICES)'                       )
-         call chkout ( 'PLTAR'                                       )
          return
 
       end if
@@ -330,7 +324,6 @@
             if (      ( plates(j,i) < 1  ) &
                  .or. ( plates(j,i) > nv )  ) then
 
-               call chkin  ( 'PLTAR'                                   )
                call setmsg ( 'Vertex indices must be in the range ' &
                //            '[1, NV] for all SPICE language versions. ' &
                //            'The input value of NV was #. Vertex ' &
@@ -342,7 +335,6 @@
                call errint ( '#',  i                                   )
                call errint ( '#',  plates(j,i)                         )
                call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
-               call chkout ( 'PLTAR'                                   )
                return
 
             end if

@@ -361,11 +361,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFSSOB' )
 
 
       if (  first  .or. ( trgid /= prvtrg )  ) then
@@ -392,10 +389,7 @@
 !
       call zzvalcor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFSSOB' )
-         return
-      end if
+      if ( failed() ) return
 
       geom   = attblk( geoidx )
       uselt  = attblk( ltidx  )
@@ -421,7 +415,6 @@
          //            'is not supported by this routine.'       )
          call errch  ( '#', method                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'ZZGFSSOB'                                )
          return
 
       end if
@@ -436,10 +429,7 @@
          call namfrm ( fixref, frcode )
          call frinfo ( frcode, center, frclss, clssid, fnd )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSOB' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. fnd ) then
 
@@ -447,7 +437,6 @@
             //            'recognized.'                     )
             call errch  ( '#', fixref                       )
             call sigerr ( 'SPICE(NOFRAME)'                  )
-            call chkout ( 'ZZGFSSOB'                        )
             return
 
          end if
@@ -460,7 +449,6 @@
             call errint ( '#', center                           )
             call errint ( '#', trgid                            )
             call sigerr ( 'SPICE(INVALIDFRAME)'                 )
-            call chkout ( 'ZZGFSSOB'                            )
             return
 
          end if
@@ -473,10 +461,7 @@
 !
          call spkgeo ( trgid, et, fixref, obsid, fxtsta, lt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSOB' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Compute the state of the observer with respect to the target
@@ -502,7 +487,6 @@
                //            'the velocity was not well ' &
                //            'defined. DNEARP returned "not found."' )
                call sigerr ( 'SPICE(DEGENERATECASE)'                 )
-               call chkout ( 'ZZGFSSOB'                              )
                return
 
             end if
@@ -532,7 +516,6 @@
                //            'the velocity was not well ' &
                //            'defined. SURFPV returned "not found."' )
                call sigerr ( 'SPICE(DEGENERATECASE)'                 )
-               call chkout ( 'ZZGFSSOB'                              )
                return
 
             end if
@@ -614,10 +597,7 @@
 !
          call sxform ( 'J2000', fixref, trgepc, xform )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFSSOB' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Initialize the state of the sub-observer point in the
@@ -642,10 +622,7 @@
 
             end do
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFSSOB' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Compute the observer's acceleration using a quadratic
@@ -772,7 +749,6 @@
                   //            'defined.  DNEARP returned ' &
                   //            '"not found."'                  )
                   call sigerr ( 'SPICE(DEGENERATECASE)'         )
-                  call chkout ( 'ZZGFSSOB'                      )
                   return
 
                end if
@@ -802,7 +778,6 @@
                   //            'defined. SURFPV returned ' &
                   //            '"not found."'                   )
                   call sigerr ( 'SPICE(DEGENERATECASE)'          )
-                  call chkout ( 'ZZGFSSOB'                       )
                   return
 
                end if
@@ -859,7 +834,6 @@
          //            'recognized.'                      )
          call errch  ( '#',  abcorr                       )
          call sigerr ( 'SPICE(NOTSUPPORTED)'              )
-         call chkout ( 'ZZGFSSOB'                         )
          return
 
       end if
@@ -869,6 +843,5 @@
 !
       call moved ( fxpsta, 6, state )
 
-      call chkout  ( 'ZZGFSSOB' )
       return
       end

@@ -226,9 +226,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Check to see if HANDLE is associated with a DAF of the native
@@ -242,13 +240,11 @@
 !     handle to DAFRDR.
 !
       if ( ( found ) .and. ( .not. native ) ) then
-         call chkin  ( 'DAFRDA'                                 )
          call setmsg ( 'The binary file format for file ''#'' ' &
          //            'is not native. This routine operates ' &
          //            'only on files of the native format.'    )
          call errhan ( '#', handle                              )
          call sigerr ( 'SPICE(UNSUPPORTEDBFF)'                  )
-         call chkout ( 'DAFRDA'                                 )
          return
       end if
 
@@ -256,21 +252,17 @@
 !     Bad addresses?
 !
       if ( begin <= 0 ) then
-         call chkin  ( 'DAFRDA' )
          call setmsg ( 'Negative value for BEGIN address: #' )
          call errint ( '#', begin )
          call sigerr ( 'SPICE(DAFNEGADDR)' )
-         call chkout ( 'DAFRDA' )
          return
 
       else if ( begin > end ) then
-         call chkin  ( 'DAFRDA' )
          call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#).' )
          call errint ( '#', begin )
          call errint ( '#', end   )
          call sigerr ( 'SPICE(DAFBEGGTEND)' )
-         call chkout ( 'DAFRDA' )
          return
       end if
 

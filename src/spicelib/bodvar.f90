@@ -234,11 +234,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-        return
-      else
-        call chkin ( 'BODVAR' )
-      end if
+      if ( return () ) return
 
 !
 !     Construct the variable name from BODY and ITEM.
@@ -262,6 +258,5 @@
          call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                 )
       end if
 
-      call chkout ( 'BODVAR' )
       return
       end

@@ -108,12 +108,7 @@
 !
       do i = 1, 3
 
-         if (      ( voxel(i) < 1       ) &
-              .or. ( voxel(i) > nvox(i) )  ) then
-
-            return
-
-         end if
+         if (      ( voxel(i) < 1       ) .or. ( voxel(i) > nvox(i) )  ) return
 
       end do
 

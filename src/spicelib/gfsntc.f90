@@ -1508,14 +1508,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check into the error subsystem.
 !
-      call chkin( 'GFSNTC' )
 
 !
 !     Confirm minimum window sizes.
@@ -1526,7 +1523,6 @@
          //            'at least 2 and an even value.'            )
          call errint ( '#',  mw                                    )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFSNTC'                                    )
          return
 
       end if
@@ -1537,7 +1533,6 @@
          //            'at least 2.'                               )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFSNTC'                                    )
          return
 
       end if
@@ -1622,7 +1617,6 @@
                     mw,       nw,       work, &
                     nobail,  gfbail,   result )
 
-      call chkout( 'GFSNTC' )
       return
 
       end

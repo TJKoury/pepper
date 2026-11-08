@@ -886,11 +886,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'OCCULT' )
 
 !
 !     Left justify the shapes and target names and make them upper case.
@@ -932,7 +929,6 @@
             //            'mapped to an ID code.'            )
             call errch  ( '#', fname                         )
             call sigerr ( 'SPICE(IDCODENOTFOUND)'            )
-            call chkout ( 'OCCULT'                           )
             return
 
          end if
@@ -940,10 +936,7 @@
          call zzprsmet ( id1, shap1, maxsrf, prshp1, subtyp, &
                          pri, nsurf, srflst, pntdef, trmtyp )
 
-         if ( failed() ) then
-            call chkout ( 'OCCULT' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -961,7 +954,6 @@
             //            'mapped to an ID code.'            )
             call errch  ( '#', bname                         )
             call sigerr ( 'SPICE(IDCODENOTFOUND)'            )
-            call chkout ( 'OCCULT'                           )
             return
 
          end if
@@ -969,10 +961,7 @@
          call zzprsmet ( id2, shap2, maxsrf, prshp2, subtyp, &
                          pri, nsurf, srflst, pntdef, trmtyp )
 
-         if ( failed() ) then
-            call chkout ( 'OCCULT' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -1031,10 +1020,7 @@
 
          call zzgfocst ( et, ocstat )
 
-         if ( failed() ) then
-            call chkout ( 'OCCULT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If there was an occultation, and both targets are represented
@@ -1060,10 +1046,7 @@
 
                   call zzgfocst ( et, ocstat )
 
-                  if ( failed() ) then
-                     call chkout ( 'OCCULT' )
-                     return
-                  end if
+                  if ( failed() ) return
 !
 !                 If the occultation condition is true, return the
 !                 integer occultation ID code.
@@ -1072,7 +1055,6 @@
 
                      ocltid = mltfac * index
 
-                     call chkout ( 'OCCULT' )
                      return
 
                   end if
@@ -1090,7 +1072,6 @@
 !
                ocltid = mltfac * total2
 
-               call chkout ( 'OCCULT' )
                return
 
 
@@ -1102,7 +1083,6 @@
 !
                ocltid = mltfac * annlr2
 
-               call chkout ( 'OCCULT' )
                return
 
             end if
@@ -1127,11 +1107,9 @@
               //       'the occultation code result # is invalid.')
          call errint ( '#', ocltid  )
          call sigerr ( 'SPICE(BUG)' )
-         call chkout ( 'OCCULT'      )
          return
 
       end if
 
-      call chkout ( 'OCCULT' )
       return
       end

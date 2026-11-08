@@ -189,7 +189,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'DIFFI' )
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -292,7 +291,6 @@
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-      call chkout ( 'DIFFI' )
 
       return
       end

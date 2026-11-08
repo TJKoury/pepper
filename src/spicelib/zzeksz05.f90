@@ -143,12 +143,10 @@
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
-         call chkin  ( 'ZZEKSZ05'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
          call errint ( '#',  colidx                            )
          call errint ( '#',  nrec                              )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKSZ05'                              )
          return
 
       end if

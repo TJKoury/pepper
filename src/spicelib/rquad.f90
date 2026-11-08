@@ -217,11 +217,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'RQUAD' )
-      end if
+      if ( return () ) return
 
 !
 !     The degree of the equation is zero unless at least one of the
@@ -231,7 +227,6 @@
 
          call setmsg ( 'Both 1st and 2nd degree coefficients are zero.')
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
-         call chkout ( 'RQUAD'                                         )
          return
 
       end if
@@ -350,6 +345,5 @@
       end if
 
 
-      call chkout ( 'RQUAD' )
       return
       end

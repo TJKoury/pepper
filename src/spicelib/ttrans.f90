@@ -918,11 +918,7 @@
 
 
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'TTRANS' )
-      end if
+      if ( return() ) return
 
 !
 !     The first time any of the entry points are called we
@@ -1144,7 +1140,6 @@
                           'likely that the leapseconds kernel has '   // &
                           'not been loaded.'                          )
             call sigerr ( 'SPICE(NOLEAPSECONDS)'                      )
-            call chkout ( 'TTRANS'                                    )
             return
 
          end if
@@ -1218,7 +1213,6 @@
                              'ordered or the UTC - TAI offsets '      // &
                              'are completely out of range. '          )
                call sigerr ( 'SPICE(BADLEAPSECONDS)'                  )
-               call chkout ( 'TTRANS'                                 )
                return
             end if
 
@@ -1302,7 +1296,6 @@
          //            'not recognized. ' )
          call errch  ( '#', from                   )
          call sigerr ( 'SPICE(UNKNONWNTIMESYSTEM)' )
-         call chkout ( 'TTRANS'                    )
          return
 
       else if ( pto == 0 ) then
@@ -1311,7 +1304,6 @@
          //            'not recognized. ' )
          call errch  ( '#', from                   )
          call sigerr ( 'SPICE(UNKNONWNTIMESYSTEM)' )
-         call chkout ( 'TTRANS'                    )
          return
 
       end if
@@ -1570,7 +1562,6 @@
          if ( elemc ( myto, unifrm ) ) then
 
             tvec(1) = unitim ( tvec(1), myfrom, myto )
-            call chkout ( 'TTRANS' )
             return
 
          end if
@@ -1896,6 +1887,5 @@
 !     END IF
 !
 
-      call chkout ( 'TTRANS' )
       return
       end

@@ -588,15 +588,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CHGIRF' )
-      end if
+      if ( return () ) return
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'CHGIRF' )
       return
 
 
@@ -856,9 +851,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     If it has not been done already, construct the transformation
@@ -874,7 +867,6 @@
 !
       if ( .not. ready ) then
 
-         call chkin ( 'IRFROT' )
 
          do i = 1, maxf
 
@@ -902,7 +894,6 @@
 
          end do
 
-         call chkout ( 'IRFROT' )
 
          ready = .true.
 
@@ -928,7 +919,6 @@
 !
       if ( refa < 1  .or.  refa > maxf ) then
 
-         call chkin  ( 'IRFROT' )
          call setmsg ( 'A request has been made to obtain the ' &
          //            'transformation from inertial reference ' &
          //            'frame # to inertial reference frame #. ' &
@@ -938,11 +928,9 @@
          call errint ( '#', refb )
          call errint ( '#', refa )
          call sigerr ( 'SPICE(IRFNOTREC)' )
-         call chkout ( 'IRFROT' )
 
       else if ( refb < 1  .or.  refb > maxf ) then
 
-         call chkin  ( 'IRFROT' )
          call setmsg ( 'A request has been made to obtain the ' &
          //            'transformation from inertial reference ' &
          //            'frame # to inertial reference frame #. ' &
@@ -952,7 +940,6 @@
          call errint ( '#', refb )
          call errint ( '#', refb )
          call sigerr ( 'SPICE(IRFNOTREC)' )
-         call chkout ( 'IRFROT' )
 
 
       else if ( refa == refb ) then
@@ -1166,9 +1153,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
       if ( name == 'J2000' .or. name == 'j2000' ) then
          index = 1
@@ -1376,11 +1361,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'IRFNAM' )
-      end if
+      if ( return () ) return
 
       if ( index < 1  .or.  index > maxf ) then
          name = ' '
@@ -1389,7 +1370,6 @@
          name = frames(index)
       end if
 
-      call chkout ( 'IRFNAM' )
       return
 
 
@@ -1593,11 +1573,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'IRFDEF' )
-      end if
+      if ( return () ) return
 
 !
 !     There's not much to do, except save the value for later use.
@@ -1616,7 +1592,6 @@
          dframe = index
       end if
 
-      call chkout ( 'IRFDEF' )
       return
 
       end

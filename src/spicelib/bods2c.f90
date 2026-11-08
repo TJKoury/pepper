@@ -268,11 +268,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'BODS2C' )
 
 !
 !     Attempt to translate the input name to an integer code.  Call
@@ -311,6 +308,5 @@
 !     or a string representation of an integer.
 !
 
-      call chkout ( 'BODS2C' )
       return
       end

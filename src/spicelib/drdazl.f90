@@ -490,11 +490,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DRDAZL' )
 
 !
 !     The input range must be non-negative. If not, signal an error
@@ -506,7 +503,6 @@
          //            'values are not allowed.'  )
          call errdp  ( '#', range                 )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-         call chkout ( 'DRDAZL'                   )
          return
 
       end if
@@ -588,6 +584,5 @@
 
       end do
 
-      call chkout ( 'DRDAZL' )
       return
       end

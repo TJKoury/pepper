@@ -372,11 +372,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CKMETA' )
 
       if ( first ) then
 
@@ -428,7 +425,6 @@
 
                nodata = .true.
 
-               call chkout ( 'CKMETA' )
                return
 
             end if
@@ -520,7 +516,6 @@
 
             nodata = .true.
 
-            call chkout ( 'CKMETA' )
             return
 
          end if
@@ -592,12 +587,10 @@
 
          call errch  ( '#', meta )
          call sigerr ( 'SPICE(UNKNOWNCKMETA)'  )
-         call chkout ( 'CKMETA' )
          return
 
       end if
 
-      call chkout ( 'CKMETA' )
 
       return
       end

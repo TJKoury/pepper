@@ -158,15 +158,11 @@
 !     Standard SPICE error handling.
 !
       if ( len ( string ) < minlen ) then
-         call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
-         call chkout ( 'PRTENC' )
          return
 
       else if ( number < 0 ) then
-         call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
-         call chkout ( 'PRTENC' )
          return
       end if
 
@@ -188,9 +184,7 @@
 !     More error handling.
 !
       if ( num > 0 ) then
-         call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
-         call chkout ( 'PRTENC' )
       end if
 
       return
@@ -310,9 +304,7 @@
 
 
       if ( len ( string ) < minlen ) then
-         call chkin  ( 'PRTDEC' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
-         call chkout ( 'PRTDEC' )
          return
       end if
 

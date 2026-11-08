@@ -497,11 +497,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKBSEG' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually write anything, do every error
@@ -512,10 +508,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'EKBSEG' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the default identifier specification the first time through.
@@ -534,10 +527,7 @@
 !
       call chckid ( 'EK table name', namlim, tabnam )
 
-      if ( failed() ) then
-         call chkout ( 'EKBSEG' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure the table name satisfies all of our restrictions on
@@ -550,7 +540,6 @@
          call setmsg ( 'Table name <#> violates syntax rules.' )
          call errch  ( '#', tabnam                             )
          call sigerr ( 'SPICE(INVALIDNAME)'                    )
-         call chkout ( 'EKBSEG'                                )
          return
 
       end if
@@ -564,7 +553,6 @@
          call errint ( '#',  mxclsg                                    )
          call errint ( '#',  ncols                                     )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         call chkout ( 'EKBSEG'                                        )
          return
 
       end if
@@ -576,10 +564,7 @@
 
          call chckid ( 'EK column name', cnamsz, cnames(i) )
 
-         if ( failed() ) then
-            call chkout ( 'EKBSEG' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Make sure each column name satisfies all of our restrictions on
@@ -593,7 +578,6 @@
             call setmsg ( 'Column name <#> violates syntax rules.' )
             call errch  ( '#', cnames(i)                           )
             call sigerr ( 'SPICE(INVALIDNAME)'                     )
-            call chkout ( 'EKBSEG'                                 )
             return
 
          end if
@@ -610,10 +594,7 @@
 !
          call zzekpdec ( decls(i), cdscrs(1,i) )
 
-         if ( failed() ) then
-            call chkout ( 'EKBSEG' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -639,12 +620,10 @@
          call setmsg ( 'Segment type # is not currently supported.' )
          call errint ( '#', stype                                   )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'EKBSEG'                                     )
          return
 
       end if
 
 
-      call chkout ( 'EKBSEG' )
       return
       end

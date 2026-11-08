@@ -294,11 +294,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKVADR' )
-      end if
+      if ( return () ) return
 
 !
 !     Never come here.
@@ -306,7 +302,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      call chkout ( 'ZZEKVADR' )
       return
 
 
@@ -437,11 +432,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKVSET' )
-      end if
+      if ( return () ) return
 
 !
 !     Validate join row set count.
@@ -453,7 +444,6 @@
          call errint ( '#',  njrs                               )
          call errint ( '#',  mxjrs                              )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'ZZEKVSET'                               )
          return
 
       end if
@@ -473,7 +463,6 @@
             call errint ( '#',  bases(i)                           )
             call errint ( '#',  top                                )
             call sigerr ( 'SPICE(BADADDRESS)'                      )
-            call chkout ( 'ZZEKVSET'                               )
             return
 
          end if
@@ -497,7 +486,6 @@
          call errint ( '#',  ntabs                                    )
          call errint ( '#',  mxjoin                                   )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
-         call chkout ( 'ZZEKVSET'                                     )
          return
 
       end if
@@ -516,7 +504,6 @@
             call errint ( '#',  j                                     )
             call errint ( '#',  ntabs                                 )
             call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-            call chkout ( 'ZZEKVSET'                                  )
             return
 
          end if
@@ -544,7 +531,6 @@
             call errint ( '#',  j                                   )
             call errint ( '#',  top                                 )
             call sigerr ( 'SPICE(INVALIDCOUNT)'                     )
-            call chkout ( 'ZZEKVSET'                                )
             return
 
          end if
@@ -580,7 +566,6 @@
             call errint ( '#',  nsv                                 )
             call errint ( '#',  top                                 )
             call sigerr ( 'SPICE(INVALIDCOUNT)'                     )
-            call chkout ( 'ZZEKVSET'                                )
             return
 
          end if
@@ -594,7 +579,6 @@
 !
       svnjrs = njrs
 
-      call chkout ( 'ZZEKVSET' )
       return
 
 
@@ -719,12 +703,10 @@
 !
       if (  ( rwvidx < 1 ) .or. ( rwvidx > maxrwv )  ) then
 
-         call chkin  ( 'ZZEKVCAL'                                   )
          call setmsg ( 'Row vector index was #; valid range is 0:#' )
          call errint ( '#',  rwvidx                                 )
          call errint ( '#',  maxrwv                                 )
          call sigerr ( 'SPICE(INVALIDINDEX)'                        )
-         call chkout ( 'ZZEKVCAL'                                   )
          return
 
       end if

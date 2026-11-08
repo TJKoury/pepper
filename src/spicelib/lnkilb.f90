@@ -267,9 +267,7 @@
 !
 !     If NEXT is non-positive, return now.
 !
-      if ( next <= 0 ) then
-         return
-      end if
+      if ( next <= 0 ) return
 
 !
 !     If we arrived here, NEXT and LIST must be valid node numbers.
@@ -279,21 +277,18 @@
            .or. ( list < 1                   ) &
            .or. ( list > pool(sizrow,sizcol) )  )  then
 
-         call chkin  ( 'LNKILB'                                        )
          call setmsg ( 'NEXT was #.  LIST was #. '                    // &
                        'Valid range is 1 to #.'                        )
          call errint ( '#', next                                       )
          call errint ( '#', list                                       )
          call errint ( '#', pool(sizrow, sizcol)                       )
          call sigerr ( 'SPICE(INVALIDNODE)'                            )
-         call chkout ( 'LNKILB'                                        )
          return
 
 
       else if (       ( pool(bckwrd,next)  ==  free ) &
                 .or.  ( pool(bckwrd,list)  ==  free )  ) then
 
-         call chkin  ( 'LNKILB'                                        )
          call setmsg ( 'Node NEXT: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
@@ -309,7 +304,6 @@
          call errint ( '#', pool(forwrd,list)                          )
          call errint ( '#', free                                       )
          call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
-         call chkout ( 'LNKILB'                                        )
          return
 
       end if

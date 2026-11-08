@@ -227,9 +227,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 
 !
@@ -246,12 +244,10 @@
 !     Make sure that this really is a type 8 or type 12 data segment.
 !
       if (  ( type /= 08 ) .and. ( type /= 12 )  ) then
-         call chkin ( 'SPKR08'                                        )
          call setmsg( 'You are attempting to locate type 8 or type ' // &
                       '12 data in a type # data segment.'             )
          call errint( '#',  type                                      )
          call sigerr( 'SPICE(WRONGSPKTYPE)'                           )
-         call chkout( 'SPKR08'                                        )
          return
       end if
 
@@ -260,14 +256,12 @@
 !     descriptor.
 !
       if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
-         call chkin ( 'SPKR08'                                      )
          call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
          call errdp ( '#',  et                                      )
          call errdp ( '#',  dc(1)                                   )
          call errdp ( '#',  dc(2)                                   )
          call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         call chkout( 'SPKR08'                                      )
          return
 
       end if

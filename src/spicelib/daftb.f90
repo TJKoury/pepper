@@ -310,11 +310,7 @@
 !
 !     Standard/ SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFTB' )
-      end if
+      if ( return () ) return
 !
 !     A brief description of the DAF transfer file format and its
 !     intended use follows. This description is intended to provide a
@@ -445,7 +441,6 @@
          call errfnm ( '#', xfrlun                                 )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'DAFTB'                                     )
          return
 
       end if
@@ -462,7 +457,6 @@
                        ' file ''#'''                           )
          call errfnm ( '#', xfrlun                             )
          call sigerr ( 'SPICE(NOTADAFFILE)'                    )
-         call chkout ( 'DAFTB'                                 )
          return
 
       end if
@@ -475,12 +469,7 @@
 !
       call rdenci( xfrlun, 2, isumry )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFTB' )
-         return
-
-      end if
+      if ( failed() ) return
 
       nd = isumry(1)
       ni = isumry(2)
@@ -496,7 +485,6 @@
          call errfnm ( '#', xfrlun                                  )
          call errint ( '#', iostat                                  )
          call sigerr ( 'SPICE(FILEREADFAILED)'                      )
-         call chkout ( 'DAFTB'                                      )
          return
 
       end if
@@ -510,12 +498,7 @@
          call dafopn ( binfil, nd, ni, ifname, resrec, binhdl )
       end if
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFTB' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Calculate the length of the segment names.
 !
@@ -548,7 +531,6 @@
             call errfnm ( '#', xfrlun                             )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(FILEREADFAILED)'                 )
-            call chkout ( 'DAFTB'                                 )
             return
 
          end if
@@ -573,7 +555,6 @@
                call errch  ( '#', errmsg                            )
                call errfnm ( '#', xfrlun                            )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'            )
-               call chkout ( 'DAFTB'                                )
                return
 
             end if
@@ -592,7 +573,6 @@
                call errch  ( '#', errmsg                           )
                call errfnm ( '#', xfrlun                           )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
-               call chkout ( 'DAFTB'                               )
                return
 
             end if
@@ -618,7 +598,6 @@
                call errch  ( '#', errmsg                          )
                call errfnm ( '#', xfrlun                          )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'          )
-               call chkout ( 'DAFTB'                              )
                return
 
             end if
@@ -637,7 +616,6 @@
                call errch  ( '#', errmsg                         )
                call errfnm ( '#', xfrlun                         )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'         )
-               call chkout ( 'DAFTB'                             )
                return
 
             end if
@@ -654,7 +632,6 @@
                call errint ( '#', earr                              )
                call errfnm ( '#', xfrlun                            )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'            )
-               call chkout ( 'DAFTB'                                )
                return
 
             end if
@@ -671,7 +648,6 @@
                call errint ( '#', ecnt                          )
                call errfnm ( '#', xfrlun                        )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'        )
-               call chkout ( 'DAFTB'                            )
                return
 
             end if
@@ -698,7 +674,6 @@
                call errch  ( '#', errmsg                           )
                call errfnm ( '#', xfrlun                           )
                call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
-               call chkout ( 'DAFTB'                               )
                return
 
             end if
@@ -714,7 +689,6 @@
                   call errint ( '#', numarr                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
-                  call chkout ( 'DAFTB'                               )
                   return
 
             end if
@@ -733,7 +707,6 @@
             call errch  ( '#', word                                 )
             call errfnm ( '#', xfrlun                               )
             call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'               )
-            call chkout ( 'DAFTB'                                   )
             return
 
          end if
@@ -754,7 +727,6 @@
                call errfnm ( '#', xfrlun                              )
                call errint ( '#', iostat                              )
                call sigerr ( 'SPICE(FILEREADFAILED)'                  )
-               call chkout ( 'DAFTB'                                  )
                return
 
             end if
@@ -763,12 +735,7 @@
 !
             call rdencd ( xfrlun, nd, dsumry )
 
-            if ( failed() ) then
-
-               call chkout ( 'DAFTB' )
-               return
-
-            end if
+            if ( failed() ) return
 !
 !           Read in the integer part of the summary. The beginning and
 !           ending addresses, ISUMRY(NI-1) and ISUMRY(NI), for the
@@ -777,12 +744,7 @@
 !
             call rdenci( xfrlun, ni-2, isumry )
 
-            if ( failed() ) then
-
-               call chkout ( 'DAFTB' )
-               return
-
-            end if
+            if ( failed() ) return
 !
 !           Pack the summary information into the DAF array summary.
 !
@@ -792,12 +754,7 @@
 !
             call dafbna ( binhdl, summry, name( :snmlen) )
 
-            if ( failed() ) then
-
-               call chkout ( 'DAFTB' )
-               return
-
-            end if
+            if ( failed() ) return
 !
 !           Read and decode the data in the current DAF array.
 !
@@ -820,7 +777,6 @@
                   call errfnm ( '#', xfrlun                          )
                   call errint ( '#', iostat                          )
                   call sigerr ( 'SPICE(FILEREADFAILED)'              )
-                  call chkout ( 'DAFTB'                              )
                   return
 
                end if
@@ -848,24 +804,14 @@
 !
                   call rdencd ( xfrlun, numdta, buffer )
 
-                  if ( failed() ) then
-
-                     call chkout ( 'DAFTB' )
-                     return
-
-                  end if
+                  if ( failed() ) return
 !
 !                 Write the double precision data to the current array
 !                 in the binary DAF file.
 !
                   call dafada ( buffer, numdta )
 
-                  if ( failed() ) then
-
-                     call chkout ( 'DAFTB' )
-                     return
-
-                  end if
+                  if ( failed() ) return
 !
 !                 Decrement the counters for the amount of data
 !                 remaining to be moved from the current data block,
@@ -894,12 +840,7 @@
 !
             call dafena
 
-            if ( failed() ) then
-
-               call chkout ( 'DAFTB' )
-               return
-
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -909,6 +850,5 @@
 !
       call dafcls ( binhdl )
 
-      call chkout ( 'DAFTB' )
       return
       end

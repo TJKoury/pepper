@@ -298,7 +298,6 @@
 !
 !     Participate in error tracing.
 !
-      call chkin ( 'ZZMULT' )
 
 
 !
@@ -324,7 +323,6 @@
       if ( (a == 0.0_wp) .or. (b == 0.0_wp) ) then
 
          zzmult = 0.0_wp
-         call chkout ( 'ZZMULT' )
          return
 
       end if
@@ -353,7 +351,6 @@
          call errdp  ( '#1', a                    )
          call errdp  ( '#2', b                    )
          call sigerr ( 'SPICE(NUMERICOVERFLOW)'   )
-         call chkout ( 'ZZMULT'                   )
          return
 
       end if
@@ -365,7 +362,6 @@
       if ( (loga + logb) < -(expnt-1.0_wp) ) then
 
          zzmult = 0.0_wp
-         call chkout ( 'ZZMULT' )
          return
 
       end if
@@ -375,7 +371,6 @@
 !
       zzmult = a*b
 
-      call chkout ( 'ZZMULT' )
 
       return
       end

@@ -394,11 +394,8 @@
 !
       badkpv = .true.
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'BADKPV' )
 
 !
 !     Look up the attributes of this variable in the kernel pool.
@@ -418,7 +415,6 @@
          call errch  ( '#', caller )
          call errch  ( '#', name   )
          call sigerr ( 'SPICE(VARIABLENOTFOUND)' )
-         call chkout ( 'BADKPV' )
          return
 
       end if
@@ -456,7 +452,6 @@
          call errch  ( '#', caller )
          call errch  ( '#', comp   )
          call sigerr ( 'SPICE(UNKNOWNCOMPARE)' )
-         call chkout ( 'BADKPV'    )
          return
 
       end if
@@ -481,7 +476,6 @@
          call errch  ( '#', name   )
          call errint ( '#', dim    )
          call sigerr ( 'SPICE(BADVARIABLESIZE)' )
-         call chkout ( 'BADKPV' )
          return
 
       end if
@@ -511,7 +505,6 @@
          call errint ( '#', dim    )
          call errint ( '#', divby  )
          call sigerr ( 'SPICE(BADVARIABLESIZE)'  )
-         call chkout ( 'BADKPV' )
          return
 
       end if
@@ -530,7 +523,6 @@
             call errch  ( '#', caller )
             call errch  ( '#', name   )
             call sigerr ( 'SPICE(BADVARIABLETYPE)' )
-            call chkout ( 'BADKPV' )
             return
 
          end if
@@ -547,7 +539,6 @@
             call errch  ( '#', caller )
             call errch  ( '#', name   )
             call sigerr ( 'SPICE(BADVARIABLETYPE)' )
-            call chkout ( 'BADKPV' )
             return
 
          end if
@@ -561,14 +552,12 @@
          call errch  ( '#', caller )
          call errch  ( '#', type                                       )
          call sigerr ( 'SPICE(INVALIDTYPE)'                            )
-         call chkout ( 'BADKPV'                                        )
          return
 
       end if
 
 
       badkpv = .false.
-      call chkout ( 'BADKPV' )
 
       return
       end

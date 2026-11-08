@@ -178,11 +178,7 @@
 
 
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SSIZEI' )
-      end if
+      if ( return() ) return
 
 !
 !     The size must be non-negative.  Other values will be snubbed.
@@ -192,7 +188,6 @@
                        'value.  The value was #.'  )
          call errint ( '#', size )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'SSIZEI' )
          return
       end if
 
@@ -206,6 +201,5 @@
          cell(i) = 0
       end do
 
-      call chkout ( 'SSIZEI' )
       return
       end

@@ -521,15 +521,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SC01' )
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'SC01' )
       return
 
 
@@ -882,11 +878,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCTK01' )
 
       if ( pass1 ) then
 !
@@ -916,7 +909,6 @@
 !
          pass1 = .true.
 
-         call chkout ( 'SCTK01' )
          return
       end if
 
@@ -929,7 +921,6 @@
 
          call setmsg ( 'CLKSTR is blank.'         )
          call sigerr ( 'SPICE(INVALIDSCLKSTRING)' )
-         call chkout ( 'SCTK01'                   )
          return
 
       end if
@@ -964,7 +955,6 @@
          call setmsg ( 'CLKSTR has # fields, which is too many.' )
          call errint ( '#' , n                                   )
          call sigerr ( 'SPICE(INVALIDSCLKSTRING)'                )
-         call chkout ( 'SCTK01'                                  )
          return
 
       end if
@@ -993,7 +983,6 @@
             call errch  ( '#', cmp(i)                              )
             call errch  ( '#', clkstr                              )
             call sigerr ( 'SPICE(INVALIDSCLKSTRING)'               )
-            call chkout ( 'SCTK01'                                 )
             return
 
          end if
@@ -1018,7 +1007,6 @@
             call errdp  ( '#', savcmp                                )
             call errdp  ( '#', offset(i)                             )
             call sigerr ( 'SPICE(INVALIDSCLKSTRING)'                 )
-            call chkout ( 'SCTK01'                                   )
             return
 
           end if
@@ -1041,7 +1029,6 @@
 !
       prvsc = sc
 
-      call chkout ( 'SCTK01' )
       return
 
 
@@ -1344,11 +1331,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCFM01' )
 
 !
 !     On the first pass through the subroutine, or if the spacecraft
@@ -1383,7 +1367,6 @@
 !
          pass1 = .true.
 
-         call chkout ( 'SCFM01' )
          return
 
       end if
@@ -1424,7 +1407,6 @@
          call errint ( '#',  needed                                    )
          call errdp  ( '#',  ticks                                     )
          call sigerr ( 'SPICE(SCLKTRUNCATED)'                          )
-         call chkout ( 'SCFM01'                                        )
          return
 
       end if
@@ -1439,7 +1421,6 @@
          call setmsg ( 'Negative value for SCLK ticks: #' )
          call errdp  ( '#', ticks                         )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'           )
-         call chkout ( 'SCFM01'                           )
          return
 
       end if
@@ -1516,7 +1497,6 @@
 !
       prvsc = sc
 
-      call chkout ( 'SCFM01' )
       return
 
 
@@ -1815,11 +1795,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCTE01' )
 
       if ( pass1 ) then
 !
@@ -1845,7 +1822,6 @@
 
          pass1 = .true.
 
-         call chkout ( 'SCTE01' )
          return
 
       end if
@@ -1875,7 +1851,6 @@
          call errch  ( '#', 'SCLKDP'            )
          call errdp  ( '#',  sclkdp             )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCTE01'                 )
          return
 
       end if
@@ -1982,7 +1957,6 @@
 
          call setmsg ( 'Invalid SCLK rate.'     )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCTE01'                 )
          return
 
       end if
@@ -2006,10 +1980,7 @@
 
          et = unitim ( partim, 'TDT', 'TDB' )
 
-         if ( failed() ) then
-            call chkout ( 'SCTE01' )
-            return
-         end if
+         if ( failed() ) return
 
       else
 !
@@ -2022,7 +1993,6 @@
          call errint ( '#', timsys                                 )
          call errint ( '#', sc                                     )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'SCTE01' )
          return
 
       end if
@@ -2032,7 +2002,6 @@
 !
       prvsc = sc
 
-      call chkout ( 'SCTE01' )
       return
 
 
@@ -2341,11 +2310,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCET01' )
 
       if ( pass1 ) then
 !
@@ -2371,7 +2337,6 @@
 
          pass1 = .true.
 
-         call chkout ( 'SCET01' )
          return
 
       end if
@@ -2391,10 +2356,7 @@
 
          partim = unitim ( et, 'TDB', 'TDT' )
 
-         if ( failed() ) then
-            call chkout ( 'SCET01' )
-            return
-         end if
+         if ( failed() ) return
 
       else
 !
@@ -2407,7 +2369,6 @@
          call errint ( '#', timsys                                 )
          call errint ( '#', sc                                     )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'SCET01' )
          return
 
       end if
@@ -2535,7 +2496,6 @@
 
          call setmsg ( 'Invalid SCLK rate.'     )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCET01'                 )
          return
 
       end if
@@ -2586,7 +2546,6 @@
          call errch  ( '#', 'ET'                )
          call errdp  ( '#',  et                 )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCET01'                 )
          return
 
       end if
@@ -2596,7 +2555,6 @@
 !
       prvsc = sc
 
-      call chkout ( 'SCET01' )
       return
 
 
@@ -2850,11 +2808,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCEC01' )
 
       if ( pass1 ) then
 !
@@ -2880,7 +2835,6 @@
 
          pass1 = .true.
 
-         call chkout ( 'SCEC01' )
          return
 
       end if
@@ -2900,10 +2854,7 @@
 
          partim = unitim ( et, 'TDB', 'TDT' )
 
-         if ( failed() ) then
-            call chkout ( 'SCEC01' )
-            return
-         end if
+         if ( failed() ) return
 
       else
 !
@@ -2916,7 +2867,6 @@
          call errint ( '#', timsys                                 )
          call errint ( '#', sc                                     )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         call chkout ( 'SCEC01' )
          return
 
       end if
@@ -2962,7 +2912,6 @@
          call errch  ( '#', 'ET'                )
          call errdp  ( '#',  et                 )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCEC01'                 )
          return
 
 
@@ -3043,7 +2992,6 @@
          call setmsg ( 'Invalid SCLK rate #.'   )
          call errdp  ( '#', coeffs( 3, lower )  )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCEC01'                 )
          return
 
       end if
@@ -3086,7 +3034,6 @@
          call errch  ( '#', 'ET'                )
          call errdp  ( '#',  et                 )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SCEC01'                 )
          return
 
       end if
@@ -3096,7 +3043,6 @@
 !
       prvsc = sc
 
-      call chkout ( 'SCEC01' )
       return
 
 
@@ -3221,11 +3167,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SCTY01' )
 
 !
 !     At this point, PRVSC is either 0 or the ID of the last type 1
@@ -3287,7 +3230,6 @@
 
                pass1 = .true.
 
-               call chkout ( 'SCTY01' )
                return
 
             end if
@@ -3304,7 +3246,6 @@
                call errch  ( '#', kvname                 )
                call sigerr ( 'SPICE(KERNELVARNOTFOUND)'  )
 
-               call chkout ( 'SCTY01' )
                return
 
             end if
@@ -3321,7 +3262,6 @@
 !
             prvsc = 0
 
-            call chkout ( 'SCTY01' )
             return
 
          end if
@@ -3341,7 +3281,6 @@
 
             pass1 = .true.
 
-            call chkout ( 'SCTY01' )
             return
 
          end if
@@ -3354,7 +3293,6 @@
       clktyp = 1
       prvsc  = sc
 
-      call chkout ( 'SCTY01' )
       return
 
 
@@ -3468,11 +3406,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SCPR01' )
 
       if ( pass1 ) then
 !
@@ -3498,7 +3433,6 @@
 
          pass1 = .true.
 
-         call chkout ( 'SCPR01' )
          return
 
       end if
@@ -3513,6 +3447,5 @@
 
       prvsc  = sc
 
-      call chkout ( 'SCPR01' )
       return
       end

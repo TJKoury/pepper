@@ -399,11 +399,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKPFS' )
-      end if
+      if ( return () ) return
 
 !
 !     Start off with FOUND set to false.
@@ -500,6 +496,5 @@
          found = .false.
       end if
 
-      call chkout ( 'CKPFS' )
       return
       end

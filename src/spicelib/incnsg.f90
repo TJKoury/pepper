@@ -364,9 +364,7 @@
 !     out afterward. When those code sections are skipped,
 !     we avoid traceback participation.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No intersection was found so far.
@@ -380,11 +378,9 @@
 
       if ( axmag == 0.0_wp ) then
 
-         call chkin  ( 'INCNSG'                                       )
          call setmsg ( 'The cone''s axis vector must be non-zero ' &
          //            'but sadly, it failed to meet this criterion.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                            )
-         call chkout ( 'INCNSG'                                       )
          return
 
       end if
@@ -394,12 +390,10 @@
 !
       if ( angle < 0.0_wp ) then
 
-         call chkin  ( 'INCNSG'                             )
          call setmsg ( 'The cone''s angular radius must be ' &
          //            ' non-negative but was # (radians).' )
          call errdp  ( '#', angle                           )
          call sigerr ( 'SPICE(INVALIDANGLE)'                )
-         call chkout ( 'INCNSG'                             )
          return
 
       end if
@@ -414,7 +408,6 @@
 
       if ( dmag == 0.0_wp ) then
 
-         call chkin  ( 'INCNSG'                              )
          call setmsg ( 'The distance between the segment''s ' &
          //            'endpoints was zero. First endpoint: ' &
          //            '(# # #).'                            )
@@ -422,7 +415,6 @@
          call errdp  ( '#', endpt1(2)                        )
          call errdp  ( '#', endpt1(3)                        )
          call sigerr ( 'SPICE(ENDPOINTSMATCH)'               )
-         call chkout ( 'INCNSG'                              )
          return
 
       end if
@@ -789,7 +781,6 @@
 
          else
 
-            call chkin ( 'INCNSG' )
 !
 !           Both endpoints are outside the cone. We could have zero to
 !           two roots. If the minimum angular separation of the segment
@@ -821,10 +812,7 @@
 
             call zzsglatx ( xoff1, xoff2, minlat, minp, maxlat, maxp )
 
-            if ( failed() ) then
-               call chkout ( 'INCNSG' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           COLAT is the colatitude of the point of maximum latitude.
@@ -902,7 +890,6 @@
             end if
 
 
-            call chkout ( 'INCNSG' )
 
          end if
 !

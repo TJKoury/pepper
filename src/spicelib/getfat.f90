@@ -684,11 +684,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin  ( 'GETFAT' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the temporary storage variables that we use.
@@ -702,7 +698,6 @@
 
          call setmsg ( 'The file name is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'    )
-         call chkout ( 'GETFAT'                  )
          return
 
       end if
@@ -751,7 +746,6 @@
             //              '= #.'                                    )
             call errint ( '#', iostat                                 )
             call sigerr ( 'SPICE(INQUIREERROR)'                       )
-            call chkout ( 'GETFAT'                                    )
             return
          end if
 
@@ -765,7 +759,6 @@
             call setmsg ( 'The kernel file ''#'' does not exist.'   )
             call errch  ( '#', file                                 )
             call sigerr ( 'SPICE(FILENOTFOUND)'                     )
-            call chkout ( 'GETFAT'                                  )
             return
 
          end if
@@ -783,7 +776,6 @@
             call setmsg ( 'The file ''#'' is already open.' )
             call errch  ( '#', file                         )
             call sigerr ( 'SPICE(EXTERNALOPEN)'             )
-            call chkout ( 'GETFAT'                          )
             return
 
          end if
@@ -840,7 +832,6 @@
                call errch  ( '#', file                              )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEOPENFAILED)'                )
-               call chkout ( 'GETFAT'                               )
                return
 
             end if
@@ -884,7 +875,6 @@
                call errch  ( '#', file                               )
                call errint ( '#', iostat                             )
                call sigerr ( 'SPICE(FILEREADFAILED)'                 )
-               call chkout ( 'GETFAT'                                )
                return
 
             end if
@@ -917,7 +907,6 @@
                call errch  ( '#', file                        )
                call errint ( '#', iostat                      )
                call sigerr ( 'SPICE(FILEOPENFAILED)'          )
-               call chkout ( 'GETFAT'                         )
                return
 
             end if
@@ -948,7 +937,6 @@
          call errch  ( '#', file                                   )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'GETFAT'                                    )
          return
 
       end if
@@ -1045,7 +1033,6 @@
 
       end if
 
-      call chkout ( 'GETFAT' )
       return
 
       end

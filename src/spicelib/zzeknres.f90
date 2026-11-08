@@ -204,16 +204,12 @@
 !
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( iparse == ifalse ) then
 
-         call chkin  ( 'ZZEKNRES'                            )
          call setmsg ( 'Encoded query has not been parsed.'  )
          call sigerr ( 'SPICE(QUERYNOTPARSED)'               )
-         call chkout ( 'ZZEKNRES'                            )
          return
 
       end if
@@ -387,9 +383,7 @@
                          ntab,   table,   alias,  base+eqltab-1, &
                          error,  errmsg,  errptr                )
 
-         if ( error ) then
-            return
-         end if
+         if ( error ) return
 
 
          if ( cnstyp == eqcol ) then
@@ -400,9 +394,7 @@
                             ntab,   table,   alias,  base+eqrtab-1, &
                             error,  errmsg,  errptr                )
 
-            if ( error ) then
-               return
-            end if
+            if ( error ) return
 
          end if
 
@@ -428,9 +420,7 @@
                          ntab,   table,   alias,  base, &
                          error,  errmsg,  errptr        )
 
-         if ( error ) then
-            return
-         end if
+         if ( error ) return
 
       end do
 
@@ -452,9 +442,7 @@
                          ntab,   table,   alias,  base, &
                          error,  errmsg,  errptr        )
 
-         if ( error ) then
-            return
-         end if
+         if ( error ) return
 
       end do
 

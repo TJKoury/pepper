@@ -192,14 +192,11 @@
       if ( return() ) then
          ordi = 0
          return
-      else
-         call chkin ( 'ORDI' )
       end if
 !
 !     Given the structure of sets, there's not much to do.
 !
       ordi = bsrchi ( item, cardi(set), set(1) )
 
-      call chkout ( 'ORDI' )
       return
       end

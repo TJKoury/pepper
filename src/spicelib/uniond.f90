@@ -184,7 +184,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'UNIOND' )
 
 
 !
@@ -304,7 +303,6 @@
       end if
 
 
-      call chkout ( 'UNIOND' )
 
       return
       end

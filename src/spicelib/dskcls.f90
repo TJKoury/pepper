@@ -159,11 +159,8 @@
       character(methln)     method
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKCLS' )
 
       if ( optmiz ) then
 !
@@ -184,10 +181,7 @@
 !
          call dasham ( handle, method )
 
-         if ( failed() ) then
-            call chkout ( 'DSKCLS' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( method == 'WRITE ' ) then
 !
@@ -205,6 +199,5 @@
 
       end if
 
-      call chkout ( 'DSKCLS' )
       return
       end

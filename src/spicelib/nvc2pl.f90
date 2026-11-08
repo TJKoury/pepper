@@ -370,9 +370,7 @@
 !
 !     This routine checks in only if an error is discovered.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
       call unorm ( normal, plane(nmlpos), mag )
 
@@ -381,10 +379,8 @@
 !
       if ( mag == 0 ) then
 
-         call chkin  ( 'NVC2PL'                            )
          call setmsg ( 'Plane''s normal must be non-zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                 )
-         call chkout ( 'NVC2PL'                            )
          return
 
       end if

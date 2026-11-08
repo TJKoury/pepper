@@ -324,11 +324,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STLABX' )
-      end if
+      if ( return () ) return
 
 !
 !     Obtain the negative of the observer's velocity.  This
@@ -340,6 +336,5 @@
 
       call stelab ( pobj, negvel, corpos )
 
-      call chkout ( 'STLABX' )
       return
       end

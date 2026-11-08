@@ -440,11 +440,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASUDC' )
 
 !
 !     Get the last logical addresses in use in this DAS file.
@@ -464,7 +461,6 @@
          call errint ( '#',   last                                     )
          call errint ( '#',   lastc                                    )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                         )
-         call chkout ( 'DASUDC'                                        )
          return
 
       end if
@@ -481,7 +477,6 @@
          call errint ( '#', len( data(1) )           )
          call errint ( '#', bpos                     )
          call sigerr ( 'SPICE(INVALIDINDEX)'         )
-         call chkout ( 'DASUDC'                      )
          return
 
       end if
@@ -494,7 +489,6 @@
          call errint ( '#', len( data(1) )           )
          call errint ( '#', epos                     )
          call sigerr ( 'SPICE(INVALIDINDEX)'         )
-         call chkout ( 'DASUDC'                      )
          return
 
       end if
@@ -506,7 +500,6 @@
          call errint ( '#', bpos                           )
          call errint ( '#', epos                           )
          call sigerr ( 'SPICE(INDICESOUTOFORDER)'          )
-         call chkout ( 'DASUDC'                            )
          return
 
       end if
@@ -647,6 +640,5 @@
       end do
 
 
-      call chkout ( 'DASUDC' )
       return
       end

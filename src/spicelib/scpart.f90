@@ -326,11 +326,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCPART' )
 
 !
 !     Get the partition values from the type 1 subsystem. If the
@@ -338,6 +335,5 @@
 !
       call scpr01 ( sc, nparts, pstart, pstop )
 
-      call chkout ( 'SCPART' )
       return
       end

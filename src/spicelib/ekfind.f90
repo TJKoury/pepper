@@ -742,11 +742,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKFIND' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the encoded query each time, for safety.
@@ -760,10 +756,7 @@
                       lxbegs, lxends, values, numvls, chrbuf, &
                       chbegs, chends, error,  errmsg         )
 
-      if ( error ) then
-         call chkout ( 'EKFIND' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -774,10 +767,7 @@
                        chbegs,  chends,  eqryi,   eqryc, &
                        eqryd,   error,   errmsg          )
 
-      if ( error ) then
-         call chkout ( 'EKFIND' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -786,10 +776,7 @@
       call zzeknres ( query, eqryi, eqryc, &
                              error, errmsg, errptr )
 
-      if ( error ) then
-         call chkout ( 'EKFIND' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -798,10 +785,7 @@
       call zzektres ( query, eqryi,  eqryc,  eqryd, &
                              error,  errmsg, errptr  )
 
-      if ( error ) then
-         call chkout ( 'EKFIND' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -810,10 +794,7 @@
       call zzeksemc ( query, eqryi, eqryc, &
                              error, errmsg, errptr )
 
-      if ( error ) then
-         call chkout ( 'EKFIND' )
-         return
-      end if
+      if ( error ) return
 
 !
 !     If we arrived here, the encoded query is ready for execution.
@@ -822,6 +803,5 @@
       call eksrch ( eqryi, eqryc, eqryd, nmrows, error, errmsg )
 
 
-      call chkout ( 'EKFIND' )
       return
       end

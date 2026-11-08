@@ -211,11 +211,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STCG01' )
-      end if
+      if ( return () ) return
 
 !
 !     Fetch data from the catalog in the following order
@@ -234,7 +230,6 @@
          call setmsg ( 'RA value for star # not found. '    )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -243,7 +238,6 @@
          call setmsg ( 'DEC value for star # not found. '   )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -252,7 +246,6 @@
          call setmsg ( 'RASIG value for star # not found. ' )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -261,7 +254,6 @@
          call setmsg ( 'DECSIG value for star # not found.' )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -270,7 +262,6 @@
          call setmsg ( 'CATNUM value for star # not found.' )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -279,7 +270,6 @@
          call setmsg ( 'SPTYPE value for star # not found.' )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -288,7 +278,6 @@
          call setmsg ( 'VMAG value for star # not found. '  )
          call errint ( '#', index                           )
          call sigerr ( 'SPICE(BADSTARINDEX)'                )
-         call chkout ( 'STCG01' )
          return
       end if
 
@@ -300,6 +289,5 @@
       rasig  = rasig  * rpd()
       decsig = decsig * rpd()
 
-      call chkout ( 'STCG01' )
       return
       end

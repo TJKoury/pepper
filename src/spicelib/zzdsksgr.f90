@@ -225,11 +225,9 @@
 
          if ( minr <= 0.0_wp ) then
 
-            call chkin  ( 'ZZDSKSGR'                )
             call setmsg ( 'Minimum radius was *.'   )
             call errdp  ( '*', minr                 )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'  )
-            call chkout ( 'ZZDSKSGR'                )
             return
 
          end if
@@ -249,11 +247,9 @@
 
          if ( re <= 0.0_wp ) then
 
-            call chkin  ( 'ZZDSKSGR'                  )
             call setmsg ( 'Equatorial radius was *.'  )
             call errdp  ( '*', re                     )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'    )
-            call chkout ( 'ZZDSKSGR'                  )
             return
 
          end if
@@ -293,11 +289,9 @@
 !           one, the polar radius is zero. Either case is a problem, so
 !           signal an error and check out.
 !
-            call chkin  ( 'ZZDSKSGR'                       )
             call setmsg ( 'Flattening coefficient was *.'  )
             call errdp  ( '*', f                           )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-            call chkout ( 'ZZDSKSGR'                       )
             return
 
          end if
@@ -331,11 +325,9 @@
 !
 !        Never heard of this coordinate system.
 !
-         call chkin ( 'ZZDSKSGR'                                       )
          call setmsg( 'The coordinate system code # is not recognized.')
          call errint( '#',  corsys                                     )
          call sigerr( 'SPICE(NOTSUPPORTED)'                            )
-         call chkout( 'ZZDSKSGR'                                       )
          return
 
       end if

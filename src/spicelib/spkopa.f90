@@ -309,11 +309,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKOPA')
 
 !
 !     Until we get a legitimate handle we set HANDLE to zero.
@@ -329,7 +326,6 @@
          //            'existing file. ' )
          call errch  ( '#', file )
          call sigerr ( 'SPICE(FILENOTFOUND)'  )
-         call chkout ( 'SPKOPA' )
 
          return
       end if
@@ -339,10 +335,7 @@
 !
       call getfat ( file, arch, type )
 
-      if ( failed() )then
-         call chkout ( 'SPKOPA' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( arch /= 'DAF' .or. type /= 'SPK' ) then
 
@@ -354,7 +347,6 @@
          call errch  ( '#', arch )
          call errch  ( '#', type )
          call sigerr ( 'SPICE(FILEISNOTSPK)'  )
-         call chkout ( 'SPKOPA' )
          return
       end if
 
@@ -368,7 +360,6 @@
          handle = 0
       end if
 
-      call chkout ( 'SPKOPA' )
       return
 
       end

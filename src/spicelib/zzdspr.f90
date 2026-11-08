@@ -299,11 +299,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSPR' )
 
 !
 !     Local constants.
@@ -447,7 +444,6 @@
 
       end if
 
-      call chkout ( 'ZZDSPR' )
 
       return
       end

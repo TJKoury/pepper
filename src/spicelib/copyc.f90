@@ -158,7 +158,6 @@
 !     Set up the error processing.
 !
       if ( return() ) return
-      call chkin ( 'COPYC' )
 
 !
 !     We need the cardinality of the input cell, and the size of
@@ -213,7 +212,6 @@
       if ( size < card ) then
          call excess (  card - size,  'cell' )
          call sigerr ( 'SPICE(CELLTOOSMALL)' )
-         call chkout ( 'COPYC' )
          return
       end if
 
@@ -230,10 +228,8 @@
          call errint ( '#', reqlen  )
          call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         call chkout ( 'COPYC' )
          return
 
       end if
-      call chkout ( 'COPYC' )
       return
       end

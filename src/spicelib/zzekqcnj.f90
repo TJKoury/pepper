@@ -134,16 +134,12 @@
 
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( iparse == ifalse ) then
 
-         call chkin  ( 'ZZEKQCNJ'                                )
          call setmsg ( 'Encoded query has not yet been parsed.'  )
          call sigerr ( 'SPICE(UNPARSEDQUERY)'                    )
-         call chkout ( 'ZZEKQCNJ'                                )
          return
 
       end if
@@ -155,12 +151,10 @@
 
       if (  ( n < 1 ) .or. ( n > ncnj )  ) then
 
-         call chkin  ( 'ZZEKQCNJ'                                  )
          call setmsg ( 'Table index # is out of valid range 1:#.'  )
          call errint ( '#',  n                                     )
          call errint ( '#',  ncnj                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-         call chkout ( 'ZZEKQCNJ'                                  )
          return
 
       end if

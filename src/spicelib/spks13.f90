@@ -153,17 +153,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS13' )
-      end if
+      if ( return () ) return
 
 !
 !     The type 9 subsetter knows how to do this job.
 !
       call spks09 ( handle, baddr, eaddr, begin, end )
 
-      call chkout ( 'SPKS13' )
       return
       end

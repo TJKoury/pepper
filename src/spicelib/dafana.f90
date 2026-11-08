@@ -956,9 +956,7 @@
       if ( return () ) then
          return
       else
-         call chkin  ( 'DAFANA'            )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'DAFANA'            )
       end if
 
       return
@@ -1118,21 +1116,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFBNA' )
-      end if
+      if ( return () ) return
 
 !
 !     Check out the file handle before going any further.
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFBNA' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the state table pool, if this hasn't been done yet.
@@ -1172,10 +1163,7 @@
 !
 !     If we couldn't read the file record, bail out now.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFBNA' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     See whether we already have an entry for this DAF in the
@@ -1419,7 +1407,6 @@
                call errhan ( '#', handle                             )
                call errint ( '#', tbsize                             )
                call sigerr ( 'SPICE(STFULL)'                         )
-               call chkout ( 'DAFBNA'                                )
                return
 
             end if
@@ -1476,7 +1463,6 @@
       stname( p )  =  name
 
 
-      call chkout ( 'DAFBNA' )
       return
 
 
@@ -1628,11 +1614,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFADA' )
-      end if
+      if ( return () ) return
 
 !
 !     This routine operates on the DAF at the head of the active list.
@@ -1649,7 +1631,6 @@
 
          call setmsg ( 'No DAF is currently being written.' )
          call sigerr ( 'SPICE(DAFNOWRITE)'                  )
-         call chkout ( 'DAFADA'                             )
          return
 
 !
@@ -1661,17 +1642,13 @@
 !
          call dafsih ( stfh(p), 'WRITE' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFADA' )
-            return
-         end if
+         if ( failed() ) return
 
          call dafhfn (  stfh(p), dafnam                                )
          call setmsg ( 'An attempt was made to add data to an array ' // &
                        'that has not yet been begun, in file #.'       )
          call errch  ( '#', dafnam                                     )
          call sigerr ( 'SPICE(DAFNEWCONFLICT)'                         )
-         call chkout ( 'DAFADA'                                        )
          return
 
 !
@@ -1685,7 +1662,6 @@
 
       end if
 
-      call chkout ( 'DAFADA' )
       return
 
 
@@ -1848,11 +1824,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFENA' )
-      end if
+      if ( return () ) return
 
 !
 !     This routine operates on the DAF at the head of the active list.
@@ -1863,7 +1835,6 @@
 
          call setmsg ( 'No DAF is currently being written.' )
          call sigerr ( 'SPICE(DAFNOWRITE)'                  )
-         call chkout ( 'DAFENA'                             )
          return
 
 !
@@ -1875,17 +1846,13 @@
 !
          call dafsih ( stfh(p), 'WRITE' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFENA' )
-            return
-         end if
+         if ( failed() ) return
 
          call dafhfn (  stfh(p), dafnam                                )
          call setmsg ( 'An attempt was made to end an array that has '// &
                        'not yet been begun, in file #.'                )
          call errch  ( '#', dafnam                                     )
          call sigerr ( 'SPICE(DAFNEWCONFLICT)'                         )
-         call chkout ( 'DAFENA'                                        )
          return
 
       end if
@@ -2005,7 +1972,6 @@
 !
       staddg(p) = .false.
 
-      call chkout ( 'DAFENA' )
       return
 
 
@@ -2183,21 +2149,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFCAD' )
-      end if
+      if ( return () ) return
 
 !
 !     Check out the file handle before going any further.
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFCAD' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     See whether we already have an entry for this DAF in the
@@ -2234,7 +2193,6 @@
          call errch  ( '#',  dafnam                                  )
          call errint ( '#',  handle                                  )
          call sigerr ( 'SPICE(NOARRAYSTARTED)'                       )
-         call chkout ( 'DAFCAD'                                      )
          return
 
       else if ( .not. staddg(p) ) then
@@ -2244,7 +2202,6 @@
          call errch  ( '#',  dafnam                                  )
          call errint ( '#',  handle                                  )
          call sigerr ( 'SPICE(NOARRAYSTARTED)'                       )
-         call chkout ( 'DAFCAD'                                      )
          return
 
       end if
@@ -2273,6 +2230,5 @@
       end if
 
 
-      call chkout ( 'DAFCAD' )
       return
       end

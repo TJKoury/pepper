@@ -365,11 +365,8 @@
       logical               status
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKSBA' )
 
 !
 !     Check the body table for presence of the new body. It's
@@ -386,7 +383,6 @@
          //            're-initialized before this body can be added.' )
          call errint ( '#', bodyid                                     )
          call sigerr ( 'SPICE(INVALIDADD)'                             )
-         call chkout ( 'ZZDSKSBA'                                      )
          return
 
       end if
@@ -397,10 +393,7 @@
 !
       call zzdskbbl ( bodyid )
 
-      if ( failed() ) then
-         call chkout( 'ZZDSKSBA' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Count the segments in the BSR system for the body.
@@ -411,10 +404,7 @@
       call zzdskbss( bodyid )
       call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-      if ( failed() ) then
-         call chkout( 'ZZDSKSBA' )
-         return
-      end if
+      if ( failed() ) return
 
       do while ( segfnd )
 
@@ -422,10 +412,7 @@
 
          call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         if ( failed() ) then
-            call chkout( 'ZZDSKSBA' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -445,7 +432,6 @@
          call errint ( '#', nseg                                     )
          call errint ( '#', stsize                                   )
          call sigerr ( 'SPICE(SEGMENTTABLEFULL)'                     )
-         call chkout ( 'ZZDSKSBA'                                    )
          return
 
       end if
@@ -463,10 +449,7 @@
                          btstsz, sthan,  stdscr, stdlad, stfree, &
                          stoff,  stctr,  strad                  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDSKSBA' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -488,10 +471,7 @@
       call zzdskbss( bodyid )
       call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-      if ( failed() ) then
-         call chkout( 'ZZDSKSBA' )
-         return
-      end if
+      if ( failed() ) return
 
       do while ( segfnd )
 !
@@ -507,10 +487,7 @@
 
          call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         if ( failed() ) then
-            call chkout( 'ZZDSKSBA' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -527,10 +504,7 @@
 
          call zzsegbox ( stdscr(1,j), stctr(1,j), strad(j) )
 
-         if ( failed() ) then
-            call chkout( 'ZZDSKSBA' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Obtain the center of the frame for the Ith segment.
@@ -545,7 +519,6 @@
             //            'segment frame having ID #.'       )
             call errint ( '#', segfid                        )
             call sigerr ( 'SPICE(NOFRAMEINFO)'               )
-            call chkout ( 'ZZDSKSBA'                         )
             return
 
          end if
@@ -570,7 +543,6 @@
                //            'segment frame having ID #.'       )
                call errint ( '#', segfid                        )
                call sigerr ( 'SPICE(NOFRAMENAME)'               )
-               call chkout ( 'ZZDSKSBA'                         )
                return
 
             end if
@@ -583,16 +555,12 @@
 
             call spkgps ( frmctr, et, frname, segctr, stoff(1,j), lt )
 
-            if ( failed() ) then
-               call chkout ( 'ZZDSKSBA' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
       end do
 
 
-      call chkout ( 'ZZDSKSBA' )
       return
       end

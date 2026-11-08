@@ -135,11 +135,9 @@
 
       if ( tol < 0.0_wp ) then
 
-         call chkin  ( 'DASINE'                           )
          call setmsg ( 'TOL was #; must be non-negative.' )
          call errdp  ( '#',  tol                          )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'           )
-         call chkout ( 'DASINE'                           )
          return
 
       end if
@@ -151,14 +149,12 @@
 
       if  ( ( abs ( arg ) - tol ) > 1.0_wp) then
 
-         call chkin  ( 'DASINE'                           )
          call setmsg ( 'The |argument| specified was greater '// &
                        'than 1.D0 by more than #. The value '// &
                        'of the argument is #. '           )
          call errdp  ( '#',  tol                          )
          call errdp  ( '#',  arg                          )
          call sigerr ( 'SPICE(INPUTOUTOFBOUNDS)'          )
-         call chkout ( 'DASINE'                           )
          return
 
       end if

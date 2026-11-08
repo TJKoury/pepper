@@ -251,11 +251,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCT2B' )
-      end if
+      if ( return () ) return
 
 !
 !     DAFT2B creates the new binary file and writes the data to
@@ -283,16 +279,11 @@
          call errint ( '#', iostat                                    )
          call errfnm ( 'FNM', unit                                    )
          call sigerr ( 'SPICE(FILEREADFAILED)'                        )
-         call chkout ( 'SPCT2B'                                       )
          return
       end if
 
 
-      if (   (  line ( ltrim(line): )  /=  bmark  )   .or. &
-             (  iostat                 <  0      )   ) then
-         call chkout ( 'SPCT2B' )
-         return
-      end if
+      if (   (  line ( ltrim(line): )  /=  bmark  )   .or. (  iostat                 <  0      )   ) return
 
 !
 !     We're not at the end of the file, and the line we read
@@ -317,7 +308,6 @@
          call errint ( '#', iostat                                    )
          call errfnm ( 'FNM', scrtch                                  )
          call sigerr ( 'SPICE(FILEOPENERROR)'                         )
-         call chkout ( 'SPCT2B'                                       )
          return
       end if
 
@@ -329,7 +319,6 @@
          call errint ( '#', iostat                                    )
          call errfnm ( 'FNM', scrtch                                  )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
-         call chkout ( 'SPCT2B'                                       )
          return
       end if
 
@@ -347,7 +336,6 @@
             call errint ( '#', iostat                                )
             call errfnm ( 'FNM', unit                                )
             call sigerr ( 'SPICE(FILEREADFAILED)'                    )
-            call chkout ( 'SPCT2B'                                   )
             return
          end if
 
@@ -359,7 +347,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FNM', scrtch                               )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'                    )
-            call chkout ( 'SPCT2B'                                    )
             return
          end if
 
@@ -380,6 +367,5 @@
 
       close ( scrtch )
 
-      call chkout ( 'SPCT2B' )
       return
       end

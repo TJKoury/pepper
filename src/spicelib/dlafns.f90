@@ -298,11 +298,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLAFNS' )
 
 !
 !     Nothing found yet.
@@ -318,7 +315,6 @@
 !
 !        There is no segment following the input segment.
 !
-         call chkout ( 'DLAFNS' )
          return
 
       end if
@@ -330,6 +326,5 @@
 
       found = .true.
 
-      call chkout ( 'DLAFNS' )
       return
       end

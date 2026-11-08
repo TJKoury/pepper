@@ -329,11 +329,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASWFR' )
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
@@ -346,10 +343,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      if ( failed () ) then
-         call chkout ( 'DASWFR' )
-         return
-      end if
+      if ( failed () ) return
 
 !
 !     In order to maintain the integrity of the file ID word, the
@@ -374,7 +368,6 @@
          call errfnm ( '#', unit                                      )
          call errint ( '#', iostat                                    )
          call sigerr ( 'SPICE(DASREADFAIL)'                           )
-         call chkout ( 'DASWFR'                                       )
          return
 
       end if
@@ -404,7 +397,6 @@
          call errfnm ( '#', unit                                 )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(DASFILEWRITEFAILED)'               )
-         call chkout ( 'DASWFR'                                  )
          return
 
       end if
@@ -433,6 +425,5 @@
                     lastrc, &
                     lastwd )
 
-      call chkout ( 'DASWFR' )
       return
       end

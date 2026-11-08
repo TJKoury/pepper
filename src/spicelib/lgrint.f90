@@ -256,11 +256,9 @@
 
          lgrint = 0.0_wp
 
-         call chkin  ( 'LGRINT'                              )
          call setmsg ( 'Array size must be positive; was #.' )
          call errint ( '#',  n                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                  )
-         call chkout ( 'LGRINT'                              )
          return
 
       end if
@@ -371,13 +369,11 @@
             if ( denom == 0.0_wp ) then
 
                lgrint = 0.0_wp
-               call chkin ( 'LGRINT'                   )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )
                call errint ( '#',   i                  )
                call errint ( '#',   i + j              )
                call errdp  ( '#',   xvals(i)           )
                call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
-               call chkout ( 'LGRINT'                  )
                return
 
             end if

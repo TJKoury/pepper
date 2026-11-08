@@ -342,11 +342,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZXLATEI' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -376,7 +372,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZXLATEI'                                   )
             return
 
          end if
@@ -420,7 +415,6 @@
          //            'never occur.'                               )
          call errint ( '#', inbff                                   )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'ZZXLATEI'                                   )
          return
 
       end if
@@ -456,7 +450,6 @@
                call errch  ( '#', strbff(inbff)                    )
                call errch  ( '#', strbff(natbff)                   )
                call sigerr ( 'SPICE(BUG)'                          )
-               call chkout ( 'ZZXLATEI'                            )
                return
 
             end if
@@ -477,7 +470,6 @@
                call errch  ( '#', strbff(natbff)                      )
                call errint ( '#', space                               )
                call sigerr ( 'SPICE(BUG)'                             )
-               call chkout ( 'ZZXLATEI'                               )
                return
 
             end if
@@ -606,7 +598,6 @@
             call errch  ( '#', strbff(inbff)                        )
             call errch  ( '#', strbff(natbff)                       )
             call sigerr ( 'SPICE(BUG)'                              )
-            call chkout ( 'ZZXLATEI'                                )
             return
 
          end if
@@ -634,7 +625,6 @@
                call errch  ( '#', strbff(inbff)                    )
                call errch  ( '#', strbff(natbff)                   )
                call sigerr ( 'SPICE(BUG)'                          )
-               call chkout ( 'ZZXLATEI'                            )
                return
 
             end if
@@ -655,7 +645,6 @@
                call errch  ( '#', strbff(natbff)                      )
                call errint ( '#', space                               )
                call sigerr ( 'SPICE(BUG)'                             )
-               call chkout ( 'ZZXLATEI'                               )
                return
 
             end if
@@ -785,7 +774,6 @@
             call errch  ( '#', strbff(inbff)                        )
             call errch  ( '#', strbff(natbff)                       )
             call sigerr ( 'SPICE(BUG)'                              )
-            call chkout ( 'ZZXLATEI'                                )
             return
 
          end if
@@ -803,12 +791,10 @@
          //            'formats.'                                      )
          call errch  ( '#', strbff(natbff)                             )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZXLATEI'                                      )
          return
 
       end if
 
-      call chkout ( 'ZZXLATEI' )
       return
 
       end

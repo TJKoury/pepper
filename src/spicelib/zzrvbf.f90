@@ -404,11 +404,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZRVBF' )
-      end if
+      if ( return() ) return
 !
 !     Initializations.
 !
@@ -452,10 +448,7 @@
          do while ( line == ' ' )
             eof    = linnum > bsize
 
-            if ( eof ) then
-               call chkout ( 'ZZRVBF' )
-               return
-            end if
+            if ( eof ) return
 
             line   = buffer(linnum )
             linnum = linnum + 1
@@ -657,7 +650,6 @@
                call errint ( '#', linnum     )
                call errch  ( '#', line(1:r2) )
                call sigerr ( 'SPICE(BADVARASSIGN)' )
-               call chkout ( 'ZZRVBF' )
                return
 
             end if
@@ -686,7 +678,6 @@
                call errint ( '#', linnum             )
                call errint ( '#', ichar(line(at:at)) )
                call sigerr ( 'SPICE(NONPRINTINGCHAR)')
-               call chkout ( 'ZZRVBF' )
                return
             end if
 
@@ -742,7 +733,6 @@
                call errint ( '#', linnum     )
                call errch  ( '#', line(1:r2) )
                call sigerr ( 'SPICE(BADVARASSIGN)' )
-               call chkout ( 'ZZRVBF' )
                return
 
             end if
@@ -812,7 +802,6 @@
 
                call errint ( '#', linnum             )
                call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-               call chkout ( 'ZZRVBF' )
                return
 
             end if
@@ -961,7 +950,6 @@
 
                   call errint ( '#', linnum     )
                   call sigerr ( 'SPICE(BADVARASSIGN)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
                end if
@@ -993,7 +981,6 @@
                   call errch  ( '#', varnam(1:r1) )
                   call errint ( '#', linnum       )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
                end if
@@ -1015,7 +1002,6 @@
 
                   call errint ( '#', linnum       )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
                end if
@@ -1039,7 +1025,6 @@
 
                   call errint ( '#', linnum       )
                   call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
 
@@ -1114,7 +1099,6 @@
                   call errch  ( '#', varnam(1:r1) )
                   call errint ( '#', linnum       )
                   call sigerr ( 'SPICE(TYPEMISMATCH)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
                end if
@@ -1150,7 +1134,6 @@
                      call errint ( '#', linnum       )
                      call errch  ( '#', varnam(1:r1) )
                      call sigerr ( 'SPICE(BADTIMESPEC)' )
-                     call chkout ( 'ZZRVBF' )
                      return
 
                   end if
@@ -1172,7 +1155,6 @@
                      call errch  ( '#', line(b+1:e) )
                      call errint ( '#', linnum      )
                      call sigerr ( 'SPICE(BADTIMESPEC)' )
-                     call chkout ( 'ZZRVBF' )
                      return
                   end if
 
@@ -1191,7 +1173,6 @@
                      call errch  ( '#',  line(b:e) )
                      call errint ( '#',  linnum    )
                      call sigerr ( 'SPICE(NUMBEREXPECTED)' )
-                     call chkout ( 'ZZRVBF' )
                      return
                   end if
 
@@ -1215,7 +1196,6 @@
 
                   call errint ( '#', linnum       )
                   call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  call chkout ( 'ZZRVBF' )
                   return
 
 
@@ -1294,7 +1274,6 @@
 
          call errint ( '#', linnum-1   )
          call sigerr ( 'SPICE(BADVARASSIGN)' )
-         call chkout ( 'ZZRVBF' )
          return
 
       end if
@@ -1306,6 +1285,5 @@
       name = varnam
 
 
-      call chkout ( 'ZZRVBF' )
       return
       end

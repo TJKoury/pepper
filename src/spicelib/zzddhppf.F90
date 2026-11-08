@@ -468,11 +468,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHPPF' )
-      end if
+      if ( return() ) return
 
 !
 !     If this is the first time into the routine, populate local
@@ -530,7 +526,6 @@
          //            'architecture to examine is out of range.'     )
          call errint ( '#', arch                                      )
          call sigerr ( 'SPICE(UNKNOWNFILARC)'                         )
-         call chkout ( 'ZZDDHPPF'                                     )
          return
 
       end if
@@ -553,7 +548,6 @@
          call errfnm ( '#', unit                                 )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(FILEREADFAILED)'                   )
-         call chkout ( 'ZZDDHPPF'                                )
          return
 
       end if
@@ -581,7 +575,6 @@
          //            'kernel.'                               )
          call errfnm ( '#', unit                               )
          call sigerr ( 'SPICE(UNKNOWNFILARC)'                  )
-         call chkout ( 'ZZDDHPPF'                              )
          return
 
 !
@@ -599,7 +592,6 @@
          call errfnm ( '$', unit                                     )
          call errch  ( '%', strarc(arch)                             )
          call sigerr ( 'SPICE(FILARCHMISMATCH)'                      )
-         call chkout ( 'ZZDDHPPF'                                    )
          return
 
       end if
@@ -621,7 +613,6 @@
          call errch  ( '$', strarc(tstarc)                         )
          call errfnm ( '#', unit                                   )
          call sigerr ( 'SPICE(FTPXFERERROR)'                       )
-         call chkout ( 'ZZDDHPPF'                                  )
          return
 
       end if
@@ -668,7 +659,6 @@
             call errfnm ( '#', unit                                  )
             call errch  ( '#', bffidw                                )
             call sigerr ( 'SPICE(UNKNOWNBFF)'                        )
-            call chkout ( 'ZZDDHPPF'                                 )
             return
 
          end if
@@ -677,10 +667,7 @@
 !        See if we have a NULLID situation, if not check out and
 !        return as swe have identified the BFF.
 !
-         if ( bff /= nullid ) then
-            call chkout ( 'ZZDDHPPF' )
-            return
-         end if
+         if ( bff /= nullid ) return
 
       end if
 
@@ -703,12 +690,10 @@
             //            'that should never occur, please contact ' &
             //            'NAIF.'                                    )
             call sigerr ( 'SPICE(BUG)'                               )
-            call chkout ( 'ZZDDHPPF'                                 )
             return
 
          end if
 
-         call chkout ( 'ZZDDHPPF' )
          return
 
       end if
@@ -785,7 +770,6 @@
             call errfnm ( '#', unit                                 )
             call errint ( '#', iostat                               )
             call sigerr ( 'SPICE(FILEREADFAILED)'                   )
-            call chkout ( 'ZZDDHPPF'                                )
             return
 
          end if
@@ -815,7 +799,6 @@
             //            'it from being loaded.'                   )
             call errfnm ( '#', unit                                 )
             call sigerr ( 'SPICE(UNKNOWNBFF)'                       )
-            call chkout ( 'ZZDDHPPF'                                )
             return
 
          else if ( ( chrrec(     nsmpos:nsmpos     ) == null ) .and. &
@@ -844,7 +827,6 @@
                //            'format of DAF ''#''.'                 )
                call errfnm ( '#', unit                              )
                call sigerr ( 'SPICE(UNKNOWNBFF)'                    )
-               call chkout ( 'ZZDDHPPF'                             )
                return
 
             end if
@@ -857,7 +839,6 @@
 
       end if
 
-      call chkout ( 'ZZDDHPPF' )
       return
 
       end

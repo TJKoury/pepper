@@ -323,11 +323,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFB2T' )
-      end if
+      if ( return () ) return
 !
 !     Initialize the IDWORD.
 !
@@ -339,12 +335,7 @@
 !
       call dafopr ( binary, handle )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFB2T' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     At this point, we know that we have a DAF file, because we were
 !     able to successfully open it, so we will attempt to proceed with
@@ -356,10 +347,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., daflun )
 
-      if ( failed() ) then
-         call chkout ( 'DAFB2T' )
-         return
-      end if
+      if ( failed() ) return
 
       read ( daflun, rec=1, iostat=iostat ) idword
 
@@ -370,7 +358,6 @@
          call errch  ( '#', binary                                )
          call errint ( '#', iostat                                )
          call sigerr ( 'SPICE(DAFREADFAIL)'                       )
-         call chkout ( 'DAFB2T'                                   )
          return
 
       end if
@@ -381,12 +368,7 @@
 !
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFB2T' )
-         return
-
-      end if
+      if ( failed() ) return
 
       write (text,*,iostat=iostat) quote // idword // quote
 
@@ -398,7 +380,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -413,7 +394,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -428,7 +408,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -443,7 +422,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -463,12 +441,7 @@
       call dafbfs ( handle )
       call daffna ( found  )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFB2T' )
-         return
-
-      end if
+      if ( failed() ) return
 
       do while ( found )
 
@@ -476,12 +449,7 @@
          call dafgn ( name )
          call dafus ( sum, nd, ni, dc, ic )
 
-         if ( failed() ) then
-
-            call chkout ( 'DAFB2T' )
-            return
-
-         end if
+         if ( failed() ) return
 
          write (text,*,iostat=iostat) '1'
 
@@ -493,7 +461,6 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
@@ -508,7 +475,6 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
@@ -523,7 +489,6 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
@@ -538,7 +503,6 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
@@ -553,12 +517,7 @@
 
             call dafgda ( handle, begin, chunk, buffer )
 
-            if ( failed() ) then
-
-               call chkout ( 'DAFB2T' )
-               return
-
-            end if
+            if ( failed() ) return
 
             write (text,*,iostat=iostat) csize
 
@@ -570,7 +529,6 @@
                call errfnm ( '#', text                             )
                call errint ( '#', iostat                           )
                call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-               call chkout ( 'DAFB2T'                              )
                return
 
             end if
@@ -585,7 +543,6 @@
                call errfnm ( '#', text                             )
                call errint ( '#', iostat                           )
                call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-               call chkout ( 'DAFB2T'                              )
                return
 
             end if
@@ -604,7 +561,6 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
@@ -619,19 +575,13 @@
             call errfnm ( '#', text                             )
             call errint ( '#', iostat                           )
             call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-            call chkout ( 'DAFB2T'                              )
             return
 
          end if
 
          call daffna ( found )
 
-         if ( failed() ) then
-
-            call chkout ( 'DAFB2T' )
-            return
-
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -649,7 +599,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -664,7 +613,6 @@
          call errfnm ( '#', text                             )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
-         call chkout ( 'DAFB2T'                              )
          return
 
       end if
@@ -674,6 +622,5 @@
 !
       call dafcls ( handle )
 
-      call chkout ( 'DAFB2T' )
       return
       end

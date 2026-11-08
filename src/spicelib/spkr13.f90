@@ -178,17 +178,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR13' )
 
 !
 !     The type 9 reader knows how to obtain a type 13 record.
 !
       call spkr09 ( handle, descr, et, record )
 
-      call chkout ( 'SPKR13' )
       return
       end

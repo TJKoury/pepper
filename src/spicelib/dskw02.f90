@@ -959,11 +959,8 @@
       integer(ip)           vtxnpl
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKW02' )
 
 !
 !     Map the input reference frame name to an ID code.
@@ -978,7 +975,6 @@
          //            'a required frame kernel was not loaded. ' )
          call errch  ( '#',  frame                                )
          call sigerr ( 'SPICE(FRAMEIDNOTFOUND)'                   )
-         call chkout ( 'DSKW02'                                   )
          return
 
       end if
@@ -993,7 +989,6 @@
          call errdp  ( '#',  first                                )
          call errdp  ( '#',  last                                 )
          call sigerr ( 'SPICE(TIMESOUTOFORDER)'                   )
-         call chkout ( 'DSKW02'                                   )
          return
 
       end if
@@ -1017,7 +1012,6 @@
             call errdp  ( '#', mncor1                                )
             call errdp  ( '#', mncor1 * dpr()                        )
             call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1034,7 +1028,6 @@
             call errdp  ( '#', mncor1                                )
             call errdp  ( '#', mncor1 * dpr()                        )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1057,7 +1050,6 @@
             call errdp  ( '#', mxcor1                                )
             call errdp  ( '#', mxcor1 * dpr()                        )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1080,7 +1072,6 @@
             call errdp  ( '#', mxcor1 * dpr()                )
             call errdp  ( '#', mxcor2 * dpr()                )
             call sigerr ( 'SPICE(INVALIDLONEXTENT)'          )
-            call chkout ( 'DSKW02'                           )
             return
 
          end if
@@ -1094,7 +1085,6 @@
             call errdp  ( '#', mxcor1 * dpr()                )
             call errdp  ( '#', mxcor2 * dpr()                )
             call sigerr ( 'SPICE(INVALIDLONEXTENT)'          )
-            call chkout ( 'DSKW02'                           )
             return
 
          end if
@@ -1135,7 +1125,6 @@
             call errdp  ( '#', segbds(1,1)                           )
             call errdp  ( '#', mncor1 * dpr()                        )
             call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1152,7 +1141,6 @@
             call errdp  ( '#', mncor2                                )
             call errdp  ( '#', mncor2 * dpr()                        )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1174,7 +1162,6 @@
             call errdp  ( '#', mxcor2                                )
             call errdp  ( '#', mxcor2 * dpr()                        )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            call chkout ( 'DSKW02'                                   )
             return
 
          end if
@@ -1194,7 +1181,6 @@
             call errdp  ( '#',  mncor2                                )
             call errdp  ( '#',  mxcor2                                )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                   )
-            call chkout ( 'DSKW02'                                    )
             return
 
          end if
@@ -1211,7 +1197,6 @@
                //            'non-negative but was #.'     )
                call errdp  ( '#',  mncor3                  )
                call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
-               call chkout ( 'DSKW02'                      )
                return
 
             end if
@@ -1222,7 +1207,6 @@
                //            'strictly positive but was #.'  )
                call errdp  ( '#',  mxcor3                    )
                call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
-               call chkout ( 'DSKW02'                        )
                return
 
             end if
@@ -1241,7 +1225,6 @@
                //            'must be strictly positive.'            )
                call errdp  ( '#', corpar(1)                          )
                call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
-               call chkout ( 'DSKW02'                                )
                return
 
             end if
@@ -1253,7 +1236,6 @@
                //            'value must be strictly less than 1.' )
                call errdp  ( '#', corpar(2)                        )
                call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-               call chkout ( 'DSKW02'                              )
                return
 
             end if
@@ -1280,7 +1262,6 @@
                call errdp  ( '#', mncor3                           )
                call errdp  ( '#', altlim                           )
                call sigerr ( 'SPICE(DEGENERATESURFACE)'            )
-               call chkout ( 'DSKW02'                              )
                return
 
             end if
@@ -1304,7 +1285,6 @@
             call errdp  ( '#',  mncor3              )
             call errdp  ( '#',  mxcor3              )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)' )
-            call chkout ( 'DSKW02'                  )
             return
 
          end if
@@ -1323,7 +1303,6 @@
             call errdp  ( '#',  mncor3              )
             call errdp  ( '#',  mxcor3              )
             call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)' )
-            call chkout ( 'DSKW02'                  )
             return
 
          end if
@@ -1349,7 +1328,6 @@
             call errdp  ( '#', mncor3                              )
             call errdp  ( '#', mxcor3                              )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                )
-            call chkout ( 'DSKW02'                                 )
             return
 
          end if
@@ -1364,7 +1342,6 @@
          call setmsg ( 'Coordinate system code # is not recognized.' )
          call errint ( '#', corsys                                   )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                         )
-         call chkout ( 'DSKW02'                                      )
          return
 
       end if
@@ -1377,7 +1354,6 @@
          call setmsg ( 'Data class # is not recognized.' )
          call errint ( '#', dclass                       )
          call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-         call chkout ( 'DSKW02'                          )
          return
 
       end if
@@ -1395,7 +1371,6 @@
          call errint ( '#',  nv                          )
          call errint ( '#',  maxvrt                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
-         call chkout ( 'DSKW02'                          )
          return
 
       end if
@@ -1407,7 +1382,6 @@
          call errint ( '#',  np                          )
          call errint ( '#',  maxplt                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
-         call chkout ( 'DSKW02'                          )
          return
 
       end if
@@ -1431,7 +1405,6 @@
                call errint ( '#', k                            )
                call errint ( '#', nv                           )
                call sigerr ( 'SPICE(BADVERTEXINDEX)'           )
-               call chkout ( 'DSKW02'                          )
                return
 
             end if
@@ -1567,7 +1540,6 @@
             call errint ( '#',  vgrext(3)                        )
             call errint ( '#',  maxvox                           )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'               )
-            call chkout ( 'DSKW02'                               )
             return
 
          end if
@@ -1586,7 +1558,6 @@
          call errint ( '#',  nvxtot                              )
          call errint ( '#',  maxvox                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         call chkout ( 'DSKW02'                                  )
          return
 
       end if
@@ -1606,7 +1577,6 @@
          call errint ( '#',  cgrscl                              )
          call errint ( '#',  nvxtot                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         call chkout ( 'DSKW02'                                  )
          return
 
       end if
@@ -1627,7 +1597,6 @@
          call errint ( '#',  cgrscl                              )
          call errint ( '#',  nvxtot                              )
          call sigerr ( 'SPICE(INCOMPATIBLESCALE)'                )
-         call chkout ( 'DSKW02'                                  )
          return
 
       end if
@@ -1652,7 +1621,6 @@
          call errint ( '#',  ncgr                            )
          call errint ( '#',  maxcgr                          )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'DSKW02'                              )
          return
 
       end if
@@ -1663,10 +1631,7 @@
 !
       call dlabns ( handle )
 
-      if ( failed() ) then
-         call chkout ( 'DSKW02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Write the d.p. data to the segment first. In the segregated
@@ -1737,6 +1702,5 @@
 !
       call dlaens ( handle )
 
-      call chkout ( 'DSKW02' )
       return
       end

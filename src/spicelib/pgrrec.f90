@@ -545,11 +545,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'PGRREC' )
 
 !
 !     Initialization.
@@ -580,7 +577,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', body                                  )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'PGRREC'                                   )
          return
 
       end if
@@ -594,7 +590,6 @@
          call setmsg ( 'Equatorial radius was #.' )
          call errdp  ( '#', re                    )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-         call chkout ( 'PGRREC'                   )
          return
 
       end if
@@ -609,7 +604,6 @@
          call setmsg ( 'Flattening coefficient was #.'  )
          call errdp  ( '#', f                           )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-         call chkout ( 'PGRREC'                         )
          return
 
       end if
@@ -642,7 +636,6 @@
             call errch  ( '#', pmkvar                             )
             call errch  ( '#', kvalue                             )
             call sigerr ( 'SPICE(INVALIDOPTION)'                  )
-            call chkout ( 'PGRREC'                                )
             return
 
          end if
@@ -669,7 +662,6 @@
             call errch  ( '#', pmkvar                                )
             call errch  ( '#', body                                  )
             call sigerr ( 'SPICE(MISSINGDATA)'                       )
-            call chkout ( 'PGRREC'                                   )
             return
 
          end if
@@ -703,6 +695,5 @@
       call georec ( geolon, lat, alt, re, f, rectan )
 
 
-      call chkout ( 'PGRREC' )
       return
       end

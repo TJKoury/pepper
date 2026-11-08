@@ -172,11 +172,7 @@
       logical               return
 
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SCARDI' )
-      end if
+      if ( return() ) return
 
 !
 !     The cardinality may range from 0 to the size of the cell,
@@ -187,7 +183,6 @@
                        'to invalid value.  The value was #.'  )
          call errint ( '#', card )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'SCARDI' )
          return
       end if
 
@@ -196,6 +191,5 @@
 !
       cell(0) = card
 
-      call chkout ( 'SCARDI' )
       return
       end

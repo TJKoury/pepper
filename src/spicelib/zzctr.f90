@@ -251,15 +251,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     This routine should never be called. If this routine is called,
 !     an error is signaled.
 !
-      call chkin  ( 'ZZCTR' )
 
       call setmsg ( 'ZZCTR: You have called an entry which performs ' // &
                     'performs no run-time function. This may '        // &
@@ -268,7 +265,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'ZZCTR' )
 
       return
 
@@ -360,9 +356,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the high and low values.
@@ -473,9 +467,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the high and low values.
@@ -586,9 +578,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the high and low values.
@@ -608,7 +598,6 @@
 !
       if ( oldctr(1) == ctrhgh .and. oldctr(2) == ctrhgh ) then
 
-         call chkin  ( 'ZZCTRINC' )
 
          call setmsg ( 'A subsystem state counter overflowed. '    // &
                        'For this to happen there must be '         // &
@@ -620,7 +609,6 @@
 
          call sigerr ( 'SPICE(SPICEISTIRED)' )
 
-         call chkout ( 'ZZCTRINC' )
 
          return
 
@@ -741,9 +729,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Do counters differ?

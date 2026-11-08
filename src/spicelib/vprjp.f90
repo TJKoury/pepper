@@ -232,9 +232,7 @@
 !
 !     Check RETURN but use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Obtain a unit vector normal to the input plane, and a constant
@@ -247,14 +245,12 @@
 !
       if (  .not.  approx( vnorm(normal), 1.0_wp, magtol )  ) then
 
-         call chkin  ( 'VPRJP' )
          call setmsg ( 'Normal vector returned by PL2NVC does not ' &
          //            'have unit length; the difference of the ' &
          //            'length from 1 is #. The input plane is ' &
          //            'invalid. '                                )
          call errdp  ( '#',  vnorm(normal) - 1.0_wp                 )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
-         call chkout ( 'VPRJP' )
          return
 
       end if

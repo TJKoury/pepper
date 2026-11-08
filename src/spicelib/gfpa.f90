@@ -1025,14 +1025,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check into the error subsystem.
 !
-      call chkin( 'GFPA' )
 
 !
 !     Confirm minimum window sizes.
@@ -1043,7 +1040,6 @@
          //            'at least 2 and an even value.'            )
          call errint ( '#',  mw                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
-         call chkout ( 'GFPA'                                     )
          return
 
       end if
@@ -1056,7 +1052,6 @@
          call errint ( '#',  nw                                     )
          call errint ( '#',  nwpa                                   )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                    )
-         call chkout ( 'GFPA'                                       )
          return
 
       end if
@@ -1071,7 +1066,6 @@
          //            'at least 2 and an even value.'             )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFPA'                                      )
          return
 
       end if
@@ -1129,7 +1123,6 @@
                     work,     nobail,   gfbail,       result  )
 
 
-      call chkout( 'GFPA' )
       return
 
       end

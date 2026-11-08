@@ -360,11 +360,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SRFSCC' )
 
 !
 !     No result has been found yet.
@@ -377,10 +374,7 @@
 !
       call zzsrfn2c ( srfstr, bodyid, code, found )
 
-      if ( failed() ) then
-         call chkout ( 'SRFSCC' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 !
@@ -401,6 +395,5 @@
 !
 !     CODE and FOUND are set.
 !
-      call  chkout ( 'SRFSCC' )
       return
       end

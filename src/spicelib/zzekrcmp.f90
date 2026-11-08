@@ -346,11 +346,9 @@
 !
          zzekrcmp  =  .false.
 
-         call chkin  ( 'ZZEKRCMP'                                      )
          call setmsg ( 'The relational operator # was not recognized.' )
          call errint ( '#',  op                                        )
          call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
-         call chkout ( 'ZZEKRCMP'                                      )
          return
 
       end if

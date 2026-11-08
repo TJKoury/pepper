@@ -380,11 +380,8 @@
       integer(ip)           start
       integer(ip)           unit
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKN02' )
 
 !
 !     Look up the DSK descriptor for this segment.
@@ -418,7 +415,6 @@
          call errint ( '#', np                               )
          call errint ( '#', plid                             )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
-         call chkout ( 'DSKN02'                              )
          return
 
       end if
@@ -438,10 +434,7 @@
 
       end do
 
-      if ( failed() ) then
-         call chkout ( 'DSKN02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Use the right-handed order of the vertices to determine the
@@ -452,6 +445,5 @@
 
       call ucrss ( edge1, edge2, normal )
 
-      call chkout ( 'DSKN02' )
       return
       end

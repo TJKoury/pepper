@@ -176,11 +176,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'PCKPDS' )
-      end if
+      if ( return() ) return
 !
 !     We do not support orientation models for barycenters.
 !
@@ -190,7 +186,6 @@
          //            ' for for a barycenter, and the PCK system' &
          //            ' does not support this.'                   )
          call sigerr ( 'SPICE(BARYCENTERIDCODE)'                   )
-         call chkout ( 'PCKPDS'                                    )
 
          return
 
@@ -205,7 +200,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'PCKPDS'                                    )
          return
 
       end if
@@ -228,7 +222,6 @@
          call errdp  ( '#', last                                   )
          call errch  ( '#', callst                                 )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'PCKPDS'                                    )
          return
 
       end if
@@ -242,7 +235,6 @@
          //            'within the PCK system. '                  )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(UNKNOWNPCKTYPE)'                    )
-         call chkout ( 'PCKPDS'                                   )
          return
 
       end if
@@ -261,7 +253,6 @@
 
       call dafps  ( nd, ni, dppart, ipart, descr )
 
-      call chkout ( 'PCKPDS' )
       return
 
       end

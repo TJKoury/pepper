@@ -453,7 +453,6 @@
 !     Set up the error processing.
 !
       if ( return() ) return
-      call chkin ( 'CONVRT' )
 
 
 
@@ -483,7 +482,6 @@
 
             call sigerr ('SPICE(UNITSNOTREC)')
 
-            call chkout ( 'CONVRT' )
             return
 
          else if ( i == 0 ) then
@@ -494,7 +492,6 @@
 
             call sigerr ('SPICE(UNITSNOTREC)')
 
-            call chkout ( 'CONVRT' )
             return
 
          else if ( j == 0 ) then
@@ -505,7 +502,6 @@
 
             call sigerr ('SPICE(UNITSNOTREC)')
 
-            call chkout ( 'CONVRT' )
             return
 
          end if
@@ -524,7 +520,6 @@
 
          call sigerr ('SPICE(INCOMPATIBLEUNITS)')
 
-         call chkout ( 'CONVRT' )
          return
 
       end if
@@ -534,7 +529,6 @@
       y    = temp / cnvrtn ( j )
 
 
-      call chkout ( 'CONVRT' )
       return
 
       end

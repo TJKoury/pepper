@@ -538,11 +538,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( rname )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -567,7 +563,6 @@
          lt = 0.0_wp
 
          call cleard ( 6, state )
-         call chkout ( rname )
          return
 
       end if
@@ -681,10 +676,7 @@
 
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -740,10 +732,7 @@
 !        If one of the routines above failed during
 !        execution, we just give up and check out.
 !
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -781,10 +770,7 @@
                call spkpvn ( handle, descr, et, tmpfrm, stemp, &
                              ctarg(chlen))
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Add STEMP to the state of TARG relative to
@@ -806,10 +792,7 @@
 
                   call frmchg( tframe(chlen), tmpfrm,   et,   stxfrm )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   call mxvg  ( stxfrm, starg (1,chlen), 6, 6, vtemp  )
 
@@ -825,10 +808,7 @@
 !           If one of the routines above failed during
 !           execution, we just give up and check out.
 !
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -913,10 +893,7 @@
                call spkpvn ( handle, descr, et, tmpfrm, stemp, cobs )
             end if
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( nofrm ) then
                nofrm  = .false.
@@ -951,10 +928,7 @@
 
                call frmchg ( cframe, tmpfrm, et,   stxfrm )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call mxvg   ( stxfrm, sobs,   6, 6, vtemp  )
                call vaddg  ( vtemp,  stemp,     6, sobs   )
@@ -975,10 +949,7 @@
 !
 !        Check failed.  We don't want to loop indefinitely.
 !
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1020,7 +991,6 @@
          call errch  ( 'OBS',  oname                                   )
          call errch  ( '#',    tstring                                 )
          call sigerr ( 'SPICE(SPKINSUFFDATA)'                          )
-         call chkout ( rname                                           )
          return
 
       end if
@@ -1085,10 +1055,7 @@
 
             call frmchg ( tframe(i),  tframe(i+1), et,  stxfrm       )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             call mxvg   ( stxfrm,     starg(1,i),  6,6, stemp        )
             call vaddg  ( stemp,      starg(1,i+1),  6, vtemp        )
@@ -1127,10 +1094,7 @@
 
             call frmchg ( cframe, refid, et,  stxfrm )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             call mxvg   ( stxfrm, sobs,  6,6, stemp  )
 
@@ -1160,10 +1124,7 @@
 !
          call frmchg ( tframe(ctpos),  cframe,          et,  stxfrm )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call mxvg   ( stxfrm,         starg(1,ctpos),  6,6, stemp  )
          call vsubg  ( stemp,          sobs,            6,   state  )
@@ -1193,10 +1154,7 @@
 
          call frmchg ( cframe,  refid, et,  stxfrm )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call mxvg   ( stxfrm,  state, 6, 6, stemp )
          call moved  ( stemp,          6,    state )
@@ -1205,6 +1163,5 @@
 
       lt = vnorm  ( state ) / clight()
 
-      call chkout ( rname )
       return
       end

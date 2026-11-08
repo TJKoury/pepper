@@ -412,11 +412,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZCPUTIM' )
-      end if
+      if ( return () ) return
 
       call date_and_time( rclock(1), rclock(2), rclock(3), dtime )
 !
@@ -433,7 +429,6 @@
 !
 !     That's it.
 !
-      call chkout ( 'ZZCPUTIM' )
       return
 
       end

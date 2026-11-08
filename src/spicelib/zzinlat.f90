@@ -335,9 +335,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( first ) then
 
@@ -365,11 +363,9 @@
 
       else if ( margin < 0.0_wp ) then
 
-         call chkin  ( 'ZZINLAT'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINLAT'                                )
          return
 
       end if
@@ -377,11 +373,9 @@
 
       if (  ( exclud < 0 ) .or. ( exclud > 3 )  ) then
 
-         call chkin  ( 'ZZINLAT'                                    )
          call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
          call errint ( '#', exclud                                  )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         call chkout ( 'ZZINLAT'                                    )
          return
 
       end if
@@ -435,9 +429,7 @@
          aminr = max( 0.0_wp,  minr*smin )
          amaxr = maxr * smax
 
-         if ( ( r < aminr ) .or. ( r > amaxr ) ) then
-             return
-         end if
+         if ( ( r < aminr ) .or. ( r > amaxr ) ) return
 
       end if
 
@@ -449,9 +441,7 @@
          aminlt = max( -hpi, minlat - margin )
          amaxlt = min(  hpi, maxlat + margin )
 
-         if ( ( lat < aminlt ) .or. ( lat > amaxlt ) ) then
-            return
-         end if
+         if ( ( lat < aminlt ) .or. ( lat > amaxlt ) ) return
 
       end if
 
@@ -544,11 +534,7 @@
 !           Compare the adjusted longitude of the input point to the
 !           adjusted longitude bounds.
 !
-            if ( ( lon < aminlo ) .or. ( lon > amaxlo ) ) then
-
-               return
-
-            end if
+            if ( ( lon < aminlo ) .or. ( lon > amaxlo ) ) return
 
 
          else

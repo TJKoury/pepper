@@ -430,11 +430,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKW20' )
 
 !
 !     The number of sets of coefficients must be positive.
@@ -445,7 +442,6 @@
          //            'coefficients is not positive. N = # ' )
          call errint ( '#', n                                 )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                  )
-         call chkout ( 'SPKW20'                               )
          return
 
       end if
@@ -461,7 +457,6 @@
          call errint ( '#', polydg                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW20'                                        )
          return
 
       end if
@@ -475,7 +470,6 @@
          //            'N = #'                                )
          call errdp  ( '#', intlen                            )
          call sigerr ( 'SPICE(INTLENNOTPOS)'                  )
-         call chkout ( 'SPKW20'                               )
          return
 
       end if
@@ -490,7 +484,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW20'                                    )
          return
 
       end if
@@ -511,7 +504,6 @@
          call errch  ( '#',   netstr                            )
          call errdp  ( '#',   last                              )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                   )
-         call chkout ( 'SPKW20'                                 )
          return
 
       end if
@@ -525,7 +517,6 @@
          //            'DSCALE = #'                           )
          call errdp  ( '#', dscale                            )
          call sigerr ( 'SPICE(NONPOSITIVESCALE)'              )
-         call chkout ( 'SPKW20'                               )
          return
 
       end if
@@ -536,7 +527,6 @@
          //            'TSCALE = #'                      )
          call errdp  ( '#', tscale                       )
          call sigerr ( 'SPICE(NONPOSITIVESCALE)'         )
-         call chkout ( 'SPKW20'                          )
          return
 
       end if
@@ -570,7 +560,6 @@
          call errdp  ( '#',   btime-first                            )
          call errdp  ( '#',   tol                                    )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW20'                                      )
          return
 
       end if
@@ -594,7 +583,6 @@
          call errdp  ( '#',   last-ltime                             )
          call errdp  ( '#',   tol                                    )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW20'                                      )
          return
 
       end if
@@ -604,10 +592,7 @@
 !
       call chckid ( 'SPK segment identifier', sidlen, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW20' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Store the start and end times to be associated
@@ -706,6 +691,5 @@
 !
       call dafena
 
-      call chkout ( 'SPKW20' )
       return
       end

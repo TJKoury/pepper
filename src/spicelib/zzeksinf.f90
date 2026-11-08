@@ -263,11 +263,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKSINF' )
-      end if
+      if ( return () ) return
 
 !
 !     Verify that the target file is a paged DAS EK open for read
@@ -275,10 +271,7 @@
 !
       call zzekpgch ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKSINF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find out how many segments are in the file, so we can check
@@ -292,7 +285,6 @@
          call errint ( '#',  segno                               )
          call errint ( '#',  nseg                                )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
-         call chkout ( 'ZZEKSINF'                                )
          return
 
       end if
@@ -358,6 +350,5 @@
 !     All output arguments are set, or else FAILED() is .TRUE.
 !
 
-      call chkout ( 'ZZEKSINF' )
       return
       end

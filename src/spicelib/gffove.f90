@@ -1500,11 +1500,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFFOVE' )
 
 !
 !     Check the result window's size.
@@ -1515,7 +1512,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
-         call chkout ( 'GFFOVE'                                )
          return
 
       end if
@@ -1533,7 +1529,6 @@
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
-         call chkout ( 'GFFOVE'                                )
          return
 
       end if
@@ -1553,10 +1548,7 @@
       call zzgffvin ( inst,   tshape, raydir, &
                       target, tframe, abcorr, obsrvr )
 
-      if ( failed() ) then
-         call chkout ( 'GFFOVE' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Prepare the progress reporter if appropriate.
@@ -1583,10 +1575,7 @@
                          finish,     tol,      rpt,      udrepu, &
                          result                                  )
 
-         if (  failed()  ) then
-            call chkout ( 'GFFOVE'  )
-            return
-         end if
+         if (  failed()  ) return
 
          if ( bail ) then
 !
@@ -1597,7 +1586,6 @@
 !              An interrupt has been issued. Return now regardless of
 !              whether the search has been completed.
 !
-               call chkout ( 'GFFOVE' )
                return
 
             end if
@@ -1614,6 +1602,5 @@
       end if
 
 
-      call chkout ( 'GFFOVE' )
       return
       end

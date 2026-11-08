@@ -467,11 +467,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DNEARP' )
 
 !
 !     Until we have reason to believe otherwise, we set FOUND to TRUE.
@@ -488,7 +485,6 @@
 !
       if ( failed() ) then
          found = .false.
-         call chkout ( 'DNEARP' )
          return
       end if
 
@@ -503,11 +499,9 @@
 !
       if ( failed() ) then
          found = .false.
-         call chkout ( 'DNEARP' )
          return
       end if
 
-      call chkout ( 'DNEARP' )
 
       return
       end

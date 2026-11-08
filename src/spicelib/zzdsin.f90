@@ -437,11 +437,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSIN' )
 
 !
 !     Constants
@@ -719,7 +716,6 @@
 
       end if
 
-      call chkout ( 'ZZDSIN' )
 
       return
       end

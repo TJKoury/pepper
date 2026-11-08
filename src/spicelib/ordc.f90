@@ -197,8 +197,6 @@
       if ( return() ) then
          ordc = 0
          return
-      else
-         call chkin ( 'ORDC' )
       end if
 
 !
@@ -207,6 +205,5 @@
       ordc = bsrchc ( item, cardc(set), set(1) )
 
 
-      call chkout ( 'ORDC' )
       return
       end

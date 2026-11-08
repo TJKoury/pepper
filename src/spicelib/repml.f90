@@ -292,11 +292,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'REPML' )
 
 !
 !     Identify the case string and find its index in the
@@ -315,7 +312,6 @@
          call setmsg ( 'Case (#) must be U, L, or C.' )
          call errch  ( '#', rtcase                    )
          call sigerr ( 'SPICE(INVALIDCASE)'           )
-         call chkout ( 'REPML'                        )
          return
 
       end if
@@ -327,7 +323,6 @@
 
          out = in
 
-         call chkout ( 'REPML' )
          return
 
       end if
@@ -349,7 +344,6 @@
 
          out = in
 
-         call chkout ( 'REPML' )
          return
 
       end if
@@ -380,6 +374,5 @@
                     lvalue( : lastnb(lvalue) ), &
                     out )
 
-      call chkout ( 'REPML' )
       return
       end

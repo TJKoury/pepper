@@ -179,11 +179,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCB2A' )
-      end if
+      if ( return () ) return
 
 !
 !     Open the new text file.  Call SPCB2T to write the data
@@ -195,6 +191,5 @@
 
       close       (         unit )
 
-      call chkout ( 'SPCB2A' )
       return
       end

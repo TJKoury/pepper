@@ -163,11 +163,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFPAQ' )
 
 !
 !     This calculation is invariant with respect to reference frame.
@@ -180,10 +177,7 @@
 !
       call spkezp ( targ, et, ref, abcorr,  obs, pv1, lt )
 
-      if  (  failed() ) then
-         call chkout ( 'ZZGFPAQ' )
-         return
-      end if
+      if (  failed() ) return
 
 
 !
@@ -200,10 +194,7 @@
 
       end if
 
-      if (  failed() ) then
-         call chkout ( 'ZZGFPAQ' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !                       ILLMN      OBS
@@ -239,7 +230,6 @@
 !
 !     All done.
 !
-      call chkout (  'ZZGFPAQ' )
       return
 
       end

@@ -174,11 +174,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'REMSUB' )
-      end if
+      if ( return () ) return
 
 !
 !     If a character position is out of range, signal an error.
@@ -193,7 +189,6 @@
          call errint ( '*', left             )
          call errint ( '*', right            )
          call sigerr ( 'SPICE(INVALIDINDEX)' )
-         call chkout ( 'REMSUB' )
          return
 
       else
@@ -245,6 +240,5 @@
       end if
 
 
-      call chkout ( 'REMSUB' )
       return
       end

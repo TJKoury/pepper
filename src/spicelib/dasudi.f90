@@ -344,11 +344,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASUDI' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the last logical addresses in use in this DAS file.
@@ -368,7 +364,6 @@
          call errint ( '#',   last                                     )
          call errint ( '#',   lasti                                    )
          call sigerr ( 'SPICE(INVALIDADDRESS)'                         )
-         call chkout ( 'DASUDI'                                        )
          return
 
       end if
@@ -454,6 +449,5 @@
       end do
 
 
-      call chkout ( 'DASUDI' )
       return
       end

@@ -192,11 +192,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYENQC' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -249,6 +245,5 @@
       end if
 
 
-      call chkout ( 'SYENQC' )
       return
       end

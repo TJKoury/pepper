@@ -147,11 +147,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFUDLT' )
 
 !
 !     Default value of false for ISLESS.
@@ -166,10 +163,7 @@
 !
 !     Check for an error, return if found.
 !
-      if ( failed() ) then
-         call chkout ( 'ZZGFUDLT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Retrieve the stored reference value. Signal an error if a
@@ -183,13 +177,11 @@
                  //    'to store the GF reference value or a post ' &
                  //    'store reset of ZZHOLDD.' )
          call sigerr ( 'SPICE(ZZHOLDDGETFAILED)' )
-         call chkout ( 'ZZGFUDLT'                )
          return
       end if
 
       isless = udval < refval
 
-      call chkout ( 'ZZGFUDLT' )
       return
 
       end

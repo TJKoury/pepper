@@ -239,13 +239,9 @@
 !     Initial values
 !
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZSINUTL' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZSINUTL' )
       return
 
 
@@ -381,25 +377,18 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSUELIN' )
 
       savtyp = elltrg
 
       call zzgftreb ( trgcde, savrad )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSUELIN' )
-         return
-      end if
+      if ( failed() ) return
 
       savmnr = min( savrad(1), savrad(2), savrad(3) )
       savmxr = max( savrad(1), savrad(2), savrad(3) )
 
-      call chkout( 'ZZSUELIN' )
       return
 
 
@@ -564,11 +553,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSUDSKI' )
 
       savtyp = dsktrg
 
@@ -579,7 +565,6 @@
          call errint ( '#', maxsrf                          )
          call errint ( '#', nsurf                           )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                )
-         call chkout ( 'ZZSUDSKI'                           )
          return
 
       end if
@@ -594,17 +579,13 @@
       call cleard ( 3, savrad )
 
 
-      if ( failed() ) then
-         call chkout ( 'ZZSUDSKI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch minimum and maximum radius of target body surface.
 !
       call zzdsksph ( trgcde, savnsf, savsrf, savmnr, savmxr )
 
-      call chkout( 'ZZSUDSKI' )
       return
 
 
@@ -766,11 +747,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZRAYSFX' )
 
       if ( savtyp == elltrg ) then
 
@@ -790,12 +768,10 @@
          //            'reached.'                               )
          call errint ( '#', savtyp                              )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'ZZRAYSFX'                               )
          return
 
       end if
 
-      call chkout ( 'ZZRAYSFX' )
       return
 
 
@@ -1255,11 +1231,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZRAYNP' )
 
 
       if ( savtyp == elltrg ) then
@@ -1286,11 +1259,9 @@
          //            'reached.'                               )
          call errint ( '#', savtyp                              )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'ZZRAYNP'                                )
          return
 
       end if
 
-      call chkout ( 'ZZRAYNP' )
       return
       end

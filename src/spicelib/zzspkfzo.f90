@@ -809,11 +809,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -823,10 +820,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -882,10 +876,7 @@
 
          call spkgeo ( targ,  et,     ref,    obsctr, stemp, ltcent )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call vsubg  ( stemp, stoctr, 6,      starg  )
 
@@ -907,7 +898,6 @@
             //            'the name of the output frame. ' )
             call errch  ( '#', ref )
             call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-            call chkout ( rname )
             return
 
          end if
@@ -923,7 +913,6 @@
 
             call zzspkfao ( targ,   et,    ref, abcorr, &
                             obssub, starg, lt,  dlt    )
-            call chkout ( rname )
             return
 
          end if
@@ -944,10 +933,7 @@
          call zzspkfao ( targ,   et,    'J2000', abcorr, &
                          obssub, state, lt,      dlt    )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the frame is centered at the target, the light time and
@@ -971,10 +957,7 @@
             call obssub ( et,      'J2000',  obsctr,  stoctr )
             call spkssb ( obsctr,  et,      'J2000',  stemp  )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             call vaddg  ( stemp,   stoctr,  6,        stobs  )
 
@@ -986,10 +969,7 @@
 !        If something went wrong (like we couldn't get the state of
 !        the center relative to the observer) now it is time to quit.
 !
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the aberration corrections are for transmission, make the
@@ -1010,10 +990,7 @@
 !
          call frmchg ( fj2000, reqfrm, et + ltsign*ltcent, xform )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        There's a tricky bit here:  since XFORM is evaluated
@@ -1034,7 +1011,6 @@
 
       end if
 
-      call chkout ( rname )
       return
       end
 

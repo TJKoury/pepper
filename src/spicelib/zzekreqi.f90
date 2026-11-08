@@ -156,11 +156,9 @@
 
       if ( i == 0 ) then
 
-         call chkin  ( 'ZZEKREQI'           )
          call setmsg ( 'Item # not found.'  )
          call errch  ( '#',  name           )
          call sigerr ( 'SPICE(INVALIDNAME)' )
-         call chkout ( 'ZZEKREQI'           )
          return
 
       end if

@@ -213,11 +213,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKAC03' )
-      end if
+      if ( return () ) return
 
 !
 !     Grab the column's attributes.  Initialize the maximum non-blank
@@ -245,7 +241,6 @@
          call errint ( '#', class                                      )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKAC03'                                      )
          return
 
       end if
@@ -263,7 +258,6 @@
          call errint ( '#', idxtyp                                     )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
-         call chkout ( 'ZZEKAC03'                                      )
          return
 
       end if
@@ -546,6 +540,5 @@
       end if
 
 
-      call chkout ( 'ZZEKAC03' )
       return
       end

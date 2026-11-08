@@ -1073,11 +1073,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 
 !
@@ -1100,10 +1097,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -1167,7 +1161,6 @@
             //            'the name of the output frame. ' )
             call errch  ( '#', ref )
             call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-            call chkout ( rname )
             return
 
          end if
@@ -1175,10 +1168,7 @@
 
          call frinfo ( reqfrm, center, type, typeid, found )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. found ) then
 
@@ -1190,7 +1180,6 @@
             //            'the name of the output frame. ' )
             call errch  ( '#', ref )
             call sigerr ( 'SPICE(UNKNOWNFRAME2)' )
-            call chkout ( rname )
 
             return
 
@@ -1203,7 +1192,6 @@
          if ( type == inertl ) then
 
             call zzspkac1 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
-            call chkout   ( rname )
             return
 
          end if
@@ -1223,10 +1211,7 @@
          call zzspkac1 ( targ, et,   'J2000', abcorr, &
                          obs,  state, lt,     dlt    )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( center == obs ) then
 
@@ -1249,10 +1234,7 @@
 !        If something went wrong (like we couldn't get the state of
 !        the center relative to the observer) now it is time to quit.
 !
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the aberration corrections are for transmission, make the
@@ -1273,10 +1255,7 @@
 !
          call zzfrmch1 ( fj2000, reqfrm, et + ltsign*ltcent, xform )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        There's a tricky bit here:  since XFORM is evaluated
@@ -1315,6 +1294,5 @@
 
       end if
 
-      call chkout ( rname )
       return
       end

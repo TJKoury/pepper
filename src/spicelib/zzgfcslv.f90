@@ -854,11 +854,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFCSLV' )
 
 !
 !     Check the workspace window count.
@@ -870,7 +867,6 @@
          call errint ( '#', nw                                    )
          call errint ( '#', nwmax                                 )
          call sigerr ( 'SPICE(TOOFEWWINDOWS)'                     )
-         call chkout ( 'ZZGFCSLV'                                 )
          return
 
       end if
@@ -885,7 +881,6 @@
          //            'at least 2.'                              )
          call errint ( '#', mw                                    )
          call sigerr ( 'SPICE(WINDOWSTOOSMALL)'                   )
-         call chkout ( 'ZZGFCSLV'                                 )
          return
 
       end if
@@ -898,7 +893,6 @@
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'ZZGFCSLV'                            )
          return
 
       end if
@@ -911,7 +905,6 @@
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
-         call chkout ( 'ZZGFCSLV'                     )
          return
 
       end if
@@ -938,7 +931,6 @@
                        'LOCMIN.'                                )
          call errch  ( '#', relate                              )
          call sigerr ( 'SPICE(NOTRECOGNIZED)'                   )
-         call chkout ( 'ZZGFCSLV'                               )
          return
 
       end if
@@ -976,10 +968,7 @@
                          ref,   abcorr,  obsrvr, dref, &
                          dvec,  crdsys,  crdnam )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFCSLV' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        This routine presumes that UDSTEP has been initialized, so we
@@ -1014,20 +1003,14 @@
                             start,  finish,    tol,      rpt, &
                             udrepu, work(lbcell,exwidx)      )
 
-            if (  failed()  ) then
-               call chkout ( 'ZZGFCSLV'  )
-               return
-            end if
+            if (  failed()  ) return
 !
 !           If interrupt processing is enabled, check to see
 !           whether an interrupt has occurred.
 !
             if ( bail ) then
 
-               if ( udbail () ) then
-                  call chkout ( 'ZZGFCSLV' )
-                  return
-               end if
+               if ( udbail () ) return
 
             end if
 
@@ -1143,7 +1126,6 @@
 
       end if
 
-      call chkout ( 'ZZGFCSLV' )
       return
 
       end

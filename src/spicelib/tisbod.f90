@@ -1002,11 +1002,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'TISBOD' )
 
 !
 !     Perform any needed first pass initializations.
@@ -1147,7 +1144,6 @@
                end if
 
                call sigerr ( 'SPICE(FRAMEDATANOTFOUND)' )
-               call chkout ( 'TISBOD'                   )
                return
 
             end if
@@ -1202,7 +1198,6 @@
                   call errch  ( '#', item                   )
                   call errch  ( '#', item2                  )
                   call sigerr ( 'SPICE(COMPETINGEPOCHSPEC)' )
-                  call chkout ( 'TISBOD'                    )
                   return
 
                end if
@@ -1246,7 +1241,6 @@
                   call errch  ( '#', item                   )
                   call errch  ( '#', item2                  )
                   call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-                  call chkout ( 'TISBOD'                    )
                   return
 
                end if
@@ -1262,28 +1256,19 @@
             call cleard (             mxpoly,     rcoef )
             call bodvcd ( body, item, mxpoly, na, rcoef )
 
-            if ( failed() ) then
-               call chkout ( 'TISBOD' )
-               return
-            end if
+            if ( failed() ) return
 
             item = 'POLE_DEC'
             call cleard (             mxpoly,     dcoef )
             call bodvcd ( body, item, mxpoly, nd, dcoef )
 
-            if ( failed() ) then
-               call chkout ( 'TISBOD' )
-               return
-            end if
+            if ( failed() ) return
 
             item = 'PM'
             call cleard (             mxpoly,     wcoef )
             call bodvcd ( body, item, mxpoly, nw, wcoef )
 
-            if ( failed() ) then
-               call chkout ( 'TISBOD' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Whether or not the body is a satellite, there may be
@@ -1320,7 +1305,6 @@
                      call errint ( '#', mxphas-1                     )
                      call errint ( '#', deg                          )
                      call sigerr ( 'SPICE(DEGREEOUTOFRANGE)'         )
-                     call chkout ( 'TISBOD'                          )
                      return
 
                   end if
@@ -1347,10 +1331,7 @@
 !
                call bodvcd ( refid, item, maxang*mxphas, ntheta, tcoef )
 
-               if ( failed() ) then
-                  call chkout ( 'TISBOD' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              NPHSCO is at least 1; this division is safe.
@@ -1370,10 +1351,7 @@
 
                call bodvcd ( body, item, maxang, na, ac )
 
-               if ( failed() ) then
-                  call chkout ( 'TISBOD' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -1388,10 +1366,7 @@
 
                call bodvcd ( body, item, maxang, nd, dc )
 
-               if ( failed() ) then
-                  call chkout ( 'TISBOD' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -1405,10 +1380,7 @@
 
                call bodvcd ( body, item, maxang, nw, wc )
 
-               if ( failed() ) then
-                  call chkout ( 'TISBOD' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -1427,7 +1399,6 @@
                call errint ( '#', nphase            )
                call errint ( '#', max( na, nd, nw ) )
                call sigerr ( 'SPICE(INSUFFICIENTANGLES)' )
-               call chkout ( 'TISBOD' )
                return
             end if
 
@@ -1590,10 +1561,7 @@
          dphi    =   dra
          ddelta  = - ddec
 
-         if ( failed() ) then
-            call chkout ( 'TISBOD' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Pack the Euler angles and their derivatives into
@@ -1634,10 +1602,7 @@
 !
          call irfrot ( reqref, pcref, req2pc )
 
-         if ( failed() ) then
-            call chkout ( 'TISBOD' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Since we're applying an inertial transformation to TSIPM,
@@ -1684,6 +1649,5 @@
 !
 !     That's all folks. Check out and get out.
 !
-      call chkout ( 'TISBOD' )
       return
       end

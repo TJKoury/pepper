@@ -442,11 +442,8 @@
       integer(ip)           ncomr
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLAOPN' )
 
 !
 !     Compute the number of comment records required.
@@ -465,7 +462,6 @@
          //            'must be non-negative but was #.'         )
          call errint ( '#',  ncomch                              )
          call sigerr ( 'SPICE(BADRECORDCOUNT)'                   )
-         call chkout ( 'DLAOPN'                                  )
          return
 
       end if
@@ -491,6 +487,5 @@
 !     should occur next.  The file will eventually be closed
 !     by a call to DASCLS or DASLLC, if all goes well.
 !
-      call chkout ( 'DLAOPN' )
       return
       end

@@ -473,11 +473,8 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'TWOVXF' )
 
 
 !
@@ -491,6 +488,5 @@
 !
       call invstm ( xi, xform )
 
-      call chkout ( 'TWOVXF' )
       return
       end

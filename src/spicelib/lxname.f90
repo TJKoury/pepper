@@ -329,17 +329,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LXNAME' )
-      end if
+      if ( return () ) return
 
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      call chkout ( 'LXNAME' )
       return
 
 
@@ -698,11 +693,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LXDFID' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize our head and tail character sets.
@@ -764,7 +755,6 @@
          call appndi ( tailc(i), idspec )
       end do
 
-      call chkout ( 'LXDFID' )
       return
 
 
@@ -921,11 +911,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LXCSID' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize our head and tail character sets, every time.
@@ -952,7 +938,6 @@
             call errint ( '#',  c                                    )
             call errint ( '#',  i                                    )
             call sigerr ( 'SPICE(NONPRINTINGCHARS)'                  )
-            call chkout ( 'LXCSID'                                   )
             return
 
          end if
@@ -972,7 +957,6 @@
             call errint ( '#',  c                                    )
             call errint ( '#',  i                                    )
             call sigerr ( 'SPICE(NONPRINTINGCHARS)'                  )
-            call chkout ( 'LXCSID'                                   )
             return
 
          end if
@@ -1037,6 +1021,5 @@
          call appndi ( tailc(i), idspec )
       end do
 
-      call chkout ( 'LXCSID' )
       return
       end

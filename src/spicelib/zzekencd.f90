@@ -161,11 +161,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKENCD' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the encoded query each time, for safety.
@@ -181,7 +177,6 @@
 
       if ( error ) then
          errptr  = 1
-         call chkout ( 'ZZEKENCD' )
          return
       end if
 
@@ -196,7 +191,6 @@
 
       if ( error ) then
          errptr = 1
-         call chkout ( 'ZZEKENCD' )
          return
       end if
 
@@ -207,10 +201,7 @@
       call zzeknres ( query, eqryi, eqryc, &
                              error, errmsg, errptr )
 
-      if ( error ) then
-         call chkout ( 'ZZEKENCD' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -219,10 +210,7 @@
       call zzektres ( query, eqryi,  eqryc,  eqryd, &
                              error,  errmsg, errptr  )
 
-      if ( error ) then
-         call chkout ( 'ZZEKENCD' )
-         return
-      end if
+      if ( error ) return
 
 
 !
@@ -231,12 +219,8 @@
       call zzeksemc ( query, eqryi, eqryc, &
                              error, errmsg, errptr )
 
-      if ( error ) then
-         call chkout ( 'ZZEKENCD' )
-         return
-      end if
+      if ( error ) return
 
 
-      call chkout ( 'ZZEKENCD' )
       return
       end

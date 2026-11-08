@@ -304,11 +304,8 @@
 !
       logical               update
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZBODVCD' )
 
 !
 !     See whether the kernel pool state has changed since the
@@ -333,6 +330,5 @@
 
       end if
 
-      call chkout ( 'ZZBODVCD' )
       return
       end

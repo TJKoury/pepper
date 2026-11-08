@@ -207,11 +207,7 @@
 !
 !     Standard SPICE Error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PCKEUL' )
-      end if
+      if ( return () ) return
 
 !
 !     Get a segment applicable to a specified body and epoch.
@@ -251,6 +247,5 @@
 
       end if
 
-      call chkout ( 'PCKEUL' )
       return
       end

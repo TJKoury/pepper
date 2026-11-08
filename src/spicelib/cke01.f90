@@ -355,11 +355,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin( 'CKE01' )
-      end if
+      if ( return() ) return
 
 !
 !     Dissect the record.
@@ -376,6 +372,5 @@
 
       end if
 
-      call chkout( 'CKE01' )
       return
       end

@@ -149,11 +149,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFTREB' )
 
 
 !
@@ -161,10 +158,7 @@
 !
       call bodvcd ( body, 'RADII', 3, n, axes )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFTREB' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( n /= 3 ) then
 
@@ -173,7 +167,6 @@
          call errint ( '#',   n                            )
          call errint ( '#',   body                         )
          call sigerr ( 'SPICE(INVALIDCOUNT)'               )
-         call chkout ( 'ZZGFTREB'                          )
          return
 
       else
@@ -193,7 +186,6 @@
                call errint ( '#', i                            )
                call errint ( '#', body                         )
                call sigerr ( 'SPICE(BADAXISLENGTH)'            )
-               call chkout ( 'ZZGFTREB'                        )
                return
 
            end if
@@ -202,6 +194,5 @@
 
       end if
 
-      call chkout ( 'ZZGFTREB' )
       return
       end

@@ -278,7 +278,6 @@
          value = 0.0_wp
          ok    = .false.
 
-         call chkin  ( 'ZZHOLDD'                               )
          call setmsg ( 'ID value unknown. ID value #1 ' &
                //      'not an element of [1, #2]. Confirm' &
                //      'the ID value exists in the zzholdd.inc ' &
@@ -286,7 +285,6 @@
          call errint ( '#1', id                                )
          call errint ( '#2', nid                               )
          call sigerr ( 'SPICE(UNKNOWNID)'                      )
-         call chkout ( 'ZZHOLDD'                               )
          return
 
       end if
@@ -366,13 +364,11 @@
          value = 0.0_wp
          ok    = .false.
 
-         call chkin  ( 'ZZHOLDD'                          )
          call setmsg ( 'Unknown operation. Confirm the OP ' &
                //      'value # exists in the zzholdd.inc ' &
                //      'parameter file.'                  )
          call errint ( '#', op                            )
          call sigerr ( 'SPICE(UNKNOWNOP)'                 )
-         call chkout ( 'ZZHOLDD'                          )
          return
 
       end if

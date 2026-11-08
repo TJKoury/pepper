@@ -154,11 +154,8 @@
       integer(ip)           node
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGAPOOL' )
 
 !
 !     The output agent set is empty until we find any
@@ -177,7 +174,6 @@
 !        This variable is not watched. The agent set is
 !        empty.
 !
-         call chkout ( 'ZZGAPOOL' )
          return
 
       end if
@@ -202,6 +198,5 @@
       call validc ( sizec(agtset), nfetch, agtset )
 
 
-      call chkout ( 'ZZGAPOOL' )
       return
       end

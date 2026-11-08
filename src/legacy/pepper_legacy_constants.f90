@@ -5,6 +5,7 @@
 ! These keep the original SPICELIB interface for existing callers (such as
 ! the tspice tests). New code should use pepper_constants directly.
 
+      !> Legacy interface: the constant b1900 of module pepper_constants.
       real(wp) function b1900 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_b1900 => b1900
@@ -12,6 +13,7 @@
       b1900 = pepper_b1900
       end function b1900
 
+      !> Legacy interface: the constant b1950 of module pepper_constants.
       real(wp) function b1950 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_b1950 => b1950
@@ -19,6 +21,7 @@
       b1950 = pepper_b1950
       end function b1950
 
+      !> Legacy interface: the constant clight of module pepper_constants.
       real(wp) function clight ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_clight => clight
@@ -26,6 +29,7 @@
       clight = pepper_clight
       end function clight
 
+      !> Legacy interface: the constant dpmax of module pepper_constants.
       real(wp) function dpmax ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_dpmax => dpmax
@@ -33,6 +37,7 @@
       dpmax = pepper_dpmax
       end function dpmax
 
+      !> Legacy interface: the constant dpmin of module pepper_constants.
       real(wp) function dpmin ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_dpmin => dpmin
@@ -40,6 +45,7 @@
       dpmin = pepper_dpmin
       end function dpmin
 
+      !> Legacy interface: the constant dpr of module pepper_constants.
       real(wp) function dpr ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_dpr => dpr
@@ -47,6 +53,7 @@
       dpr = pepper_dpr
       end function dpr
 
+      !> Legacy interface: the constant halfpi of module pepper_constants.
       real(wp) function halfpi ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_halfpi => halfpi
@@ -54,6 +61,7 @@
       halfpi = pepper_halfpi
       end function halfpi
 
+      !> Legacy interface: the constant intmax of module pepper_constants.
       integer(ip) function intmax ( )
       use pepper_kinds, only: ip
       use pepper_constants, only: pepper_intmax => intmax
@@ -61,6 +69,7 @@
       intmax = pepper_intmax
       end function intmax
 
+      !> Legacy interface: the constant intmin of module pepper_constants.
       integer(ip) function intmin ( )
       use pepper_kinds, only: ip
       use pepper_constants, only: pepper_intmin => intmin
@@ -68,6 +77,7 @@
       intmin = pepper_intmin
       end function intmin
 
+      !> Legacy interface: the constant j1900 of module pepper_constants.
       real(wp) function j1900 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_j1900 => j1900
@@ -75,6 +85,7 @@
       j1900 = pepper_j1900
       end function j1900
 
+      !> Legacy interface: the constant j1950 of module pepper_constants.
       real(wp) function j1950 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_j1950 => j1950
@@ -82,6 +93,7 @@
       j1950 = pepper_j1950
       end function j1950
 
+      !> Legacy interface: the constant j2000 of module pepper_constants.
       real(wp) function j2000 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_j2000 => j2000
@@ -89,6 +101,7 @@
       j2000 = pepper_j2000
       end function j2000
 
+      !> Legacy interface: the constant j2100 of module pepper_constants.
       real(wp) function j2100 ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_j2100 => j2100
@@ -96,6 +109,7 @@
       j2100 = pepper_j2100
       end function j2100
 
+      !> Legacy interface: the constant jyear of module pepper_constants.
       real(wp) function jyear ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_jyear => jyear
@@ -103,6 +117,7 @@
       jyear = pepper_jyear
       end function jyear
 
+      !> Legacy interface: the constant pi of module pepper_constants.
       real(wp) function pi ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_pi => pi
@@ -110,6 +125,7 @@
       pi = pepper_pi
       end function pi
 
+      !> Legacy interface: the constant rpd of module pepper_constants.
       real(wp) function rpd ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_rpd => rpd
@@ -117,6 +133,7 @@
       rpd = pepper_rpd
       end function rpd
 
+      !> Legacy interface: the constant spd of module pepper_constants.
       real(wp) function spd ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_spd => spd
@@ -124,6 +141,7 @@
       spd = pepper_spd
       end function spd
 
+      !> Legacy interface: the constant twopi of module pepper_constants.
       real(wp) function twopi ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_twopi => twopi
@@ -131,6 +149,7 @@
       twopi = pepper_twopi
       end function twopi
 
+      !> Legacy interface: the constant tyear of module pepper_constants.
       real(wp) function tyear ( )
       use pepper_kinds, only: wp
       use pepper_constants, only: pepper_tyear => tyear

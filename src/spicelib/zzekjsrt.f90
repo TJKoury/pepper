@@ -439,11 +439,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKJSRT' )
-      end if
+      if ( return () ) return
 
 !
 !     If there are no order-by columns, that's an error.
@@ -454,7 +450,6 @@
                        'positive but was #.'                       )
          call errint ( '#',  norder                                )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'ZZEKJSRT'                                  )
          return
 
       end if
@@ -603,7 +598,6 @@
                   call errint ( '#',  dtdscs(ordidx,colptr)         )
                   call errint ( '#',  eltidx                        )
                   call sigerr ( 'SPICE(BUG)'                        )
-                  call chkout ( 'ZZEKJSRT'                          )
                   return
 
                end if
@@ -634,7 +628,6 @@
                   call errint ( '#',  dtdscs(ordidx,colptr)         )
                   call errint ( '#',  eltidx                        )
                   call sigerr ( 'SPICE(BUG)'                        )
-                  call chkout ( 'ZZEKJSRT'                          )
                   return
 
                end if
@@ -664,7 +657,6 @@
                   call errint ( '#',  dtdscs(ordidx,colptr)         )
                   call errint ( '#',  eltidx                        )
                   call sigerr ( 'SPICE(BUG)'                        )
-                  call chkout ( 'ZZEKJSRT'                          )
                   return
 
                end if
@@ -678,7 +670,6 @@
                              'column.'                              )
                call errint ( '#', dtype                             )
                call sigerr ( 'SPICE(INVALIDTYPE)'                   )
-               call chkout ( 'ZZEKJSRT'                             )
                return
 
             end if
@@ -1014,6 +1005,5 @@
 !     We've sorted the row numbers, no matter how many there were.
 !
 
-      call chkout ( 'ZZEKJSRT' )
       return
       end

@@ -185,8 +185,6 @@
       if ( return () ) then
          fetchd = 0
          return
-      else
-         call chkin ( 'FETCHD' )
       end if
 
 !
@@ -206,6 +204,5 @@
       end if
 
 
-      call chkout ( 'FETCHD' )
       return
       end

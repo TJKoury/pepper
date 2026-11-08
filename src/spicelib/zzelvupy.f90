@@ -357,11 +357,8 @@
       data                 origin /  3 * 0.0_wp /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZELVUPY' )
 
 !
 !     We start out by checking the inputs.
@@ -412,7 +409,6 @@
          call errdp  ( '#', vnorm(smajor)                     )
          call errdp  ( '#', vnorm(sminor)                     )
          call sigerr ( 'SPICE(ZEROVECTOR)'                    )
-         call chkout ( 'ZZELVUPY'                             )
          return
 
       end if
@@ -450,7 +446,6 @@
 
          call setmsg ( 'Scaled ellipse''s semi-minor axis length = 0.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
-         call chkout ( 'ZZELVUPY'                                      )
          return
 
       end if
@@ -464,7 +459,6 @@
 
          call setmsg ( 'The pyramid''s axis the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                    )
-         call chkout ( 'ZZELVUPY'                             )
          return
 
       end if
@@ -478,7 +472,6 @@
                        'this number must be at least 3.'        )
          call errint ( '#',  n                                  )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'ZZELVUPY'                               )
          return
 
       end if
@@ -493,7 +486,6 @@
          call errint ( '#',  n                                  )
          call errint ( '#',  maxfov                             )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'ZZELVUPY'                               )
          return
 
       end if
@@ -533,7 +525,6 @@
             call errint ( '#',  i                                 )
             call errdp  ( '#',  asep                              )
             call sigerr ( 'SPICE(INVALIDFOV)'                     )
-            call chkout ( 'ZZELVUPY'                              )
             return
 
          end if
@@ -580,7 +571,6 @@
 
             end if
 
-            call chkout ( 'ZZELVUPY' )
             return
 
          end if
@@ -624,11 +614,7 @@
 !
          consep = vsep ( ctrvec, axis )  -  ( easize + pasize )
 
-         if ( consep > 0.0_wp ) then
-
-            call chkout ( 'ZZELVUPY' )
-            return
-         end if
+         if ( consep > 0.0_wp ) return
 
       end if
 
@@ -673,7 +659,6 @@
                call errint ( '#',  nxpts                            )
                call errint ( '#',  i                                )
                call sigerr ( 'SPICE(BUG)'                           )
-               call chkout ( 'ZZELVUPY'                             )
                return
 
             end if
@@ -693,7 +678,6 @@
 !
             found = .true.
 
-            call chkout ( 'ZZELVUPY' )
             return
 
          end if
@@ -758,7 +742,6 @@
 !
             found = .true.
 
-            call chkout ( 'ZZELVUPY' )
             return
 
          end if
@@ -912,7 +895,6 @@
 !
 !              We've found an intersection.  We're done.
 !
-               call chkout ( 'ZZELVUPY' )
                return
 
             end if
@@ -932,7 +914,6 @@
 !     already been set to .FALSE.
 !
 
-      call chkout ( 'ZZELVUPY' )
       return
       end
 

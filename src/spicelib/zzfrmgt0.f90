@@ -192,11 +192,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZFRMGT0' )
 
 !
 !     On the first pass, initialize the identity matrix.
@@ -223,7 +220,6 @@
          call cleard ( 36, xform )
          outfrm = 0
 
-         call chkout ( 'ZZFRMGT0' )
          return
 
       end if
@@ -323,7 +319,6 @@
          call errint ( '#', type  )
          call errch  ( '#', versn )
          call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         call chkout ( 'ZZFRMGT0'                  )
          return
 
       end if
@@ -340,6 +335,5 @@
 
       end if
 
-      call chkout ( 'ZZFRMGT0' )
       return
       end

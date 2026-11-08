@@ -209,11 +209,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYSETD' )
-      end if
+      if ( return () ) return
 
 !
 !     How many symbols to start with?
@@ -295,6 +291,5 @@
       end if
 
 
-      call chkout ( 'SYSETD' )
       return
       end

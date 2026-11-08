@@ -274,14 +274,12 @@
 !
       if (  ( loc < 1 )  .or.  ( loc > inlen+1 )  ) then
 
-         call chkin  ( 'INSSUB'                                    )
          call setmsg ( 'Index at which the substring is to be ' &
          //            'inserted is out of the valid range [1,#]. ' &
          //            'Requested index was *.'                    )
          call errint ( '#', inlen + 1                              )
          call errint ( '*', loc                                    )
          call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-         call chkout ( 'INSSUB'                                    )
          return
 
       end if

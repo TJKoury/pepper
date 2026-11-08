@@ -319,12 +319,10 @@
 !
       if ( lastch == 0 ) then
 
-         call chkin  ( 'DPFMT'                                      )
          call setmsg ( 'The format picture must begin with a '       // &
                        'non-blank character. The picture supplied '  // &
                        'was begun with a blank.'                    )
          call sigerr ( 'SPICE(NOPICTURE)'                           )
-         call chkout ( 'DPFMT'                                      )
          return
 
       else if ( lastch == 1 ) then
@@ -333,13 +331,11 @@
              .or. pictur == '-' &
              .or. pictur == '.' ) then
 
-            call chkin ( 'DPFMT' )
             call setmsg ( 'Format pictures must have at least ' &
             //            'one significant character. The ' &
             //            'picture provided ''#'' does not. ' )
             call errch  ( '#', pictur(1:1)                    )
             call sigerr ( 'SPICE(BADPICTURE)'                 )
-            call chkout ( 'DPFMT'                             )
             return
 
          end if
@@ -349,19 +345,16 @@
          if (     pictur == '+.' &
              .or. pictur == '-.' ) then
 
-            call chkin ( 'DPFMT' )
             call setmsg ( 'Format pictures must have at least ' &
             //            'one significant character. The ' &
             //            'picture provided ''#'' does not. ' )
             call errch  ( '#', pictur(1:2)                    )
             call sigerr ( 'SPICE(BADPICTURE)'                 )
-            call chkout ( 'DPFMT'                             )
             return
          end if
 
       else if ( lastch > len(str) ) then
 
-         call chkin  ( 'DPFMT'                                      )
          call setmsg ( 'The output string is not long enough to ' &
          //            'accommodate a number formatted according ' &
          //            'to the supplied format picture. The ' &
@@ -372,7 +365,6 @@
          call errch  ( '#', pictur(1:lastch) )
          call errint ( '#', lastch )
          call sigerr ( 'SPICE(OUTPUTTOOSHORT)' )
-         call chkout ( 'DPFMT'                                      )
          return
 
       end if

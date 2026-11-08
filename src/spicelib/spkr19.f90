@@ -348,11 +348,8 @@
 
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR19' )
 
 !
 !     Before any error checks are done, copy the status from
@@ -492,7 +489,6 @@
          call errdp ( '#',  dc(1)                               )
          call errdp ( '#',  dc(2)                               )
          call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                  )
-         call chkout( 'SPKR19'                                  )
          return
 
       end if
@@ -619,7 +615,6 @@
             //           'data in a type 19 data segment.'      )
             call errint( '*',  type                             )
             call sigerr( 'SPICE(WRONGSPKTYPE)'                  )
-            call chkout( 'SPKR19'                               )
             return
          end if
 
@@ -634,10 +629,7 @@
 !
          call dafgda ( handle, eaddr-1, eaddr, contrl )
 
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
          isel   = nint ( contrl(1) )
          n      = nint ( contrl(2) )
@@ -706,10 +698,7 @@
 !
                call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               if ( failed() ) then
-                  call chkout( 'SPKR19' )
-                  return
-               end if
+               if ( failed() ) return
 
                remain = ndir - nread
 
@@ -727,10 +716,7 @@
 !
                   call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  if ( failed() ) then
-                     call chkout( 'SPKR19' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   remain = remain - nread
 
@@ -783,10 +769,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout( 'SPKR19' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Find the index of the first epoch greater than ET. The case
@@ -807,7 +790,6 @@
                call setmsg ( 'IVEIX = #.' )
                call errint ( '#', iveix   )
                call sigerr ( 'SPICE(BUG)' )
-               call chkout ( 'SPKR19'     )
                return
 
             end if
@@ -843,10 +825,7 @@
 !
                call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               if ( failed() ) then
-                  call chkout( 'SPKR19' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              The variable NREAD always contains a positive value at
@@ -862,10 +841,7 @@
 !
                   call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  if ( failed() ) then
-                     call chkout( 'SPKR19' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   remain = remain - nread
 
@@ -917,10 +893,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout( 'SPKR19' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Find the index of the last epoch less than ET. The case
@@ -940,7 +913,6 @@
                call setmsg ( 'IVBIX = #.' )
                call errint ( '#', ivbix   )
                call sigerr ( 'SPICE(BUG)' )
-               call chkout ( 'SPKR19'     )
                return
 
             end if
@@ -965,10 +937,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+2, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
          minib = nint ( buffer(1) ) + baddr - 1
 !
@@ -985,10 +954,7 @@
 !
          call dafgda ( handle, ivbas+miniix, ivbas+miniix+1, mintim )
 
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        From this point onward, we'll work with the mini-segment
@@ -998,10 +964,7 @@
 !
          call dafgda ( handle, minie-ctrlsz+1, minie, contrl )
 
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Fetch the control area parameters for the mini-segment.
@@ -1017,7 +980,6 @@
             call errint ( '#',  subtyp                                 )
             call errint ( '#',  miniix                                 )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-            call chkout ( 'SPKR19'                                     )
             return
 
          end if
@@ -1038,7 +1000,6 @@
             call errint ( '#',  subtyp                                 )
             call errint ( '#',  miniix                                 )
             call sigerr ( 'SPICE(INVALIDVALUE)'                        )
-            call chkout ( 'SPKR19'                                     )
             return
 
          end if
@@ -1052,7 +1013,6 @@
             call errint ( '#',  subtyp                             )
             call errint ( '#',  miniix                             )
             call sigerr ( 'SPICE(INVALIDVALUE)'                    )
-            call chkout ( 'SPKR19'                                 )
             return
 
          end if
@@ -1072,10 +1032,7 @@
 !        The test below is done for safety. No SPICE error s
 !        should ever be detected at this point.
 !
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If we made it this far, we did so without a SPICE error. We
@@ -1166,10 +1123,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SPKR19' )
-            return
-         end if
+         if ( failed() ) return
 
          do while (       ( buffer(nread) < et ) &
                     .and. ( remain        > 0  )   )
@@ -1182,10 +1136,7 @@
 !
             call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            if ( failed() ) then
-               call chkout ( 'SPKR19' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -1232,10 +1183,7 @@
 
       call dafgda ( handle, timbas+begidx, timbas+endidx, buffer )
 
-      if ( failed() ) then
-         call chkout ( 'SPKR19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find two adjacent epochs bounding the request epoch.  The request
@@ -1324,10 +1272,7 @@
                     bufbas+nrcpkt, &
                     record( 3 + nrcpkt*pktsiz )  )
 
-      if ( failed() ) then
-         call chkout ( 'SPKR19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The call was successful. Record this fact so that saved
@@ -1335,6 +1280,5 @@
 !
       svok = .true.
 
-      call chkout ( 'SPKR19' )
       return
       end

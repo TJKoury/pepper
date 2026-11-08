@@ -1259,9 +1259,7 @@
       if ( return () ) then
          return
       else
-         call chkin  ( 'DAFFA'             )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'DAFFA'             )
       end if
 
       return
@@ -1547,21 +1545,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFBFS' )
-      end if
+      if ( return () ) return
 
 !
 !     Check out the file handle before going any further.
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFBFS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the state table pool, if this hasn't been done yet.
@@ -1777,7 +1768,6 @@
          call errint ( '#', stnext(p)                            )
          call errch  ( '#', dafnam                               )
          call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
-         call chkout ( 'DAFBFS'                                  )
          return
 
       end if
@@ -1800,7 +1790,6 @@
 !
       stcurr( p )  =  0
 
-      call chkout ( 'DAFBFS' )
       return
 
 
@@ -2092,11 +2081,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFFNA' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -2116,7 +2101,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFFNA'                              )
          return
 
 !
@@ -2126,10 +2110,7 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFFNA' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -2193,7 +2174,6 @@
                call errint ( '#', stnext(p)                            )
                call errch  ( '#', dafnam                               )
                call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
-               call chkout ( 'DAFFNA'                                  )
                return
 
             end if
@@ -2217,7 +2197,6 @@
 
       end if
 
-      call chkout ( 'DAFFNA' )
       return
 
 
@@ -2501,21 +2480,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFBBS' )
-      end if
+      if ( return () ) return
 
 !
 !     Check out the file handle before going any further.
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFBBS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the state table pool, if this hasn't been done yet.
@@ -2731,7 +2703,6 @@
          call errint ( '#', stnext(p)                            )
          call errch  ( '#', dafnam                               )
          call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
-         call chkout ( 'DAFBBS'                                  )
          return
 
       end if
@@ -2749,7 +2720,6 @@
 !
       stcurr( p )  =  stnseg( p ) + 1
 
-      call chkout ( 'DAFBBS' )
       return
 
 
@@ -3056,11 +3026,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFFPA' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -3080,7 +3046,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFFPA'                              )
          return
 
 !
@@ -3090,10 +3055,7 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFFPA' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -3154,7 +3116,6 @@
                call errint ( '#', stnext(p)                            )
                call errch  ( '#', dafnam                               )
                call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
-               call chkout ( 'DAFFPA'                                  )
                return
 
             end if
@@ -3178,7 +3139,6 @@
 
       end if
 
-      call chkout ( 'DAFFPA' )
       return
 
 
@@ -3472,11 +3432,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFGS' )
-      end if
+      if ( return () ) return
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -3490,7 +3446,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFGS'                               )
          return
 
 !
@@ -3500,10 +3455,7 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFGS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -3522,7 +3474,6 @@
                        'the first array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFGS'                                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
@@ -3533,7 +3484,6 @@
                        ' the last array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFGS'                                         )
          return
 
       end if
@@ -3550,7 +3500,6 @@
 
       call moved (  stsr( offset+1, p ),  sumsiz,  sum )
 
-      call chkout ( 'DAFGS' )
       return
 
 
@@ -3712,11 +3661,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFGN' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -3731,7 +3676,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFGN'                               )
          return
 
 !
@@ -3741,10 +3685,7 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFGN' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -3763,7 +3704,6 @@
                        'the first array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFGN'                                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
@@ -3774,7 +3714,6 @@
                        ' the last array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFGN'                                         )
          return
 
       end if
@@ -3807,7 +3746,6 @@
 
       name    =  stnr(p) (  offset + 1  :  offset + namsiz  )
 
-      call chkout ( 'DAFGN' )
       return
 
 
@@ -4010,11 +3948,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFGH' )
-      end if
+      if ( return () ) return
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -4028,7 +3962,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFGH'                               )
          return
 
 !
@@ -4038,16 +3971,12 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFGH' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
       handle = stfh( p )
 
-      call chkout ( 'DAFGH' )
       return
 
 
@@ -4218,11 +4147,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFRS' )
-      end if
+      if ( return () ) return
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -4236,7 +4161,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFRS'                               )
          return
 
 !
@@ -4247,10 +4171,7 @@
 
          call dafsih ( stfh(p), 'WRITE' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFRS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -4269,7 +4190,6 @@
                        'the first array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFRS'                                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
@@ -4280,7 +4200,6 @@
                        ' the last array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFRS'                                         )
          return
 
       end if
@@ -4316,7 +4235,6 @@
 !
       call dafwdr ( stfh(p), stthis(p), stsr(1,p) )
 
-      call chkout ( 'DAFRS' )
       return
 
 
@@ -4479,11 +4397,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFRN' )
-      end if
+      if ( return () ) return
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -4497,7 +4411,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFRN'                               )
          return
 
 !
@@ -4508,10 +4421,7 @@
 
          call dafsih ( stfh(p), 'WRITE' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFRN' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -4530,7 +4440,6 @@
                        'the first array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFRN'                                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
@@ -4541,7 +4450,6 @@
                        ' the last array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFRN'                                         )
          return
 
       end if
@@ -4580,7 +4488,6 @@
 !
       call dafwcr ( stfh(p), stthis(p)+1, stnr(p) )
 
-      call chkout ( 'DAFRN' )
       return
 
 
@@ -4745,11 +4652,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFWS' )
-      end if
+      if ( return () ) return
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -4763,7 +4666,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFWS'                               )
          return
 
 !
@@ -4774,10 +4676,7 @@
 
          call dafsih ( stfh(p), 'READ' )
 
-         if ( failed() ) then
-            call chkout ( 'DAFWS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -4796,7 +4695,6 @@
                        'the first array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFWS'                                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
@@ -4807,7 +4705,6 @@
                        ' the last array of DAF #'                      )
          call errch  ( '#',     dafnam                                 )
          call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
-         call chkout ( 'DAFWS'                                         )
          return
 
       end if
@@ -4831,7 +4728,6 @@
 !
       call dafwdr ( stfh(p), stthis(p), stsr(1,p) )
 
-      call chkout ( 'DAFWS' )
       return
 
 
@@ -4967,11 +4863,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFCS' )
-      end if
+      if ( return () ) return
 
 !
 !     Validate the DAF's handle before going any further. DAFSIH will
@@ -4979,10 +4871,7 @@
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFCS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     See whether we already have an entry for this DAF in the
@@ -5016,7 +4905,6 @@
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
-         call chkout ( 'DAFCS'                               )
          return
 
       end if
@@ -5044,6 +4932,5 @@
 
       end if
 
-      call chkout ( 'DAFCS' )
       return
       end

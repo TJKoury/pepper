@@ -143,9 +143,7 @@
 !
       call zzekpgfr ( handle, type, p )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Update the segment's metadata.  For type 1 segments,

@@ -477,11 +477,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKACLI' )
-      end if
+      if ( return () ) return
 
 !
 !     Find the descriptors for the specified segment and column.
@@ -489,10 +485,7 @@
       call zzeksdsc ( handle,  segno,   segdsc          )
       call zzekcdsc ( handle,  segdsc,  column,  coldsc )
 
-      if ( failed() ) then
-         call chkout ( 'EKACLI' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This column had better be of integer type.
@@ -507,7 +500,6 @@
          call errch  ( '#',  column                                  )
          call errint ( '#',  dtype                                   )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                        )
-         call chkout ( 'EKACLI'                                      )
          return
 
       end if
@@ -546,11 +538,9 @@
          call errint ( '#', class                                      )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                           )
-         call chkout ( 'EKACLI'                                        )
          return
 
       end if
 
-      call chkout ( 'EKACLI' )
       return
       end

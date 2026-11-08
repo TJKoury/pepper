@@ -361,11 +361,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASTB' )
-      end if
+      if ( return () ) return
 !
 !     A DAS transfer file contains in an encoded form all of the data
 !     from the original binary DAS file. This includes the reserved
@@ -517,7 +513,6 @@
          call errfnm ( '#', xfrlun                                 )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'DASTB'                                     )
          return
 
       end if
@@ -534,7 +529,6 @@
                        ' file #.'                               )
          call errfnm ( '#', xfrlun                              )
          call sigerr ( 'SPICE(NOTADASFILE)'                     )
-         call chkout ( 'DASTB'                                  )
          return
 
       end if
@@ -551,7 +545,6 @@
          call errfnm ( '#', xfrlun                                 )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'DASTB'                                     )
          return
 
       end if
@@ -565,7 +558,6 @@
 !        If an error occurred while opening the new DAS file,
 !        then check out and return.
 !
-         call chkout ( 'DASTB' )
          return
 
       end if
@@ -590,7 +582,6 @@
 !        attempt to close the binary file, then check out and return.
 !
          call dascls ( handle  )
-         call chkout ( 'DASTB' )
          return
 
       end if
@@ -601,12 +592,7 @@
       call rdenci ( xfrlun, 1, nresvr )
       call rdenci ( xfrlun, 1, nresvc )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASTB' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check to be sure that the number of reserved records and the
 !     number of reserved characters are not being used. The DAS
@@ -625,7 +611,6 @@
          call errint ( '#', nresvc                                   )
          call errfnm ( '#', xfrlun                                   )
          call sigerr ( 'SPICE(BADDASFILE)'                           )
-         call chkout ( 'DASTB' )
          return
 
       end if
@@ -642,7 +627,6 @@
          call errint ( '#', nresvr                                   )
          call errfnm ( '#', xfrlun                                   )
          call sigerr ( 'SPICE(BADDASFILE)'                           )
-         call chkout ( 'DASTB' )
          return
 
       end if
@@ -653,12 +637,7 @@
       call rdenci ( xfrlun, 1, ncomr )
       call rdenci ( xfrlun, 1, ncomc )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASTB' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Begin converting the DAS transfer file into an equivalent
 !     binary DAS file here.
@@ -695,7 +674,6 @@
 !           then check out and return.
 !
             call dascls ( handle  )
-            call chkout ( 'DASTB' )
             return
 
          end if
@@ -710,7 +688,6 @@
 !           then checkout and return.
 !
             call dascls ( handle  )
-            call chkout ( 'DASTB' )
             return
 
          end if
@@ -751,7 +728,6 @@
                call errfnm ( '#', xfrlun                         )
                call errint ( '#', iostat                         )
                call sigerr ( 'SPICE(FILEREADFAILED)'             )
-               call chkout ( 'DASTB'                             )
                return
 
             end if
@@ -782,7 +758,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -806,7 +781,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -838,7 +812,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -862,7 +835,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -884,7 +856,6 @@
                   call errint ( '#', eindex                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -906,7 +877,6 @@
                   call errint ( '#', ecount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -938,7 +908,6 @@
                   call errch  ( '#', errmsg                          )
                   call errfnm ( '#', xfrlun                          )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  call chkout ( 'DASTB'                              )
                   return
 
                end if
@@ -961,7 +930,6 @@
                   call errch  ( '#', errmsg                      )
                   call errfnm ( '#', xfrlun                      )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  call chkout ( 'DASTB'                          )
                   return
 
                end if
@@ -986,7 +954,6 @@
                   call errint ( '#', numblk                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -1008,7 +975,6 @@
                   call errint ( '#', tcount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -1032,7 +998,6 @@
                call errch  ( '#', word                                 )
                call errfnm ( '#', xfrlun                               )
                call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
-               call chkout ( 'DASTB'                                   )
                return
 
             end if
@@ -1085,7 +1050,6 @@
 !                    binary file, then checkout and return.
 !
                      call dascls ( handle  )
-                     call chkout ( 'DASTB' )
                      return
 
                   end if
@@ -1170,7 +1134,6 @@
                call errfnm ( '#', xfrlun                         )
                call errint ( '#', iostat                         )
                call sigerr ( 'SPICE(FILEREADFAILED)'             )
-               call chkout ( 'DASTB'                             )
                return
 
             end if
@@ -1201,7 +1164,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -1225,7 +1187,6 @@
                   call errch  ( '#', errmsg                          )
                   call errfnm ( '#', xfrlun                          )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  call chkout ( 'DASTB'                              )
                   return
 
                end if
@@ -1257,7 +1218,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -1281,7 +1241,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -1303,7 +1262,6 @@
                   call errint ( '#', eindex                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -1325,7 +1283,6 @@
                   call errint ( '#', ecount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -1357,7 +1314,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -1380,7 +1336,6 @@
                   call errch  ( '#', errmsg                      )
                   call errfnm ( '#', xfrlun                      )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  call chkout ( 'DASTB'                          )
                   return
 
                end if
@@ -1405,7 +1360,6 @@
                   call errint ( '#', numblk                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -1427,7 +1381,6 @@
                   call errint ( '#', tcount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -1451,7 +1404,6 @@
                call errch  ( '#', word                                 )
                call errfnm ( '#', xfrlun                               )
                call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
-               call chkout ( 'DASTB'                                   )
                return
 
             end if
@@ -1503,7 +1455,6 @@
 !                    binary file, then checkout and return.
 !
                      call dascls ( handle  )
-                     call chkout ( 'DASTB' )
                      return
 
                   end if
@@ -1574,7 +1525,6 @@
                call errfnm ( '#', xfrlun                         )
                call errint ( '#', iostat                         )
                call sigerr ( 'SPICE(FILEREADFAILED)'             )
-               call chkout ( 'DASTB'                             )
                return
 
             end if
@@ -1605,7 +1555,6 @@
                   call errch  ( '#', errmsg                       )
                   call errfnm ( '#', xfrlun                       )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'       )
-                  call chkout ( 'DASTB'                           )
                   return
 
                end if
@@ -1630,7 +1579,6 @@
                   call errch  ( '#', errmsg                       )
                   call errfnm ( '#', xfrlun                       )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'       )
-                  call chkout ( 'DASTB'                           )
                   return
 
                end if
@@ -1662,7 +1610,6 @@
                   call errch  ( '#', errmsg                          )
                   call errfnm ( '#', xfrlun                          )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  call chkout ( 'DASTB'                              )
                   return
 
                end if
@@ -1687,7 +1634,6 @@
                   call errch  ( '#', errmsg                      )
                   call errfnm ( '#', xfrlun                      )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  call chkout ( 'DASTB'                          )
                   return
 
                end if
@@ -1709,7 +1655,6 @@
                   call errint ( '#', eindex                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -1731,7 +1676,6 @@
                   call errint ( '#', ecount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -1763,7 +1707,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -1786,7 +1729,6 @@
                   call errch  ( '#', errmsg                      )
                   call errfnm ( '#', xfrlun                      )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  call chkout ( 'DASTB'                          )
                   return
 
                end if
@@ -1812,7 +1754,6 @@
                   call errint ( '#', numblk                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -1834,7 +1775,6 @@
                   call errint ( '#', tcount                          )
                   call errfnm ( '#', xfrlun                          )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  call chkout ( 'DASTB'                              )
                   return
 
                end if
@@ -1858,7 +1798,6 @@
                call errch  ( '#', word                                 )
                call errfnm ( '#', xfrlun                               )
                call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
-               call chkout ( 'DASTB'                                   )
                return
 
             end if
@@ -1908,7 +1847,6 @@
 !                    binary file, then checkout and return.
 !
                      call dascls ( handle  )
-                     call chkout ( 'DASTB' )
                      return
 
                   end if
@@ -1978,7 +1916,6 @@
                call errfnm ( '#', xfrlun                         )
                call errint ( '#', iostat                         )
                call sigerr ( 'SPICE(FILEREADFAILED)'             )
-               call chkout ( 'DASTB'                             )
                return
 
             end if
@@ -2009,7 +1946,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -2033,7 +1969,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -2065,7 +2000,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -2089,7 +2023,6 @@
                   call errch  ( '#', errmsg                         )
                   call errfnm ( '#', xfrlun                         )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  call chkout ( 'DASTB'                             )
                   return
 
                end if
@@ -2111,7 +2044,6 @@
                   call errint ( '#', eindex                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -2133,7 +2065,6 @@
                   call errint ( '#', ecount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -2165,7 +2096,6 @@
                   call errch  ( '#', errmsg                           )
                   call errfnm ( '#', xfrlun                           )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  call chkout ( 'DASTB'                               )
                   return
 
                end if
@@ -2188,7 +2118,6 @@
                   call errch  ( '#', errmsg                      )
                   call errfnm ( '#', xfrlun                      )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  call chkout ( 'DASTB'                          )
                   return
 
                end if
@@ -2213,7 +2142,6 @@
                   call errint ( '#', numblk                          )
                   call errfnm ( '#', xfrlun                          )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  call chkout ( 'DASTB'                              )
                   return
 
                end if
@@ -2235,7 +2163,6 @@
                   call errint ( '#', tcount                        )
                   call errfnm ( '#', xfrlun                        )
                   call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  call chkout ( 'DASTB'                            )
                   return
 
                end if
@@ -2259,7 +2186,6 @@
                call errch  ( '#', word                                 )
                call errfnm ( '#', xfrlun                               )
                call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
-               call chkout ( 'DASTB'                                   )
                return
 
             end if
@@ -2309,7 +2235,6 @@
 !                    binary file, then checkout and return.
 !
                      call dascls ( handle  )
-                     call chkout ( 'DASTB' )
                      return
 
                   end if
@@ -2349,6 +2274,5 @@
 !
       call dascls ( handle )
 
-      call chkout ( 'DASTB' )
       return
       end

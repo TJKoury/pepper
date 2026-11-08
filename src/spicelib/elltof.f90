@@ -180,15 +180,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ELLTOF' )
-      end if
+      if ( return () ) return
 
       if ( ecc < 0.0_wp  .or.  ecc >= 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
-         call chkout ( 'ELLTOF'            )
          return
       end if
 
@@ -355,6 +350,5 @@
       end if
 
 
-      call chkout ( 'ELLTOF' )
       return
       end

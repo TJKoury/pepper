@@ -161,8 +161,6 @@
       if ( return () ) then
          wnelmd = .false.
          return
-      else
-         call chkin ( 'WNELMD' )
       end if
 
 
@@ -179,7 +177,6 @@
 
          if ( point >= window(i)  .and. point <= window(i+1) ) then
             wnelmd = .true.
-            call chkout ( 'WNELMD' )
             return
          end if
 
@@ -188,6 +185,5 @@
       wnelmd = .false.
 
 
-      call chkout ( 'WNELMD' )
       return
       end

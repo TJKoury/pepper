@@ -166,19 +166,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CYAIIP' )
-      end if
+      if ( return () ) return
 
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      if ( nelt < 1 ) then
-         call chkout ( 'CYAIIP' )
-         return
-      end if
+      if ( nelt < 1 ) return
 
 !
 !     A backward cycle is the same as a forward cycle by the opposite
@@ -201,7 +194,6 @@
          call setmsg ( 'Cycling direction was *.' )
          call errch  ( '*', dir                   )
          call sigerr ( 'SPICE(INVALIDDIRECTION)'  )
-         call chkout ( 'CYAIIP'                   )
          return
 
       end if
@@ -213,7 +205,6 @@
 
       else if ( k == 0 ) then
 
-         call chkout ( 'CYAIIP' )
          return
 
       end if
@@ -249,6 +240,5 @@
       end do
 
 
-      call chkout ( 'CYAIIP' )
       return
       end

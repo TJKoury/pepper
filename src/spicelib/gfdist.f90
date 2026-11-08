@@ -1279,11 +1279,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GFDIST' )
 
 !
 !     Check the workspace window dimensions.
@@ -1294,7 +1291,6 @@
          //            'at least 2.'                               )
          call errint ( '#',  mw                                    )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFDIST'                                    )
          return
 
       end if
@@ -1306,7 +1302,6 @@
          call errint ( '#',  nw                                      )
          call errint ( '#',  nwdist                                  )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
-         call chkout ( 'GFDIST'                                      )
          return
 
       end if
@@ -1320,7 +1315,6 @@
          //            'at least 2.'                             )
          call errint ( '#',  sized(result)                       )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                 )
-         call chkout ( 'GFDIST'                                  )
          return
 
       end if
@@ -1373,6 +1367,5 @@
                     gfrepu,   gfrepf,   mw,          nwdist, &
                     work,     nobail,   gfbail,      result  )
 
-      call chkout ( 'GFDIST' )
       return
       end

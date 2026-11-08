@@ -275,7 +275,6 @@
 
       if ( first ) then
 
-         call chkin ( 'ZZPINI' )
 
          do i = 1, maxvar
             namlst(i) = 0
@@ -311,7 +310,6 @@
             first = .false.
          end if
 
-         call chkout ( 'ZZPINI' )
          return
 
       end if

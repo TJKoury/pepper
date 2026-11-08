@@ -199,11 +199,8 @@
       logical               yabbrv
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZEKTCNV' )
 
 !
 !     No error to start with.
@@ -250,7 +247,6 @@
                         'supplied.'
             end if
 
-            call chkout ( 'ZZEKTCNV' )
             return
 
          end if
@@ -271,7 +267,6 @@
                       'while attempting to parse the string <'
             call suffix ( timstr, 0, errmsg )
             call suffix ( '>',    0, errmsg )
-            call chkout ( 'ZZEKTCNV'        )
             return
 
          else if ( error ) then
@@ -280,7 +275,6 @@
                       'as a spacecraft clock string.'
             call repmc  ( errmsg, '#', timstr, errmsg )
             call suffix ( sclmsg,  3,          errmsg )
-            call chkout ( 'ZZEKTCNV'                  )
             return
 
          else
@@ -294,7 +288,6 @@
                          'while attempting to parse the string <'
                call suffix ( timstr, 0, errmsg )
                call suffix ( '>',    0, errmsg )
-               call chkout ( 'ZZEKTCNV'        )
                return
 
             end if
@@ -326,7 +319,6 @@
                          'while attempting to parse the string <'
                call suffix ( timstr, 0, errmsg )
                call suffix ( '>',    0, errmsg )
-               call chkout ( 'ZZEKTCNV'        )
                return
 
             end if
@@ -337,7 +329,6 @@
 !           was set by TPARTV.
 !
             error  =  .true.
-            call chkout ( 'ZZEKTCNV' )
             return
 
          end if
@@ -348,6 +339,5 @@
 !
 !     We've parsed a time string, if it was an SCLK or standard string.
 !
-      call chkout ( 'ZZEKTCNV' )
       return
       end

@@ -236,7 +236,6 @@
          setc = .false.
          return
       else
-         call chkin ( 'SETC' )
          setc = .false.
       end if
 
@@ -383,7 +382,6 @@
 
               if ( carda >= cardb ) then
                  setc = .false.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 0
@@ -402,7 +400,6 @@
 
               if ( carda > cardb ) then
                  setc = .false.
-                 call chkout ( 'SETC' )
                  return
                else
                  condlt = 0
@@ -422,7 +419,6 @@
 
                if ( carda /= cardb ) then
                   setc = .false.
-                  call chkout ( 'SETC' )
                   return
                else
                   condlt = 0
@@ -442,7 +438,6 @@
 
               if ( carda /= cardb ) then
                  setc = .true.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 2
@@ -462,7 +457,6 @@
 
               if ( carda <= cardb ) then
                  setc = .false.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 1
@@ -479,7 +473,6 @@
 
               if ( carda < cardb ) then
                  setc = .false.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 1
@@ -497,7 +490,6 @@
 
               if ( ( carda == 0 ) .or. ( cardb == 0 ) ) then
                  setc = .false.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 1
@@ -515,7 +507,6 @@
 
               if ( ( carda == 0 ) .or. ( cardb == 0 ) ) then
                  setc = .true.
-                 call chkout ( 'SETC' )
                  return
               else
                  condlt = 1
@@ -535,7 +526,6 @@
                            'recognized.'                              )
              call errch  ( '*', op                   )
              call sigerr ( 'SPICE(INVALIDOPERATION)' )
-             call chkout ( 'SETC' )
              return
       end if
 
@@ -599,13 +589,11 @@
          if      ( cond == 0 ) then
 
                   setc = .false.
-                  call chkout ( 'SETC' )
                   return
 
          else if ( cond == 2 ) then
 
                   setc = .true.
-                  call chkout ( 'SETC' )
                   return
 
          end if
@@ -646,6 +634,5 @@
 
 
 
-      call chkout ( 'SETC' )
       return
       end

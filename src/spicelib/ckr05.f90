@@ -356,11 +356,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKR05' )
 
 !
 !     No pointing found so far.
@@ -385,7 +382,6 @@
                       'data in a type 5 data segment.'       )
          call errint( '*',  type                             )
          call sigerr( 'SPICE(WRONGCKTYPE)'                   )
-         call chkout( 'CKR05'                                )
          return
       end if
 
@@ -397,7 +393,6 @@
                       'was actually *.'                      )
          call errdp ( '*',  tol                              )
          call sigerr( 'SPICE(VALUEOUTOFRANGE)'               )
-         call chkout( 'CKR05'                                )
          return
       end if
 
@@ -411,7 +406,6 @@
 !        The request time is too far outside the segment's coverage
 !        interval for any pointing to satisfy the request.
 !
-         call chkout ( 'CKR05' )
          return
 
       end if
@@ -447,10 +441,7 @@
 !     any DAF file and the error action is not set to ABORT.  We
 !     do this only after the first call to DAFGDA, as in CKR03.
 !
-      if ( failed() ) then
-         call chkout ( 'CKR05' )
-         return
-      end if
+      if ( failed() ) return
 
       rate    =         contrl(1)
       subtyp  =  nint ( contrl(2) )
@@ -483,7 +474,6 @@
                        'type 5 segment.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'CKR05'                                    )
          return
 
       end if
@@ -497,7 +487,6 @@
                        'be positive.'                                )
          call errint ( '#',  wndsiz                                  )
          call sigerr ( 'SPICE(INVALIDVALUE)'                         )
-         call chkout ( 'CKR05'                                       )
          return
 
       end if
@@ -518,7 +507,6 @@
             call errint ( '#',  wndsiz                                )
             call errint ( '#',  maxwnd                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'CKR05'                                     )
             return
 
          end if
@@ -530,7 +518,6 @@
                           '(Hermite, 8 or 14-element packets).'       )
             call errint ( '#',  wndsiz                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'CKR05'                                     )
             return
 
          end if
@@ -551,7 +538,6 @@
             call errint ( '#',  wndsiz                                )
             call errint ( '#',  maxwnd                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'CKR05'                                     )
             return
 
          end if
@@ -563,7 +549,6 @@
                           '(Lagrange, 4 or 7-element packets).'       )
             call errint ( '#',  wndsiz                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'CKR05'                                     )
             return
 
          end if
@@ -575,7 +560,6 @@
                        'updated to handle the new subtype #'        )
          call errint ( '#', subtyp                                  )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-         call chkout ( 'CKR05'                                      )
          return
 
       end if
@@ -725,12 +709,7 @@
 !        If the input request time is too far from PBUFFR(1) on
 !        the low side, we're done.
 !
-         if ( sclkdp + tol < pbuffr(1) ) then
-
-            call chkout ( 'CKR05' )
-            return
-
-         end if
+         if ( sclkdp + tol < pbuffr(1) ) return
 
 !
 !        Bracket T to move it within the range of buffered epochs.
@@ -742,12 +721,7 @@
 !
 !        This can happen only if T follows all epochs.
 !
-         if ( sclkdp - tol > pbuffr(npread) ) then
-
-            call chkout ( 'CKR05' )
-            return
-
-         end if
+         if ( sclkdp - tol > pbuffr(npread) ) return
 
 !
 !        Bracket T to move it within the range of buffered epochs.
@@ -998,7 +972,6 @@
 !
 !              ...But T is too far from the interval.
 !
-               call chkout ( 'CKR05' )
                return
 
             end if
@@ -1018,7 +991,6 @@
 !
 !              ...But T is too far from the interval.
 !
-               call chkout ( 'CKR05' )
                return
 
             end if
@@ -1115,7 +1087,6 @@
 !
 !        Fuggedaboudit.
 !
-         call chkout ( 'CKR05' )
          return
 
       end if
@@ -1168,6 +1139,5 @@
 !
       found = .true.
 
-      call chkout ( 'CKR05' )
       return
       end

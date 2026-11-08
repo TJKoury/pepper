@@ -556,11 +556,7 @@
 !     ================================================================
 !     ----------------------------------------------------------------
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'NEARPT' )
-      end if
+      if ( return () ) return
 
 !
 !     Check the axes to make sure that none of them is less than or
@@ -592,7 +588,6 @@
          call errdp  ( '#', c )
 
          call sigerr ( 'SPICE(BADAXISLENGTH)' )
-         call chkout ( 'NEARPT' )
          return
 
       end if
@@ -906,7 +901,6 @@
             call errint ( '*', iorder(1)                             )
             call errdp  ( '*', axis(i)                               )
             call sigerr ( 'SPICE(BADAXISLENGTH)'                     )
-            call chkout ( 'NEARPT'                                   )
             return
 
          end if
@@ -934,7 +928,6 @@
             call errint ( '*', iorder(i)                             )
             call errdp  ( '*', toobig**2.0_wp                          )
             call sigerr ( 'SPICE(INPUTSTOOLARGE)'                    )
-            call chkout ( 'NEARPT'                                   )
             return
 
          end if
@@ -1259,7 +1252,6 @@
                      call errint ( '#',  i                             )
                      call errint ( '#',  i                             )
                      call sigerr ( 'SPICE(BUG)'                        )
-                     call chkout ( 'NEARPT'                            )
                      return
 
                   end if
@@ -1327,7 +1319,6 @@
                call errdp  ( '#',  upper                             )
                call errdp  ( '#',  upper - lower                     )
                call sigerr ( 'SPICE(BUG)'                            )
-               call chkout ( 'NEARPT'                                )
                return
 
             end if
@@ -1448,7 +1439,6 @@
                            call errint ( '#',  i                     )
                            call errint ( '#',  i                     )
                            call sigerr ( 'SPICE(BUG)'                )
-                           call chkout ( 'NEARPT'                    )
                            return
 
                         end if
@@ -1501,7 +1491,6 @@
                  call errint ( '#', i                           )
                  call errdp  ( '#', denom                       )
                  call sigerr ( 'SPICE(BUG)'                     )
-                 call chkout ( 'NEARPT'                         )
                  return
 
               end if
@@ -1904,7 +1893,6 @@
                   call errdp  ( '#',  positn(2)               )
                   call errdp  ( '#',  positn(3)               )
                   call sigerr ( 'SPICE(BUG)'                  )
-                  call chkout ( 'NEARPT'                      )
                   return
 
                end if
@@ -2052,7 +2040,6 @@
                         call errdp  ( '#',  positn(2)               )
                         call errdp  ( '#',  positn(3)               )
                         call sigerr ( 'SPICE(BUG)'                  )
-                        call chkout ( 'NEARPT'                      )
                         return
 
                      end if
@@ -2113,7 +2100,6 @@
 
       alt = bestht/scale
 
-      call chkout ( 'NEARPT' )
 
       return
       end

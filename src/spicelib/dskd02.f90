@@ -500,11 +500,9 @@
 
       if ( room <= 0 ) then
 
-         call chkin  ( 'DSKD02' )
          call setmsg ( 'ROOM was #; must be positive.' )
          call errint ( '#',  room                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
-         call chkout ( 'DSKD02'                        )
          return
 
       end if
@@ -535,9 +533,7 @@
 !
          call dasrdi ( handle, ibase+ixnv, ibase+ixnv, nv )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 !
 !        Update the saved handle value.
 !
@@ -598,11 +594,9 @@
 
       else
 
-         call chkin  ( 'DSKD02' )
          call setmsg ( 'Keyword parameter # was not recognized.' )
          call errint ( '#',  item                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'DSKD02'                                  )
          return
 
       end if
@@ -612,7 +606,6 @@
 !
       if (  ( start < 1 ) .or. ( start > size )  ) then
 
-         call chkin  ( 'DSKD02' )
          call setmsg ( 'START must be in the range defined ' // &
                        'by the size of the data associated ' // &
                        'with the keyword parameter #, '      // &
@@ -622,7 +615,6 @@
          call errint ( '#',  size                            )
          call errint ( '#',  start                           )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
-         call chkout ( 'DSKD02'                              )
          return
 
       end if

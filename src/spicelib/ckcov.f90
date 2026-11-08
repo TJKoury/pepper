@@ -758,11 +758,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKCOV' )
 
 !
 !     Check tolerance value.
@@ -773,7 +770,6 @@
                        'was #.'                                       )
          call errdp  ( '#',  tol                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'CKCOV'                                        )
          return
 
       end if
@@ -795,7 +791,6 @@
          call errch  ( '#',  kwintv                                  )
          call errch  ( '#',  level                                   )
          call sigerr ( 'SPICE(INVALIDOPTION)'                        )
-         call chkout ( 'CKCOV'                                       )
          return
 
       end if
@@ -805,10 +800,7 @@
 !
       call getfat ( ckfnm, arch, kertyp )
 
-      if ( failed() ) then
-         call chkout ( 'CKCOV' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( arch == 'XFR' ) then
@@ -821,7 +813,6 @@
          call errch  ( '#',  ckfnm                                 )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
-         call chkout ( 'CKCOV'                                     )
          return
 
       else if ( arch /= 'DAF' ) then
@@ -838,7 +829,6 @@
          call errch  ( '#',  ckfnm                                 )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
-         call chkout ( 'CKCOV'                                     )
          return
 
       else if ( kertyp /= 'CK' ) then
@@ -854,7 +844,6 @@
          call errch  ( '#',  ckfnm                                 )
          call errch  ( '#',  kertyp                                )
          call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
-         call chkout ( 'CKCOV'                                     )
          return
 
       end if
@@ -876,7 +865,6 @@
                           'values are SCLK and TDB.'                )
             call errch  ( '#',  timsys                              )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-            call chkout ( 'CKCOV'                                   )
             return
 
          end if
@@ -891,10 +879,7 @@
 
          call ckmeta ( idcode, 'SCLK', clkid )
 
-         if ( failed() ) then
-            call chkout ( 'CKCOV' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -903,10 +888,7 @@
 !
       call dafopr ( ckfnm, handle )
 
-      if ( failed() ) then
-         call chkout ( 'CKCOV' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -1031,7 +1013,6 @@
                                 'need to update your SPICE Toolkit.' )
                   call errint ( '#',  dtype                          )
                   call sigerr ( 'SPICE(NOTSUPPORTED)'                )
-                  call chkout ( 'CKCOV'                              )
                   return
 
                end if
@@ -1042,10 +1023,7 @@
 
          call daffna ( found )
 
-         if ( failed() ) then
-            call chkout ( 'CKCOV' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1059,6 +1037,5 @@
       call dafcls ( handle )
 
 
-      call chkout ( 'CKCOV' )
       return
       end

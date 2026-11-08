@@ -165,11 +165,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKFF01' )
 
 !
 !     Initialize all arrays.
@@ -198,7 +195,6 @@
          call errint ( '#',  handle                                   )
          call errint ( '#',  stkhan                                   )
          call sigerr ( 'SPICE(WRONGSEGMENT)'                          )
-         call chkout ( 'ZZEKFF01'                                     )
          return
 
       end if
@@ -336,6 +332,5 @@
       call dasudi   (  handle,  base+liwidx,  base+liwidx,  ipsize  )
 
 
-      call chkout ( 'ZZEKFF01' )
       return
       end

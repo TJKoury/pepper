@@ -324,11 +324,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZPTPL02' )
 
 !
 !     No plate has been found so far.
@@ -350,10 +347,7 @@
          call dski02 ( handle, dladsc, kwvgrx, 1, 3, n, vgrext )
          call dski02 ( handle, dladsc, kwcgsc, 1, 1, n, cgrscl )
 
-         if ( failed() ) then
-            call chkout ( 'ZZPTPL02' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( voxsiz == 0.0_wp ) then
@@ -361,7 +355,6 @@
             call setmsg ( 'Voxel edge length is zero; length ' &
             //            'must be positive.'                  )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
-            call chkout ( 'ZZPTPL02'                           )
             return
 
          end if
@@ -371,7 +364,6 @@
             call setmsg ( 'Coarse voxel scale is zero; scale ' &
             //            'must be positive.'                  )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
-            call chkout ( 'ZZPTPL02'                           )
             return
 
          end if
@@ -380,10 +372,7 @@
 
          call zzsegbox ( dskdsc, boxctr, maxr )
 
-         if ( failed() ) then
-            call chkout ( 'ZZPTPL02' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        We successfully obtained the desired segment parameters, so we
@@ -419,10 +408,7 @@
       call zzinvelt ( point,          corsys, dskdsc(paridx), &
                       dskdsc(mn1idx), ptsrfm, 0,              inside )
 
-      if ( failed() ) then
-         call chkout ( 'ZZPTPL02' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( .not. inside ) then
@@ -430,7 +416,6 @@
 !        The point is too far from the segment to be considered
 !        to lie on a plate in that segment.
 !
-         call chkout ( 'ZZPTPL02' )
          return
 
       end if
@@ -459,10 +444,7 @@
 !
       call zzvoxcvo ( vgrcor, vgrext, cgrscl, cgrcor, cgroff, ptroff )
 
-      if ( failed() ) then
-         call chkout ( 'ZZPTPL02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the pointer from the coarse voxel to the first element of
@@ -479,17 +461,13 @@
 
       call dski02 ( handle, dladsc, kwcgpt, cgrvid, 1, n, cgrptr )
 
-      if ( failed() ) then
-         call chkout ( 'ZZPTPL02' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( cgrptr < 1 ) then
 !
 !        There are no non-empty fine voxels, hence no plates, in the
 !        coarse voxel we're looking at.
 !
-         call chkout ( 'ZZPTPL02' )
          return
 
       end if
@@ -501,17 +479,11 @@
 
       call dski02 ( handle, dladsc, kwvxpt, ptrloc, 1, n, pltptr )
 
-      if (  failed()  .or.  ( pltptr < 1 )  ) then
-         call chkout ( 'ZZPTPL02' )
-         return
-      end if
+      if (  failed()  .or.  ( pltptr < 1 )  ) return
 
       call dski02 ( handle, dladsc, kwvxpl, pltptr, 1, n, nplate )
 
-      if (  failed()  .or.  ( nplate < 1 )  ) then
-         call chkout ( 'ZZPTPL02' )
-         return
-      end if
+      if (  failed()  .or.  ( nplate < 1 )  ) return
 
 !
 !     Loop through the plates, keeping track of the minimum plate-point
@@ -529,10 +501,7 @@
          call dski02 ( handle,   dladsc, kwvxpl, &
                        pltptr+i, nread,  n,      pltbuf )
 
-         if ( failed() ) then
-            call chkout ( 'ZZPTPL02' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Look up the vertices of each plate in the buffer and find
 !        the distance of the point from that plate. Quit if we
@@ -555,10 +524,7 @@
 
             end do
 
-            if ( failed() ) then
-               call chkout ( 'ZZPTPL02' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Work with an expanded version of the plate.
@@ -568,10 +534,7 @@
             call pltnrm ( xverts(1,1), xverts(1,2), xverts(1,3), &
                           normal                                )
 
-            if ( failed() ) then
-               call chkout ( 'ZZPTPL02' )
-               return
-            end if
+            if ( failed() ) return
 
             call vhatip ( normal )
 
@@ -591,10 +554,7 @@
                call pltnp ( point,       xverts(1,1), xverts(1,2), &
                             xverts(1,3), pnear,       dist        )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZPTPL02' )
-                  return
-               end if
+               if ( failed() ) return
 
             else
                dist = dpmax()
@@ -634,6 +594,5 @@
 
       end do
 
-      call chkout ( 'ZZPTPL02' )
       return
       end

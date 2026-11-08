@@ -209,11 +209,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKE17')
 
 !
 !     Fetch the various entities from the input record, first the epoch.
@@ -242,7 +239,6 @@
          //            '#.'                    )
          call errdp  ( '#', a                  )
          call sigerr ( 'SPICE(BADSEMIAXIS)'    )
-         call chkout ( 'SPKE17'                )
          return
 
       else if ( ecc > 0.9_wp ) then
@@ -254,7 +250,6 @@
          //            'to the type 17 evaluator was #. ' )
          call errdp  ( '#',   ecc                )
          call sigerr ( 'SPICE(BADECCENTRICITY)'  )
-         call chkout ( 'SPKE17'                  )
          return
 
       end if
@@ -268,6 +263,5 @@
 !
 !     That's all folks.  Check out and return.
 !
-      call chkout('SPKE17')
       return
       end

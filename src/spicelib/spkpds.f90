@@ -183,11 +183,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SPKPDS' )
-      end if
+      if ( return() ) return
 !
 !     We do not support ephemerides for the solar system barycenter
 !     (at least not yet anyway).
@@ -198,7 +194,6 @@
          //            ' for the solar system barycenter.  This' &
          //            ' is not supported by the ephemeris system.' )
          call sigerr ( 'SPICE(BARYCENTEREPHEM)'                     )
-         call chkout ( 'SPKPDS'                                     )
 
          return
 
@@ -214,7 +209,6 @@
          //            ' body ID code was: #.'                 )
          call errint ( '#', body                               )
          call sigerr ( 'SPICE(BODYANDCENTERSAME)'              )
-         call chkout ( 'SPKPDS'                                )
          return
 
       end if
@@ -228,7 +222,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKPDS'                                    )
          return
 
       end if
@@ -251,7 +244,6 @@
          call errdp  ( '#', last                                   )
          call errch  ( '#', callst                                 )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKPDS'                                    )
          return
 
       end if
@@ -265,7 +257,6 @@
          //            ' within the SPK system.'                  )
          call errint ( '#', type                                  )
          call sigerr ( 'SPICE(UNKNOWNSPKTYPE)'                    )
-         call chkout ( 'SPKPDS'                                   )
          return
 
       end if
@@ -285,7 +276,6 @@
 
       call dafps  ( nd, ni, dppart, ipart, descr )
 
-      call chkout ( 'SPKPDS' )
       return
 
       end

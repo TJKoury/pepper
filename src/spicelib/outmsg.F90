@@ -626,6 +626,7 @@
 
          else if ( upword  == 'TRACEBACK' ) then
 
+!           PEPPER: there is no traceback any more; accepted and ignored.
             trace  =  .true.
 
          else if ( upword  == 'DEFAULT'   ) then
@@ -668,7 +669,6 @@
       output =        (  short   .and.  msgsel ( 'SHORT'     )  ) &
                 .or.  (  expl    .and.  msgsel ( 'EXPLAIN'   )  ) &
                 .or.  (  long    .and.  msgsel ( 'LONG'      )  ) &
-                .or.  (  trace   .and.  msgsel ( 'TRACEBACK' )  ) &
                 .or.  (  dfault  .and.  msgsel ( 'DEFAULT'   )  ) &
                 .and. (  device  /=   'NULL'                  )
 
@@ -682,9 +682,7 @@
 !
 !     If there's nothing to output, we can leave now.
 !
-      if ( .not. output ) then
-         return
-      end if
+      if ( .not. output ) return
 
 !
 !     Write the starting border: skip a line, write the border,
@@ -867,101 +865,6 @@
       end if
 
 
-      if (  trace .and. msgsel ( 'TRACEBACK' )  ) then
-!
-!        Extract the traceback from global storage and
-!        output it:
-!
-         call trcdep ( depth )
-
-         if ( depth > 0 ) then
-!
-!           We know we'll be outputting some trace information.
-!           So, write a line telling the reader what's coming.
-!
-            call wrline ( device, 'A traceback follows.  The '  // &
-                                  'name of the highest level '  // &
-                                  'module is first.'          )
-!
-!           While there are more names in the traceback
-!           representation, we stuff them into output lines and
-!           write the lines out when they are full.
-!
-            line    =   ' '
-            remain  =   ll
-
-            do index = 1, depth
-!
-!              For each module name in the traceback representation,
-!              retrieve module name and stuff it into one or more
-!              lines for output.
-!
-!              Get a name and add the call order sign.  We
-!              indicate calling order by a ' --> ' delimiter; e.g.
-!              "A calls B" is indicated by 'A --> B'.
-!
-               call trcnam ( index, name )
-
-               length = lastnb ( name )
-!
-!              If it's the first name, just put it into the output
-!              line, otherwise, add the call order sign and put the
-!              name into the output line.
-!
-               if ( index == 1 ) then
-                  call suffix ( name, 0,  line )
-                  remain = remain - length
-               else
-!
-!                 Add the calling order indicator, if it will fit.
-!                 If not, write the line and put the indicator as
-!                 the first thing on the next line.
-!
-                  if( remain >= 4 ) then
-                     call suffix ( '-->', 1,  line )
-                     remain = remain - 4
-                  else
-                     call wrline ( device, line )
-                     line = '-->'
-                     remain = ll - 3
-                  end if
-!
-!                 The name fits or it doesn't. If it does, just add
-!                 it, if it doesn't, write it, then make the name
-!                 the first thing on the next line.
-!
-                  if( remain >= length ) then
-                     call suffix ( name, 1,  line )
-                     remain = remain - length - 1
-                  else
-                     call wrline ( device, line )
-                     line = name
-                     remain = ll - length
-                  end if
-
-               end if
-
-            end do
-
-!
-!           At this point, no more names are left in the
-!           trace representation.  LINE may still contain
-!           names, or part of a long name.  If it does,
-!           we now write it out.
-!
-            if ( line /= ' ' ) then
-               call wrline ( device, line )
-            end if
-
-            call wrline  ( device, ' '  )
-
-         end if
-!
-!        At this point, either we have output the trace
-!        representation, or the trace representation was
-!        empty.
-!
-      end if
 
       if (  dfault  .and. msgsel ( 'DEFAULT' )  ) then
 !

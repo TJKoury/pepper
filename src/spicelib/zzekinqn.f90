@@ -149,11 +149,9 @@
 
       if ( init /= itrue ) then
 
-         call chkin  ( 'ZZEKINQN'                                    )
          call setmsg ( 'Encoded query must be initialized before it ' // &
                        'may be written.'                             )
          call sigerr ( 'SPICE(NOTINITIALIZED)'                       )
-         call chkout ( 'ZZEKINQN'                                    )
          return
 
       end if
@@ -168,12 +166,10 @@
 
       if ( room <= 0 ) then
 
-         call chkin  ( 'ZZEKINQN'                                    )
          call setmsg ( 'Out of room in numeric portion of encoded ' // &
                        'query; only # elements were available.'      )
          call errint ( '#',  size                                    )
          call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
-         call chkout ( 'ZZEKINQN'                                    )
          return
 
       end if

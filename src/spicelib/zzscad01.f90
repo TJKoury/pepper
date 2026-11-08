@@ -331,11 +331,8 @@
         'SCLK01_TIME_SYSTEM',     1,         0              /
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZSCAD01' )
 
 !
 !     Make up a list of names of kernel variables that we'll use.
@@ -373,7 +370,6 @@
 !        This code should be unreachable but is provided for safety.
 !
          call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call chkout ( 'ZZSCAD01' )
          return
 
       end if
@@ -399,7 +395,6 @@
          call errint ( '#', i        )
          call errint ( '#', ibufsz+1 )
          call sigerr ( 'SPICE(BUG)'  )
-         call chkout ( 'ZZSCAD01'    )
          return
 
       end if
@@ -424,7 +419,6 @@
          call errint ( '#', i        )
          call errint ( '#', dbufsz+1 )
          call sigerr ( 'SPICE(BUG)'  )
-         call chkout ( 'ZZSCAD01'    )
          return
 
       end if
@@ -451,7 +445,6 @@
       if ( failed() ) then
 
          call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call chkout ( 'ZZSCAD01' )
          return
 
       end if
@@ -489,7 +482,6 @@
             call zzscin01 ( hdsclk, scpool, clklst, &
                             dpfree, ifree,  prvsc  )
 
-            call chkout ( 'ZZSCAD01' )
             return
 
          end if
@@ -508,7 +500,6 @@
             call errch  ( '#', kvname(i)                           )
             call errint ( '#', sc                                  )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'               )
-            call chkout ( 'ZZSCAD01'                               )
             return
 
          end if
@@ -545,7 +536,6 @@
             end if
 
             call sigerr (  shrtms    )
-            call chkout ( 'ZZSCAD01' )
             return
 
          end if
@@ -582,7 +572,6 @@
          call errint ( '#', nparte                                 )
          call errint ( '#', sc                                     )
          call sigerr ( 'SPICE(NUMPARTSUNEQUAL)'                    )
-         call chkout ( 'ZZSCAD01'                                  )
          return
 
       else
@@ -607,7 +596,6 @@
          call errint ( '#', ndpval                      )
          call errint ( '#', dbufsz                      )
          call sigerr ( 'SPICE(BUG)'                     )
-         call chkout ( 'ZZSCAD01'                       )
          return
 
       else if ( ndpval > dproom ) then
@@ -663,7 +651,6 @@
             call zzscin01 ( hdsclk, scpool, clklst, &
                             dpfree, ifree,  prvsc  )
 
-            call chkout ( 'ZZSCAD01' )
             return
 
          end if
@@ -680,6 +667,5 @@
       dpfree = dpfree + ndpval
       ifree  = ifree  + nivals
 
-      call chkout ( 'ZZSCAD01' )
       return
       end

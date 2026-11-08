@@ -184,7 +184,6 @@
          segno  =  segdsc   ( snoidx )
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRSI'                                       )
          call setmsg ( 'Column # is of type #; ZZEKRSI only works '   // &
                        'with integer columns.  RECNO = #; SEGNO = '   // &
                        '#; EK = #.'                                    )
@@ -194,7 +193,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
-         call chkout ( 'ZZEKRSI'                                       )
          return
 
       end if
@@ -243,7 +241,6 @@
          segno  =  segdsc   ( snoidx )
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRSI'                                       )
          call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported integer class.  COLUMN = #; '     // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
@@ -253,7 +250,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKRSI'                                       )
          return
 
       end if

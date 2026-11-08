@@ -471,10 +471,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
-      call chkin ( 'DASADC' )
+      if ( return () ) return
 
 
 !
@@ -491,7 +488,6 @@
          call errint ( '#',  bpos                                      )
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         call chkout ( 'DASADC'                                        )
          return
 
 
@@ -503,7 +499,6 @@
          call errint ( '#',  bpos                                      )
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         call chkout ( 'DASADC'                                        )
          return
 
       end if
@@ -521,10 +516,7 @@
                     lastrc, &
                     lastwd )
 
-      if ( failed() ) then
-         call chkout ( 'DASADC' )
-         return
-      end if
+      if ( failed() ) return
 
       lastc  =  lastla(char)
 
@@ -677,6 +669,5 @@
 !
       call dascud ( handle, char, nwritn )
 
-      call chkout ( 'DASADC' )
       return
       end

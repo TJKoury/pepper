@@ -395,11 +395,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PROP2B' )
-      end if
+      if ( return () ) return
 
 !
 !     Life will be easier if we use POS and VEL to hold the state.
@@ -491,7 +487,6 @@
 !
          if ( gm <= 0.0_wp ) then
             call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
-            call chkout ( 'PROP2B'                   )
             return
          end if
 
@@ -500,7 +495,6 @@
 !
          if ( vzero(pos) ) then
             call sigerr ( 'SPICE(ZEROPOSITION)'   )
-            call chkout ( 'PROP2B'                )
             return
          end if
 
@@ -509,7 +503,6 @@
 !
          if ( vzero(vel) ) then
             call sigerr ( 'SPICE(ZEROVELOCITY)'   )
-            call chkout ( 'PROP2B'                )
             return
          end if
 
@@ -550,7 +543,6 @@
 !
          if ( h2 == 0 ) then
             call sigerr ( 'SPICE(NONCONICMOTION)'   )
-            call chkout ( 'PROP2B'                  )
             return
          end if
 
@@ -1065,7 +1057,6 @@
                call errdp  ( '#', kfunl                               )
                call errdp  ( '#', kfunu                               )
                call sigerr ( 'SPICE(DTOUTOFRANGE)'                    )
-               call chkout ( 'PROP2B'                                 )
                return
             end if
 
@@ -1111,7 +1102,6 @@
                call errdp  ( '#', kfunl                               )
                call errdp  ( '#', kfunu                               )
                call sigerr ( 'SPICE(DTOUTOFRANGE)'                    )
-               call chkout ( 'PROP2B'                                 )
                return
             end if
 
@@ -1126,7 +1116,6 @@
       else
 
          call vequg  ( pvinit, 6, pvprop )
-         call chkout ( 'PROP2B'          )
          return
 
       end if
@@ -1212,7 +1201,6 @@
       call vlcom ( pc,    pos, vc,    vel,       pvprop(1) )
       call vlcom ( pcdot, pos, vcdot, vel,       pvprop(4) )
 
-      call chkout ( 'PROP2B' )
       return
 
       end

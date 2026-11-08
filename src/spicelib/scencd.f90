@@ -521,11 +521,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SCENCD' )
 
 !
 !     Read the partition start and stop times (in ticks) for this
@@ -533,10 +530,7 @@
 !
       call scpart ( sc, nparts, pstart, pstop )
 
-      if ( failed() ) then
-         call chkout ( 'SCENCD' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( nparts > mxpart ) then
 !
@@ -548,7 +542,6 @@
          call errint ( '#', sc               )
          call errint ( '#', mxpart           )
          call sigerr ( 'SPICE(TOOMANYPARTS)' )
-         call chkout ( 'SCENCD'              )
          return
 
       end if
@@ -564,7 +557,6 @@
                        'from SCLK string #.'  )
          call errch  ( '#', sclkch            )
          call sigerr ( 'SPICE(BADPARTNUMBER)' )
-         call chkout ( 'SCENCD'               )
          return
 
       end if
@@ -575,17 +567,13 @@
          //            'slash in SCLK string #.'  )
          call errch  ( '#', sclkch                )
          call sigerr ( 'SPICE(INVALIDSCLKSTRING)' )
-         call chkout ( 'SCENCD'                   )
          return
 
       end if
 
       call sctiks (  sc, sclkch( pos+1 : ), ticks )
 
-      if ( failed() ) then
-         call chkout ( 'SCENCD' )
-         return
-      end if
+      if ( failed() ) return
 
       ticks = anint ( ticks )
 
@@ -644,7 +632,6 @@
                           'from SCLK string #.'  )
             call errch  ( '#', sclkch            )
             call sigerr ( 'SPICE(BADPARTNUMBER)' )
-            call chkout ( 'SCENCD'               )
             return
 
          else if ( part <= 0 .or. part > nparts ) then
@@ -655,7 +642,6 @@
             call errch  ( '#', sclkch            )
             call errint ( '#', nparts            )
             call sigerr ( 'SPICE(BADPARTNUMBER)' )
-            call chkout ( 'SCENCD'               )
             return
 
          else if ( ticks < pstart( part )   .or. &
@@ -666,7 +652,6 @@
             call errch  ( '#', sclkch        )
             call errint ( '#', part          )
             call sigerr ( 'SPICE(NOTINPART)' )
-            call chkout ( 'SCENCD'           )
             return
 
          end if
@@ -691,7 +676,6 @@
             call errch  ( '#', sclkch          )
             call errint ( '#', sc              )
             call sigerr ( 'SPICE(NOPARTITION)' )
-            call chkout ( 'SCENCD'             )
             return
 
          end if
@@ -710,6 +694,5 @@
          sclkdp = ticks - pstart( part )
       end if
 
-      call chkout ( 'SCENCD' )
       return
       end

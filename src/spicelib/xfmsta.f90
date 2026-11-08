@@ -746,11 +746,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'XFMSTA' )
 
 !
 !     Initialization.
@@ -800,7 +797,6 @@
             call errch  ( '#', icosys )
             call errch  ( '#', ocosys )
             call sigerr ( 'SPICE(COORDSYSNOTREC)' )
-            call chkout ( 'XFMSTA' )
             return
 
          else if ( isys == 0 ) then
@@ -812,7 +808,6 @@
                      //   'was not recognized'  )
             call errch  ( '#', icosys )
             call sigerr ( 'SPICE(COORDSYSNOTREC)' )
-            call chkout ( 'XFMSTA' )
             return
 
          else
@@ -824,7 +819,6 @@
                      //   'was not recognized'    )
             call errch  ( '#', ocosys )
             call sigerr ( 'SPICE(COORDSYSNOTREC)' )
-            call chkout ( 'XFMSTA' )
             return
 
          end if
@@ -839,7 +833,6 @@
       if ( isys == osys ) then
 
          call vequg  ( istate, 6, ostate )
-         call chkout ( 'XFMSTA' )
          return
 
       end if
@@ -867,10 +860,7 @@
 
             call zzgftreb ( bodyid, radii )
 
-            if ( failed() ) then
-               call chkout ( 'XFMSTA' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           If the difference of the equatorial and polar radii
@@ -888,7 +878,6 @@
                call errdp  ( '#', radii(1) )
                call errdp  ( '#', radii(3) )
                call sigerr ( 'SPICE(INVALIDRADIUS)' )
-               call chkout ( 'XFMSTA'      )
                return
 
             end if
@@ -910,7 +899,6 @@
                call errch  ( '#', cosys ( geodet )                   )
                call errch  ( '#', cosys ( plntgr )                   )
                call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
-               call chkout ( 'XFMSTA'                                )
                return
 
             end if
@@ -926,7 +914,6 @@
                      //   'have a valid NAIF ID code.' )
             call errch  ( '#', body )
             call sigerr ( 'SPICE(IDCODENOTFOUND)'     )
-            call chkout ( 'XFMSTA'  )
             return
 
          end if
@@ -991,10 +978,7 @@
             call georec ( istate(1), istate(2), istate(3), radii(1), &
                           f, ipos )
 
-            if ( failed() ) then
-               call chkout ( 'XFMSTA' )
-               return
-            end if
+            if ( failed() ) return
 
             call drdgeo ( istate(1), istate(2), istate(3), radii(1), &
                           f, jacobi )
@@ -1008,10 +992,7 @@
             call pgrrec ( body, istate(1), istate(2), istate(3), &
                           radii(1), f, ipos   )
 
-            if ( failed() ) then
-               call chkout ( 'XFMSTA' )
-               return
-            end if
+            if ( failed() ) return
 
             call drdpgr ( body, istate(1), istate(2), istate(3), &
                           radii(1), f, jacobi )
@@ -1025,7 +1006,6 @@
                      //   'coordinate system is not recognized, yet ' &
                      //   'was not caught by an earlier check.' )
             call sigerr ( 'SPICE(BUG1)')
-            call chkout ( 'XFMSTA' )
             return
 
          end if
@@ -1034,10 +1014,7 @@
 !        Some DRD* routines are not error free. Be safe and check
 !        FAILED to not use un-initialized JACOBI.
 !
-         if ( failed() ) then
-            call chkout ( 'XFMSTA' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the multiplication of the Jacobian and velocity can cause
@@ -1056,7 +1033,6 @@
                            //   'and velocity may cause numeric ' &
                            //   'overflow.' )
                   call sigerr ( 'SPICE(NUMERICOVERFLOW)' )
-                  call chkout ( 'XFMSTA'    )
                   return
 
                end if
@@ -1089,7 +1065,6 @@
                   //   'coordinate system is rectangular, the ELSE IF ' &
                   //   'should be executed.' )
          call sigerr ( 'SPICE(BUG2)' )
-         call chkout ( 'XFMSTA'    )
          return
 
       end if
@@ -1197,7 +1172,6 @@
                        //   'system is not recognized, yet was not ' &
                        //   'caught by an earlier check.' )
                   call sigerr ( 'SPICE(BUG3)' )
-                  call chkout ( 'XFMSTA'    )
                   return
 
                end if
@@ -1206,7 +1180,6 @@
 !              case of the position and velocity existing along the
 !              z-axis.
 !
-               call chkout ( 'XFMSTA' )
                return
 
             else
@@ -1217,7 +1190,6 @@
 !
                call setmsg ( 'Invalid input state: z axis.' )
                call sigerr ( 'SPICE(INVALIDSTATE)' )
-               call chkout ( 'XFMSTA' )
                return
 
             end if
@@ -1285,7 +1257,6 @@
                      //   'output coordinate system is not recognized, ' &
                      //   'yet was not caught by an earlier check.' )
             call sigerr ( 'SPICE(BUG4)' )
-            call chkout ( 'XFMSTA'    )
             return
 
          end if
@@ -1294,10 +1265,7 @@
 !        Many D*DR and REC* routines are not error free. Be safe and
 !        check FAILED to not use un-initialized JACOBI.
 !
-         if ( failed() ) then
-            call chkout ( 'XFMSTA' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the multiplication of the Jacobian and velocity can cause
@@ -1316,7 +1284,6 @@
                            //   'and velocity may cause numeric ' &
                            //   'overflow.' )
                   call sigerr ( 'SPICE(NUMERICOVERFLOW)' )
-                  call chkout ( 'XFMSTA'    )
                   return
 
                end if
@@ -1351,11 +1318,9 @@
                   //   'coordinate system is rectangular, the ELSE IF ' &
                   //   'should be executed.' )
          call sigerr ( 'SPICE(BUG5)' )
-         call chkout ( 'XFMSTA'    )
          return
 
       end if
 
-      call chkout ( 'XFMSTA' )
       return
       end

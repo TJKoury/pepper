@@ -570,11 +570,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'PCKCOV' )
 
 !
 !     See whether GETFAT thinks we've got a binary PCK file.
@@ -582,10 +579,7 @@
 !
       call getfat ( pckfnm, arch, kertyp )
 
-      if ( failed() ) then
-         call chkout ( 'PCKCOV' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( arch == 'XFR' ) then
 
@@ -597,7 +591,6 @@
          call errch  ( '#',  pckfnm                                )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
-         call chkout ( 'PCKCOV'                                    )
          return
 
       else if ( arch /= 'DAF' ) then
@@ -614,7 +607,6 @@
          call errch  ( '#',  pckfnm                                )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
-         call chkout ( 'PCKCOV'                                    )
          return
 
       else if ( kertyp /= 'PCK' ) then
@@ -630,7 +622,6 @@
          call errch  ( '#',  pckfnm                                )
          call errch  ( '#',  kertyp                                )
          call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
-         call chkout ( 'PCKCOV'                                    )
          return
 
       end if
@@ -640,10 +631,7 @@
 !
       call dafopr ( pckfnm, handle )
 
-      if ( failed() ) then
-         call chkout ( 'PCKCOV' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -684,6 +672,5 @@
 !
       call dafcls ( handle )
 
-      call chkout ( 'PCKCOV' )
       return
       end

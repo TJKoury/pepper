@@ -1011,11 +1011,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'POOL' )
-      end if
+      if ( return () ) return
 
 !
 !     This routine should never be called. If this routine is called,
@@ -1028,7 +1024,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'POOL' )
       return
 
 
@@ -1353,11 +1348,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CLPOOL' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -1406,7 +1397,6 @@
                          wtagnt,    active, notify, agents )
       end do
 
-      call chkout ( 'CLPOOL' )
       return
 
 
@@ -1809,11 +1799,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'LDPOOL' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the pool if necessary.
@@ -1887,7 +1873,6 @@
 !     doesn't hurt anything.
 !
       call cltext (  fname  )
-      call chkout ( 'LDPOOL' )
       return
 
 
@@ -2111,11 +2096,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RTPOOL' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -2147,7 +2128,6 @@
       if ( namlst(lookat) == 0 ) then
 
          found = .false.
-         call chkout ( 'RTPOOL' )
          return
 
       end if
@@ -2166,7 +2146,6 @@
          if ( node < 0 ) then
 
             found = .false.
-            call chkout ( 'RTPOOL' )
             return
 
          end if
@@ -2202,7 +2181,6 @@
 
       end if
 
-      call chkout ( 'RTPOOL' )
       return
 
 
@@ -2527,11 +2505,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'EXPOOL' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -2563,7 +2537,6 @@
       if ( namlst(lookat) == 0 ) then
 
          found = .false.
-         call chkout ( 'EXPOOL' )
          return
 
       end if
@@ -2582,7 +2555,6 @@
          if ( node < 0 ) then
 
             found = .false.
-            call chkout ( 'EXPOOL' )
             return
 
          end if
@@ -2600,7 +2572,6 @@
 !
       found = datlst(node) > 0
 
-      call chkout ( 'EXPOOL' )
       return
 
 
@@ -2905,11 +2876,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'WRPOOL' )
-      end if
+      if ( return() ) return
 
 !
 !     Indicate the beginning of a data section.
@@ -2923,7 +2890,6 @@
                       ' ', &
                        iostat             )
          call sigerr ( 'SPICE(WRITEERROR)' )
-         call chkout ( 'WRPOOL'            )
          return
       end if
 
@@ -2961,7 +2927,6 @@
                r = rtrim(pnames(nnode))
                call errch  ( '#', pnames(nnode)(1:r) )
                call sigerr ( 'SPICE(BUG)'           )
-               call chkout ( 'WRPOOL' )
                return
             end if
 !
@@ -3040,7 +3005,6 @@
                                 ' ', &
                                 iostat              )
                   call sigerr ( 'SPICE(WRITEERROR)' )
-                  call chkout ( 'WRPOOL'            )
                   return
                end if
 
@@ -3077,11 +3041,9 @@
                         ' ', &
                         iostat              )
          call sigerr ( 'SPICE(WRITEERROR)' )
-         call chkout ( 'WRPOOL'            )
          return
       end if
 
-      call chkout ( 'WRPOOL' )
       return
 
 
@@ -3385,11 +3347,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SWPOOL' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the pool if necessary.
@@ -3448,7 +3406,6 @@
          call errint ( '#', nnames                        )
          call errch  ( '#', agent                         )
          call sigerr ( 'SPICE(KERVARSETOVERFLOW)'         )
-         call chkout ( 'SWPOOL'                           )
          return
 
       end if
@@ -3493,7 +3450,6 @@
                call errch  ( '#', names(i)                            )
                call errint ( '#', maxagt                              )
                call sigerr ( 'SPICE(TOOMANYWATCHES)'                  )
-               call chkout ( 'SWPOOL'                                 )
                return
 
             end if
@@ -3518,7 +3474,6 @@
          call errint ( '#', need                            )
          call errch  ( '#', agent                           )
          call sigerr ( 'SPICE(AGENTLISTOVERFLOW)'           )
-         call chkout ( 'SWPOOL'                             )
          return
 
       end if
@@ -3668,7 +3623,6 @@
 !
 !     That is all.
 !
-      call chkout ( 'SWPOOL' )
       return
 
 
@@ -3985,11 +3939,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CVPOOL' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the pool if necessary.
@@ -4019,7 +3969,6 @@
       end if
 
 
-      call chkout ( 'CVPOOL' )
       return
 
 
@@ -4269,11 +4218,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'GCPOOL' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -4305,7 +4250,6 @@
 
          call errint ( '#', room )
          call sigerr ( 'SPICE(BADARRAYSIZE)'  )
-         call chkout ( 'GCPOOL' )
          return
 
       end if
@@ -4325,7 +4269,6 @@
       if ( namlst(lookat) == 0 ) then
 
          found = .false.
-         call chkout ( 'GCPOOL' )
          return
 
       end if
@@ -4344,7 +4287,6 @@
          if ( node < 0 ) then
 
             found = .false.
-            call chkout ( 'GCPOOL' )
             return
 
          end if
@@ -4363,7 +4305,6 @@
 
          n     =  0
          found = .false.
-         call chkout ( 'GCPOOL' )
          return
 
       else if ( datahd == 0 ) then
@@ -4376,7 +4317,6 @@
          //            'this error to NAIF. '   )
          call errch  ( '#', name(1:rtrim(name)) )
          call sigerr ( 'SPICE(BUG)'             )
-         call chkout ( 'GCPOOL'                 )
          return
 
       end if
@@ -4395,10 +4335,7 @@
             n        = n+1
             cvals(n) = chvals(     node)
 
-            if ( n == room ) then
-               call chkout ( 'GCPOOL' )
-               return
-            end if
+            if ( n == room ) return
 
          end if
 
@@ -4406,7 +4343,6 @@
 
       end do
 
-      call chkout ( 'GCPOOL' )
       return
 
 
@@ -4652,11 +4588,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'GDPOOL' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -4688,7 +4620,6 @@
 
          call errint ( '#', room )
          call sigerr ( 'SPICE(BADARRAYSIZE)'  )
-         call chkout ( 'GDPOOL' )
          return
 
       end if
@@ -4707,7 +4638,6 @@
       if ( namlst(lookat) == 0 ) then
 
          found = .false.
-         call chkout ( 'GDPOOL' )
          return
 
       end if
@@ -4726,7 +4656,6 @@
          if ( node < 0 ) then
 
             found = .false.
-            call chkout ( 'GDPOOL' )
             return
 
          end if
@@ -4745,7 +4674,6 @@
 
          n     =  0
          found = .false.
-         call chkout ( 'GDPOOL' )
          return
 
       else if ( datahd == 0 ) then
@@ -4758,7 +4686,6 @@
          //            'this error to NAIF. '   )
          call errch  ( '#', name(1:rtrim(name)) )
          call sigerr ( 'SPICE(BUG)'             )
-         call chkout ( 'GDPOOL'                 )
          return
 
       end if
@@ -4777,10 +4704,7 @@
             n = n+1
             values(n) = dpvals(     node)
 
-            if ( n == room ) then
-               call chkout ( 'GDPOOL' )
-               return
-            end if
+            if ( n == room ) return
 
          end if
 
@@ -4788,7 +4712,6 @@
 
       end do
 
-      call chkout ( 'GDPOOL' )
       return
 
 
@@ -5035,11 +4958,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'GIPOOL' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -5071,7 +4990,6 @@
 
          call errint ( '#', room )
          call sigerr ( 'SPICE(BADARRAYSIZE)'  )
-         call chkout ( 'GIPOOL' )
          return
 
       end if
@@ -5090,7 +5008,6 @@
       if ( namlst(lookat) == 0 ) then
 
          found = .false.
-         call chkout ( 'GIPOOL' )
          return
 
       end if
@@ -5109,7 +5026,6 @@
          if ( node < 0 ) then
 
             found = .false.
-            call chkout ( 'GIPOOL' )
             return
 
          end if
@@ -5128,7 +5044,6 @@
 
          n     =  0
          found = .false.
-         call chkout ( 'GIPOOL' )
          return
 
       else if ( datahd == 0 ) then
@@ -5141,7 +5056,6 @@
          //            'this error to NAIF. '   )
          call errch  ( '#', name(1:rtrim(name)) )
          call sigerr ( 'SPICE(BUG)'             )
-         call chkout ( 'GIPOOL'                )
          return
 
       end if
@@ -5180,15 +5094,11 @@
                call errch  ( '#', name(1:rtrim(name))   )
                call errdp  ( '#', dpvals(node)          )
                call sigerr ( 'SPICE(INTOUTOFRANGE)'     )
-               call chkout ( 'GIPOOL' )
                return
 
 
             end if
-            if ( n == room ) then
-               call chkout ( 'GIPOOL' )
-               return
-            end if
+            if ( n == room ) return
 
          end if
 
@@ -5196,7 +5106,6 @@
 
       end do
 
-      call chkout ( 'GIPOOL' )
       return
 
 
@@ -5449,11 +5358,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DTPOOL' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the pool if necessary.
@@ -5489,12 +5394,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) == 0 ) then
-
-         call chkout ( 'DTPOOL' )
-         return
-
-      end if
+      if ( namlst(lookat) == 0 ) return
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
@@ -5507,12 +5407,7 @@
 
          node = nmpool ( next, node )
 
-         if ( node < 0 ) then
-
-            call chkout ( 'DTPOOL' )
-            return
-
-         end if
+         if ( node < 0 ) return
 
          succes = name == pnames(node)
 
@@ -5557,13 +5452,11 @@
          //            'this error to NAIF. '   )
          call errch  ( '#', name(1:rtrim(name)) )
          call sigerr ( 'SPICE(BUG)'             )
-         call chkout ( 'DTPOOL'                 )
 
          return
 
       end if
 
-      call chkout ( 'DTPOOL' )
       return
 
 
@@ -5821,15 +5714,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n <= 0 ) then
-         return
-      end if
+      if ( n <= 0 ) return
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'PCPOOL' )
 
 
 !
@@ -5850,7 +5738,6 @@
          call errint ( '#2', varlen                   )
          call errch  ( '#3', name                     )
          call sigerr ( 'SPICE(BADVARNAME)'            )
-         call chkout ( 'PCPOOL'                       )
          return
 
       end if
@@ -5886,10 +5773,7 @@
                     chpool, chvals, &
                     name,   gotit,  lookat, nameat )
 
-      if ( failed() ) then
-         call chkout ( 'PCPOOL' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
@@ -5960,7 +5844,6 @@
          call errch  ( '#', name )
          call errint ( '#', avail   )
          call sigerr ( 'SPICE(NOMOREROOM)' )
-         call chkout ( 'PCPOOL' )
          return
 
       end if
@@ -6023,7 +5906,6 @@
             //            'adding another character value ' &
             //            'to the kernel pool.' )
             call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            call chkout ( 'PCPOOL' )
             return
 
          end if
@@ -6083,7 +5965,6 @@
 
       end if
 
-      call chkout ( 'PCPOOL' )
       return
 
 
@@ -6340,15 +6221,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n <= 0 ) then
-         return
-      end if
+      if ( n <= 0 ) return
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'PDPOOL' )
 
 
 !
@@ -6369,7 +6245,6 @@
          call errint ( '#2', varlen                   )
          call errch  ( '#3', name                     )
          call sigerr ( 'SPICE(BADVARNAME)'            )
-         call chkout ( 'PDPOOL'                       )
          return
 
       end if
@@ -6405,10 +6280,7 @@
                     chpool, chvals, &
                     name,   gotit,  lookat, nameat )
 
-      if ( failed() ) then
-         call chkout ( 'PDPOOL' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
@@ -6479,7 +6351,6 @@
          call errch  ( '#', name )
          call errint ( '#', avail   )
          call sigerr ( 'SPICE(NOMOREROOM)' )
-         call chkout ( 'PDPOOL' )
          return
 
       end if
@@ -6548,7 +6419,6 @@
             //            'adding another numeric value ' &
             //            'to the kernel pool.' )
             call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            call chkout ( 'PDPOOL' )
             return
 
          end if
@@ -6601,7 +6471,6 @@
       end if
 
 
-      call chkout ( 'PDPOOL' )
       return
 
 
@@ -6858,15 +6727,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n <= 0 ) then
-         return
-      end if
+      if ( n <= 0 ) return
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'PIPOOL' )
 
 
 !
@@ -6887,7 +6751,6 @@
          call errint ( '#2', varlen                   )
          call errch  ( '#3', name                     )
          call sigerr ( 'SPICE(BADVARNAME)'            )
-         call chkout ( 'PIPOOL'                       )
          return
 
       end if
@@ -6923,10 +6786,7 @@
                     chpool, chvals, &
                     name, gotit,  lookat, nameat )
 
-      if ( failed() ) then
-         call chkout ( 'PIPOOL' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
@@ -6996,7 +6856,6 @@
          call errch  ( '#', name )
          call errint ( '#', avail   )
          call sigerr ( 'SPICE(NOMOREROOM)' )
-         call chkout ( 'PIPOOL' )
          return
 
       end if
@@ -7065,7 +6924,6 @@
             //            'adding another numeric value ' &
             //            'to the kernel pool.' )
             call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            call chkout ( 'PIPOOL' )
             return
 
          end if
@@ -7119,7 +6977,6 @@
       end if
 
 
-      call chkout ( 'PIPOOL' )
       return
 
 
@@ -7311,11 +7168,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'LMPOOL' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the pool if necessary.
@@ -7385,7 +7238,6 @@
 !     That's it, the buffer supplied has been completely parsed
 !     and placed into the kernel pool.
 !
-      call chkout  ( 'LMPOOL' )
       return
 
 
@@ -7550,11 +7402,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SZPOOL')
 
       found = .true.
 
@@ -7577,7 +7426,6 @@
          found = .false.
       end if
 
-      call chkout ( 'SZPOOL' )
       return
 
 
@@ -7752,11 +7600,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'DVPOOL' )
-      end if
+      if ( return() ) return
 
 !
 !     Initialize the pool if necessary.
@@ -7793,12 +7637,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) == 0 ) then
-
-         call chkout ( 'DVPOOL' )
-         return
-
-      end if
+      if ( namlst(lookat) == 0 ) return
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
@@ -7811,12 +7650,7 @@
 
          nameat = nmpool ( next, nameat )
 
-         if ( nameat < 0 ) then
-
-            call chkout ( 'DVPOOL' )
-            return
-
-         end if
+         if ( nameat < 0 ) return
 
          succes = name == pnames(nameat)
 
@@ -7856,7 +7690,6 @@
 
       end if
 
-      call chkout ( 'DVPOOL' )
       return
 
 
@@ -8107,11 +7940,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GNPOOL')
 
 
 !
@@ -8143,7 +7973,6 @@
 
          call errint ( '#', room )
          call sigerr ( 'SPICE(BADARRAYSIZE)'  )
-         call chkout ( 'GNPOOL' )
          return
 
       end if
@@ -8187,7 +8016,6 @@
 !
                   if ( n == room ) then
                      found = .true.
-                     call chkout ( 'GNPOOL' )
                      return
                   end if
 
@@ -8209,7 +8037,6 @@
 
       found = hits > 0
 
-      call chkout ( 'GNPOOL' )
       return
 
 
@@ -8339,11 +8166,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DWPOOL' )
 
 !
 !     Initialize the pool if necessary.
@@ -8372,7 +8196,6 @@
          //            'with at least one updated kernel variable. ' )
          call errch  ( '#', agent                                    )
          call sigerr ( 'SPICE(UPDATEPENDING)'                        )
-         call chkout ( 'DWPOOL'                                      )
          return
 
       end if
@@ -8534,7 +8357,6 @@
 !
       end do
 
-      call chkout ( 'DWPOOL' )
       return
 
 
@@ -8678,11 +8500,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZVUPOOL' )
 
       call copyc ( wtvars, uwvars                )
       call movei ( wtptrs, cardc(wtvars), uwptrs )
@@ -8700,7 +8519,6 @@
       call movec ( wtagnt, mxnote, uwagnt )
 
 
-      call chkout ( 'ZZVUPOOL' )
       return
 
 
@@ -8879,9 +8697,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
       call zzctrchk ( subctr, usrctr, update )
 

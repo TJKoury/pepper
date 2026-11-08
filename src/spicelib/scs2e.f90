@@ -262,11 +262,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCS2E' )
-      end if
+      if ( return () ) return
 
 !
 !     Encode SCLKCH, and convert the result to ET.
@@ -274,6 +270,5 @@
       call scencd ( sc, sclkch, sclkdp )
       call sct2e  ( sc, sclkdp, et     )
 
-      call chkout ( 'SCS2E' )
       return
       end

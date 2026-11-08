@@ -186,11 +186,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCA2B' )
-      end if
+      if ( return () ) return
 
 !
 !     Open the text file with read access.  SPCT2B will
@@ -204,6 +200,5 @@
       close       (         unit )
 
 
-      call chkout ( 'SPCA2B' )
       return
       end

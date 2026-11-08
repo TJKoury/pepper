@@ -213,11 +213,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDNPT' )
 !
 !     Until we have reason to believe otherwise, we set FOUND to TRUE.
 !
@@ -366,7 +363,6 @@
             m(i,i) = 1.0_wp / dterm(i)
          else
             found = .false.
-            call chkout ( 'ZZDNPT' )
             return
          end if
 
@@ -376,7 +372,6 @@
 
       if ( denom == 0.0_wp ) then
          found = .false.
-         call chkout ( 'ZZDNPT' )
          return
       end if
 
@@ -420,7 +415,6 @@
 !
       dalt = vdot ( norml, state(4) )
 
-      call chkout ( 'ZZDNPT' )
 
       return
       end

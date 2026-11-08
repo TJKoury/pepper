@@ -257,11 +257,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODKER' )
-      end if
+      if ( return() ) return
 
 !
 !     Until the code below proves otherwise, we shall assume
@@ -275,10 +271,7 @@
       call gcpool ( nbn, 1, nroom, num(1), names, plfind(1) )
       call gipool ( nbc, 1, nroom, num(2), codes, plfind(2) )
 
-      if ( failed() ) then
-         call chkout ( 'ZZBODKER' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Examine PLFIND(1) and PLFIND(2) for problems.
@@ -304,7 +297,6 @@
          end if
 
          call sigerr ( 'SPICE(MISSINGKPV)' )
-         call chkout ( 'ZZBODKER'          )
          return
 
       else if ( .not. plfind(1) ) then
@@ -312,7 +304,6 @@
 !
 !        Return if both keywords are absent.
 !
-         call chkout ( 'ZZBODKER' )
          return
 
       end if
@@ -324,10 +315,7 @@
       call dtpool ( nbn, found, nsiz(1), type(1) )
       call dtpool ( nbc, found, nsiz(2), type(2) )
 
-      if ( failed() ) then
-         call chkout ( 'ZZBODKER' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( ( nsiz(1) > nroom ) .or. ( nsiz(2) > nroom ) ) then
 
@@ -341,7 +329,6 @@
          call errint ( '#2', nsiz(2)                         )
          call errint ( '#3', nroom                           )
          call sigerr ( 'SPICE(KERVARTOOBIG)'                 )
-         call chkout ( 'ZZBODKER'                            )
          return
 
       else if ( nsiz(1) /= nsiz(2) ) then
@@ -357,7 +344,6 @@
          call errint ( '#', nsiz(1)                           )
          call errint ( '#', nsiz(2)                           )
          call sigerr ( 'SPICE(BADDIMENSIONS)'                 )
-         call chkout ( 'ZZBODKER'                             )
          return
 
       end if
@@ -384,7 +370,6 @@
             //            'the NAIF_BODY_NAME array.'               )
             call errint ( '#', i                                    )
             call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
-            call chkout ( 'ZZBODKER'                                )
             return
 
          end if
@@ -403,10 +388,7 @@
                       bnmlst, bnmpol, bnmnms, bnmidx, &
                       bidlst, bidpol, bidids, bididx  )
 
-      if ( failed() ) then
-         call chkout ( 'ZZBODKER' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -415,7 +397,6 @@
 !
       extker = .true.
 
-      call chkout ( 'ZZBODKER' )
       return
 
       end

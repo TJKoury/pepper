@@ -435,11 +435,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DAZLDR' )
 
 !
 !     There is a singularity of the Jacobian matrix for points on
@@ -452,7 +449,6 @@
          //            'coordinates is not defined for points on ' &
          //            'the z-axis.'                               )
          call sigerr ( 'SPICE(POINTONZAXIS)'                       )
-         call chkout ( 'DAZLDR'                                    )
          return
 
       end if
@@ -498,6 +494,5 @@
 
       end if
 
-      call chkout ( 'DAZLDR' )
       return
       end

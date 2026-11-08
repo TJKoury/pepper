@@ -693,11 +693,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKW01' )
 
 !
 !     The first thing that we will do is create the segment descriptor.
@@ -722,7 +719,6 @@
                        'instances for type 1.'                     )
          call errint ( '#', nrec                                   )
          call sigerr ( 'SPICE(INVALIDNUMREC)'                      )
-         call chkout ( 'CKW01'                                     )
          return
 
       end if
@@ -737,7 +733,6 @@
          call errdp  ( '#', begtim               )
          call errdp  ( '#', sclkdp(1)            )
          call sigerr ( 'SPICE(INVALIDDESCRTIME)' )
-         call chkout ( 'CKW01' )
          return
 
       end if
@@ -749,7 +744,6 @@
          call errdp  ( '#', endtim               )
          call errdp  ( '#', sclkdp(nrec)         )
          call sigerr ( 'SPICE(INVALIDDESCRTIME)' )
-         call chkout ( 'CKW01' )
          return
 
       end if
@@ -768,7 +762,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'CKW01'                                     )
          return
 
       end if
@@ -803,7 +796,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'CKW01'                                 )
             return
 
          end if
@@ -818,7 +810,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'CKW01'                                   )
          return
 
       end if
@@ -835,7 +826,6 @@
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
          call sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
-         call chkout ( 'CKW01'                                 )
          return
 
       end if
@@ -855,7 +845,6 @@
             call errint ( '#', i-1                              )
             call errdp  ( '#', sclkdp(i-1)                      )
             call sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
-            call chkout ( 'CKW01'                               )
             return
 
          end if
@@ -874,7 +863,6 @@
             //            'zero.'                                    )
             call errint ( '#', i                                     )
             call sigerr ( 'SPICE(ZEROQUATERNION)'                    )
-            call chkout ( 'CKW01'                                    )
             return
 
          end if
@@ -887,10 +875,7 @@
 
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'CKW01' )
-         return
-       end if
+      if ( failed() ) return
 
 
 
@@ -944,6 +929,5 @@
 !
       call dafena
 
-      call chkout ( 'CKW01' )
       return
       end

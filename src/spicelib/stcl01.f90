@@ -185,11 +185,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STCL01' )
-      end if
+      if ( return () ) return
 
 !
 !     Check whether the file is really a type 1 star catalog file.
@@ -202,7 +198,6 @@
                          'file.' // errmsg                  )
          call errch  ( '#', catfnm                          )
          call sigerr ( 'SPICE(BADCATALOGFILE)'              )
-         call chkout ( 'STCL01' )
          return
       end if
 
@@ -211,6 +206,5 @@
 !
       call eklef  ( catfnm, handle )
 
-      call chkout ( 'STCL01' )
       return
       end

@@ -292,11 +292,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKOPN' )
 !
 !     Compute the number of comment records that we want to allocate, if
 !     the number of comment characters requested is greater than zero,
@@ -324,6 +321,5 @@
 
       end if
 
-      call chkout ( 'SPKOPN' )
       return
       end

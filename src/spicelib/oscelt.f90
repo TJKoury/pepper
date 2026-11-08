@@ -637,11 +637,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'OSCELT' )
-      end if
+      if ( return () ) return
 
 
       if ( mu <= 0.0_wp ) then
@@ -649,7 +645,6 @@
          call setmsg ( 'MU = #; non-positive gravitational parameter' )
          call errdp  ( '#',  mu                                       )
          call sigerr ( 'SPICE(NONPOSITIVEMASS)'                       )
-         call chkout ( 'OSCELT'                                       )
          return
 
       end if
@@ -694,7 +689,6 @@
 
          call setmsg ( 'Zero vector for input position vector.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )
-         call chkout ( 'OSCELT'                                 )
          return
 
       end if
@@ -703,7 +697,6 @@
 
          call setmsg ( 'Zero vector for input velocity vector.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )
-         call chkout ( 'OSCELT'                                 )
          return
 
       end if
@@ -724,7 +717,6 @@
                        'to parallel; the specific angular momentum ' // &
                        'vector is zero.'                              )
          call sigerr ( 'SPICE(DEGENERATECASE)'                        )
-         call chkout ( 'OSCELT'                                       )
          return
 
       end if
@@ -950,6 +942,5 @@
       elts(8) = mu
 
 
-      call chkout ( 'OSCELT' )
       return
       end

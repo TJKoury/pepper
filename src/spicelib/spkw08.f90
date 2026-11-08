@@ -455,11 +455,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKW08' )
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -471,7 +468,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW08'                                    )
          return
 
       end if
@@ -484,7 +480,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW08'                                  )
          return
 
       end if
@@ -506,7 +501,6 @@
             call errint ( '#',   i                                )
             call errint ( '#',   chrcod                           )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW08'                                )
             return
 
          end if
@@ -524,7 +518,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW08'                                        )
          return
 
       end if
@@ -542,7 +535,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
-         call chkout ( 'SPKW08'                                        )
          return
 
       end if
@@ -557,7 +549,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW08'                                    )
          return
 
       end if
@@ -570,7 +561,6 @@
          call setmsg ( 'The step size must be > 0 but was #. ' )
          call errdp  ( '#', step                               )
          call sigerr ( 'SPICE(INVALIDSTEPSIZE)'                )
-         call chkout ( 'SPKW08'                                )
          return
 
       end if
@@ -595,7 +585,6 @@
          call errdp  ( '#',    begtim-first                          )
          call errdp  ( '#',    tol                                   )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW08'                                      )
          return
 
       end if
@@ -621,7 +610,6 @@
          call errdp  ( '#',   last-ltime                             )
          call errdp  ( '#',   tol                                    )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW08'                                      )
          return
 
       end if
@@ -653,10 +641,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW08' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The type 8 segment structure is eloquently described by this
@@ -696,6 +681,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW08' )
       return
       end

@@ -165,11 +165,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKWPAC' )
-      end if
+      if ( return () ) return
 
 !
 !     Check the input string length.
@@ -181,7 +177,6 @@
          call setmsg ( 'String length # is just plain wrong.' )
          call errint ( '#',  l                                )
          call sigerr ( 'SPICE(INVALIDSIZE)'                   )
-         call chkout ( 'ZZEKWPAC'                             )
          return
 
       end if
@@ -241,6 +236,5 @@
       end do
 
 
-      call chkout ( 'ZZEKWPAC' )
       return
       end

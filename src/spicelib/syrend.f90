@@ -213,11 +213,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYREND' )
-      end if
+      if ( return () ) return
 
 !
 !     Where was the old symbol?
@@ -278,6 +274,5 @@
       end if
 
 
-      call chkout ( 'SYREND' )
       return
       end

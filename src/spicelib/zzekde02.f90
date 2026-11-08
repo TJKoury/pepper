@@ -151,11 +151,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKDE02' )
 
 !
 !     Before trying to actually modify the file, do every error
@@ -166,10 +163,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKDE02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Compute the data pointer location.  If the data pointer is
@@ -266,11 +260,9 @@
          call errint ( '#',  recno                               )
          call errhan ( '#',  handle                              )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKDE02'                                )
          return
 
       end if
 
-      call chkout ( 'ZZEKDE02' )
       return
       end

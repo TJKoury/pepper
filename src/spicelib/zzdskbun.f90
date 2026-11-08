@@ -293,11 +293,8 @@
 !     Initial values
 !
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKBUN' )
 
 !
 !     Check the incoming segment count.
@@ -309,7 +306,6 @@
          //            'body # having been loaded.'            )
          call errint ( '#',  bodyid                            )
          call sigerr ( 'SPICE(NODSKSEGMENTS)'                  )
-         call chkout ( 'ZZDSKBUN'                              )
          return
 
       end if
@@ -414,10 +410,7 @@
 !
                   call refchg ( fixfid, segfid, et, xform )
 
-                  if ( failed() ) then
-                     call chkout ( 'ZZDSKBUN' )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 Transform the local copy of the point to the segment's
@@ -482,15 +475,11 @@
                   call setmsg( 'Coordinate system # is not supported.' )
                   call errint( '#', corsys                             )
                   call sigerr( 'SPICE(BADCOORDSYS)'                    )
-                  call chkout( 'ZZDSKBUN'                              )
                   return
 
                end if
 
-               if ( failed() ) then
-                  call chkout( 'ZZDSKBUN' )
-                  return
-               end if
+               if ( failed() ) return
 
 
                if ( inside ) then
@@ -505,7 +494,6 @@
                      //            'input point. Buffer size is #.'  )
                      call errint ( '#', maxhit                       )
                      call sigerr ( 'SPICE(TOOMANYHITS)'              )
-                     call chkout ( 'ZZDSKBUN'                        )
                      return
 
                   end if
@@ -548,7 +536,6 @@
          call errint ( '#', fixfid                               )
          call errint ( '#', bodyid                               )
          call sigerr ( 'SPICE(POINTNOTINSEGMENT)'                )
-         call chkout ( 'ZZDSKBUN' )
          return
 
       end if
@@ -614,10 +601,7 @@
             call zzptpl02 ( hanbuf(j), dlabuf(1,j), dskbuf(1,j), segpt, &
                             plid,      plate,       verts,       xfnd  )
 
-            if ( failed() ) then
-               call chkout( 'ZZDSKBUN' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( xfnd ) then
 !
@@ -626,10 +610,7 @@
 !
                call pltnrm ( verts(1,1), verts(1,2), verts(1,3), &
                              normal                              )
-               if ( failed() ) then
-                  call chkout( 'ZZDSKBUN' )
-                  return
-               end if
+               if ( failed() ) return
 
                call vhatip ( normal )
 !
@@ -648,16 +629,12 @@
             //            'currently supported.'                )
             call errint ( '#', dtype                            )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
-            call chkout ( 'ZZDSKBUN'                            )
             return
 
          end if
 
 
-         if ( failed() ) then
-            call chkout( 'ZZDSKBUN' )
-            return
-         end if
+         if ( failed() ) return
 
 
 
@@ -721,11 +698,9 @@
          call errint ( '#', fixfid                               )
          call errint ( '#', bodyid                               )
          call sigerr ( 'SPICE(POINTOFFSURFACE)'                  )
-         call chkout ( 'ZZDSKBUN' )
          return
 
       end if
 
-      call chkout ( 'ZZDSKBUN' )
       return
       end

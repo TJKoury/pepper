@@ -303,11 +303,8 @@
       real(wp)              udval (2)
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'UDDF' )
 
 !
 !     Apply a three-point estimation of the derivative for
@@ -323,31 +320,21 @@
 !
       call udfunc ( x-dx, udval(1) )
 
-      if (  failed() ) then
-         call chkout ( 'UDDF' )
-         return
-      end if
+      if (  failed() ) return
 
       call udfunc ( x+dx, udval(2) )
 
-      if (  failed() ) then
-         call chkout ( 'UDDF' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     Estimate the derivative at X.
 !
       call qderiv ( n, udval(1), udval(2), dx, dfdx )
 
-      if (  failed() ) then
-         call chkout ( 'UDDF' )
-         return
-      end if
+      if (  failed() ) return
 
       deriv = dfdx(1)
 
-      call chkout ( 'UDDF' )
       return
 
       end

@@ -167,11 +167,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYORDC' )
-      end if
+      if ( return () ) return
 
 !
 !     How many symbols?
@@ -196,6 +192,5 @@
       end if
 
 
-      call chkout ( 'SYORDC' )
       return
       end

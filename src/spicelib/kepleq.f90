@@ -146,7 +146,6 @@
       if ( e2 >= 0.81_wp ) then
 
          kepleq = 0.0_wp
-         call chkin  ( 'KEPLEQ' )
          call setmsg ( 'The values of H and K supplied to KEPLEQ ' &
          //            'must satisfy the inequality H*H + K*K < ' &
          //            'ECC**2 where ECC is the eccentricity ' &
@@ -158,7 +157,6 @@
          call errdp  ( '#', k  )
          call errdp  ( '#', e2 )
          call sigerr ( 'SPICE(ECCOUTOFBOUNDS)' )
-         call chkout ( 'KEPLEQ' )
          return
 
       end if

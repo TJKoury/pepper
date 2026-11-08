@@ -2176,11 +2176,8 @@
       data                  xmit   / .false. /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'TANGPT' )
 
 !
 !     Counter initialization is done separately.
@@ -2215,10 +2212,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Set logical flags indicating the attributes of the requested
 !        correction:
@@ -2279,7 +2273,6 @@
          //            'ELLIPSOID, but input value was #.' )
          call errch  ( '#', method                         )
          call sigerr ( 'SPICE(NOTSUPPORTED)'               )
-         call chkout ( 'TANGPT'                            )
          return
 
       end if
@@ -2315,7 +2308,6 @@
             //            'was #.'                                  )
             call errch  ( '#', corloc                               )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-            call chkout ( 'TANGPT'                                  )
             return
 
          end if
@@ -2337,7 +2329,6 @@
          call setmsg ( 'Input ray direction was the zero ' &
          //            'vector; this vector must be non-zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                     )
-         call chkout ( 'TANGPT'                                )
          return
 
       end if
@@ -2348,10 +2339,7 @@
       call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
                       target, trgcde, fnd    )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2364,7 +2352,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'TANGPT'                                   )
          return
 
       end if
@@ -2372,10 +2359,7 @@
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2388,7 +2372,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'TANGPT'                                   )
          return
 
       end if
@@ -2403,7 +2386,6 @@
          //            'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( 'TANGPT'                                     )
          return
 
       end if
@@ -2427,10 +2409,7 @@
 
       call zzbodvcd ( trgcde, 'RADII', 3, svctr5, svnrad, svradi )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( svnrad /= 3 ) then
 
@@ -2439,7 +2418,6 @@
          call errch  ( '#',  target                             )
          call errint ( '#',  svnrad                             )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         call chkout ( 'TANGPT'                                 )
          return
 
       end if
@@ -2456,10 +2434,7 @@
 
       call frinfo ( fxfcde, fxcent, fxclss, fxtyid, fnd )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2469,7 +2444,6 @@
          //            'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( 'TANGPT'                                  )
          return
 
       end if
@@ -2486,7 +2460,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fxcent                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( 'TANGPT'                                   )
          return
 
       end if
@@ -2498,10 +2471,7 @@
 
       call frinfo ( dfrcde, dcentr, dclass, dtypid, fnd )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2511,7 +2481,6 @@
          //            'not been loaded.'                        )
          call errch  ( '#',  dref                                )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( 'TANGPT'                                  )
          return
 
       end if
@@ -2523,10 +2492,7 @@
 !
       call spkpos ( target, et, fixref, abcorr, obsrvr, tpos, lt )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( vzero(tpos) ) then
 
@@ -2536,7 +2502,6 @@
          call errch  ( '#',  obsrvr                              )
          call errch  ( '#',  target                              )
          call sigerr ( 'SPICE(NOSEPARATION)'                     )
-         call chkout ( 'TANGPT'                                  )
          return
 
       end if
@@ -2554,10 +2519,7 @@
 !
       call edpnt ( fixobs, svradi(1), svradi(2), svradi(3), p )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( vnorm(p) >= vnorm(fixobs) ) then
 
@@ -2566,7 +2528,6 @@
          call errch  ( '#', obsrvr              )
          call errch  ( '#', target              )
          call sigerr ( 'SPICE(INVALIDGEOMETRY)' )
-         call chkout ( 'TANGPT' )
          return
 
       end if
@@ -2613,10 +2574,7 @@
          call spkezp ( dcentr, et,     'J2000', abcorr, &
                        obscde, ctrpos, ltcent          )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 
          refepc  =  et  +  s * ltcent
 
@@ -2635,10 +2593,7 @@
 
          call refchg ( dfrcde, j2code, refepc, r2jmat )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 
          call mxv ( r2jmat, dvec, j2dir )
 
@@ -2650,10 +2605,7 @@
 !
       call refchg ( j2code, fxfcde, trgepc, j2fixm )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       call mxv ( j2fixm, j2dir, fixdir )
 
@@ -2664,10 +2616,7 @@
       call npedln ( svradi(1), svradi(2), svradi(3), &
                     fixobs,    fixdir,    srfpt,    alt )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Compute the observer-to-surface point vector for the initial
@@ -2694,10 +2643,7 @@
 !     A SPICE error should not be possible here but we check anyway
 !     for safety.
 !
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. uselt ) then
 !
@@ -2727,10 +2673,7 @@
 
             call nearpt ( fixobs, svradi(1), svradi(2), svradi(3), &
                           srfpt,  alt                             )
-            if ( failed() ) then
-               call chkout ( 'TANGPT' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Compute SRFVEC using our newly computed value of SRFPT.
@@ -2762,7 +2705,6 @@
 
          end if
 
-         call chkout ( 'TANGPT' )
          return
 
       end if
@@ -2810,10 +2752,7 @@
 !
       call spkssb ( obscde, et, 'J2000', ssbost )
 
-      if ( failed() ) then
-         call chkout ( 'TANGPT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Compute light time based on distance to the aberration correction
@@ -2888,10 +2827,7 @@
 !
          call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Convert the position of the observer relative to the solar
@@ -2904,10 +2840,7 @@
          call vsub   ( ssbost,  ssbtst, j2opos         )
          call pxform ( 'J2000', fixref, trgepc, j2fixm )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If we're using stellar aberration corrections, which we
@@ -2999,10 +2932,7 @@
          call npedln ( svradi(1), svradi(2), svradi(3), &
                        stlobs,    fixdir,    srfpt,    alt )
 
-         if ( failed() ) then
-            call chkout ( 'TANGPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Now compute the tangent point.
@@ -3048,10 +2978,7 @@
             call nearpt ( stlobs,    svradi(1), svradi(2), &
                           svradi(3), srfpt,     alt       )
 
-            if ( failed() ) then
-               call chkout ( 'TANGPT' )
-               return
-            end if
+            if ( failed() ) return
 
             call vsub ( srfpt, tanpt, srfvec )
 
@@ -3128,6 +3055,5 @@
 
       range = vdist ( stlobs, tanpt )
 
-      call chkout ( 'TANGPT' )
       return
       end

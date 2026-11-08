@@ -180,15 +180,11 @@
          return
 
       else if ( len ( string ) < minlen ) then
-         call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
-         call chkout ( 'ENCHAR' )
          return
 
       else if ( number < 0 ) then
-         call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
-         call chkout ( 'ENCHAR' )
          return
       end if
 
@@ -210,9 +206,7 @@
 !     More error handling.
 !
       if ( num > 0 ) then
-         call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
-         call chkout ( 'ENCHAR' )
       end if
 
       return
@@ -358,9 +352,7 @@
          return
 
       else if ( len ( string ) < minlen ) then
-         call chkin  ( 'DECHAR' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
-         call chkout ( 'DECHAR' )
          return
       end if
 

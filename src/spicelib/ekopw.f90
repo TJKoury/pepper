@@ -448,21 +448,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKOPW' )
-      end if
+      if ( return () ) return
 
 !
 !     Open the file as a DAS file.
 !
       call dasopw ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Nothing doing unless the architecture is correct.  This file
@@ -471,6 +464,5 @@
       call zzekpgch ( handle, 'WRITE' )
 
 
-      call chkout ( 'EKOPW' )
       return
       end

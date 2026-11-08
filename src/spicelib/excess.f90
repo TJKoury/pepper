@@ -169,7 +169,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'EXCESS' )
 !
 !     If there is no excess, don't report one.
 !
@@ -223,7 +222,6 @@
 
       end if
 
-      call chkout ( 'EXCESS' )
 
       return
       end

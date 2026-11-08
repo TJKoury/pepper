@@ -246,7 +246,6 @@
 !     Consistency check.
 !
       if ( maxval < nvals ) then
-         call chkin  ( 'ZZBODINI' )
          call setmsg ( 'There is an inconsistency between the '  // &
                        'number of input bodies and the size of ' // &
                        'the output hashes. The number of input ' // &
@@ -255,7 +254,6 @@
          call errint ( '#', nvals  )
          call errint ( '#', maxval )
          call sigerr ( 'SPICE(BUG1)' )
-         call chkout ( 'ZZBODINI' )
          return
       end if
 
@@ -281,11 +279,9 @@
             if ( item /= 0 ) then
                bnmidx( item ) = i
             else
-               call chkin  ( 'ZZBODINI' )
                call setmsg ( 'Could not add name # to the hash.' )
                call errch  ( '#', nornam(i) )
                call sigerr ( 'SPICE(BUG3)' )
-               call chkout ( 'ZZBODINI' )
             end if
          end if
 
@@ -306,11 +302,9 @@
                if ( item /= 0 ) then
                   bididx( item ) = i
                else
-                  call chkin  ( 'ZZBODINI' )
                   call setmsg ( 'Could not add ID # to the hash.' )
                   call errint ( '#', codes(i) )
                   call sigerr ( 'SPICE(BUG2)' )
-                  call chkout ( 'ZZBODINI' )
                   return
                end if
             end if

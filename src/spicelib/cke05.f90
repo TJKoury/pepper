@@ -455,11 +455,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKE05' )
 
 !
 !     Capture the subtype from the record and set the packet size
@@ -490,7 +487,6 @@
                        'type 5 segment.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'CKE05'                                    )
          return
 
       end if
@@ -593,7 +589,6 @@
                call errdp  ( '#', record(prvptr+2)                     )
                call errdp  ( '#', record(prvptr+3)                     )
                call sigerr ( 'SPICE(BADQUATSIGN)'                      )
-               call chkout ( 'CKE05'                                   )
                return
 
             end if
@@ -656,7 +651,6 @@
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
             call sigerr ( 'SPICE(DIVIDEBYZERO)'                      )
-            call chkout ( 'CKE05'                                    )
             return
 
          end if
@@ -818,7 +812,6 @@
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
             call sigerr ( 'SPICE(DIVIDEBYZERO)'                      )
-            call chkout ( 'CKE05'                                    )
             return
 
          end if
@@ -937,6 +930,5 @@
       clkout = record(epcidx)
 
 
-      call chkout ( 'CKE05' )
       return
       end

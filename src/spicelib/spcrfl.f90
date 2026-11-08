@@ -269,11 +269,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCRFL' )
-      end if
+      if ( return () ) return
 
 !
 !     SPCRFL has been called for this file.
@@ -297,7 +293,6 @@
          line   = ' '
          eoc    = .true.
          eocsav = eoc
-         call chkout ( 'SPCRFL' )
          return
       end if
 
@@ -307,10 +302,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      if ( failed() ) then
-         call chkout ( 'SPCRFL' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Buffer the value of HANDLE.
@@ -339,7 +331,6 @@
          call errint ( '#', iostat                                 )
          call errfnm ( 'FNM', dafu                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'SPCRFL'                                    )
          return
       end if
 
@@ -380,7 +371,6 @@
       eoc     = .false.
       eocsav  = eoc
 
-      call chkout ( 'SPCRFL' )
       return
 
 
@@ -587,11 +577,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCRNL' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -603,7 +589,6 @@
                        'line of comments before calling SPCRNL '      // &
                        'to read the next line.'                       )
          call sigerr ( 'SPICE(SPCRFLNOTCALLED)'                       )
-         call chkout ( 'SPCRNL'                                       )
          return
       end if
 
@@ -614,7 +599,6 @@
       if ( eocsav ) then
          line = ' '
          eoc  = .true.
-         call chkout ( 'SPCRNL' )
          return
       end if
 
@@ -623,10 +607,7 @@
 !
       call zzddhhlu ( hanbuf, 'DAF', .false., dafu )
 
-      if ( failed() ) then
-         call chkout ( 'SPCRNL' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     RECORD contains the last line and EOL is the position of
@@ -661,7 +642,6 @@
             call errint ( '#', rec-1                                  )
             call errfnm ( 'FNM', dafu                                 )
             call sigerr ( 'SPICE(FORMATERROR)'                        )
-            call chkout ( 'SPCRNL'                                    )
             return
          end if
 
@@ -678,7 +658,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FNM', dafu                                 )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'SPCRNL'                                    )
             return
          end if
 
@@ -698,7 +677,6 @@
          line   = ' '
          eoc    = .true.
          eocsav = eoc
-         call chkout ( 'SPCRNL' )
          return
       end if
 
@@ -711,7 +689,6 @@
          line   = ' '
          eoc    = .false.
          eocsav = eoc
-         call chkout ( 'SPCRNL' )
          return
       end if
 
@@ -756,7 +733,6 @@
             call errint ( '#', rec-1                                  )
             call errfnm ( 'FNM', dafu                                 )
             call sigerr ( 'SPICE(FORMATERROR)'                        )
-            call chkout ( 'SPCRNL'                                    )
             return
          end if
 
@@ -773,7 +749,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FNM', dafu                                 )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'SPCRNL'                                    )
             return
          end if
 
@@ -790,7 +765,6 @@
                           'is something wrong with the format of the' // &
                           'comments.'                                 )
             call sigerr ( 'SPICE(FORMATERROR)'                        )
-            call chkout ( 'SPCRNL'                                    )
             return
          end if
 
@@ -813,6 +787,5 @@
       end if
 
 
-      call chkout ( 'SPCRNL' )
       return
       end

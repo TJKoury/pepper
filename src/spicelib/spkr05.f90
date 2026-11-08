@@ -233,11 +233,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKR05' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the segment descriptor.
@@ -256,7 +252,6 @@
                       'data in a type # data segment.'              )
          call errint( '#',  type                                    )
          call sigerr( 'SPICE(WRONGSPKTYPE)'                         )
-         call chkout( 'SPKR05'                                      )
          return
       end if
 
@@ -437,7 +432,6 @@
             call moved  ( data, 6, record(1) )
             call moved  ( data, 6, record(7) )
 
-            call chkout( 'SPKR05' )
             return
 
          else
@@ -471,7 +465,6 @@
             call moved ( data, 6, record(1) )
             call moved ( data, 6, record(7) )
 
-            call chkout( 'SPKR05' )
             return
 
          else
@@ -510,6 +503,5 @@
 
       call moved  ( data, 12, record(1) )
 
-      call chkout( 'SPKR05' )
       return
       end

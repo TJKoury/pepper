@@ -257,9 +257,7 @@
       save                  svobs
       save                  svillm
 
-      call chkin  ( 'ZZGFPAU'           )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFPAU'           )
 
       return
 
@@ -426,11 +424,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFPAIN' )
 
 !
 !     Find NAIF IDs for TARGET, ILLMN, and OBSRVR.
@@ -446,7 +441,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFPAIN'                                 )
          return
 
       end if
@@ -463,7 +457,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFPAIN'                                 )
          return
 
       end if
@@ -480,7 +473,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFPAIN'                                 )
          return
 
       end if
@@ -501,7 +493,6 @@
          call errch  ( '#', target                         )
          call errch  ( '#', illmn                          )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( 'ZZGFPAIN'                          )
          return
 
       end if
@@ -519,10 +510,7 @@
 !
       call zzvalcor ( svabco, svablk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFPAIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Restrict correction to reception cases.
@@ -535,13 +523,11 @@
          //            'restricted to reception cases.')
          call errch  ( '#', abcorr )
          call sigerr ( 'SPICE(INVALIDOPTION)' )
-         call chkout ( 'ZZGFPAIN' )
          return
 
       end if
 
 
-      call chkout ( 'ZZGFPAIN' )
       return
 
 
@@ -653,11 +639,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFPADC' )
 
 
 !
@@ -665,10 +648,7 @@
 !
       call spkez ( svtarg, et, ref, svabco, svobs, s1, lt )
 
-      if  (  failed() ) then
-         call chkout ( 'ZZGFPADC' )
-         return
-      end if
+      if (  failed() ) return
 
 
 !
@@ -686,10 +666,7 @@
 
          call spkez ( svillm, et - lt, ref, svabco, svtarg, s2, lt )
 
-         if (  failed() ) then
-            call chkout ( 'ZZGFPADC' )
-            return
-         end if
+         if (  failed() ) return
 
 !
 !        Correct velocity for time derivative of the observer target
@@ -720,10 +697,7 @@
 
       end if
 
-      if (  failed() ) then
-         call chkout ( 'ZZGFPADC' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !                       ILLMN      OBS
@@ -753,7 +727,6 @@
 
       decres = -dsep < 0.0_wp
 
-      call chkout ( 'ZZGFPADC' )
       return
 
 

@@ -124,11 +124,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKTRIT' )
 
 !
 !     Start out by allocating a DAS integer page.  We'll write the root
@@ -160,6 +157,5 @@
 !
       tree  =  p
 
-      call chkout ( 'ZZEKTRIT' )
       return
       end

@@ -1330,20 +1330,16 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 !
 !     Signal an error if this routine is called directly.
 !
-      call chkin  ( 'SGSEQW'                                      )
       call setmsg ( 'This routine should never be called' &
       //            ' directly. It exists as an umbrella routine' &
       //            ' to maintain all of the variables for the' &
       //            ' generic segment sequential writing entry' &
       //            ' points.'                                    )
       call sigerr ( 'SPICE(BOGUSENTRY)'                           )
-      call chkout ( 'SGSEQW'                                      )
       return
 
 
@@ -1534,11 +1530,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SGBWFS' )
 !
 !     We need to do some sanity checks on our input arguments before we
 !     should attempt to write anything to the file. So, let's start with
@@ -1549,12 +1542,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'SGBWFS' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check to see if the handle is currently in the file table. If it
 !     is, we've got a problem. This routine may only be called once for
@@ -1575,7 +1563,6 @@
             //            ' current segment is finished. '          )
             call errhan ( '#', handle                               )
             call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                 )
-            call chkout ( 'SGBWFS'                                  )
             return
 
          end if
@@ -1593,10 +1580,7 @@
 !
       call dafhsf ( handle, nd, ni )
 
-      if ( failed() ) then
-         call chkout ( 'SGBWFS' )
-         return
-      end if
+      if ( failed() ) return
 
       nc = 8 * ( nd + ( ni + 1 ) / 2 )
 !
@@ -1614,7 +1598,6 @@
          //            '# characters.'                           )
          call errint ( '#', nc                                   )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SGBWFS'                                  )
          return
 
       end if
@@ -1629,7 +1612,6 @@
             //            ' a nonprinting character at location #.' )
             call errint ( '#', i                                    )
             call sigerr ( 'SPICE(NONPRINTINGCHARS)'                 )
-            call chkout ( 'SGBWFS'                                  )
             return
 
          end if
@@ -1647,7 +1629,6 @@
          //            'initialized. '                           )
          call errint ( '#', nconst                               )
          call sigerr ( 'SPICE(NUMCONSTANTSNEG) '                 )
-         call chkout (  'SGBWFS'                                 )
          return
 
       end if
@@ -1662,7 +1643,6 @@
          //            ' properly initialized. '              )
          call errint ( '#', pktsiz                            )
          call sigerr ( 'SPICE(NONPOSPACKETSIZE)'              )
-         call chkout (  'SGBWFS'                              )
          return
 
       end if
@@ -1678,7 +1658,6 @@
          call errint ( '#', mnidxt                                )
          call errint ( '#', mxidxt                                )
          call sigerr ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
-         call chkout ( 'SGBWFS'                                   )
          return
 
       end if
@@ -1695,7 +1674,6 @@
          //            ' closed via a call to SGWES.'             )
          call errint ( '#', nft                                   )
          call sigerr ( 'SPICE(FILETABLEFULL)'                     )
-         call chkout ( 'SGBWFS'                                   )
          return
 
       end if
@@ -1724,10 +1702,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SGBWFS' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Write out the constants to the new segment, if there are any
 !     constants.
@@ -1736,10 +1711,7 @@
 
          call dafada ( const, nconst )
 
-         if ( failed() ) then
-            call chkout ( 'SGBWFS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -1776,7 +1748,6 @@
       index  = nft
       numfxd = numfxd + 1
 
-      call chkout ( 'SGBWFS' )
       return
 
 
@@ -1958,11 +1929,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'SGBWVS' )
 !
 !     We need to do some sanity checks on our input arguments before we
 !     should attempt to write anything to the file. So, let's start with
@@ -1973,12 +1941,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'SGBWVS' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check to see if the handle is currently in the file table. If it
 !     is, we've got a problem. This routine may only be called once for
@@ -2000,7 +1963,6 @@
             //            ' current segment is finished. '          )
             call errhan ( '#', handle                               )
             call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                 )
-            call chkout ( 'SGBWVS'                                  )
             return
 
          end if
@@ -2018,10 +1980,7 @@
 !
       call dafhsf ( handle, nd, ni )
 
-      if ( failed() ) then
-         call chkout ( 'SGBWVS' )
-         return
-      end if
+      if ( failed() ) return
 
       nc = 8 * ( nd + ( ni + 1 ) / 2 )
 !
@@ -2039,7 +1998,6 @@
          //            '# characters.'                           )
          call errint ( '#', nc                                   )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SGBWVS'                                  )
          return
 
       end if
@@ -2054,7 +2012,6 @@
             //            ' a nonprinting character at location #.' )
             call errint ( '#', i                                    )
             call sigerr ( 'SPICE(NONPRINTINGCHARS)'                 )
-            call chkout ( 'SGBWVS'                                  )
             return
 
          end if
@@ -2072,7 +2029,6 @@
          //            'initialized. '                           )
          call errint ( '#', nconst                               )
          call sigerr ( 'SPICE(NUMCONSTANTSNEG) '                 )
-         call chkout (  'SGBWVS'                                 )
          return
 
       end if
@@ -2089,7 +2045,6 @@
          call errint ( '#', mnidxt                                )
          call errint ( '#', mxidxt                                )
          call sigerr ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
-         call chkout ( 'SGBWVS'                                   )
          return
 
       end if
@@ -2106,7 +2061,6 @@
          //            ' closed via a call to SGWES. '            )
          call errint ( '#', nft                                   )
          call sigerr ( 'SPICE(FILETABLEFULL)'                     )
-         call chkout ( 'SGBWVS'                                   )
          return
 
       end if
@@ -2136,10 +2090,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SGBWVS' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Write out the constants to the new segment, if there are any
 !     constants.
@@ -2148,10 +2099,7 @@
 
          call dafada ( const, nconst )
 
-         if ( failed() ) then
-            call chkout ( 'SGBWVS' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -2188,7 +2136,6 @@
       index  = nft
       numvar = numvar + 1
 
-      call chkout ( 'SGBWVS' )
       return
 
 
@@ -2428,11 +2375,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SGWFPK' )
 !
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
@@ -2445,7 +2389,6 @@
          //            ' SGBWFS must be called before his routine' &
          //            ' may be called.'                            )
          call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         call chkout ( 'SGWFPK'                                       )
          return
 
       end if
@@ -2467,7 +2410,6 @@
             //            ' called to begin the segment.'           )
             call errhan ( '#', handle                               )
             call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            call chkout ( 'SGWFPK'                                  )
             return
 
          end if
@@ -2478,10 +2420,7 @@
 
          call dafcad ( handle )
 
-         if ( failed() ) then
-            call chkout ( 'SGWFPK' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -2498,7 +2437,6 @@
             //            ' to write variable size packets.'          )
             call errhan ( '#', handle                                 )
             call sigerr ( 'SPICE(SEGTYPECONFLICT)'                    )
-            call chkout ( 'SGWFPK'                                    )
             return
 
       end if
@@ -2517,7 +2455,6 @@
          //            ' uninitialized.'                       )
          call errint ( '#', npkts                              )
          call sigerr ( 'SPICE(NUMPACKETSNOTPOS)'               )
-         call chkout ( 'SGWFPK'                                )
          return
 
       end if
@@ -2545,7 +2482,6 @@
             call errint ( '#', nrefs                                 )
             call errint ( '#', npkts                                 )
             call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'                )
-            call chkout ( 'SGWFPK'                                   )
             return
 
          end if
@@ -2570,7 +2506,6 @@
                call errdp  ( '#',  refdat(1)                           )
                call errdp  ( '#',  ftrefs(1,index)                     )
                call sigerr ( 'SPICE(UNORDEREDREFS)'                    )
-               call chkout ( 'SGWFPK'                                  )
                return
 
             end if
@@ -2590,7 +2525,6 @@
                call errdp  ( '#',  refdat(i-1)                        )
                call errint ( '#',  i-1                                )
                call sigerr ( 'SPICE(UNORDEREDREFS)'                   )
-               call chkout ( 'SGWFPK'                                 )
                return
 
             end if
@@ -2609,10 +2543,7 @@
             call dafada ( pktdat((i-1)*ftpksz(index)+1), &
                           ftpksz(index)                  )
 
-            if ( failed() ) then
-               call chkout ( 'SGWFPK' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 !
@@ -2650,7 +2581,6 @@
                //            ' reference values to be two (2).'      )
                call errint ( '#', nrefs                              )
                call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'             )
-               call chkout ( 'SGWFPK'                                )
                return
 
             end if
@@ -2660,7 +2590,6 @@
                call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
                call sigerr ( 'SPICE(REFVALNOTINTEGER)'             )
-               call chkout ( 'SGWFPK'                              )
                return
 
             end if
@@ -2671,10 +2600,7 @@
 !
          call dafada ( pktdat, ftpksz(index)*npkts )
 
-         if ( failed() ) then
-            call chkout ( 'SGWFPK' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Save the last reference values and the number of reference
 !        values in the file table. We only do this on the first time
@@ -2694,7 +2620,6 @@
 
       end if
 
-      call chkout ( 'SGWFPK' )
       return
 
 
@@ -2956,11 +2881,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'SGWVPK' )
 !
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
@@ -2973,7 +2895,6 @@
          //            ' SGBWVS must be called before his routine' &
          //            ' may be called.'                            )
          call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         call chkout ( 'SGWVPK'                                     )
          return
 
       end if
@@ -2995,7 +2916,6 @@
             //            ' called to begin the segment.'           )
             call errhan ( '#', handle                               )
             call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            call chkout ( 'SGWVPK'                                  )
             return
 
          end if
@@ -3006,10 +2926,7 @@
 
          call dafcad ( handle )
 
-         if ( failed() ) then
-            call chkout ( 'SGWVPK' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -3026,7 +2943,6 @@
             //            ' to write fixed size packets.'             )
             call errhan ( '#', handle                                 )
             call sigerr ( 'SPICE(SEGTYPECONFLICT)'                    )
-            call chkout ( 'SGWVPK'                                    )
             return
 
       end if
@@ -3046,7 +2962,6 @@
          //            ' uninitialized.'                       )
          call errint ( '#', npkts                              )
          call sigerr ( 'SPICE(NUMPACKETSNOTPOS)'               )
-         call chkout ( 'SGWVPK'                                )
          return
 
       end if
@@ -3074,7 +2989,6 @@
             call errint ( '#', nrefs                                 )
             call errint ( '#', npkts                                 )
             call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'                )
-            call chkout ( 'SGWVPK'                                   )
             return
 
          end if
@@ -3099,7 +3013,6 @@
                call errdp  ( '#',  refdat(1)                           )
                call errdp  ( '#',  ftrefs(1,index)                     )
                call sigerr ( 'SPICE(UNORDEREDREFS)'                    )
-               call chkout ( 'SGWVPK'                                  )
                return
 
             end if
@@ -3119,7 +3032,6 @@
                call errdp  ( '#',  refdat(i-1)                        )
                call errint ( '#',  i-1                                )
                call sigerr ( 'SPICE(UNORDEREDREFS)'                   )
-               call chkout ( 'SGWVPK'                                 )
                return
 
             end if
@@ -3139,7 +3051,6 @@
                call errint ( '#', i                                  )
                call errint ( '#', pktsiz(i)                          )
                call sigerr ( 'SPICE(NONPOSPACKETSIZE)'               )
-               call chkout ( 'SGWVPK'                                )
                return
 
             end if
@@ -3162,10 +3073,7 @@
             call dafada ( dpksiz,    1              )
             call dafada ( pktdat(pktpos), pktsiz(i) )
 
-            if ( failed() ) then
-               call chkout ( 'SGWVPK' )
-               return
-            end if
+            if ( failed() ) return
 
             pktpos        = pktpos        + pktsiz(i)
             ftpksz(index) = ftpksz(index) + pktsiz(i)
@@ -3213,7 +3121,6 @@
                //            ' reference values to be two (2).'        )
                call errint ( '#', nrefs                                )
                call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'               )
-               call chkout ( 'SGWVPK'                                  )
                return
 
             end if
@@ -3223,7 +3130,6 @@
                call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
                call sigerr ( 'SPICE(REFVALNOTINTEGER)'             )
-               call chkout ( 'SGWVPK'                              )
                return
 
             end if
@@ -3243,10 +3149,7 @@
             call dafada ( dpksiz, 1                 )
             call dafada ( pktdat(pktpos), pktsiz(i) )
 
-            if ( failed() ) then
-               call chkout ( 'SGWVPK' )
-               return
-            end if
+            if ( failed() ) return
 
             pktpos        = pktpos        + pktsiz(i)
             ftpksz(index) = ftpksz(index) + pktsiz(i)
@@ -3271,7 +3174,6 @@
 
       end if
 
-      call chkout ( 'SGWVPK' )
       return
 
 
@@ -3409,11 +3311,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SGWES' )
 !
 !     Check to see if we have any fixed or variable segments being
 !     written.
@@ -3426,7 +3325,6 @@
          //            ' SGBWVS must be called before his routine' &
          //            ' may be called.'                            )
          call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         call chkout ( 'SGWES'                                      )
          return
 
       end if
@@ -3448,7 +3346,6 @@
             //            ' segment.'                               )
             call errhan ( '#', handle                               )
             call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            call chkout ( 'SGWES'                                   )
             return
 
          end if
@@ -3459,10 +3356,7 @@
 
          call dafcad ( handle )
 
-         if ( failed() ) then
-            call chkout ( 'SGWES' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -3502,10 +3396,7 @@
                call dafgda ( handle, refadr, refadr, myref )
                call dafada ( myref, 1 )
 
-               if ( failed() ) then
-                  call chkout ( 'SGWES' )
-                  return
-               end if
+               if ( failed() ) return
 
                refadr = refadr + size
 
@@ -3524,10 +3415,7 @@
                   call dafgda ( handle, refadr, refadr, myref )
                   call dafada ( myref, 1 )
 
-                  if ( failed() ) then
-                     call chkout ( 'SGWES' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   refadr = refadr + dirsiz
 
@@ -3585,10 +3473,7 @@
                call dafgda ( handle, pktadr-1, pktadr-1, mysize )
                call dafada ( myaddr, 1                          )
 
-               if ( failed() ) then
-                  call chkout ( 'SGWES' )
-                  return
-               end if
+               if ( failed() ) return
 
                size   = int ( mysize )
                pktadr = pktadr +        size + ftoff(index)
@@ -3603,10 +3488,7 @@
 
             call dafada ( myaddr, 1 )
 
-            if ( failed() ) then
-               call chkout ( 'SGWES' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           3) Collect all of the references, stored with the packets
@@ -3621,10 +3503,7 @@
                call dafgda ( handle, refadr+1, refadr+1, mysize )
                call dafada ( myref,  1                          )
 
-               if ( failed() ) then
-                  call chkout ( 'SGWES' )
-                  return
-               end if
+               if ( failed() ) return
 
                size   = int ( mysize )
                refadr = refadr + size + ftoff(index)
@@ -3650,10 +3529,7 @@
                   call dafgda ( handle, refadr, refadr, myref )
                   call dafada ( myref,  1                     )
 
-                  if ( failed() ) then
-                     call chkout ( 'SGWES' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   refadr = refadr + dirsiz
 
@@ -3697,10 +3573,7 @@
 !
             call dafada ( ftrefs(1,index), ftnref(index) )
 
-            if ( failed() ) then
-               call chkout ( 'SGWES' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           Now we need to construct the meta data for this segment. We
 !           will write it to the file a bit later.
@@ -3750,10 +3623,7 @@
                call dafgda ( handle, pktadr-1, pktadr-1, mysize )
                call dafada ( myaddr, 1                          )
 
-               if ( failed() ) then
-                  call chkout ( 'SGWES' )
-                  return
-               end if
+               if ( failed() ) return
 
                size   = int ( mysize )
                pktadr = pktadr +        size + ftoff(index)
@@ -3768,10 +3638,7 @@
 
             call dafada ( myaddr, 1 )
 
-            if ( failed() ) then
-               call chkout ( 'SGWES' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           3) Construct the meta data for the segment.
 !
@@ -3810,10 +3677,7 @@
 !
       call dafena
 
-      if ( failed() ) then
-         call chkout ( 'SGWES' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Now we need to clean up after ourselves, removing the information
 !     for the segment we just ended from the file table.
@@ -3840,7 +3704,6 @@
          numvar = numvar - 1
       end if
 
-      call chkout ( 'SGWES' )
       return
 
       end

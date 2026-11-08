@@ -229,7 +229,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'WNFETD' )
 
 !
 !
@@ -247,7 +246,6 @@
          right = window(end  )
       end if
 
-      call chkout ( 'WNFETD' )
 
       return
       end

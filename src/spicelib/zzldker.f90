@@ -249,11 +249,8 @@
       character(eoltsz)     termin
       character(klinsz)     kerlin
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZLDKER' )
 
       if ( .not. exists( file ) ) then
 
@@ -261,7 +258,6 @@
          call errch  ( '#', file )
          call errch  ( '#', 'could not be located.' )
          call sigerr ( 'SPICE(NOSUCHFILE)'  )
-         call chkout ( 'ZZLDKER' )
          return
 
       end if
@@ -293,7 +289,6 @@
          //                 'Transfer format files cannot be ' &
          //                 'loaded. ' )
          call sigerr ( 'SPICE(TRANSFERFILE)'  )
-         call chkout ( 'ZZLDKER' )
          return
 
       else if ( arch == 'TE1' ) then
@@ -304,7 +299,6 @@
          //                 'files are obsolete and cannot be ' &
          //                 'loaded. ' )
          call sigerr ( 'SPICE(TYPE1TEXTEK)' )
-         call chkout ( 'ZZLDKER' )
          return
 
       end if
@@ -343,7 +337,6 @@
             call errch  ( '#', mytype  )
             call errch  ( '#', versn )
             call sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
-            call chkout ( 'ZZLDKER' )
             return
 
          end if
@@ -374,7 +367,6 @@
             call errch  ( '#', mytype  )
             call errch  ( '#', versn )
             call sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
-            call chkout ( 'ZZLDKER' )
             return
 
          end if
@@ -412,6 +404,5 @@
 
       end if
 
-      call chkout ( 'ZZLDKER' )
       return
       end

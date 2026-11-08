@@ -311,11 +311,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCE2S' )
-      end if
+      if ( return () ) return
 
 !
 !     Convert ET to encoded SCLK, and then to an SCLK string.
@@ -323,6 +319,5 @@
       call sce2t  ( sc, et,     sclkdp )
       call scdecd ( sc, sclkdp, sclkch )
 
-      call chkout ( 'SCE2S' )
       return
       end

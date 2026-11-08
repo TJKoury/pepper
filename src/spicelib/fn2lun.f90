@@ -129,11 +129,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'FN2LUN' )
-      end if
+      if ( return () ) return
 
 !
 !     First we test to see if the filename is blank.
@@ -142,7 +138,6 @@
 
          call setmsg ( 'The filename is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'   )
-         call chkout ( 'FN2LUN'                 )
          return
 
       end if
@@ -163,7 +158,6 @@
          call errch  ( '#', filnam                      )
          call errint ( '#', iostat                      )
          call sigerr ( 'SPICE(INQUIREFAILED)'           )
-         call chkout ( 'FN2LUN'                         )
          return
 
       end if
@@ -178,7 +172,6 @@
          call setmsg ( 'No file with the name ''#'' was found.' )
          call errch  ( '#', filnam                              )
          call sigerr ( 'SPICE(FILEDOESNOTEXIST)'                )
-         call chkout ( 'FN2LUN'                                 )
          return
 
       end if
@@ -193,11 +186,9 @@
                        ' the filename ''#''.'                        )
          call errch  ( '#', filnam                                   )
          call sigerr ( 'SPICE(FILENOTOPEN)'                          )
-         call chkout ( 'FN2LUN'                                      )
          return
 
       end if
 
-      call chkout ( 'FN2LUN' )
       return
       end

@@ -565,9 +565,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     We'll give the name TOOBIG to the bound DPMAX() / MARGIN.
@@ -583,10 +581,8 @@
 
       if (  vnorm (vertex)  >=  toobig  )  then
 
-         call chkin  ( 'INRYPL'                                    )
          call setmsg ( 'Ray''s vertex is too far from the origin.' )
          call sigerr ( 'SPICE(VECTORTOOBIG)'                       )
-         call chkout ( 'INRYPL'                                    )
          return
 
       end if
@@ -599,10 +595,8 @@
 
       if (  const  >=  toobig  )  then
 
-         call chkin  ( 'INRYPL'                            )
          call setmsg ( 'Plane is too far from the origin.' )
          call sigerr ( 'SPICE(VECTORTOOBIG)'               )
-         call chkout ( 'INRYPL'                            )
          return
 
       end if
@@ -614,10 +608,8 @@
 
       if ( vzero (udir) ) then
 
-         call chkin  ( 'INRYPL'                                      )
          call setmsg ( 'Ray''s direction vector is the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                           )
-         call chkout ( 'INRYPL'                                      )
          return
 
       end if

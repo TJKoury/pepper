@@ -224,12 +224,10 @@
 
       if (  ( key < 1 ) .or. ( key > totkey)  ) then
 
-         call chkin  ( 'ZZEKTRUD'                                )
          call setmsg ( 'Key = #. Valid range is 1:#.  File = #.' )
          call errint ( '#',     key                              )
          call errint ( '#',     totkey                           )
          call errhan ( '#',     handle                           )
-         call chkout ( 'ZZEKTRUD'                                )
          return
 
       end if
@@ -321,9 +319,7 @@
          call zzektrlk ( handle,  tree,    key,    keyidx, &
                          target,  toffst,  level,  datptr  )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 
          call zzekpgri ( handle, target, tpage )
@@ -391,9 +387,7 @@
             call zzektrpi ( handle, tree,  key,  parent, pkey,  poffst, &
                             lpidx,  lpkey, lsib, rpidx,  rpkey, rsib   )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Read the target page.  Get the key count for this node.
@@ -408,7 +402,6 @@
 !
             if ( tnkeys < mnkeyc ) then
 
-               call chkin  ( 'ZZEKTRUD'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
                              'count = #; max allowed, including ' // &
                              'overflow, is #.'                     )
@@ -418,7 +411,6 @@
                call errint ( '#',   tnkeys                         )
                call errint ( '#',   mxkeyc + 1                     )
                call sigerr ( 'SPICE(BUG)'                          )
-               call chkout ( 'ZZEKTRUD'                            )
                return
 
             end if
@@ -474,9 +466,7 @@
             call zzektrlk ( handle,  tree,    key-1,  prev, &
                             leaf,    loffst,  level,  datptr  )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Since we'll have to update the ancestors of LEAF,
@@ -489,9 +479,7 @@
             call zzektrpi ( handle, tree,  key-1, parent, pkey,  poffst, &
                             lpidx,  lpkey, lsib,  rpidx,  rpkey, rsib  )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Since deletions are allowed only in leaf nodes, we'll

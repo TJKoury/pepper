@@ -189,11 +189,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCOPN' )
-      end if
+      if ( return () ) return
 
 !
 !     DAFOPN does all the work.  We just handle the values of
@@ -203,6 +199,5 @@
       call dafopn ( fname, nd, ni, ifname, resv, handle )
 
 
-      call chkout ( 'SPCOPN' )
       return
       end

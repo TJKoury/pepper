@@ -321,21 +321,15 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SRFREC' )
 
 !
 !     Look up the body's radii.
 !
       call zzgftreb ( body, radii )
 
-      if ( failed() ) then
-         call chkout ( 'SRFREC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the unit vector pointing from the body center to the
@@ -349,6 +343,5 @@
 !
       call edpnt ( uvec, radii(1), radii(2), radii(3), rectan )
 
-      call chkout ( 'SRFREC' )
       return
       end

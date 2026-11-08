@@ -400,11 +400,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DLAENS' )
 !
 !     Now that the segment has been written, our only task is
 !     to update the corresponding segment descriptor to reflect
@@ -439,6 +436,5 @@
 !     Leave the file open.  The file is now ready for the
 !     addition of a new segment.
 !
-      call chkout ( 'DLAENS' )
       return
       end

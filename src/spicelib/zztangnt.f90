@@ -365,11 +365,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZTANGNT' )
 
 !
 !     Empty the result window.
@@ -408,17 +405,13 @@
 !
       maxrad = maxrad * 1.001_wp
 
-      if ( failed() ) then
-         call chkout ( 'ZZTANGNT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( maxrad <= 0.0_wp ) then
 
          call setmsg ( 'Target maximum radius # is non-positive.' )
          call errdp  ( '#',  maxrad                               )
          call sigerr ( 'SPICE(INVALIDRADIUS)'                     )
-         call chkout ( 'ZZTANGNT'                                 )
          return
 
       end if
@@ -447,10 +440,7 @@
 
         end if
 
-         if ( failed() ) then
-            call chkout ( 'ZZTANGNT' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Set the final ray-axis separation.
 !
@@ -466,7 +456,6 @@
             call setmsg ( 'Source radius # is non-positive.' )
             call errdp  ( '#',  srcrad                       )
             call sigerr ( 'SPICE(INVALIDRADIUS)'             )
-            call chkout ( 'ZZTANGNT'                         )
             return
 
          end if
@@ -487,7 +476,6 @@
             call errdp  ( '#',  maxrad                             )
             call errdp  ( '#',  r                                  )
             call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                 )
-            call chkout ( 'ZZTANGNT'                               )
             return
 
          end if
@@ -513,20 +501,14 @@
 !
             start = pi() + dasine( (srcrad-maxrad)/r, margin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZTANGNT' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Set the final ray-axis separation.
 !
             finish = pi() +  dasine( srcrad/r, margin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZTANGNT' )
-               return
-            end if
+            if ( failed() ) return
 
 
          else if ( curve == pnmbrl ) then
@@ -554,27 +536,20 @@
 
             start = pi() -  dasine( srcrad / (alpha*r), margin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZTANGNT' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           We stop looking when the ray intersects the target center.
 !
             finish = pi() - dasine( srcrad / r, margin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZTANGNT' )
-               return
-            end if
+            if ( failed() ) return
 
          else
 
             call setmsg ( 'Input curve code # was not recognized.' )
             call errint ( '#', curve                               )
             call sigerr ( 'SPICE(BUG)'                             )
-            call chkout ( 'ZZTANGNT'                               )
             return
 
          end if
@@ -595,10 +570,7 @@
                       cstep,    schstp, start,  finish, &
                       soltol,   result, points, endflg )
 
-      if ( failed() ) then
-         call chkout ( 'ZZTANGNT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If the first endpoint of RESULT is the interval start but is not
@@ -643,6 +615,5 @@
 
       end if
 
-      call chkout ( 'ZZTANGNT' )
       return
       end

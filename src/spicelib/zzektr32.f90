@@ -420,13 +420,11 @@
 
       if (  ( lpkidx < 1 ) .or. ( lpkidx > psize-1 )  )  then
 
-         call chkin  ( 'ZZEKTR32'                                )
          call setmsg ( 'Left parent key of MIDDLE is out of '   // &
                        'range.  Value is #; valid range is 1:#'  )
          call errint ( '#',   lpkidx                             )
          call errint ( '#',   psize-1                            )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKTR32'                                )
          return
 
       end if
@@ -450,7 +448,6 @@
            .or. ( msib /= middle ) &
            .or. ( rsib /= right  )  ) then
 
-         call chkin  ( 'ZZEKTR32'                                      )
          call setmsg ( 'LEFT, RIGHT, MIDDLE, PARENT, and PKIDX are '  // &
                        'inconsistent. LEFT = #; MIDDLE = #; '         // &
                        'RIGHT = #; PARENT = #; LPKIDX = #; LSIB '     // &
@@ -464,7 +461,6 @@
          call errint ( '#',   msib                                     )
          call errint ( '#',   rsib                                     )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKTR32'                                      )
          return
 
       end if
@@ -493,7 +489,6 @@
 !
       if (  sum  /=  ( 3*mnkeyc - 1 )  ) then
 
-         call chkin  ( 'ZZEKTR32'                                      )
          call setmsg ( 'Number of keys in nodes LEFT = #; in MIDDLE ' // &
                        '= #; in RIGHT = #; counts summing to # were ' // &
                        'expected.'                                     )
@@ -502,7 +497,6 @@
          call errint ( '#',  nrkeys                                    )
          call errint ( '#',  3*mnkeyc-1                                )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKTR32'                                      )
          return
 
       end if

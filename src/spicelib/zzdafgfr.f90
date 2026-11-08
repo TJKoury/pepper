@@ -241,11 +241,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDAFGFR' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -276,7 +272,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZDAFGFR'                                   )
             return
 
          end if
@@ -309,7 +304,6 @@
          //            'has been closed.'                           )
          call errint ( '#', handle                                  )
          call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
-         call chkout ( 'ZZDAFGFR'                                   )
          return
       end if
 
@@ -319,10 +313,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., lun )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDAFGFR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Branch based on whether the binary file format is native
@@ -344,10 +335,7 @@
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGFR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !     Process the non-native binary file format case.
@@ -365,10 +353,7 @@
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGFR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !        Assign the character components of the file record.
@@ -399,10 +384,7 @@
          call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
                          1,    locfre                         )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDAFGFR' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -420,7 +402,6 @@
       bward  = locbwd
       free   = locfre
 
-      call chkout( 'ZZDAFGFR' )
       return
 
       end

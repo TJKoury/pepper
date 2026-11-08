@@ -981,11 +981,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin( 'GFUDB' )
 
 !
 !     Check the result window size.
@@ -996,7 +993,6 @@
          //            'at least 2 and an even value.'             )
          call errint ( '#', sized(result)                          )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFUDB'                                     )
          return
 
       end if
@@ -1030,7 +1026,6 @@
                      norpt,  gfrepi,  gfrepu,  gfrepf, &
                      nobail, gfbail,  cnfine,  result )
 
-      call chkout( 'GFUDB' )
 
       return
       end

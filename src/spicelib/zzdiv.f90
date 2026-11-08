@@ -319,7 +319,6 @@
 !
 !     Participate in error tracing.
 !
-      call chkin ( 'ZZDIV' )
 
 
 !
@@ -351,7 +350,6 @@
                     // 'Numerator value #1.'             )
          call errdp  ( '#1', numr                        )
          call sigerr ( 'SPICE(DIVIDEBYZERO)'             )
-         call chkout ( 'ZZDIV'                           )
          return
 
       end if
@@ -364,7 +362,6 @@
       if ( numr == 0.0_wp ) then
 
          zzdiv = 0.0_wp
-         call chkout ( 'ZZDIV' )
          return
 
       end if
@@ -394,7 +391,6 @@
          call errdp  ( '#1', numr                                 )
          call errdp  ( '#2', denom                                )
          call sigerr ( 'SPICE(NUMERICOVERFLOW)'                   )
-         call chkout ( 'ZZDIV'                                    )
          return
 
       end if
@@ -406,7 +402,6 @@
       if ( (lognum - logden) < -(expnt-1.0_wp) ) then
 
          zzdiv = 0.0_wp
-         call chkout ( 'ZZDIV' )
          return
 
       end if
@@ -416,7 +411,6 @@
 !
       zzdiv = numr/denom
 
-      call chkout ( 'ZZDIV' )
 
       return
       end

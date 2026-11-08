@@ -204,19 +204,15 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check the axis.
 !
       if ( vzero(axis) ) then
 
-         call chkin  ( 'ZZCXBRUT'                     )
          call setmsg ( 'Cone axis is the zero vector' )
          call sigerr ( 'SPICE(ZEROVECTOR)'            )
-         call chkout ( 'ZZCXBRUT'                     )
          return
 
       end if
@@ -268,9 +264,7 @@
 !
       isbrck = state1 .neqv. state2
 
-      if ( .not. isbrck) then
-         return
-      end if
+      if ( .not. isbrck) return
 
 !
 !     Prepare for a solution by bisection.

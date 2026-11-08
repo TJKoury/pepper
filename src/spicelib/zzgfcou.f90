@@ -424,13 +424,9 @@
 !
 !     This routine should never be called.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZGFCOU'           )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFCOU'           )
       return
 
 
@@ -826,11 +822,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFCOIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
@@ -846,7 +839,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFCOIN'                                 )
          return
 
       end if
@@ -863,7 +855,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFCOIN'                                 )
          return
 
       end if
@@ -879,7 +870,6 @@
          call errch  ( '#', obsrvr                         )
          call errch  ( '#', target                         )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( 'ZZGFCOIN'                          )
          return
 
       end if
@@ -897,10 +887,7 @@
 !
       call zzvalcor ( svcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFCOIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Store a compressed, upper case, left-justified copy of VECDEF.
@@ -922,7 +909,6 @@
          call setmsg ( 'The vector definition # is not supported.' )
          call errch  ( '#',  vecdef                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
-         call chkout ( 'ZZGFCOIN'                                  )
          return
 
       end if
@@ -943,7 +929,6 @@
          call setmsg ( 'The coordinate system # is not supported.' )
          call errch  ( '#',  crdsys                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
-         call chkout ( 'ZZGFCOIN'                                  )
          return
 
       end if
@@ -970,7 +955,6 @@
          call errch  ( '#',  crdnam                               )
          call errch  ( '#',  crdsys                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'ZZGFCOIN'                                 )
          return
 
       end if
@@ -1009,7 +993,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', ref                                  )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZGFCOIN'                                )
             return
 
          end if
@@ -1035,7 +1018,6 @@
                call errint ( '#',  svrctr                     )
                call errch  ( '#',  target                     )
                call sigerr ( 'SPICE(INVALIDFRAME)'            )
-               call chkout ( 'ZZGFCOIN'                       )
                return
 
             end if
@@ -1067,7 +1049,6 @@
                call errch  ( '#',  ref                               )
                call errint ( '#',  svrctr                            )
                call sigerr ( 'SPICE(BADFRAME)'                       )
-               call chkout ( 'ZZGFCOIN'                              )
 
             else
 
@@ -1079,7 +1060,6 @@
                call errch  ( '#',  ref                              )
                call errint ( '#',  svrctr                           )
                call sigerr ( 'SPICE(BADFRAME)'                      )
-               call chkout ( 'ZZGFCOIN'                             )
 
             end if
 
@@ -1093,10 +1073,7 @@
 !
          call zzgftreb ( svrctr, svradi )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFCOIN' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        For geodetic and planetographic coordinates, we need to save
@@ -1122,7 +1099,6 @@
                call errdp  ( '#', svradi(3)                          )
                call errch  ( '#', crdsys                             )
                call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
-               call chkout ( 'ZZGFCOIN'                              )
                return
 
             end if
@@ -1233,7 +1209,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', dref                                 )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZGFCOIN'                                )
             return
 
          end if
@@ -1249,7 +1224,6 @@
 
       end if
 
-      call chkout ( 'ZZGFCOIN' )
       return
 
 
@@ -1364,11 +1338,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin  ( 'ZZGFCOG' )
-      end if
+      if ( return () ) return
 
       call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
                      svcorr, svobs,  svdref, svdvec, svcsys, &
@@ -1382,12 +1352,10 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCOG'                                     )
          return
 
       end if
 
-      call chkout  ( 'ZZGFCOG' )
       return
 
 
@@ -1536,11 +1504,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCODC' )
 
 !
 !     Fetch the state from which the coordinate is derived. If the
@@ -1561,7 +1526,6 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCODC'                                    )
          return
 
       end if
@@ -1579,7 +1543,6 @@
 !
       decres  =  cdsign(svcidx) == -1
 
-      call chkout  ( 'ZZGFCODC' )
       return
 
 
@@ -1710,11 +1673,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCOEX' )
 
 !
 !     Simply attempt to compute the state. The returned found flag
@@ -1724,7 +1684,6 @@
                       svobs,  svdref, svdctr, svdvec, svradi, state, &
                       crdfnd                                          )
 
-      call chkout  ( 'ZZGFCOEX' )
       return
 
 
@@ -1838,11 +1797,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCOCG' )
 
       call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
                      svcorr, svobs,  svdref, svdvec, svcsys, &
@@ -1856,14 +1812,12 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCOCG'                                    )
          return
 
       end if
 
       crdval = cos ( value )
 
-      call chkout  ( 'ZZGFCOCG' )
       return
 
 
@@ -1975,11 +1929,8 @@
 !-&
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCOSG' )
 
       call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
                      svcorr, svobs,  svdref, svdvec, svcsys, &
@@ -1993,14 +1944,12 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCOSG'                                    )
          return
 
       end if
 
       crdval = sin ( value )
 
-      call chkout ( 'ZZGFCOSG' )
       return
 
 
@@ -2150,11 +2099,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCOCD' )
 
 !
 !     The derivative of cosine of the coordinate Q is
@@ -2179,7 +2125,6 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCOCD'                                    )
          return
 
       end if
@@ -2234,7 +2179,6 @@
          call setmsg ( 'The coordinate system # is not supported.' )
          call errch  ( '#',  crdsys                                )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZGFCOCD'                                  )
          return
 
       end if
@@ -2257,7 +2201,6 @@
       decres  =  ( - sin(value) * cdsign(svcidx) )  <  0.0_wp
 
 
-      call chkout  ( 'ZZGFCOCD' )
       return
 
 
@@ -2405,11 +2348,8 @@
 !     Standard SPICE error handling.
 !
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFCOSD' )
 
 !
 !     The derivative of the sine of the coordinate Q is
@@ -2434,7 +2374,6 @@
          call errch  ( '#', svcrd                                    )
          call errch  ( '#', timstr                                   )
          call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
-         call chkout ( 'ZZGFCOSD'                                    )
          return
 
       end if
@@ -2489,7 +2428,6 @@
          call setmsg ( 'The coordinate system # is not supported.' )
          call errch  ( '#',  crdsys                                )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZGFCOSD'                                  )
          return
 
       end if
@@ -2511,7 +2449,6 @@
 !
       decres  =  ( cos(value) * cdsign(svcidx) )  <  0.0_wp
 
-      call chkout  ( 'ZZGFCOSD' )
       return
 
 

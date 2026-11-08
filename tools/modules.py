@@ -2,6 +2,16 @@
 Which SPICELIB routines go into which PEPPER module (used by
 tools/modularize.py). Modules are listed in dependency order: a module's
 routines may use only modules listed before it.
+
+Steps to move the routines of a new module (MODULE = e.g. pepper_cells):
+
+    python tools/modularize.py MODULE
+    python tools/add_intents.py src/MODULE.f90
+    pixi run python tools/mark_pure.py src/MODULE.f90
+    python tools/document_procedures.py --remove-brief-io \
+        src/MODULE.f90 src/legacy/pepper_legacy_<name>.f90
+    python tools/modernize_syntax.py src
+    pixi run tspice
 """
 
 # Constant functions of SPICELIB that are named constants in
@@ -43,4 +53,5 @@ MODULES = {
         samch samsub scanrj shiftl shiftr sigdgt suffix ucase wdcnt wdindx
         zzinssub zzrepsub
         """.split(),
+    "pepper_errors": ["expln"],
 }

@@ -704,11 +704,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GETFVN' )
 
 !
 !     Initialization.
@@ -738,14 +735,12 @@
          //            'kernel.'                                  )
          call errch  ( '#', inst                                  )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'GETFVN'                                   )
          return
 
       end if
 
       call getfov ( instid, room, shape, frame, bsight, n, bounds )
 
-      call chkout ( 'GETFVN' )
       return
 
       end

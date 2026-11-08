@@ -333,11 +333,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASSDR' )
-      end if
+      if ( return () ) return
 
 !
 !     Before starting, make sure that this DAS file is open for
@@ -350,20 +346,14 @@
 !
       call dashlu ( handle, unit )
 
-      if ( failed() ) then
-         call chkout ( 'DASSDR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Write out any buffered records that belong to the file.
 !
       call daswbr ( handle )
 
-      if ( failed () ) then
-         call chkout ( 'DASSDR' )
-         return
-      end if
+      if ( failed () ) return
 
 !
 !     We're going to re-order the physical records in the DAS file,
@@ -388,10 +378,7 @@
 !
       call dasops ( scrhan )
 
-      if ( failed () ) then
-         call chkout ( 'DASSDR' )
-         return
-      end if
+      if ( failed () ) return
 
 !
 !     Now build up our `inverse order vector'.   This array is an
@@ -421,10 +408,7 @@
                     lastrc, &
                     lastwd )
 
-      if ( failed () ) then
-         call chkout ( 'DASSDR' )
-         return
-      end if
+      if ( failed () ) return
 !
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file, and also find the type of the descriptor
@@ -457,10 +441,7 @@
 !
          call dasrri ( handle, recno, 1, nwi, irec )
 
-         if ( failed () ) then
-             call chkout ( 'DASSDR' )
-           return
-         end if
+         if ( failed () ) return
 !
 !        Increment the directory count.
 !
@@ -473,10 +454,7 @@
          call dasadi ( scrhan,  1,  dir        )
          call dasadi ( scrhan,  1,  count(dir) )
 
-         if ( failed () ) then
-            call chkout ( 'DASSDR' )
-            return
-         end if
+         if ( failed () ) return
 !
 !        Set up our `finite state machine' that tells us the data
 !        types of the records described by the last read directory.
@@ -507,10 +485,7 @@
                call dasadi (  scrhan,  1,  type           )
                call dasadi (  scrhan,  1,  count(type)+j  )
 
-               if ( failed () ) then
-                  call chkout ( 'DASSDR' )
-                  return
-               end if
+               if ( failed () ) return
 
             end do
 
@@ -590,10 +565,7 @@
 
       end do
 
-      if ( failed () ) then
-         call chkout ( 'DASSDR' )
-         return
-      end if
+      if ( failed () ) return
 !
 !     We note that the way to construct the inverse of a permutation
 !     SIGMA in a single loop is suggested by the relation
@@ -619,10 +591,7 @@
          call dasrdi ( scrhan,  (2*i)-1,  (2*i)-1,  type  )
          call dasrdi ( scrhan,   2*i,      2*i,     dest  )
 
-         if ( failed () ) then
-            call chkout ( 'DASSDR' )
-            return
-         end if
+         if ( failed () ) return
 !
 !        Set DEST to the destination location, measured as an offset
 !        from the last comment record, of the Ith record by adding
@@ -661,10 +630,7 @@
 !
          call dasudi ( scrhan, base+i+total, base+i+total, type )
 
-         if ( failed () ) then
-            call chkout ( 'DASSDR' )
-            return
-         end if
+         if ( failed () ) return
 
       end do
 
@@ -742,10 +708,7 @@
 
          end if
 
-         if ( failed () ) then
-            call chkout ( 'DASSDR' )
-            return
-         end if
+         if ( failed () ) return
 !
 !        Let I be the index of the record that we are going to move
 !        data into next.  I is an offset from the last comment record.
@@ -779,10 +742,7 @@
                           base + total + offset, &
                           type                    )
 
-            if ( failed () ) then
-               call chkout ( 'DASSDR' )
-               return
-            end if
+            if ( failed () ) return
 !
 !           Only pick records up if we're going to put them down in
 !           a location other than their original one.
@@ -806,10 +766,7 @@
 
                end if
 
-               if ( failed () ) then
-                  call chkout ( 'DASSDR' )
-                  return
-               end if
+               if ( failed () ) return
 
             end if
 
@@ -822,10 +779,7 @@
             call dasrdi ( scrhan, base+i,       base+i,       offset )
             call dasrdi ( scrhan, base+i+total, base+i+total, type   )
 
-            if ( failed () ) then
-               call chkout ( 'DASSDR' )
-               return
-            end if
+            if ( failed () ) return
 
          end do
 
@@ -853,10 +807,7 @@
 !
          call dasudi ( scrhan,  base+i,  base+i, -start )
 
-         if ( failed () ) then
-            call chkout ( 'DASSDR' )
-            return
-         end if
+         if ( failed () ) return
 !
 !        Update START so that it points to the first element of a cycle
 !        of the order vector that has not yet been traversed.  This will
@@ -874,10 +825,7 @@
 
             call dasrdi (  scrhan,  base+start,  base+start,  offset  )
 
-            if ( failed () ) then
-               call chkout ( 'DASSDR' )
-               return
-            end if
+            if ( failed () ) return
 
          end do
 
@@ -1034,6 +982,5 @@
       call dasllc ( scrhan )
 
 
-      call chkout ( 'DASSDR' )
       return
       end

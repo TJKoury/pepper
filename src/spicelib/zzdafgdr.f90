@@ -163,11 +163,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDAFGDR' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -198,7 +194,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZDAFGDR'                                   )
             return
 
          end if
@@ -231,7 +226,6 @@
          //            'has been closed.'                           )
          call errint ( '#', handle                                  )
          call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
-         call chkout ( 'ZZDAFGDR'                                   )
          return
       end if
 
@@ -241,10 +235,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., lun )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDAFGDR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Branch based on whether the binary file format is native
@@ -265,10 +256,7 @@
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGDR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !     Process the non-native binary file format case.
@@ -286,10 +274,7 @@
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         if ( iostat /= 0 ) then
-            call chkout ( 'ZZDAFGDR' )
-            return
-         end if
+         if ( iostat /= 0 ) return
 
 !
 !        Translate the data record.  Assume (improperly in the
@@ -302,10 +287,7 @@
 !
          call zzxlated ( ibff, chrbuf, 128, dpbuf )
 
-         if ( failed() ) then
-            call chkout ( 'ZZDAFGDR' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -316,7 +298,6 @@
       found = .true.
       call moved ( dpbuf, 128, dprec )
 
-      call chkout( 'ZZDAFGDR' )
       return
 
       end

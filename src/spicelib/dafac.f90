@@ -438,11 +438,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFAC' )
-      end if
+      if ( return () ) return
 !
 !     The lines of text in BUFFER will be ``packed'' into DAF comment
 !     records: the significant portion of each comment line from BUFFER
@@ -468,22 +464,14 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFAC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Convert the DAF file handle to its corresponding Fortran logical
 !     unit number for reading and writing comment records.
 !
       call zzddhhlu ( handle, 'DAF', .false., daflun )
 
-      if ( failed() ) then
-         call chkout ( 'DAFAC' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
@@ -495,7 +483,6 @@
          call errfnm ( '#', daflun                                 )
          call errint ( '#', n                                      )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                    )
-         call chkout ( 'DAFAC'                                     )
          return
 
       end if
@@ -531,7 +518,6 @@
                                 ' buffer. Value: #'                 )
                   call errint ( '#', ichar( buffer(i)(j:j) )        )
                   call sigerr ( 'SPICE(ILLEGALCHARACTER)'           )
-                  call chkout ( 'DAFAC'                             )
                   return
 
             end if
@@ -559,12 +545,7 @@
 !
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFAC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Compute the number of comment records and the number of comment
 !     characters. In order to perform these calculations, we assume
@@ -595,7 +576,6 @@
                call errfnm ( '#', daflun                             )
                call errint ( '#', iostat                             )
                call sigerr ( 'SPICE(FILEREADFAILED)'                 )
-               call chkout ( 'DAFAC'                                 )
                return
 
             end if
@@ -638,7 +618,6 @@
                           ' the comments could not be found.'   )
             call errfnm ( '#', daflun                           )
             call sigerr ( 'SPICE(BADCOMMENTAREA)'               )
-            call chkout ( 'DAFAC'                               )
             return
 
          else if ( found ) then
@@ -699,10 +678,7 @@
 
          call dafarr ( handle, newrec )
 
-         if ( failed() ) then
-            call chkout ( 'DAFAC' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -775,7 +751,6 @@
                   call errfnm ( '#', daflun                          )
                   call errint ( '#', iostat                          )
                   call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
-                  call chkout ( 'DAFAC'                              )
                   return
 
                end if
@@ -811,7 +786,6 @@
                   call errfnm ( '#', daflun                          )
                   call errint ( '#', iostat                          )
                   call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
-                  call chkout ( 'DAFAC'                              )
                   return
 
                end if
@@ -854,7 +828,6 @@
             call errfnm ( '#', daflun                            )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-            call chkout ( 'DAFAC'                                )
             return
 
          end if
@@ -881,13 +854,11 @@
          call errfnm ( '#', daflun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DAFAC'                                )
          return
 
       end if
 !
 !     Check out and leave DAFAC.
 !
-      call chkout ( 'DAFAC' )
       return
       end

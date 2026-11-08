@@ -209,11 +209,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYSETI' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -296,6 +292,5 @@
       end if
 
 
-      call chkout ( 'SYSETI' )
       return
       end

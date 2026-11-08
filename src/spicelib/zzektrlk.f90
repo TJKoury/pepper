@@ -335,14 +335,12 @@
 
       if (  ( key < 1 )  .or.  ( key > totkey )  ) then
 
-         call chkin  ( 'ZZEKTRLK'                                      )
          call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
          call errint ( '#',     key                                    )
          call errint ( '#',     totkey                                 )
          call errint ( '#',     tree                                   )
          call errhan ( '#',     handle                                 )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'ZZEKTRLK'                                      )
          return
 
       end if
@@ -409,7 +407,6 @@
 
          if ( level > depth ) then
 
-            call chkin  ( 'ZZEKTRLK'                                   )
             call setmsg ( 'Runaway node pointer chain.  Key = #; '// &
                           'valid range = 1:#. Tree = #, file = #'      )
             call errint ( '#',     key                                 )
@@ -417,7 +414,6 @@
             call errint ( '#',     tree                                )
             call errhan ( '#',     handle                              )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZEKTRLK'                                   )
             return
 
          end if
@@ -477,7 +473,6 @@
 !
       if ( .not. found ) then
 
-         call chkin  ( 'ZZEKTRLK'                                      )
          call setmsg ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
                        '  Key was not found.  This probably indicates'// &
                        ' a corrupted file or a bug in the EK code.'    )
@@ -486,7 +481,6 @@
          call errint ( '#',     tree                                   )
          call errhan ( '#',     handle                                 )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKTRLK'                                      )
          return
 
       end if

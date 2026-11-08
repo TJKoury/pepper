@@ -915,11 +915,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKGP' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -945,10 +941,7 @@
 !
 !     If the tolerance is less than zero, we go no further.
 !
-      if ( tol < 0.0_wp ) then
-         call chkout ( 'CKGP' )
-         return
-      end if
+      if ( tol < 0.0_wp ) return
 
 !
 !     Begin a search for this instrument and time, and get the first
@@ -1021,10 +1014,7 @@
 !              If REFCHG detects that the reference frame is invalid
 !              then return from this routine with FOUND equal to false.
 !
-               if ( failed () ) then
-                  call chkout ( 'CKGP' )
-                  return
-               end if
+               if ( failed () ) return
 !
 !              Transform the attitude information: convert CMAT so that
 !              it maps from request frame to C-matrix frame.
@@ -1036,7 +1026,6 @@
 
             found = .true.
 
-            call chkout ( 'CKGP' )
             return
 
          end if
@@ -1046,6 +1035,5 @@
       end do
 
 
-      call chkout ( 'CKGP' )
       return
       end

@@ -466,18 +466,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKOPS' )
-      end if
+      if ( return () ) return
 
       call dasops ( handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the file for paged access.  The EK architecture
@@ -485,10 +478,7 @@
 !
       call zzekpgin ( handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPS' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Allocate the first integer page for the file's metadata.  We
@@ -510,6 +500,5 @@
 !
 !     That's it.  We're ready to add data to the file.
 !
-      call chkout ( 'EKOPS' )
       return
       end

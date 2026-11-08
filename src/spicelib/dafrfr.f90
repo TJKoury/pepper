@@ -230,11 +230,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFRFR' )
-      end if
+      if ( return () ) return
 
 !
 !     Do some initializations
@@ -247,12 +243,7 @@
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed () ) then
-
-         call chkout ( 'DAFRFR' )
-         return
-
-      end if
+      if ( failed () ) return
 
 !
 !     Retrieve all but the internal file name directly from the
@@ -277,11 +268,9 @@
          call errint ( '#1', handle              )
          call errint ( '#2', handle              )
          call sigerr ( 'SPICE(DAFFRNOTFOUND)'   )
-         call chkout ( 'DAFRFR'                 )
          return
 
       end if
 
-      call chkout ( 'DAFRFR' )
       return
       end

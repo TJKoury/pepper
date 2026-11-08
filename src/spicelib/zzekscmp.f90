@@ -331,11 +331,9 @@
 
       else
 
-         call chkin  ( 'ZZEKSCMP'                         )
          call setmsg ( 'Data type code # not recognized.' )
          call errint ( '#',  coltyp                       )
          call sigerr ( 'SPICE(INVALIDDATATYPE)'           )
-         call chkout ( 'ZZEKSCMP'                         )
          return
 
       end if
@@ -343,7 +341,6 @@
 
       if ( .not. found ) then
 
-         call chkin  ( 'ZZEKSCMP'                                  )
          call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                        'Column entry element was not found.'       )
          call errhan ( '#',  handle                                )
@@ -351,7 +348,6 @@
          call errint ( '#',  row                                   )
          call errint ( '#',  eltidx                                )
          call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-         call chkout ( 'ZZEKSCMP'                                  )
          return
 
       end if
@@ -403,12 +399,10 @@
 
             if ( dtype /= chr ) then
 
-               call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
                call errint ( '#', coltyp                         )
                call errint ( '#', dtype                          )
                call sigerr ( 'SPICE(BUG)'                        )
-               call chkout ( 'ZZEKSCMP'                          )
                return
 
             end if
@@ -426,12 +420,10 @@
 
             if (  ( dtype /= time ) .and. ( dtype /= dp )  ) then
 
-               call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
                call errint ( '#', coltyp                         )
                call errint ( '#', dtype                          )
                call sigerr ( 'SPICE(BUG)'                        )
-               call chkout ( 'ZZEKSCMP'                          )
                return
 
             end if
@@ -458,12 +450,10 @@
 
             else
 
-               call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
                call errint ( '#', coltyp                         )
                call errint ( '#', dtype                          )
                call sigerr ( 'SPICE(BUG)'                        )
-               call chkout ( 'ZZEKSCMP'                          )
                return
 
             end if
@@ -490,12 +480,10 @@
 
             else
 
-               call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
                call errint ( '#', coltyp                         )
                call errint ( '#', dtype                          )
                call sigerr ( 'SPICE(BUG)'                        )
-               call chkout ( 'ZZEKSCMP'                          )
                return
 
             end if
@@ -514,11 +502,9 @@
 !           Something untoward has happened in our column descriptor
 !           argument.
 !
-            call chkin  ( 'ZZEKSCMP'                                )
             call setmsg ( 'The data type code # was not recognized.')
             call errint ( '#',  coltyp                              )
             call sigerr ( 'SPICE(INVALIDDATATYPE)'                  )
-            call chkout ( 'ZZEKSCMP'                                )
             return
 
          end if
@@ -580,13 +566,11 @@
 !
 !        Sorry, we couldn't resist.
 !
-         call chkin  ( 'ZZEKSCMP'                                      )
          call setmsg ( 'The relational operator # was not recognized '// &
                        'or was not applicable for data type #.'        )
          call errint ( '#',  op                                        )
          call errint ( '#',  dtype                                     )
          call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
-         call chkout ( 'ZZEKSCMP'                                      )
          return
 
       end if

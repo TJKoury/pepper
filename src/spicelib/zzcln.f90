@@ -156,7 +156,6 @@
 !
 !     First remove the data...
 !
-      call chkin ( 'ZZCLN' )
 
       head = datlst( nameat )
 
@@ -196,6 +195,5 @@
 
       call lnkfsl ( head, tail, nmpool )
 
-      call chkout ('ZZCLN' )
       return
       end

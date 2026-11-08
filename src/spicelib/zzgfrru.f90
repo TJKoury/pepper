@@ -283,9 +283,7 @@
       real(wp)              svdt
       save                  svdt
 
-      call chkin  ( 'ZZGFRRU'           )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFRRU'           )
 
       return
 
@@ -468,11 +466,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFRRIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
@@ -488,7 +483,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFRRIN'                                 )
          return
 
       end if
@@ -505,7 +499,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFRRIN'                                 )
          return
 
       end if
@@ -521,7 +514,6 @@
          call errch  ( '#', obsrvr                         )
          call errch  ( '#', target                         )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( 'ZZGFRRIN'                          )
          return
 
       end if
@@ -539,12 +531,7 @@
 !
       call zzvalcor ( svabco, attblk )
 
-      if ( failed() ) then
-
-         call chkout ( 'ZZGFRRIN' )
-         return
-
-      end if
+      if ( failed() ) return
 
 !
 !     The "delta" argument for QDERIV, DT, must have a non-zero value.
@@ -554,7 +541,6 @@
          call setmsg ( 'Delta value for QDERIV is zero; a non-zero ' // &
                        'value is required.'                        )
          call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-         call chkout ( 'ZZGFRRIN' )
          return
 
       end if
@@ -565,7 +551,6 @@
       svref  = 'J2000'
       svdt   = dt
 
-      call chkout ( 'ZZGFRRIN' )
       return
 
 
@@ -688,11 +673,8 @@
 !     Standard SPICE error handling.
 !
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFRRDC' )
 
       n  = 6
 
@@ -722,10 +704,7 @@
 
       call spkez ( svtarg, et, svref, svabco, svobs, state, lt )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFRRDC' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !        d ||r||     ^
@@ -743,7 +722,6 @@
       drvel  =  vdot( dfdt(4), srhat ) + vdot( state(4), srhat(4) )
       decres =  drvel < 0.0_wp
 
-      call chkout ( 'ZZGFRRDC' )
       return
 
 

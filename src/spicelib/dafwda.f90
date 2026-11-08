@@ -189,11 +189,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DAFWDA' )
 
 !
 !     Bad addresses?
@@ -202,7 +199,6 @@
          call setmsg ( 'Negative beginning address: #' )
          call errint ( '#', begin )
          call sigerr ( 'SPICE(DAFNEGADDR)' )
-         call chkout ( 'DAFWDA' )
          return
 
       else if ( begin > end ) then
@@ -211,7 +207,6 @@
          call errint ( '#', begin )
          call errint ( '#', end   )
          call sigerr ( 'SPICE(DAFBEGGTEND)' )
-         call chkout ( 'DAFWDA' )
          return
       end if
 
@@ -261,6 +256,5 @@
 
       end do
 
-      call chkout ( 'DAFWDA' )
       return
       end

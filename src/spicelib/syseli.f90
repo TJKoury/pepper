@@ -232,11 +232,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYSELI' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -282,6 +278,5 @@
       end if
 
 
-      call chkout ( 'SYSELI' )
       return
       end

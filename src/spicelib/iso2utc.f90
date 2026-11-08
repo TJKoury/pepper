@@ -248,11 +248,7 @@
 !
 !     Standard SPICELIB exception handling
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ISO2UTC' )
-      end if
+      if ( return() ) return
 
 !
 !     Left justify the input time string, and determine the location of
@@ -378,7 +374,6 @@
                  'string was #. '
 
          call repmc  ( error, '#', mystr(1:l), error )
-         call chkout ( 'ISO2UTC' )
          return
 
       end if
@@ -396,7 +391,6 @@
                  'supplied a time string of the form '          // &
                  '# ... '
          call repmc ( error, '#', ascii(1:7), error )
-         call chkout ( 'ISO2UTC' )
          return
 
       end if
@@ -409,7 +403,6 @@
 
       utcstr = mystr
 
-      call chkout ( 'ISO2UTC'  )
 
       return
 

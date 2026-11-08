@@ -395,11 +395,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKFXFM' )
 
 !
 !     Need angular velocity data.
@@ -416,10 +413,8 @@
       call ckhave ( have )
 
       if ( .not. have ) then
-         call chkout ( 'CKFXFM' )
          return
       else if ( .not. zzsclk ( inst, sclkid ) ) then
-         call chkout ( 'CKFXFM' )
          return
       end if
 
@@ -467,7 +462,6 @@
 !
             call invstm ( ref2in, xform )
 
-            call chkout ( 'CKFXFM' )
             return
 
          end if
@@ -477,6 +471,5 @@
       end do
 
 
-      call chkout ( 'CKFXFM' )
       return
       end

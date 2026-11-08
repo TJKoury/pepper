@@ -149,15 +149,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCTRAN' )
-      end if
+      if ( return () ) return
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'SCTRAN' )
       return
 
 
@@ -473,9 +468,7 @@
 
       call bodc2n ( clkid, clknam, found )
 
-      if ( .not. found ) then
-         return
-      end if
+      if ( .not. found ) return
 
       call suffix ( 'SCLK', 1, clknam )
 

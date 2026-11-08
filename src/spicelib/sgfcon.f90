@@ -165,11 +165,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SGFCON' )
 
 !
 !     Get the value for the base of the constants and the number of
@@ -178,10 +175,7 @@
       call sgmeta ( handle, descr, conbas, base   )
       call sgmeta ( handle, descr, ncon,   myncon )
 
-      if ( failed() ) then
-         call chkout ( 'SGFCON' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Perform checks on the inputs for reasonableness.
@@ -197,7 +191,6 @@
          call errint ( '#', first                                )
          call errint ( '#', last                                 )
          call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'               )
-         call chkout ( 'SGFCON'                                  )
          return
 
       end if
@@ -210,7 +203,6 @@
          call errint ( '#', last                                   )
          call errint ( '#', first                                  )
          call sigerr ( 'SPICE(REQUESTOUTOFORDER)'                  )
-         call chkout ( 'SGFCON'                                    )
          return
 
       end if
@@ -224,7 +216,6 @@
 
       call dafgda ( handle, b, e, values )
 
-      call chkout ( 'SGFCON' )
       return
 
       end

@@ -237,11 +237,7 @@
 !
 !     Standard error handling:
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'REMOVI' )
-      end if
+      if ( return() ) return
 !
 !     What is the cardinality of the set?
 !
@@ -273,6 +269,5 @@
       end if
 
 
-      call chkout ( 'REMOVI' )
       return
       end

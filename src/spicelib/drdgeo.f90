@@ -450,11 +450,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DRDGEO' )
-      end if
+      if ( return () ) return
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -467,7 +463,6 @@
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-          call chkout ( 'DRDGEO'                         )
           return
 
       end if
@@ -477,7 +472,6 @@
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )
           call sigerr ( 'SPICE(BADRADIUS)'                   )
-          call chkout ( 'DRDGEO'                             )
           return
 
       end if
@@ -672,6 +666,5 @@
       jacobi (dz,dalt)  =         slat
 
 
-      call chkout ( 'DRDGEO' )
       return
       end

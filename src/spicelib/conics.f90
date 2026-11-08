@@ -294,11 +294,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CONICS' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -324,7 +320,6 @@
                        'was #'                  )
          call errdp  ( '#', ecc                 )
          call sigerr ( 'SPICE(BADECCENTRICITY)' )
-         call chkout ( 'CONICS'                 )
          return
       end if
 
@@ -334,7 +329,6 @@
                        'allowed.  The value supplied was #. '         )
          call errdp  ( '#', rp                                        )
          call sigerr ( 'SPICE(BADPERIAPSEVALUE)'                      )
-         call chkout ( 'CONICS'                                       )
          return
       end if
 
@@ -345,7 +339,6 @@
                        'allowed.  The value supplied was #. '         )
          call errdp  ( '#', mu                                        )
          call sigerr ( 'SPICE(BADGM)'                                 )
-         call chkout ( 'CONICS' )
          return
       end if
 
@@ -457,6 +450,5 @@
 !
       call prop2b ( mu, pstate, dt, state )
 
-      call chkout ( 'CONICS' )
       return
       end

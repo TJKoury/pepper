@@ -1839,11 +1839,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFEVNT' )
 
       if ( first ) then
 
@@ -1920,7 +1917,6 @@
                      'ILLUMINATION ANGLE.'                            )
          call errch  ('#', gquant                                     )
          call sigerr ('SPICE(NOTRECOGNIZED)'                          )
-         call chkout ('GFEVNT'                                        )
          return
 
       end if
@@ -1935,7 +1931,6 @@
          call errint ( '#', qnpars                                    )
          call errint ( '#', maxpar                                    )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
-         call chkout ( 'GFEVNT'                                       )
          return
 
       end if
@@ -1975,7 +1970,6 @@
                call errch  ( '#', qpars (i,qtnum)                    )
                call errch  ( '#', qnames(  qtnum)                    )
                call sigerr ( 'SPICE(MISSINGVALUE)'                   )
-               call chkout ( 'GFEVNT'                                )
                return
 
             end if
@@ -2258,7 +2252,6 @@
                      'LOCMIN. '                                       )
          call errch  ('#', op                                         )
          call sigerr ('SPICE(NOTRECOGNIZED)'                          )
-         call chkout ('GFEVNT'                                        )
          return
 
       end if
@@ -2436,12 +2429,10 @@
                     // 'a bug. Please contact NAIF.' )
          call errch  ( '#', gquant            )
          call sigerr ( 'SPICE(BUG)'           )
-         call chkout ( 'GFEVNT'               )
          return
 
       end  if
 
-      call chkout (  'GFEVNT' )
 
       return
       end

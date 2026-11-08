@@ -233,11 +233,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'BODC2S' )
 
 !
 !     Fortran. No type check available for CODE. Bother.
@@ -254,7 +251,6 @@
 !
 !        Success. CODE maps to NAME. Return.
 !
-         call chkout ( 'BODC2S' )
          return
 
       end if
@@ -266,7 +262,6 @@
 !
       call intstr ( code, name )
 
-      call chkout ( 'BODC2S' )
       return
 
       end

@@ -1,0 +1,35 @@
+!> The default SPICE instance and context of the legacy SPICELIB interface.
+!>
+!> The legacy external procedures (SPICELIB's names and arguments) have no
+!> context argument; they call the module procedures with this context.
+!> Its error handling is SPICELIB's global one (SIGERR, FAILED, ERRACT,
+!> ...). Like SPICELIB itself, the legacy interface is not thread-safe.
+!> This is the only global state in PEPPER, and the module API never uses
+!> it.
+module pepper_legacy_context
+
+   use pepper_instance, only: pepper_spice, pepper_context
+
+   implicit none
+
+   private
+
+   public :: legacy_context
+
+   type(pepper_spice), target, save :: default_spice  !! the default instance
+   type(pepper_context), target, save :: default_context  !! its legacy context
+   logical, save :: initialized = .false.  !! default_context has been created
+
+contains
+
+   !> The context of the legacy interface (created on the first call).
+   function legacy_context() result(ctx)
+      type(pepper_context), pointer :: ctx  !! the default context
+      if (.not. initialized) then
+         default_context = default_spice%new_context(legacy=.true.)
+         initialized = .true.
+      end if
+      ctx => default_context
+   end function legacy_context
+
+end module pepper_legacy_context

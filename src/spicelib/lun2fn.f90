@@ -125,11 +125,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LUN2FN' )
-      end if
+      if ( return () ) return
 
 !
 !     First we test to see if the filename is blank.
@@ -140,7 +136,6 @@
                        ' positive: #.'                     )
          call errint ( '#', lunit                          )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'            )
-         call chkout ( 'LUN2FN'                            )
          return
 
       end if
@@ -160,7 +155,6 @@
          call errint ( '#', lunit                               )
          call errint ( '#', iostat                              )
          call sigerr ( 'SPICE(INQUIREFAILED)'                   )
-         call chkout ( 'LUN2FN'                                 )
          return
 
       end if
@@ -175,7 +169,6 @@
                        ' logical unit #.'                            )
          call errint ( '#', lunit                                    )
          call sigerr ( 'SPICE(FILENOTOPEN)'                          )
-         call chkout ( 'LUN2FN'                                      )
          return
 
       end if
@@ -183,6 +176,5 @@
 !
 !     If we made it to here, we are done. Just check out and return.
 !
-      call chkout ( 'LUN2FN' )
       return
       end

@@ -243,20 +243,16 @@
 
       call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure the encoded query is in order before proceeding.
 !
       if ( icheck == ifalse ) then
 
-         call chkin  ( 'ZZEKPCOL'                                     )
          call setmsg ( 'Encoded query has not yet been semantically '// &
                        'checked.'                                     )
          call sigerr ( 'SPICE(NOTSEMCHECKED)'                         )
-         call chkout ( 'ZZEKPCOL'                                     )
          return
 
       end if
@@ -275,9 +271,7 @@
                       lxbegs, lxends, values, numvls, chrbuf, &
                       chbegs, chends, error,  errmsg          )
 
-      if ( error ) then
-         return
-      end if
+      if ( error ) return
 
 
       if ( ntoken == 1 ) then
@@ -381,9 +375,7 @@
 !
          call ekccnt ( tablst(tabidx), cc )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 
          fnd   =  .false.
@@ -431,9 +423,7 @@
 
             call ekccnt ( tablst(i), cc )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
             do j = 1, cc
 

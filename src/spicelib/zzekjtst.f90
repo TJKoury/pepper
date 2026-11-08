@@ -271,9 +271,7 @@
       save
 
 
-      call chkin  ( 'ZZEKJTST'          )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZEKJTST'          )
 
       return
 
@@ -561,11 +559,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZEKJPRP' )
 
 !
 !     We don't validate the inputs; these must be checked by ZZEKJOIN,
@@ -578,7 +573,6 @@
 
          case = empty
 
-         call chkout ( 'ZZEKJPRP' )
          return
 
       end if
@@ -949,7 +943,6 @@
       done  = .false.
 
 
-      call chkout ( 'ZZEKJPRP' )
       return
 
 
@@ -1510,9 +1503,7 @@
 
                rptr   =  rptr + 1
 
-               if ( found ) then
-                  return
-               end if
+               if ( found ) return
 
 
             end do

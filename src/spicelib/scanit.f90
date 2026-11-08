@@ -425,12 +425,10 @@
 
       if ( .not. return () ) then
 
-         call chkin  ( 'SCANIT'                                       )
          call setmsg ( 'Your program has referenced the umbrella '    // &
                        'subroutine SCANIT.  This may indicate a '     // &
                        'programming error.'                           )
          call sigerr ( 'SPICE(BOGUSENTRY)'                            )
-         call chkout ( 'SCANIT'                                       )
 
       end if
 
@@ -1476,11 +1474,7 @@
 !                 to identify another token. If we don't we must return
 !                 now.
 !
-                  if (       (        .not. known ) &
-                       .and. ( ntokns ==  room  ) ) then
-
-                     return
-                  end if
+                  if (       (        .not. known ) .and. ( ntokns ==  room  ) ) return
 
 !
 !                 A space is a special kind of mark.  All white space

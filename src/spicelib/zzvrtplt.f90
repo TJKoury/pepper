@@ -237,11 +237,8 @@
 !     Standard SPICELIB error handling.
 !
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZVRTPLT' )
 
 
       if ( nv < 1 ) then
@@ -250,7 +247,6 @@
          //            'be positive.'                                )
          call errint ( '#',  nv                                      )
          call sigerr ( 'SPICE(BADVERTEXCOUNT)'                       )
-         call chkout ( 'ZZVRTPLT'                                    )
          return
 
       end if
@@ -261,7 +257,6 @@
          //            'be positive.'                                )
          call errint ( '#',  np                                      )
          call sigerr ( 'SPICE(BADPLATECOUNT)'                        )
-         call chkout ( 'ZZVRTPLT'                                    )
          return
 
       end if
@@ -273,7 +268,6 @@
          call errint ( '#',  cellsz                                )
          call errint ( '#',  np                                    )
          call sigerr ( 'SPICE(CELLARRAYTOOSMALL)'                  )
-         call chkout ( 'ZZVRTPLT'                                  )
          return
 
       end if
@@ -286,7 +280,6 @@
          call errint ( '#',  maxlst                              )
          call errint ( '#',  3*np + nv                           )
          call sigerr ( 'SPICE(PLATELISTTOOSMALL)'                )
-         call chkout ( 'ZZVRTPLT'                                )
          return
 
       end if
@@ -296,10 +289,7 @@
 !
       call zzinilnk ( nv, cellsz, ncell, vrtptr, cells )
 
-      if ( failed() ) then
-         call chkout ( 'ZZVRTPLT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Loop over all plate IDS. Add each plate/vertex
@@ -315,10 +305,7 @@
             call zzaddlnk ( plates(j,i), i,     nv,   cellsz, &
                             vrtptr,      ncell, cells        )
 
-            if ( failed() ) then
-               call chkout ( 'ZZVRTPLT' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -351,6 +338,5 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkout ( 'ZZVRTPLT' )
       return
       end

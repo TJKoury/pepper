@@ -549,11 +549,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFUDB' )
 
 !
 !     Check the convergence tolerance.
@@ -563,7 +560,6 @@
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
-         call chkout ( 'ZZGFUDB'                               )
          return
 
       end if
@@ -605,10 +601,7 @@
                           rpt,    udrepu, &
                           result )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFUDB'  )
-            return
-         end if
+         if ( failed() ) return
 
          if ( bail ) then
 !
@@ -619,7 +612,6 @@
 !              An interrupt has been issued. Return now regardless of
 !              whether the search completed.
 !
-               call chkout ( 'ZZGFUDB' )
                return
 
             end if
@@ -635,7 +627,6 @@
          call udrepf
       end if
 
-      call chkout ( 'ZZGFUDB' )
       return
       end
 

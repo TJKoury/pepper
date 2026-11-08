@@ -356,11 +356,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZXLATED' )
-      end if
+      if ( return() ) return
 
 !
 !     Perform some initialization tasks.
@@ -389,7 +385,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZXLATED'                                   )
             return
 
          end if
@@ -432,7 +427,6 @@
          //            'never occur.'                               )
          call errint ( '#', inbff                                   )
          call sigerr ( 'SPICE(BUG)'                                 )
-         call chkout ( 'ZZXLATED'                                   )
          return
 
       end if
@@ -470,7 +464,6 @@
                call errch  ( '#', strbff(inbff)                    )
                call errch  ( '#', strbff(natbff)                   )
                call sigerr ( 'SPICE(BUG)'                          )
-               call chkout ( 'ZZXLATED'                            )
                return
 
             end if
@@ -492,7 +485,6 @@
                call errch  ( '#', strbff(natbff)                      )
                call errint ( '#', space                               )
                call sigerr ( 'SPICE(BUG)'                             )
-               call chkout ( 'ZZXLATED'                               )
                return
 
             end if
@@ -730,7 +722,6 @@
             call errch  ( '#', strbff(inbff)                        )
             call errch  ( '#', strbff(natbff)                       )
             call sigerr ( 'SPICE(BUG)'                              )
-            call chkout ( 'ZZXLATED'                                )
             return
 
          end if
@@ -758,7 +749,6 @@
                call errch  ( '#', strbff(inbff)                    )
                call errch  ( '#', strbff(natbff)                   )
                call sigerr ( 'SPICE(BUG)'                          )
-               call chkout ( 'ZZXLATED'                            )
                return
 
             end if
@@ -780,7 +770,6 @@
                call errch  ( '#', strbff(natbff)                      )
                call errint ( '#', space                               )
                call sigerr ( 'SPICE(BUG)'                             )
-               call chkout ( 'ZZXLATED'                               )
                return
 
             end if
@@ -1018,7 +1007,6 @@
             call errch  ( '#', strbff(inbff)                        )
             call errch  ( '#', strbff(natbff)                       )
             call sigerr ( 'SPICE(BUG)'                              )
-            call chkout ( 'ZZXLATED'                                )
             return
 
          end if
@@ -1036,12 +1024,10 @@
          //            'from non-native formats.'                      )
          call errch  ( '#', strbff(natbff)                             )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZXLATED'                                      )
          return
 
       end if
 
-      call chkout ( 'ZZXLATED' )
       return
 
       end

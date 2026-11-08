@@ -330,11 +330,8 @@
       logical               pass1
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZHULLAX' )
 
 !
 !     Nothing found yet.
@@ -353,7 +350,6 @@
          call errch  ( '#', inst                           )
          call errint ( '#', n                              )
          call sigerr ( 'SPICE(INVALIDCOUNT)'               )
-         call chkout ( 'ZZHULLAX'                          )
          return
 
       end if
@@ -401,7 +397,6 @@
             call errint ( '#', next                           )
             call errch  ( '#', inst                           )
             call sigerr ( 'SPICE(DEGENERATECASE)'             )
-            call chkout ( 'ZZHULLAX'                          )
             return
 
          end if
@@ -636,7 +631,6 @@
          //            'of FOV of instrument #.'            )
          call errch  ( '#', inst                            )
          call sigerr ( 'SPICE(FACENOTFOUND)'                )
-         call chkout ( 'ZZHULLAX'                           )
          return
 
       end if
@@ -731,7 +725,6 @@
          call errint ( '#', minix                                   )
          call errch  ( '#', inst                                    )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-         call chkout ( 'ZZHULLAX'                                   )
          return
 
       else if ( maxlon  >  pi()-2*margin  ) then
@@ -745,7 +738,6 @@
          call errint ( '#', maxix                                   )
          call errch  ( '#', inst                                    )
          call sigerr ( 'SPICE(FOVTOOWIDE)'                          )
-         call chkout ( 'ZZHULLAX'                                   )
          return
 
       end if
@@ -783,13 +775,11 @@
             call errdp  ( '#', sep                               )
             call errch  ( '#', inst                              )
             call sigerr ( 'SPICE(FOVTOOWIDE)'                    )
-            call chkout ( 'ZZHULLAX'                             )
             return
 
          end if
 
       end do
 
-      call chkout ( 'ZZHULLAX' )
       return
       end

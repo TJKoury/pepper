@@ -203,7 +203,6 @@
          return
       end if
 
-      call chkin ( 'WNCARD' )
 
 
       wncard = cardd(window)
@@ -217,7 +216,6 @@
               // 'have an even number of elements. The size was #.')
          call errint ( '#', wncard )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'WNCARD' )
          wncard = 0
          return
 
@@ -230,6 +228,5 @@
 !
       wncard = wncard/2
 
-      call chkout ( 'WNCARD' )
       return
       end

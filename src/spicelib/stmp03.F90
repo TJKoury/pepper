@@ -597,13 +597,11 @@
 !
       if ( x <= lbound ) then
 
-         call chkin ( 'STMP03'                                     )
          call setmsg( 'The input value of X must be greater than ' &
          //           '#.  The input value was #'                  )
          call errdp ( '#', lbound                                  )
          call errdp ( '#', x                                       )
          call sigerr( 'SPICE(VALUEOUTOFRANGE)'                     )
-         call chkout( 'STMP03'                                     )
          return
 
       end if

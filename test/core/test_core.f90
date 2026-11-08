@@ -26,9 +26,10 @@ program test_core
 
 contains
 
+   !> Count and report a failed check.
    subroutine check(ok, what)
-      logical, intent(in) :: ok
-      character(*), intent(in) :: what
+      logical, intent(in) :: ok  !! the check passed
+      character(*), intent(in) :: what  !! what was checked
       if (.not. ok) then
          failures = failures + 1
          print '(2a)', 'FAILED: ', what

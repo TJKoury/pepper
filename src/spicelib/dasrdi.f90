@@ -312,9 +312,7 @@
 !
       call dasa2l ( handle, int, first, clbase, clsize, recno, wordno )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Decide how many integers to read.
@@ -337,9 +335,7 @@
 !
       do while ( nread < numint )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        At this point, RECNO is the correct number of the

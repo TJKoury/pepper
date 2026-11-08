@@ -138,11 +138,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKIF01' )
-      end if
+      if ( return () ) return
 
 !
 !     Read in the segment descriptor.
@@ -214,6 +210,5 @@
       end do
 
 
-      call chkout ( 'ZZEKIF01' )
       return
       end

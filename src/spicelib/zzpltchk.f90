@@ -111,11 +111,7 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZPLTCHK' )
-      end if
+      if ( return() ) return
 
 !
 !     Verify that the runtime environment's binary file format agrees
@@ -165,12 +161,10 @@
          end if
 
          call sigerr   ( 'SPICE(BUG)'                                  )
-         call chkout   ( 'ZZPLTCHK'                                    )
          return
 
       end if
 
-      call chkout ( 'ZZPLTCHK' )
       return
 
       end

@@ -157,9 +157,7 @@
       call zzektrpi ( handle, tree,   key,  parent, pkey,  poffst, &
                       lpidx,  lpkey,  lsib, rpidx,  rpkey, rsib   )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Set the base addresses for the child pointers and keys,

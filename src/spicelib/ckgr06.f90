@@ -615,11 +615,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKGR06' )
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -653,7 +650,6 @@
          //            'descriptor shows type = #.'                   )
          call errint ( '#', ic( 3 )                                   )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
-         call chkout ( 'CKGR06'                                       )
          return
 
       end if
@@ -668,10 +664,7 @@
 
       call dafgda ( handle, eaddr, eaddr, dpdata )
 
-      if ( failed() ) then
-         call chkout ( 'CKGR06' )
-         return
-      end if
+      if ( failed() ) return
 
       nintvl = nint ( dpdata(1) )
 
@@ -682,7 +675,6 @@
          call errint ( '#', nintvl                                    )
          call errint ( '#', msno                                      )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
-         call chkout ( 'CKGR06'                                       )
          return
 
       end if
@@ -701,10 +693,7 @@
 
       call dafgda ( handle, bufbas+1, bufbas+2, buffer )
 
-      if ( failed() ) then
-         call chkout( 'CKGR06' )
-         return
-      end if
+      if ( failed() ) return
 
       minib = ( baddr - 1 )  +  nint( buffer(1) )
       minie = ( baddr - 1 )  +  nint( buffer(2) )  -  1
@@ -716,10 +705,7 @@
 
       call dafgda ( handle, bufbas+1, bufbas+mctlsz, buffer )
 
-      if ( failed() ) then
-         call chkout( 'CKGR06' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the SCLK rate (seconds per tick), mini-segment
@@ -740,7 +726,6 @@
          call errint ( '#',  subtyp                     )
          call errint ( '#',  msno                       )
          call sigerr ( 'SPICE(NOTSUPPORTED)'            )
-         call chkout ( 'CKGR06'                         )
          return
 
       end if
@@ -757,7 +742,6 @@
          call errint ( '#', nrec                                )
          call errint ( '#', recno                               )
          call sigerr ( 'SPICE(CKNONEXISTREC)'                   )
-         call chkout ( 'CKGR06'                                 )
          return
 
       end if
@@ -795,6 +779,5 @@
 !     The record is complete if DAFGDA did its job. We don't
 !     check FAILED here since we're about to return.
 !
-      call chkout ( 'CKGR06' )
       return
       end

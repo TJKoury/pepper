@@ -336,11 +336,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFT2B' )
-      end if
+      if ( return () ) return
 
       idword = ' '
       tarch  = ' '
@@ -358,7 +354,6 @@
          call errfnm ( '#', text                              )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-         call chkout ( 'DAFT2B'                               )
          return
 
       end if
@@ -375,7 +370,6 @@
                        ' file ''#'''                           )
          call errfnm ( '#', text                               )
          call sigerr ( 'SPICE(NOTADAFFILE)'                    )
-         call chkout ( 'DAFT2B'                                )
          return
 
       end if
@@ -389,7 +383,6 @@
          call errfnm ( '#', text                              )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-         call chkout ( 'DAFT2B'                               )
          return
 
       end if
@@ -399,12 +392,7 @@
 !
       call dafopn ( binary, nd, ni, ifname(1), resv, handle )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFT2B' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Each array is preceded by a '1', which indicates that more
 !     arrays are to come. The array itself begins with the name
@@ -430,7 +418,6 @@
          call errfnm ( '#', text                              )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-         call chkout ( 'DAFT2B'                               )
          return
 
       end if
@@ -447,7 +434,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -462,7 +448,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -477,7 +462,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -485,12 +469,7 @@
          call dafps  ( nd, ni, dc, ic, sum           )
          call dafbna ( handle, sum, name(1)( :isize) )
 
-         if ( failed () ) then
-
-            call chkout ( 'DAFT2B' )
-            return
-
-         end if
+         if ( failed () ) return
 
          read (text,*,iostat=iostat) chunk
 
@@ -502,7 +481,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -515,7 +493,6 @@
                call setmsg ( 'Buffer size exceeded. Increase to #.' )
                call errint ( '#', chunk                             )
                call sigerr ( 'SPICE(DAFOVERFLOW)'                   )
-               call chkout ( 'DAFT2B'                               )
                return
 
             else
@@ -530,19 +507,13 @@
                   call errfnm ( '#', text                              )
                   call errint ( '#', iostat                            )
                   call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-                  call chkout ( 'DAFT2B'                               )
                   return
 
                end if
 
                call dafada ( buffer, chunk )
 
-               if ( failed () ) then
-
-                  call chkout ( 'DAFT2B' )
-                  return
-
-               end if
+               if ( failed () ) return
 
             end if
 
@@ -556,7 +527,6 @@
                call errfnm ( '#', text                              )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-               call chkout ( 'DAFT2B'                               )
                return
 
             end if
@@ -573,7 +543,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -585,19 +554,13 @@
             call errch  ( '#', name(1)( :isize)           )
             call errch  ( '#', name(2)( :isize)           )
             call sigerr ( 'SPICE(DAFNONAMEMATCH)'         )
-            call chkout ( 'DAFT2B'                        )
             return
 
          else
 
             call dafena
 
-            if ( failed () ) then
-
-               call chkout ( 'DAFT2B' )
-               return
-
-            end if
+            if ( failed () ) return
 
          end if
 
@@ -611,7 +574,6 @@
             call errfnm ( '#', text                              )
             call errint ( '#', iostat                            )
             call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-            call chkout ( 'DAFT2B'                               )
             return
 
          end if
@@ -633,7 +595,6 @@
          call errfnm ( '#', text                              )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(DAFREADFAIL)'                   )
-         call chkout ( 'DAFT2B'                               )
          return
 
       end if
@@ -645,7 +606,6 @@
          call errch  ( '#', ifname(1)                         )
          call errch  ( '#', ifname(2)                         )
          call sigerr ( 'SPICE(DAFNOIFNMATCH)'                 )
-         call chkout ( 'DAFT2B'                               )
          return
 
       end if
@@ -655,6 +615,5 @@
 !
       call dafcls ( handle )
 
-      call chkout ( 'DAFT2B' )
       return
       end

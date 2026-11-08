@@ -364,11 +364,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASADI' )
 
 !
 !     Get the file summary for this DAS.
@@ -383,10 +380,7 @@
                     lastrc, &
                     lastwd )
 
-      if ( failed() ) then
-         call chkout ( 'DASADI' )
-         return
-      end if
+      if ( failed() ) return
 
       lasti  =  lastla(int)
 
@@ -494,6 +488,5 @@
 !
       call dascud ( handle, int, nwritn )
 
-      call chkout ( 'DASADI' )
       return
       end

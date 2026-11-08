@@ -158,8 +158,6 @@
       if ( return() ) then
          sizec = 0
          return
-      else
-         call chkin ( 'SIZEC' )
       end if
 !
 !     Set return value, regardless of validity.
@@ -178,7 +176,6 @@
          call setmsg ( 'Invalid cell size.  The size was #.')
          call errint ( '#', size )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'SIZEC' )
          return
 
       else if ( card < 0  ) then
@@ -187,7 +184,6 @@
                        'was #.'      )
          call errint ( '#', card )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'SIZEC' )
          return
 
       else if ( card > size ) then
@@ -198,11 +194,9 @@
          call errint ( '#', card )
          call errint ( '#', size )
          call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
-         call chkout ( 'SIZEC' )
          return
 
       end if
 
-      call chkout ( 'SIZEC' )
       return
       end

@@ -149,11 +149,9 @@
 !
 !        Sorry, no other types of indexes are supported.
 !
-         call chkin  ( 'ZZEKIXLK'                           )
          call setmsg ( 'The index type # is not supported.' )
          call errint ( '#',   itype                         )
          call sigerr ( 'SPICE(INVALIDTYPE)'                 )
-         call chkout ( 'ZZEKIXLK'                           )
          return
 
       end if

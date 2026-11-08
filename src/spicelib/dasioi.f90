@@ -209,9 +209,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 
       if (   eqstr ( action, 'READ' )   ) then
@@ -224,14 +222,12 @@
 
          if ( iostat /= 0 ) then
 
-            call chkin  ( 'DASIOI'                                     )
             call setmsg ( 'Could not read DAS integer record. '       // &
                           'File = # Record number = #. IOSTAT = #.'    )
             call errfnm ( '#', unit                                    )
             call errint ( '#', recno                                   )
             call errint ( '#', iostat                                  )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
-            call chkout ( 'DASIOI'                                     )
             return
 
          end if
@@ -248,14 +244,12 @@
 
          if ( iostat /= 0 ) then
 
-            call chkin  ( 'DASIOI'                                     )
             call setmsg ( 'Could not write DAS integer record. '      // &
                           'File = # Record number = #. IOSTAT = #.'    )
             call errfnm ( '#', unit                                    )
             call errint ( '#', recno                                   )
             call errint ( '#', iostat                                  )
             call sigerr ( 'SPICE(DASFILEWRITEFAILED)'                  )
-            call chkout ( 'DASIOI'                                     )
             return
 
          end if
@@ -265,11 +259,9 @@
 !
 !        The requested action is a little too weird.
 !
-         call chkin  ( 'DASIOI'                                )
          call setmsg ( 'Action was #; should be READ or WRITE' )
          call errch  ( '#', action                             )
          call sigerr ( 'SPICE(UNRECOGNIZEDACTION)'             )
-         call chkout ( 'DASIOI'                                )
          return
 
       end if

@@ -587,11 +587,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( rname )
 
 !
 !     Initialization.
@@ -624,7 +621,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout (  rname                                     )
          return
 
       end if
@@ -642,7 +638,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', illmn                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout (  rname                                     )
          return
 
       end if
@@ -660,7 +655,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout (  rname                                     )
          return
 
       end if
@@ -679,10 +673,7 @@
 !
       call zzvalcor ( xbcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -696,7 +687,6 @@
          //            'restricted to reception cases.')
          call errch  ( '#', abcorr )
          call sigerr ( 'SPICE(INVALIDOPTION)' )
-         call chkout ( rname )
          return
 
       end if
@@ -717,7 +707,6 @@
          call errch  ( '#', target                         )
          call errch  ( '#', illmn                          )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( rname )
          return
 
       end if
@@ -731,7 +720,6 @@
 !
 !     All done.
 !
-      call chkout ( rname )
       return
 
       end

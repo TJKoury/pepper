@@ -328,11 +328,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKGR05' )
 
 !
 !     The unpacked descriptor contains the following information
@@ -364,7 +361,6 @@
                        'descriptor shows type = #.'                    )
          call errint ( '#', icd( 3 )                                   )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
-         call chkout ( 'CKGR05'                                        )
          return
 
       end if
@@ -380,10 +376,7 @@
 !
       call dafgda ( handle, end-3, end-3, record(2) )
 
-      if ( failed() ) then
-         call chkout ( 'CKGR05' )
-         return
-      end if
+      if ( failed() ) return
 
 
       subtyp = nint( record(2) )
@@ -410,17 +403,13 @@
                        'type 5 segment.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( 'CKGR05'                                   )
          return
 
       end if
 
       call dafgda ( handle, end, end, npoint )
 
-      if ( failed() ) then
-         call chkout ( 'CKGR05' )
-         return
-      end if
+      if ( failed() ) return
 
       nrec = nint ( npoint )
 
@@ -435,7 +424,6 @@
          call errint ( '#', recno                                      )
          call errint ( '#', nrec                                       )
          call sigerr ( 'SPICE(CKNONEXISTREC)'                          )
-         call chkout ( 'CKGR05'                                        )
          return
       end if
 
@@ -446,10 +434,7 @@
 
       call dafgda ( handle, addr, addr + packsz - 1, record( 3 ) )
 
-      if ( failed() ) then
-         call chkout ( 'CKGR05' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Next get the SCLK time.  Need to go past all of the NREC pointing
@@ -460,6 +445,5 @@
 
       call dafgda ( handle, addr, addr, record( 1 ) )
 
-      call chkout ( 'CKGR05' )
       return
       end

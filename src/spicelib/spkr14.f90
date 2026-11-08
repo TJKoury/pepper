@@ -179,11 +179,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKR14' )
-      end if
+      if ( return () ) return
 !
 !     Check the request time against the time bounds in the segment
 !     descriptor. In order to get the right data back from the generic
@@ -201,7 +197,6 @@
          call errdp ( '#',  descr(1)                                )
          call errdp ( '#',  descr(2)                                )
          call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         call chkout( 'SPKR14'                                      )
          return
 
       end if
@@ -221,7 +216,6 @@
 !
       call sgfpkt ( handle, descr, indx, indx, record(begel1), ends )
 
-      call chkout ( 'SPKR14' )
       return
 
       end

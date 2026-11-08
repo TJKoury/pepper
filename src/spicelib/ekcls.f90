@@ -383,17 +383,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKCLS' )
-      end if
+      if ( return () ) return
 
 !
 !     Close the file as a DAS file.
 !
       call dascls ( handle )
 
-      call chkout ( 'EKCLS' )
       return
       end

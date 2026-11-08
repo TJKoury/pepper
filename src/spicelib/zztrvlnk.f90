@@ -227,11 +227,8 @@
 !     Standard SPICE error handling.
 !
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZTRVLNK' )
 
       if ( ( aval < 1 ) .or. ( aval > maxa ) ) then
 
@@ -240,7 +237,6 @@
          call errint ( '#1', aval                        )
          call errint ( '#2', maxa                        )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'          )
-         call chkout ( 'ZZTRVLNK'                        )
          return
 
       end if
@@ -251,7 +247,6 @@
          //            'MAXB = #1.'                                )
          call errint ( '#1', maxb                                  )
          call sigerr ( 'SPICE(INVALIDSIZE)'                        )
-         call chkout ( 'ZZTRVLNK'                                  )
          return
 
       end if
@@ -274,7 +269,6 @@
             call errint ( '#1', ptr                         )
             call errint ( '#2', cellsz                      )
             call sigerr ( 'SPICE(POINTEROUTOFRANGE)'        )
-            call chkout ( 'ZZTRVLNK'                        )
             return
 
          end if
@@ -296,7 +290,6 @@
             call errint ( '#5', ptr                                 )
             call errint ( '#6', cellsz                              )
             call sigerr ( 'SPICE(BARRAYTOOSMALL)'                   )
-            call chkout ( 'ZZTRVLNK'                                )
             return
 
          end if
@@ -311,6 +304,5 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkout ( 'ZZTRVLNK' )
       return
       end

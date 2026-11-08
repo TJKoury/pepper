@@ -183,7 +183,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'SDIFFI' )
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -302,7 +301,6 @@
       end if
 
 
-      call chkout ( 'SDIFFI' )
 
       return
       end

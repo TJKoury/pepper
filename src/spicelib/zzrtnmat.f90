@@ -179,16 +179,13 @@
 !
 !     Use discovery check-in. Just test the RETURN status.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 
       if (  ( v(1) == 0.0_wp ) .and. ( v(2) == 0.0_wp )  ) then
 
          call cleard ( 9, m )
 
-         call chkin  ( 'ZZRTNMAT'                              )
          call setmsg ( 'Input vector (# # #) lies on Z-axis; ' &
          //            'tangential and normal directions are ' &
          //            'undefined.'                            )
@@ -196,7 +193,6 @@
          call errdp  ( '#', v(2)                               )
          call errdp  ( '#', v(3)                               )
          call sigerr ( 'SPICE(DEGENERATECASE)'                 )
-         call chkout ( 'ZZRTNMAT'                              )
          return
 
       else

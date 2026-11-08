@@ -235,11 +235,8 @@
       integer(ip)           i
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKSBI' )
 
 !
 !     Clear the body table.
@@ -274,6 +271,5 @@
 
       stfree = 1
 
-      call chkout ( 'ZZDSKSBI' )
       return
       end

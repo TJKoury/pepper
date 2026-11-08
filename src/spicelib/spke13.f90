@@ -193,11 +193,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKE13' )
 
 
       n =  nint( record(sizidx) )
@@ -237,6 +234,5 @@
       end do
 
 
-      call chkout ( 'SPKE13' )
       return
       end

@@ -481,11 +481,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKNM06' )
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -519,7 +516,6 @@
          //            'descriptor shows type = #.'                   )
          call errint ( '#', ic( 3 )                                   )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
-         call chkout ( 'CKNM06'                                       )
          return
       end if
 
@@ -528,13 +524,9 @@
 !
       call dafgda ( handle, ic(6), ic(6), dpdata )
 
-      if ( failed() ) then
-         call chkout ( 'CKNM06' )
-         return
-      end if
+      if ( failed() ) return
 
       nmini = nint ( dpdata(1) )
 
-      call chkout ( 'CKNM06' )
       return
       end

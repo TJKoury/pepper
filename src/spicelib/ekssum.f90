@@ -318,21 +318,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKSSUM' )
-      end if
+      if ( return () ) return
 
 !
 !     Get the info from a knowledgeable source.
 !
       call zzeksinf ( handle, segno, tabnam, segdsc, cnames, cdscrs )
 
-      if ( failed() ) then
-         call chkout ( 'EKSSUM' )
-         return
-      end if
+      if ( failed() ) return
 
       nrows  =  segdsc ( nridx )
       ncols  =  segdsc ( ncidx )
@@ -354,6 +347,5 @@
 
       end do
 
-      call chkout ( 'EKSSUM' )
       return
       end

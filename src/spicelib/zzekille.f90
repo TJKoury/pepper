@@ -169,11 +169,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKILLE' )
-      end if
+      if ( return () ) return
 
 !
 !     Validate the number of rows in the column.
@@ -187,7 +183,6 @@
          call setmsg ( 'Number of rows must be positive; was #.' )
          call errint ( '#',  nrows                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                      )
-         call chkout ( 'ZZEKILLE'                                )
          return
       end if
 
@@ -232,12 +227,10 @@
          call setmsg ( 'The data type # is not supported.' )
          call errint ( '#',  coltyp                        )
          call sigerr ( 'SPICE(INVALIDSIZE)'                )
-         call chkout ( 'ZZEKILLE'                          )
          return
 
       end if
 
 
-      call chkout ( 'ZZEKILLE' )
       return
       end

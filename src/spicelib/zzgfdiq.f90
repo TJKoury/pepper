@@ -161,25 +161,18 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFDIQ' )
 
 !
 !     Get the position of the target relative to the observer.
 !
       call spkezp ( targid, et, 'J2000', abcorr, obsid, pos, lt )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFDIQ' )
-         return
-      end if
+      if (  failed() ) return
 
 
       dist = vnorm ( pos )
 
-      call chkout  ( 'ZZGFDIQ' )
       return
       end

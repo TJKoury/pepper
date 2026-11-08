@@ -187,9 +187,7 @@
       logical               inside
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Compute the original volume edge lengths from the coordinate
@@ -201,14 +199,12 @@
 
          if ( l(i) <= 0.0_wp ) then
 
-            call chkin  ( 'ZZRYTREC'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &
             //            'must be strictly increasing.'           )
             call errint ( '#',  i                                  )
             call errdp  ( '#',  bounds(lower,i)                    )
             call errdp  ( '#',  bounds(upper,i)                    )
             call sigerr ( 'SPICE(BADCOORDBOUNDS)'                  )
-            call chkout ( 'ZZRYTREC'                               )
             return
 
          end if

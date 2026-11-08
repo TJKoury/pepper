@@ -275,16 +275,12 @@
 !
       call zzektrud ( handle, tree, lkey, trgkey, undrfl )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If the deletion didn't result in an underflow, we're done.
 !
-      if ( .not. undrfl ) then
-         return
-      end if
+      if ( .not. undrfl ) return
 
 !
 !     Handle node underflows, as required.  We describe our approach

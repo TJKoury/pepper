@@ -485,11 +485,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ET2LST')
 
 
       call ljust ( type,   mytype )
@@ -547,7 +544,6 @@
 
          call errch  ( '#', type )
          call sigerr ( 'SPICE(UNKNOWNSYSTEM)'  )
-         call chkout ( 'ET2LST' )
          return
 
       end if
@@ -563,7 +559,6 @@
          time = '12:00:00'
          ampm = '12:00:00 P.M.'
 
-         call chkout ( 'ET2LST' )
          return
 
       end if
@@ -582,7 +577,6 @@
          //            'frames.req for more details. '         )
          call errint ( '#', body                               )
          call sigerr ( 'SPICE(CANTFINDFRAME)'                  )
-         call chkout ( 'ET2LST'                                )
          return
 
       end if
@@ -628,7 +622,6 @@
          call errint ( '#', body                               )
          call errch  ( '#', bpmkwd                             )
          call sigerr ( 'SPICE(CANTGETROTATIONTYPE)'            )
-         call chkout ( 'ET2LST'                                )
          return
 
       else
@@ -712,6 +705,5 @@
 
       ampm = h // ':' // m // ':' // s //  ' ' // amorpm
 
-      call chkout ( 'ET2LST' )
       return
       end

@@ -207,11 +207,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PACKAC' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -230,7 +226,6 @@
             call errint ( '*', i                )
             call errint ( '*', pack(i)          )
             call sigerr ( 'SPICE(INVALIDINDEX)' )
-            call chkout ( 'PACKAC' )
             return
          end if
 
@@ -245,6 +240,5 @@
       end do
 
 
-      call chkout ( 'PACKAC' )
       return
       end

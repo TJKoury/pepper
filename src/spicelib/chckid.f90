@@ -179,11 +179,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CHCKID' )
-      end if
+      if ( return () ) return
 
 !
 !     Check CLASS before trying to use it in an error message.
@@ -201,7 +197,6 @@
          call errint ( '#', chrcod                             )
          call errint ( '#', i                                  )
          call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-         call chkout ( 'CHCKID'                                )
          return
 
       end if
@@ -215,7 +210,6 @@
                        'positive but was #.'                        )
          call errint ( '#',   maxlen                                )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-         call chkout ( 'CHCKID'                                     )
          return
 
       end if
@@ -242,7 +236,6 @@
          call errint ( '#', l                   )
          call errint ( '#', maxlen              )
          call sigerr ( 'SPICE(IDSTRINGTOOLONG)' )
-         call chkout ( 'CHCKID'                 )
          return
 
       end if
@@ -270,11 +263,9 @@
          call errint ( '#', chrcod                )
          call errint ( '#', i                     )
          call sigerr ( 'SPICE(NONPRINTABLECHARS)' )
-         call chkout ( 'CHCKID'                   )
          return
 
       end if
 
-      call chkout ( 'CHCKID' )
       return
       end

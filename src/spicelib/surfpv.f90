@@ -492,11 +492,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SURFPV' )
 
 !
 !     Determine the ellipsoid surface intercept point of the ray
@@ -510,10 +507,7 @@
 !
       call surfpt ( stvrtx, stdir, a, b, c, x, found )
 
-      if ( failed()  .or.  ( .not. found )  ) then
-         call chkout ( 'SURFPV' )
-         return
-      end if
+      if ( failed()  .or.  ( .not. found )  ) return
 
 !
 !     No result has been found, since we don't know whether the
@@ -577,7 +571,6 @@
          call errdp  ( '#', v(3)                           )
          call errdp  ( '#', level                          )
          call sigerr ( 'SPICE(INVALIDVERTEX)'              )
-         call chkout ( 'SURFPV'                            )
          return
 
       end if
@@ -598,7 +591,6 @@
 !        is not defined. This means we can't "find" the state
 !        of the intercept point.
 !
-         call chkout ( 'SURFPV' )
          return
 
       end if
@@ -642,12 +634,7 @@
 !     unit vectors, so the dot product of U and N is less than or equal
 !     to one.
 !
-      if (  m  >  ( dpmax() / margin ) * udn**2  ) then
-
-         call chkout ( 'SURFPV' )
-         return
-
-      end if
+      if (  m  >  ( dpmax() / margin ) * udn**2  ) return
 
 !
 !     If < U,N > passed the tests above, we can solve for the
@@ -669,6 +656,5 @@
 
       found = .true.
 
-      call chkout ( 'SURFPV' )
       return
       end

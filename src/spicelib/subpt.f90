@@ -559,11 +559,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SUBPT' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -597,7 +593,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SUBPT'                                    )
          return
 
       end if
@@ -617,7 +612,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SUBPT'                                    )
          return
 
       end if
@@ -634,7 +628,6 @@
                        'Both are #.'                                  )
          call errch  ( '#',  obsrvr                                   )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                     )
-         call chkout ( 'SUBPT'                                        )
          return
 
       end if
@@ -644,10 +637,7 @@
 !
       call zzgftreb ( trgcde, radii )
 
-      if ( failed() ) then
-            call chkout ( 'SUBPT' )
-            return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the name of the body-fixed frame associated with the
@@ -664,7 +654,6 @@
                        'the FRAMES Required Reading for details.'   )
          call errch  ( '#', target                                  )
          call sigerr ( 'SPICE(NOFRAME)'                             )
-         call chkout ( 'SUBPT'                                      )
          return
 
       end if
@@ -730,7 +719,6 @@
                           'though vertex of ray is at target center. '// &
                           'This indicates a bug. Please contact NAIF.')
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'SUBPT'                                     )
             return
 
          end if
@@ -747,12 +735,10 @@
                        '"Intercept."'                                 )
          call errch  ( '#',  method                                   )
          call sigerr ( 'SPICE(DUBIOUSMETHOD)'                         )
-         call chkout ( 'SUBPT'                                        )
          return
 
       end if
 
 
-      call chkout ( 'SUBPT' )
       return
       end

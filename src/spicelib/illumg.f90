@@ -1305,11 +1305,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 
 !
@@ -1335,10 +1332,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -1385,7 +1379,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1422,10 +1415,7 @@
          call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
@@ -1444,7 +1434,6 @@
             //            'string was <#>.'                      )
             call errch  ( '#', shpstr                            )
             call sigerr ( 'SPICE(BUG)'                           )
-            call chkout ( rname                                  )
             return
 
          end if
@@ -1463,7 +1452,6 @@
             call errch  ( '#', subtyp                                 )
             call errch  ( '#', method                                 )
             call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
-            call chkout ( rname                                       )
             return
 
          end if
@@ -1494,7 +1482,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1510,7 +1497,6 @@
          //            'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( rname                                        )
          return
 
       end if
@@ -1522,10 +1508,7 @@
 
       call frinfo ( fxfcde, center, type, typeid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -1535,7 +1518,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -1552,7 +1534,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  center                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1588,10 +1569,7 @@
       call spkcpt ( spoint,   target, fixref, et,     fixref, &
                     'TARGET', abcorr, obsrvr, opstat, lt     )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     TRGEPC is the epoch associated with the surface point. Below,
@@ -1611,10 +1589,7 @@
       call spkcpo ( ilusrc, trgepc, fixref, 'OBSERVER', abcorr, &
                     spoint, target, fixref, tistat,     lti     )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the surface normal at SPOINT. This computation depends
@@ -1649,7 +1624,6 @@
          call setmsg ( 'The computation method # was not recognized. ' )
          call errch  ( '#',  method                                    )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
-         call chkout ( rname                                           )
          return
 
       end if
@@ -1657,10 +1631,7 @@
 !
 !     Check for errors before calling math routines.
 !
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We'll need the negative of the observer-surface point position
@@ -1681,6 +1652,5 @@
 !
 !     TRGEPC has already been set.
 !
-      call chkout ( rname )
       return
       end

@@ -603,9 +603,7 @@
                     modify, mods,  yabbrv, succes, &
                     pictur, errmsg )
 
-      if ( .not. succes ) then
-         return
-      end if
+      if ( .not. succes ) return
 
 !
 !     We are not going to support all of the various
@@ -653,9 +651,7 @@
 
          call tcheck ( tvec, type, mods, modify, ok, errmsg )
 
-         if ( .not. ok ) then
-            return
-         end if
+         if ( .not. ok ) return
 !
 !        If we have day of year format, we move it into the
 !        month-day of month format.

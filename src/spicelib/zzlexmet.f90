@@ -207,11 +207,8 @@
       integer(ip)           room
       integer(ip)           tke
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZLEXMET' )
 
 
       if ( method == ' ' ) then
@@ -220,7 +217,6 @@
 !
          n = 0
 
-         call chkout ( 'ZZLEXMET' )
          return
 
       end if
@@ -324,7 +320,6 @@
                      call errint ( '#', i                     )
                      call errint ( '#', tke                   )
                      call sigerr ( 'SPICE(ARRAYTOOSMALL)'     )
-                     call chkout ( 'ZZLEXMET'                 )
                      return
 
                   end if
@@ -367,7 +362,6 @@
                   call errint ( '#', tke                   )
                   call errch  ( '#', method(i:tke)         )
                   call sigerr ( 'SPICE(ARRAYTOOSMALL)'     )
-                  call chkout ( 'ZZLEXMET'                 )
                   return
 
                end if
@@ -382,7 +376,6 @@
                call errint ( '#', i                           )
                call errch  ( '#', method(i:)                  )
                call sigerr ( 'SPICE(SYNTAXERROR)'             )
-               call chkout ( 'ZZLEXMET'                       )
                return
 
             end if
@@ -395,6 +388,5 @@
 !
       end do
 
-      call chkout ( 'ZZLEXMET' )
       return
       end

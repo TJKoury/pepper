@@ -188,7 +188,6 @@
          segno  =  segdsc   ( snoidx )
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRSD'                                       )
          call setmsg ( 'Column # is of type #; ZZEKRSD only works '   // &
                        'with DP or TIME columns.  RECNO = #; SEGNO = '// &
                        '#; EK = #.'                                    )
@@ -198,7 +197,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
-         call chkout ( 'ZZEKRSD'                                       )
          return
 
       end if
@@ -242,7 +240,6 @@
          segno  =  segdsc   ( snoidx )
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRSD'                                       )
          call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported d.p. class.  COLUMN = #; '        // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
@@ -252,7 +249,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKRSD'                                       )
          return
 
       end if

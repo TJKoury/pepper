@@ -536,9 +536,7 @@
       save                  remain
 
 
-      call chkin  ( 'GFRPRT'            )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'GFRPRT'            )
       return
 
 
@@ -697,11 +695,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFREPI' )
 
 !
 !     Check to see if either the message prefix or suffix
@@ -714,7 +709,6 @@
          call errint ( '#', lastnb(begmss)                         )
          call errint ( '#', mxbegm                                 )
          call sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
-         call chkout ( 'GFREPI'                                    )
          return
 
       end if
@@ -726,7 +720,6 @@
          call errint ( '#', lastnb(endmss)                         )
          call errint ( '#', mxendm                                 )
          call sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
-         call chkout ( 'GFREPI'                                    )
          return
 
       end if
@@ -746,7 +739,6 @@
             //            'ASCII code is #.'                    )
             call errint ( '#', chrcod                           )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'            )
-            call chkout ( 'GFREPI'                              )
             return
 
          end if
@@ -764,7 +756,6 @@
             //            'ASCII code is #.'                    )
             call errint ( '#', chrcod                           )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'            )
-            call chkout ( 'GFREPI'                              )
             return
 
          end if
@@ -782,10 +773,7 @@
       call wnsumd   ( window, measur, ave, stddev, short, long )
       call zzgftswk ( measur, 1.0_wp,  4,   begmss, endmss )
 
-      if ( failed() ) then
-         call chkout ( 'GFREPI' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -806,7 +794,6 @@
 
 
 
-      call chkout  ( 'GFREPI' )
       return
 
 
@@ -962,11 +949,8 @@
 !-&
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFREPU' )
 
 !
 !     Do a few error checks before getting started.
@@ -980,7 +964,6 @@
          call errdp  ( '#',  ivbeg                                )
          call errdp  ( '#',  ivend                                )
          call sigerr ( 'SPICE(BADENDPOINTS)'                      )
-         call chkout ( 'GFREPU'                                   )
          return
       end if
 
@@ -996,7 +979,6 @@
          call errdp  ( '#',  ivbeg                           )
          call errdp  ( '#',  ivend                           )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'GFREPU'                              )
          return
       end if
 
@@ -1037,7 +1019,6 @@
 !
       call zzgfwkin ( incr )
 
-      call chkout  ( 'GFREPU' )
       return
 
 
@@ -1134,11 +1115,8 @@
 !-&
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFREPF' )
 
       call zzgfwkad ( 0.0_wp, 1, copyb, copye )
       call zzgfwkin ( 0.0_wp )
@@ -1156,7 +1134,6 @@
 !        We're not currently writing to standard output, so we're
 !        done.
 !
-         call chkout ( 'GFREPF' )
          return
 
       end if
@@ -1185,6 +1162,5 @@
       call zzgfdsps  ( 1, ' ', 'A', 1 )
 
 
-      call chkout  ( 'GFREPF' )
       return
       end

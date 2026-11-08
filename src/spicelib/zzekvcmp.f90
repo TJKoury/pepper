@@ -370,7 +370,6 @@
 
          else
 
-            call chkin  ( 'ZZEKVCMP'                            )
             call setmsg ( 'Data type mismatch for order-by '    // &
                           'column having index #; type for '    // &
                           'segment # = #; type for segment '    // &
@@ -381,7 +380,6 @@
             call errint ( '#', segs(2)                          )
             call errint ( '#', dtype (2)                        )
             call sigerr ( 'SPICE(BUG)'                          )
-            call chkout ( 'ZZEKVCMP'                            )
             return
 
          end if
@@ -431,11 +429,9 @@
 !
          zzekvcmp  =  .false.
 
-         call chkin  ( 'ZZEKVCMP'                                      )
          call setmsg ( 'The relational operator # was not recognized.' )
          call errint ( '#',  op                                        )
          call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
-         call chkout ( 'ZZEKVCMP'                                      )
          return
 
       end if

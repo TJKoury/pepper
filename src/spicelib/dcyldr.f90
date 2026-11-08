@@ -354,11 +354,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DCYLDR' )
-      end if
+      if ( return () ) return
 
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
@@ -369,7 +365,6 @@
                        'rectangular to cylindrical coordinates '      // &
                        'is not defined for points on the z-axis.'      )
          call sigerr ( 'SPICE(POINTONZAXIS)'                           )
-         call chkout ( 'DCYLDR'                                        )
          return
 
       end if
@@ -399,6 +394,5 @@
 !
       call invort ( injacb, jacobi )
 
-      call chkout ( 'DCYLDR' )
       return
       end

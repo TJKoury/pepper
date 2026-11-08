@@ -807,14 +807,12 @@
       save                     zmol
       save                     zmos
 
-      call chkin  ( 'ZZSGP4' )
       call setmsg ( 'The routine ZZSGP4 is an umbrella for ' &
       //            'the SGP4 initializer and propagator entry ' &
       //            'points. Do not call ZZSGP4. It is ' &
       //            'likely that a programming error has ' &
       //            'been made.' )
       call sigerr ( 'SPICE(BOGUSENTRY)'  )
-      call chkout ( 'ZZSGP4' )
 
       return
 
@@ -1042,11 +1040,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'XXSGP4I' )
 
 !
 !     Initialize.
@@ -1100,10 +1095,7 @@
       call ttrans ( 'TDB', 'JDUTC', tvec )
       epoch = tvec(1) - 2433281.5_wp
 
-      if ( failed() ) then
-         call chkout ( 'XXSGP4I' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This code block replaces the call:
@@ -1153,10 +1145,7 @@
                      eccsq,  omeosq, posq,  rp,    rteosq, sinio, &
                      gsto )
 
-        if ( failed() ) then
-           call chkout ( 'XXSGP4I' )
-           return
-        end if
+        if ( failed() ) return
 
 
 !
@@ -1167,7 +1156,6 @@
 
            call setmsg ( 'TLE elements suborbital.'     )
            call sigerr ( 'SPICE(SUBORBITAL)'            )
-           call chkout ( 'XXSGP4I'                      )
            return
 
         end if
@@ -1355,7 +1343,6 @@
 
       doinit = .false.
 
-      call chkout ( 'XXSGP4I' )
       return
 
 
@@ -1523,11 +1510,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'XXSGP4E' )
 
 !
 !     Local constants. Keep compiler ok for warnings on
@@ -1613,7 +1597,6 @@
          call setmsg ( 'Mean motion less-than zero. ' &
           //           'This error may indicate a bad TLE set.'     )
          call sigerr ( 'SPICE(BADMEANMOTION)'                       )
-         call chkout ( 'XXSGP4E'                                    )
          return
 
       end if
@@ -1634,7 +1617,6 @@
           //           'error may indicate a bad TLE set.'          )
          call errdp  ( '#', eccm                                    )
          call sigerr ( 'SPICE(BADMECCENTRICITY)'                     )
-         call chkout ( 'XXSGP4E'                                    )
          return
 
       end if
@@ -1646,7 +1628,6 @@
           //           'a bad TLE set or a decayed orbit.'          )
          call errdp  ( '#', eccm                                    )
          call sigerr ( 'SPICE(BADMSEMIMAJOR)'                        )
-         call chkout ( 'XXSGP4E'                                    )
          return
 
       end if
@@ -1711,7 +1692,6 @@
              //           'indicate a bad TLE set.'                )
             call errdp  ( '#', eccp                                )
             call sigerr ( 'SPICE(BADPECCENTRICITY)'                )
-            call chkout ( 'XXSGP4E'                                )
             return
 
          end if
@@ -1794,7 +1774,6 @@
 
          call setmsg ( 'Semi-latus rectum less-than zero.'          )
          call sigerr ( 'SPICE(BADSEMILATUS)'                        )
-         call chkout ( 'XXSGP4E'                                    )
          return
 
       end if
@@ -1871,12 +1850,10 @@
 
          call setmsg ( 'Satellite has decayed.' )
          call sigerr ( 'SPICE(ORBITDECAY)'      )
-         call chkout ( 'XXSGP4E'                 )
          return
 
       end if
 
-      call chkout ( 'XXSGP4E' )
 
       return
 

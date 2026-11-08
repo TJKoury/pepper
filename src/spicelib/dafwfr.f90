@@ -313,11 +313,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFWFR' )
-      end if
+      if ( return () ) return
 
 !
 !     Do some initializations
@@ -330,10 +326,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed () ) then
-         call chkout ( 'DAFWFR' )
-         return
-      end if
+      if ( failed () ) return
 
 !
 !     Get the logical unit for the file, as we know we have a valid DAF
@@ -341,10 +334,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., unit )
 
-      if ( failed() ) then
-         call chkout ( 'DAFWFR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     In order to maintain the integrity of the file ID word, the
@@ -370,7 +360,6 @@
          call errfnm ( '#', unit                                      )
          call errint ( '#', iostat                                    )
          call sigerr ( 'SPICE(DAFREADFAIL)'                           )
-         call chkout ( 'DAFWFR'                                       )
          return
 
       end if
@@ -399,11 +388,9 @@
                        'was #' )
          call errint ( '#', iostat )
          call sigerr ( 'SPICE(DAFWRITEFAIL)' )
-         call chkout ( 'DAFWFR' )
          return
 
       end if
 
-      call chkout ( 'DAFWFR' )
       return
       end

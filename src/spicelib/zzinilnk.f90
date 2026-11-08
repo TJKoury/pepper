@@ -146,11 +146,8 @@
       integer(ip)           i
       logical               return
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZINILNK' )
 
       if ( maxp < 1 ) then
 
@@ -158,7 +155,6 @@
          //            'be positive.'                           )
          call errint ( '#',  maxp                               )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINILNK'                               )
          return
 
       end if
@@ -171,7 +167,6 @@
          call errint ( '#',  maxc                               )
          call errint ( '#',  maxp                               )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINILNK'                               )
          return
 
       end if
@@ -194,6 +189,5 @@
 !
       ncell = 0
 
-      call chkout ( 'ZZINILNK' )
       return
       end

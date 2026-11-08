@@ -189,17 +189,13 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( voxsiz <= 0.0_wp ) then
 
-         call chkin  ( 'ZZGETVOX'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )
          call errdp  ( '#',  voxsiz                          )
          call sigerr ( 'SPICE(NONPOSITIVEVALUE)'             )
-         call chkout ( 'ZZGETVOX'                            )
          return
 
       end if
@@ -234,11 +230,7 @@
 !
 !        If the point is outside of the grid, return now.
 !
-         if ( ( term < 0.0_wp ) .or. ( term > nvox(i) ) ) then
-
-            return
-
-         end if
+         if ( ( term < 0.0_wp ) .or. ( term > nvox(i) ) ) return
 
 !
 !        Assign a 1-based value to the Ith component of the voxel's

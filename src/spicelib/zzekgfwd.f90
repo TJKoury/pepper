@@ -120,9 +120,7 @@
 !
       call zzekpgbs ( type, p, base )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( type == chr ) then

@@ -178,11 +178,9 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLLED'                 )
          call setmsg ( 'Column # is not indexed.' )
          call errch  ( '#',  column               )
          call sigerr ( 'SPICE(NOTINDEXED)'        )
-         call chkout ( 'ZZEKLLED'                 )
          return
 
       end if
@@ -197,12 +195,10 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKLLED'                                      )
          call setmsg ( 'Column # should be DP or TIME but has type #.' )
          call errch  ( '#',  column                                    )
          call errint ( '#',  dtype                                     )
          call sigerr ( 'SPICE(INVALIDTYPE)'                            )
-         call chkout ( 'ZZEKLLED'                                      )
          return
 
       end if

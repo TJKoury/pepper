@@ -233,14 +233,12 @@
 
       if (  ( lkey < 1 )  .or.  ( lkey > totkey )  ) then
 
-         call chkin  ( 'ZZEKTRPI'                                      )
          call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
          call errint ( '#',     lkey                                   )
          call errint ( '#',     totkey                                 )
          call errint ( '#',     tree                                   )
          call errhan ( '#',     handle                                 )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         call chkout ( 'ZZEKTRPI'                                      )
          return
 
       end if
@@ -261,9 +259,7 @@
 !     If we were lucky enough to get an exact match, we can quit now.
 !     The root has no parent so the output values remain set to zero.
 !
-      if ( prvkey == lkey ) then
-         return
-      end if
+      if ( prvkey == lkey ) return
 
 !
 !     Still here?  Traverse the pointer path until we find the key
@@ -376,7 +372,6 @@
 !
       if ( .not. found ) then
 
-         call chkin  ( 'ZZEKTRPI'                                      )
          call setmsg ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
                        '  Key was not found.  This probably indicates'// &
                        ' a corrupted file or a bug in the EK code.'    )
@@ -385,7 +380,6 @@
          call errint ( '#',     tree                                   )
          call errhan ( '#',     handle                                 )
          call sigerr ( 'SPICE(ITEMNOTFOUND)'                           )
-         call chkout ( 'ZZEKTRPI'                                      )
          return
 
       end if

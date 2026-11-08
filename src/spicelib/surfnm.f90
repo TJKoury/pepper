@@ -192,11 +192,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SURFNM' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -226,7 +222,6 @@
          call errdp  ( '#', c )
 
          call sigerr ( 'SPICE(BADAXISLENGTH)' )
-         call chkout ( 'SURFNM' )
          return
       end if
 
@@ -258,6 +253,5 @@
 
       call vhatip ( normal )
 
-      call chkout ( 'SURFNM' )
       return
       end

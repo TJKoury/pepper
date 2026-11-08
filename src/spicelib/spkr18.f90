@@ -264,11 +264,8 @@
       integer(ip)           wndsiz
 
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR18' )
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
@@ -288,7 +285,6 @@
                       'data in a type 18 data segment.'      )
          call errint( '*',  type                             )
          call sigerr( 'SPICE(WRONGSPKTYPE)'                  )
-         call chkout( 'SPKR18'                               )
          return
       end if
 
@@ -303,7 +299,6 @@
          call errdp ( '#',  dc(1)                                   )
          call errdp ( '#',  dc(2)                                   )
          call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         call chkout( 'SPKR18'                                      )
          return
 
       end if
@@ -318,10 +313,7 @@
 !     any DAF file and the error action is not set to ABORT. You need
 !     need to do this only after the first call to DAFGDA.
 !
-      if ( failed() ) then
-         call chkout ( 'SPKR18' )
-         return
-      end if
+      if ( failed() ) return
 
       subtyp  =  nint ( contrl(1) )
       wndsiz  =  nint ( contrl(2) )
@@ -333,7 +325,6 @@
                       'valid value, which is 2.'                   )
          call errint( '#',  n                                      )
          call sigerr( 'SPICE(TOOFEWSTATES)'                        )
-         call chkout( 'SPKR18'                                     )
          return
 
       end if
@@ -376,7 +367,6 @@
                        'type 18 segment.'                           )
          call errint ( '#',  subtyp                                 )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-         call chkout ( 'SPKR18'                                     )
          return
 
       end if
@@ -390,7 +380,6 @@
                        'be positive.'                                )
          call errint ( '#',  subtyp                                  )
          call sigerr ( 'SPICE(INVALIDVALUE)'                         )
-         call chkout ( 'SPKR18'                                      )
          return
 
       end if
@@ -408,7 +397,6 @@
             call errint ( '#',  wndsiz                                )
             call errint ( '#',  maxwnd                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'SPKR18'                                    )
             return
 
          end if
@@ -420,7 +408,6 @@
                           ' 12-element packets).'                     )
             call errint ( '#',  wndsiz                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'SPKR18'                                    )
             return
 
          end if
@@ -438,7 +425,6 @@
             call errint ( '#',  wndsiz                                )
             call errint ( '#',  maxwnd                                )
             call sigerr ( 'SPICE(INVALIDVALUE)'                       )
-            call chkout ( 'SPKR18'                                    )
             return
 
          end if
@@ -450,7 +436,6 @@
                           '(Lagrange, 6-element packets).'        )
             call errint ( '#',  wndsiz                            )
             call sigerr ( 'SPICE(INVALIDVALUE)'                   )
-            call chkout ( 'SPKR18'                                )
             return
 
          end if
@@ -461,7 +446,6 @@
                        'here may indicate that the code needs to '  // &
                        'updated to handle new subtypes.'            )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-         call chkout ( 'SPKR18'                                     )
          return
 
       end if
@@ -639,6 +623,5 @@
                      start + wndsiz, &
                      record( 3 + wndsiz*packsz )   )
 
-      call chkout ( 'SPKR18' )
       return
       end

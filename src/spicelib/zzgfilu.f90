@@ -273,9 +273,7 @@
 !
 !     This routine should never be called directly.
 !
-      call chkin  ( 'ZZGFILU'           )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFILU'           )
       return
 
 
@@ -519,21 +517,15 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFILIN' )
 
 !
 !     Find NAIF IDs for TARGET, OBSRVR, and ILLUM.
 !
       call bods2c ( target, svtarg, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -544,7 +536,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFILIN'                                 )
          return
 
       end if
@@ -552,10 +543,7 @@
 
       call bods2c ( obsrvr, svobs, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -566,7 +554,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFILIN'                                 )
          return
 
       end if
@@ -574,10 +561,7 @@
 
       call bods2c ( illum, svilum, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -588,7 +572,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', illum                                 )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFILIN'                                 )
          return
 
       end if
@@ -605,7 +588,6 @@
          call errch  ( '#', obsrvr                         )
          call errch  ( '#', target                         )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( 'ZZGFILIN'                          )
          return
 
       end if
@@ -621,7 +603,6 @@
          call errch  ( '#', target                                )
          call errch  ( '#', illum                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                 )
-         call chkout ( 'ZZGFILIN'                                 )
          return
 
       end if
@@ -646,10 +627,7 @@
 !
       call zzvalcor ( svcorr, svablk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Reject transmission corrections.
@@ -661,7 +639,6 @@
          //            'allowed by this routine.'        )
          call errch  ( '#',  abcorr                      )
          call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-         call chkout ( 'ZZGFILIN'                        )
          return
 
       end if
@@ -671,10 +648,7 @@
 !
       call bodvrd ( target, 'RADII', 3, n, radii )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the surface normal at the surface point. Create a
@@ -682,10 +656,7 @@
 !
       call surfnm ( radii(1), radii(2), radii(3), spoint, normal )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
       call vequ ( normal, svnrml )
 
@@ -707,7 +678,6 @@
          //            'is ELLIPSOID; the input method was #.' )
          call errch  ( '#',  method                            )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                  )
-         call chkout ( 'ZZGFILIN'                              )
          return
 
       end if
@@ -730,10 +700,7 @@
 
       call frinfo ( fxfcde, fxcent, fxclss, fxtyid, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILIN' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -743,7 +710,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'                     )
-         call chkout ( 'ZZGFILIN'                                )
          return
 
       end if
@@ -760,7 +726,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fxcent                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( 'ZZGFILIN'                                 )
          return
 
       end if
@@ -775,13 +740,11 @@
          call setmsg ( 'Illumination angle type # is not recognized.' )
          call errch  ( '#',  angtyp                                   )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
-         call chkout ( 'ZZGFILIN'                                     )
          return
 
       end if
 
 
-      call chkout ( 'ZZGFILIN' )
       return
 
 
@@ -913,11 +876,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFILDC' )
 
 !
 !     Compute the rates of change of all of the illumination angles.
@@ -926,10 +886,7 @@
                       svref,  svcorr, svonam, svsspt, &
                       svnrml, phssta, incsta, emista  )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILDC' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( svaidx == phsidx ) then
 
@@ -958,7 +915,6 @@
 !
       decres  =  rate  <  0.0_wp
 
-      call chkout ( 'ZZGFILDC' )
       return
 
 
@@ -1074,23 +1030,16 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFILGQ' )
 
       call illumg ( svmeth, svtnam,    svinam,    et,      svref, &
                     svcorr, svonam,    svsspt,    ettarg, &
                     srfvec, angles(1), angles(2), angles(3)       )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFILGQ' )
-         return
-      end if
+      if ( failed() ) return
 
       angle = angles( svaidx )
 
-      call chkout ( 'ZZGFILGQ' )
       return
       end

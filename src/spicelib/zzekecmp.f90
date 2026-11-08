@@ -199,7 +199,6 @@
 
          if ( .not. found ) then
 
-            call chkin  ( 'ZZEKECMP'                                  )
             call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                           'Column entry element was not found.'       )
             call errhan ( '#',  hans(1)                               )
@@ -207,7 +206,6 @@
             call errint ( '#',  rows(1)                               )
             call errint ( '#',  elts(1)                               )
             call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-            call chkout ( 'ZZEKECMP'                                  )
             return
 
          end if
@@ -221,7 +219,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(2)                             )
@@ -229,7 +226,6 @@
                call errint ( '#',  rows(2)                             )
                call errint ( '#',  elts(2)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -263,7 +259,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(2)                             )
@@ -271,7 +266,6 @@
                call errint ( '#',  rows(2)                             )
                call errint ( '#',  elts(2)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -301,12 +295,10 @@
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            call chkin  ( 'ZZEKECMP'                         )
             call setmsg ( 'LHS data type is #; RHSTYP is #.' )
             call errint ( '#', lhstyp                        )
             call errint ( '#', rhstyp                        )
             call sigerr ( 'SPICE(BUG)'                       )
-            call chkout ( 'ZZEKECMP'                         )
             return
 
          end if
@@ -323,7 +315,6 @@
 
          if ( .not. found ) then
 
-            call chkin  ( 'ZZEKECMP'                                  )
             call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                           'Column entry element was not found.'       )
             call errhan ( '#',  hans(1)                               )
@@ -331,7 +322,6 @@
             call errint ( '#',  rows(1)                               )
             call errint ( '#',  elts(1)                               )
             call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-            call chkout ( 'ZZEKECMP'                                  )
             return
 
          end if
@@ -344,7 +334,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(2)                             )
@@ -352,7 +341,6 @@
                call errint ( '#',  rows(2)                             )
                call errint ( '#',  elts(2)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -387,7 +375,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(2)                             )
@@ -395,7 +382,6 @@
                call errint ( '#',  rows(2)                             )
                call errint ( '#',  elts(2)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -425,12 +411,10 @@
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            call chkin  ( 'ZZEKECMP'                         )
             call setmsg ( 'LHS data type is #; RHSTYP is #.' )
             call errint ( '#', lhstyp                        )
             call errint ( '#', rhstyp                        )
             call sigerr ( 'SPICE(BUG)'                       )
-            call chkout ( 'ZZEKECMP'                         )
             return
 
          end if
@@ -446,12 +430,10 @@
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            call chkin  ( 'ZZEKECMP'                         )
             call setmsg ( 'LHS data type is #; RHSTYP is #.' )
             call errint ( '#', lhstyp                        )
             call errint ( '#', rhstyp                        )
             call sigerr ( 'SPICE(BUG)'                       )
-            call chkout ( 'ZZEKECMP'                         )
             return
 
          end if
@@ -465,7 +447,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(i)                             )
@@ -473,7 +454,6 @@
                call errint ( '#',  rows(i)                             )
                call errint ( '#',  elts(i)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -508,12 +488,10 @@
 !
 !           You know what kind of semantic error this is.
 !
-            call chkin  ( 'ZZEKECMP'                         )
             call setmsg ( 'LHS data type is #; RHSTYP is #.' )
             call errint ( '#', lhstyp                        )
             call errint ( '#', rhstyp                        )
             call sigerr ( 'SPICE(BUG)'                       )
-            call chkout ( 'ZZEKECMP'                         )
             return
 
          end if
@@ -534,7 +512,6 @@
 
             if ( .not. found ) then
 
-               call chkin  ( 'ZZEKECMP'                                )
                call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
                call errhan ( '#',  hans(i)                             )
@@ -542,7 +519,6 @@
                call errint ( '#',  rows(i)                             )
                call errint ( '#',  elts(i)                             )
                call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-               call chkout ( 'ZZEKECMP'                                )
                return
 
             end if
@@ -585,12 +561,10 @@
 !
 !        Something untoward has happened in our descriptor.
 !
-         call chkin  ( 'ZZEKECMP'                        )
          call setmsg ( 'The data type code # was not '  // &
                        'recognized.'                     )
          call errint ( '#',  lhstyp                      )
          call sigerr ( 'SPICE(INVALIDDATATYPE)'          )
-         call chkout ( 'ZZEKECMP'                        )
          return
 
       end if

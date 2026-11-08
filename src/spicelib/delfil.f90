@@ -126,11 +126,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin  ( 'DELFIL' )
-      end if
+      if ( return() ) return
 !
 !     Check to see if the filename we got is blank. If it is, signal an
 !     error and return.
@@ -139,7 +135,6 @@
 
          call setmsg ( 'The file name is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'    )
-         call chkout ( 'DELFIL'                  )
          return
 
       end if
@@ -162,7 +157,6 @@
          call errch  ( '#', filnam                                 )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(INQUIREFAILED)'                      )
-         call chkout ( 'DELFIL'                                    )
          return
 
       end if
@@ -175,7 +169,6 @@
          call setmsg ( 'The file ''#'' does not exist.' )
          call errch  ( '#', filnam                      )
          call sigerr ( 'SPICE(NOSUCHFILE)'              )
-         call chkout ( 'DELFIL'                         )
          return
 
       end if
@@ -190,7 +183,6 @@
                        ' cannot be deleted.'                    )
          call errch  ( '#', filnam                              )
          call sigerr ( 'SPICE(FILECURRENTLYOPEN)'               )
-         call chkout ( 'DELFIL'                                 )
          return
 
       end if
@@ -209,7 +201,6 @@
          call setmsg ( 'Attempt to open the file ''#'' failed.' )
          call errch  ( '#', filnam                              )
          call sigerr ( 'SPICE(FILEOPENFAILED)'                  )
-         call chkout ( 'DELFIL'                                 )
          return
 
       end if
@@ -226,12 +217,10 @@
          call setmsg ( 'Attempt to delete the file ''#'' failed.' )
          call errch  ( '#', filnam                                )
          call sigerr ( 'SPICE(FILEDELETEFAILED)'                  )
-         call chkout ( 'DELFIL'                                   )
          return
 
       end if
 
-      call chkout ( 'DELFIL' )
       return
 
       end

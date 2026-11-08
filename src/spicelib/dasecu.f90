@@ -166,22 +166,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASECU' )
-      end if
+      if ( return () ) return
 !
 !     Verify that the DAS file attached to HANDLE is opened for reading.
 !
       call dassih ( handle, 'READ' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASECU' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Initialize some things before the loop.
 !
@@ -196,12 +187,7 @@
 !
          call dasec ( handle, bufsiz, numcom, combuf, eoc )
 
-         if ( failed() ) then
-
-            call chkout( 'DASECU' )
-            return
-
-         end if
+         if ( failed() ) return
 
          if ( numcom > 0 ) then
 !
@@ -217,12 +203,7 @@
 
             call writla ( numcom, combuf, comlun )
 
-            if ( failed() ) then
-
-               call chkout( 'DASECU' )
-               return
-
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -232,6 +213,5 @@
 !
       comnts = gotsom
 
-      call chkout ( 'DASECU' )
       return
       end

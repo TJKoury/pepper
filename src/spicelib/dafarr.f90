@@ -298,20 +298,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFARR' )
-      end if
+      if ( return () ) return
 !
 !
 !     Check to see if the number of records to be reserved is less than
 !     one. If so, just return without changing anything.
 !
-      if ( resv < 1 ) then
-         call chkout ( 'DAFARR' )
-         return
-      end if
+      if ( resv < 1 ) return
 
 !
 !     Before proceeding any further, check that the DAF associated
@@ -319,10 +312,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFARR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the contents of the file record. If it fails, then just check
@@ -331,12 +321,7 @@
 !
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      if ( failed () ) then
-
-         call chkout ( 'DAFARR' )
-         return
-
-      end if
+      if ( failed () ) return
 
 !
 !     Okay, here's the plan. We are just going to move records
@@ -365,12 +350,7 @@
 
       end do
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFARR' )
-         return
-
-      end if
+      if ( failed() ) return
 
 !
 !     Records will be moved in `blocks', where each block contains
@@ -482,6 +462,5 @@
          call dafwcr ( handle, recno, crec )
       end do
 
-      call chkout ( 'DAFARR' )
       return
       end

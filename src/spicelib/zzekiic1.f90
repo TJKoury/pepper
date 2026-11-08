@@ -165,9 +165,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -179,11 +177,9 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKIIC1'                 )
          call setmsg ( 'Column # is not indexed.' )
          call errch  ( '#',  column               )
          call sigerr ( 'SPICE(NOTINDEXED)'        )
-         call chkout ( 'ZZEKIIC1'                 )
          return
 
       end if
@@ -198,12 +194,10 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKIIC1'                               )
          call setmsg ( 'Column # should be CHR but has type #.' )
          call errch  ( '#',  column                             )
          call errint ( '#',  dtype                              )
          call sigerr ( 'SPICE(INVALIDTYPE)'                     )
-         call chkout ( 'ZZEKIIC1'                               )
          return
 
       end if
@@ -234,12 +228,10 @@
 
          call zzekcnam ( handle, segdsc, column )
 
-         call chkin  ( 'ZZEKIIC1'                   )
          call setmsg ( 'Column # has index type #.' )
          call errch  ( '#',  column                 )
          call errint ( '#',  itype                  )
          call sigerr ( 'SPICE(INVALIDTYPE)'         )
-         call chkout ( 'ZZEKIIC1'                   )
          return
 
       end if

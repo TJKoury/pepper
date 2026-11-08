@@ -325,7 +325,6 @@
 
 
 
-      call chkin ( 'LOCATI' )
 !
 !     We begin by looking through the list of items at our disposal.
 !     One way or the other we will need the number of free nodes
@@ -347,7 +346,6 @@
 
          presnt = .false.
 
-         call chkout ( 'LOCATI' )
          return
 
       end if
@@ -361,7 +359,6 @@
          call errint( '#', psize )
          call errint( '#', at    )
          call sigerr ( 'SPICE(ADDRESSOUTOFBOUNDS)'  )
-         call chkout ( 'LOCATI' )
          return
 
       end if
@@ -473,7 +470,6 @@
             call lnkilb ( at, head, pool )
          end if
 
-         call chkout ( 'LOCATI' )
          return
 
       end if
@@ -525,7 +521,6 @@
 
       end if
 
-      call chkout ( 'LOCATI' )
       return
 
       end

@@ -310,11 +310,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKE15')
 
 !
 !     Fetch the various entities from the input record, first the epoch.
@@ -371,7 +368,6 @@
          //            '#.'                    )
          call errdp  ( '#', p                  )
          call sigerr ( 'SPICE(BADLATUSRECTUM)' )
-         call chkout ( 'SPKE15'                )
          return
 
       else if ( ecc < 0.0_wp ) then
@@ -382,7 +378,6 @@
          //            'to the type 15 evaluator was #. ' )
          call errdp  ( '#',   ecc                )
          call sigerr ( 'SPICE(BADECCENTRICITY)'  )
-         call chkout ( 'SPKE15'                  )
          return
 
       else if ( gm  <= 0.0_wp ) then
@@ -393,7 +388,6 @@
          //            'supplied was #. '        )
          call errdp  ( '#', gm                   )
          call sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
-         call chkout ( 'SPKE15'                  )
          return
 
       else if ( vzero(tp) ) then
@@ -403,7 +397,6 @@
          //            'cause of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKE15'             )
          return
 
       else if ( vzero(pa) ) then
@@ -413,7 +406,6 @@
          //            'of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKE15'             )
          return
 
       else if ( vzero(pv) ) then
@@ -423,7 +415,6 @@
          //            'cause of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
          call sigerr ( 'SPICE(BADVECTOR)'   )
-         call chkout ( 'SPKE15'             )
          return
 
 
@@ -434,7 +425,6 @@
          //            'supplied was #. '  )
          call errdp  ( '#', rpl            )
          call sigerr ( 'SPICE(BADRADIUS)'  )
-         call chkout ( 'SPKE15'            )
          return
 
       end if
@@ -465,7 +455,6 @@
          //            'between them is # degrees. '         )
          call errdp  ( '#',     angle        )
          call sigerr ( 'SPICE(BADINITSTATE)' )
-         call chkout ( 'SPKE15'              )
          return
 
       end if
@@ -601,6 +590,5 @@
 !
 !     That's all folks.  Check out and return.
 !
-      call chkout('SPKE15')
       return
       end

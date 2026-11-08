@@ -767,7 +767,6 @@
 
       data                  doinit / .true. /
 
-      call chkin ( 'EV2LIN' )
 
 !
 !     Rather than always making function calls we store the
@@ -1517,7 +1516,6 @@
             call errint ( '#1', mxloop                         )
             call errdp  ( '#2', et                             )
             call sigerr ( 'SPICE(ITERATIONEXCEEDED)'           )
-            call chkout ( 'EV2LIN'                             )
             return
          end if
 
@@ -1774,7 +1772,6 @@
       state(5) = tokmps  * ( rdotk * uy     +   rfdotk * vy )
       state(6) = tokmps  * ( rdotk * uz     +   rfdotk * vz )
 
-      call chkout ( 'EV2LIN' )
 
       return
       end

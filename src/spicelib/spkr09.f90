@@ -239,9 +239,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
@@ -257,12 +255,10 @@
 !     Make sure that this really is a type 9 or type 13 data segment.
 !
       if (  ( type /= 09 ) .and. ( type /= 13 )  ) then
-         call chkin ( 'SPKR09'                                        )
          call setmsg( 'You are attempting to locate type 9 or type ' // &
                       '13 data in a type # data segment.'             )
          call errint( '#',  type                                      )
          call sigerr( 'SPICE(WRONGSPKTYPE)'                           )
-         call chkout( 'SPKR09'                                        )
          return
       end if
 
@@ -271,14 +267,12 @@
 !     descriptor.
 !
       if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
-         call chkin ( 'SPKR09'                                      )
          call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
          call errdp ( '#',  et                                      )
          call errdp ( '#',  dc(1)                                   )
          call errdp ( '#',  dc(2)                                   )
          call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         call chkout( 'SPKR09'                                      )
          return
 
       end if

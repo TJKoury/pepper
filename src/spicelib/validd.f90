@@ -186,11 +186,7 @@
 !
 !     Standard error handling:
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'VALIDD' )
-      end if
+      if ( return() ) return
 
 !
 !     Is the set size big enough?
@@ -203,7 +199,6 @@
          call errint ( '#', size )
          call errint ( '#', n    )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'VALIDD' )
          return
       end if
 
@@ -219,6 +214,5 @@
       call ssized ( size, a )
       call scardd ( card, a )
 
-      call chkout( 'VALIDD' )
       return
       end

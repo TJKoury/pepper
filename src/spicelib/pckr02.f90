@@ -355,11 +355,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PCKR02' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the segment descriptor.
@@ -400,6 +396,5 @@
       record( 1 ) = record( 3 )
       call dafgda ( handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
-      call chkout ( 'PCKR02' )
       return
       end

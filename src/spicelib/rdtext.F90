@@ -552,11 +552,7 @@
 !
 !     Set up the error processing.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'RDTEXT' )
-      end if
+      if ( return () ) return
 
 !
 !     We will keep track of which files are open by storing the unit
@@ -606,7 +602,6 @@
             call errch  ( '#', file                               )
             call errint ( '#', iostat                             )
             call sigerr ( 'SPICE(INQUIREFAILED)'                  )
-            call chkout ( 'RDTEXT'                                )
             return
 
          end if
@@ -622,7 +617,6 @@
             if ( n == maxopn ) then
                call setmsg ( 'Too many files open already.' )
                call sigerr ( 'SPICE(TOOMANYFILESOPEN)'      )
-               call chkout ( 'RDTEXT' )
                return
             else
                call getlun ( unit )
@@ -643,7 +637,6 @@
                call setmsg ( 'Could not open #.'     )
                call errch  ( '#', file               )
                call sigerr ( 'SPICE(FILEOPENFAILED)' )
-               call chkout ( 'RDTEXT' )
                return
             end if
 
@@ -712,13 +705,11 @@
             call setmsg ( 'Could not read from #.' )
             call errch  ( '#', file                )
             call sigerr ( 'SPICE(FILEREADFAILED)'  )
-            call chkout ( 'RDTEXT' )
             return
          end if
 
       end if
 
-      call chkout ( 'RDTEXT' )
       return
 
 
@@ -908,7 +899,6 @@
 !
 !     Set up the error processing.
 !
-      call chkin ( 'CLTEXT' )
 
 
 !
@@ -929,7 +919,6 @@
          call errch  ( '#', file                               )
          call errint ( '#', iostat                             )
          call sigerr ( 'SPICE(INQUIREFAILED)'                  )
-         call chkout ( 'CLTEXT'                                )
          return
 
       end if
@@ -957,7 +946,6 @@
 
       end if
 
-      call chkout ( 'CLTEXT' )
 
       return
       end

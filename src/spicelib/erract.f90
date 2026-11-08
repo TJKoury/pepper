@@ -406,7 +406,6 @@
 !     Executable Code:
 !
 
-      call chkin ( 'ERRACT' )
 
 !
 !     We convert the input values to upper case, as needed. Note: we
@@ -472,7 +471,6 @@
 !     We've performed the requested operation, or signaled an
 !     error.
 !
-      call chkout ( 'ERRACT' )
       return
 
       end

@@ -503,11 +503,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'BODEUL' )
 
 !
 !     Get the code for the J2000 frame, if we don't have it yet.
@@ -524,10 +521,7 @@
 !
       call pckeul ( body, et, found, bref, eulang )
 
-      if ( failed() ) then
-         call chkout ( 'BODEUL' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( found ) then
 
@@ -537,10 +531,7 @@
 
          call irfnum ( bref, ref )
 
-         if ( failed() ) then
-            call chkout ( 'BODEUL' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The offset of the prime meridian is optional.
@@ -609,17 +600,13 @@
                call errch  ( '#', item                   )
                call errch  ( '#', item2                  )
                call sigerr ( 'SPICE(COMPETINGEPOCHSPEC)' )
-               call chkout ( 'BODEUL'                    )
                return
 
             end if
 
          end if
 
-         if ( failed() ) then
-            call chkout ( 'BODEUL' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( found .or. found2 ) then
@@ -674,7 +661,6 @@
                call errch  ( '#', item                   )
                call errch  ( '#', item2                  )
                call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-               call chkout ( 'BODEUL'                    )
                return
 
             end if
@@ -709,10 +695,7 @@
             lambda = 0
          end if
 
-         if ( failed() ) then
-            call chkout ( 'BODEUL' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        There may be additional nutation and libration (THETA) terms.
@@ -746,7 +729,6 @@
                   call errint ( '#', mxphas-1                     )
                   call errint ( '#', deg                          )
                   call sigerr ( 'SPICE(DEGREEOUTOFRANGE)'         )
-                  call chkout ( 'BODEUL'                          )
                   return
 
                end if
@@ -773,10 +755,7 @@
 !
             call bodvcd ( refid, item, maxang*mxphas, ntheta, tcoef )
 
-            if ( failed() ) then
-               call chkout ( 'BODEUL' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           NPHSCO is at least 1; this division is safe.
 !
@@ -802,10 +781,7 @@
             call bodvcd ( body, item, maxang, nw, wc )
          end if
 
-         if ( failed() ) then
-            call chkout ( 'BODEUL' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( max ( na, nd, nw ) > ntheta ) then
             call setmsg ( 'Insufficient number of nutation/'// &
@@ -813,7 +789,6 @@
             call errint ( '*', body )
             call errdp  ( '#', et   )
             call sigerr ( 'SPICE(INSUFFICIENTANGLES)' )
-            call chkout ( 'BODEUL' )
             return
          end if
 
@@ -923,10 +898,7 @@
 
          call m2eul  ( j2bfx,  3,  1,  3,  w,  delta,  phi )
 
-         if ( failed() ) then
-            call chkout ( 'BODEUL' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -952,6 +924,5 @@
       end if
 
 
-      call chkout ( 'BODEUL' )
       return
       end

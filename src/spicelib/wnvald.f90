@@ -262,7 +262,6 @@
 !     Setting up error processing.
 !
       if ( return () ) return
-      call chkin ( 'WNVALD' )
 
 !
 !     First, some error checks. The number of endpoints must be even,
@@ -272,14 +271,12 @@
 
          call setmsg ( 'WNVALD: Unmatched endpoints' )
          call sigerr ( 'SPICE(UNMATCHENDPTS)' )
-         call chkout ( 'WNVALD' )
          return
 
       else if ( n > size ) then
 
          call setmsg ( 'WNVALD: Inconsistent value for SIZE.' )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)' )
-         call chkout ( 'WNVALD' )
          return
 
       end if
@@ -307,7 +304,6 @@
            call setmsg ( 'WNVALD: Left endpoint may not exceed ' // &
                          'right endpoint.'                        )
            call sigerr ( 'SPICE(BADENDPOINTS)'                    )
-           call chkout ( 'WNVALD'                                 )
            return
          end if
 
@@ -316,7 +312,6 @@
 
       end do
 
-      call chkout ( 'WNVALD' )
 
       return
       end

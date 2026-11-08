@@ -127,11 +127,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKIF02' )
-      end if
+      if ( return () ) return
 
 !
 !     Read in the segment descriptor.
@@ -191,7 +187,6 @@
             call setmsg ( 'Class # is not supported.' )
             call errint ( '#',  class                 )
             call sigerr ( 'SPICE(NOCLASS)'            )
-            call chkout ( 'ZZEKIF02'                  )
             return
 
          end if
@@ -199,6 +194,5 @@
       end do
 
 
-      call chkout ( 'ZZEKIF02' )
       return
       end

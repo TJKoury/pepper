@@ -281,12 +281,10 @@
 
          if ( length == 0.0_wp ) then
 
-            call chkin  ( 'INVORT'                                     )
             call setmsg ( 'Column # of the input matrix has a norm '  // &
                           'of zero. '                                  )
             call errint ( '#',        i                                )
             call sigerr ( 'SPICE(ZEROLENGTHCOLUMN)'                    )
-            call chkout ( 'INVORT'                                     )
             return
 
          end if
@@ -298,7 +296,6 @@
 
             if (  ( length * bound ) < 1.0_wp ) then
 
-               call chkin  ( 'INVORT' )
                call setmsg ( 'The length of column # is #. This '     // &
                              'number cannot be inverted.  For this '  // &
                              'reason, the scaled transpose of the '   // &
@@ -306,7 +303,6 @@
                call errint ( '#',   i                                 )
                call errdp  ( '#',   length                            )
                call sigerr ( 'SPICE(COLUMNTOOSMALL)'                  )
-               call chkout ( 'INVORT'                                 )
                return
 
             end if

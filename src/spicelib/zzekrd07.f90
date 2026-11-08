@@ -163,7 +163,6 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRD07'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
          call errint ( '#',  colidx                            )
@@ -172,7 +171,6 @@
          call errint ( '#',  recno                             )
          call errhan ( '#',  handle                            )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKRD07'                              )
          return
 
       end if
@@ -208,9 +206,7 @@
 
          isnull  =  cflag == ctrue
 
-         if ( isnull ) then
-            return
-         end if
+         if ( isnull ) return
 
       end if
 

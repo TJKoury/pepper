@@ -411,11 +411,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PCKW02' )
-      end if
+      if ( return () ) return
 
 !
 !     The number of sets of coefficients must be positive.
@@ -426,7 +422,6 @@
                        'coefficients is not positive. N = #'       )
          call errint ( '#', n                                      )
          call sigerr ( 'SPICE(NUMCOEFFSNOTPOS)'                    )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -439,7 +434,6 @@
                        'N = #'                                     )
          call errdp  ( '#', intlen                                 )
          call sigerr ( 'SPICE(INTLENNOTPOS)'                       )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -453,7 +447,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -470,7 +463,6 @@
          call etcal  ( last,  netstr                               )
          call errch  ( '#',   netstr                               )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -489,7 +481,6 @@
          call etcal  ( btime, etstr                                )
          call errch  ( '#',   etstr                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -508,7 +499,6 @@
          call etcal  ( ltime, etstr                                )
          call errch  ( '#',   etstr                                )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'PCKW02'                                    )
          return
 
       end if
@@ -517,10 +507,7 @@
 !     Now check the validity of the segment identifier.
 !
       call chckid ( 'PCK segment identifier', sidlen, segid )
-      if ( failed() ) then
-         call chkout ( 'PCKW02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Store the start and end times to be associated
@@ -616,6 +603,5 @@
 !
       call dafena
 
-      call chkout ( 'PCKW02' )
       return
       end

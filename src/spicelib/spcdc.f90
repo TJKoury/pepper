@@ -190,11 +190,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCDC' )
-      end if
+      if ( return () ) return
 
 !
 !     The comment area IS the reserved records.  To empty the comment
@@ -216,6 +212,5 @@
       call dafrrr ( handle, nrr )
 
 
-      call chkout ( 'SPCDC' )
       return
       end

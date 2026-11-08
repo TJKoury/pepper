@@ -130,11 +130,8 @@
       integer(ip)           corsys
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSEGBOX' )
 
 
       corsys = nint( dskdsc(sysidx) )
@@ -160,11 +157,9 @@
          call setmsg ( 'Coordinate system # is not supported.' )
          call errint ( '#',  corsys                            )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
-         call chkout ( 'ZZSEGBOX'                              )
          return
 
       end if
 
-      call chkout ( 'ZZSEGBOX' )
       return
       end

@@ -324,9 +324,7 @@
 !
       call dasa2l ( handle, dp, first, clbase, clsize, recno, wordno )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Decide how many double precision numbers to read.
@@ -349,9 +347,7 @@
 !
       do while ( nread < numdp )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 !
 !        At this point, RECNO is the correct number of the
 !        record to read from next.  CLBASE is the number

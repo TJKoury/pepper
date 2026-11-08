@@ -174,19 +174,15 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     We need a real direction vector to work with.
 !
       if (  vzero (lindir)  )  then
 
-         call chkin  ( 'NPLNPT'                             )
          call setmsg ( 'Direction vector must be non-zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                  )
-         call chkout ( 'NPLNPT'                             )
          return
 
       end if

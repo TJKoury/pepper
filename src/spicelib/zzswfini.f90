@@ -139,11 +139,8 @@
       logical               return
       logical               failed
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSWFINI' )
 
 !
 !     Initialize the frame hash head node array, hash collision list
@@ -157,7 +154,6 @@
 !
 !        This code should be unreachable. It's provided for safety.
 !
-         call chkout ( 'ZZSWFINI' )
          return
 
       end if
@@ -174,6 +170,5 @@
       prvat  = 0
       samfrm = .false.
 
-      call chkout ( 'ZZSWFINI' )
       return
       end

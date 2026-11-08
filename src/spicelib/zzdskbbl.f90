@@ -166,11 +166,8 @@
       data                  first  / .true.     /
       data                  prvbod / 0 /
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSKBBL' )
 
 
       if ( first ) then
@@ -219,6 +216,5 @@
       end if
 
 
-      call chkout ( 'ZZDSKBBL' )
       return
       end

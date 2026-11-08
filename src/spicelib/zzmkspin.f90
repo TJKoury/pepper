@@ -394,11 +394,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZMKSPIN' )
 
 !
 !     Check NP.
@@ -410,7 +407,6 @@
          call errint ( '#',  np                          )
          call errint ( '#',  maxplt                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
-         call chkout ( 'ZZMKSPIN'                        )
          return
 
       end if
@@ -427,7 +423,6 @@
          //            'be positive.'                       )
          call errint ( '#',  cgscal                         )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
-         call chkout ( 'ZZMKSPIN'                           )
          return
 
       end if
@@ -592,7 +587,6 @@
          call errint ( '#',  nvxtot                              )
          call errint ( '#',  maxvox                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         call chkout ( 'ZZMKSPIN'                                )
          return
 
       end if
@@ -612,7 +606,6 @@
          call errint ( '#',  cgscal                              )
          call errint ( '#',  nvxtot                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         call chkout ( 'ZZMKSPIN'                                )
          return
 
       end if
@@ -634,7 +627,6 @@
          call errint ( '#',  cgscal                              )
          call errint ( '#',  nvxtot                              )
          call sigerr ( 'SPICE(INCOMPATIBLESCALE)'                )
-         call chkout ( 'ZZMKSPIN'                                )
          return
 
       end if
@@ -654,7 +646,6 @@
          call errint ( '#', ncgflg                             )
          call errint ( '#', maxcgr                             )
          call sigerr ( 'SPICE(COARSEGRIDOVERFLOW)'             )
-         call chkout ( 'ZZMKSPIN'                              )
          return
 
       end if
@@ -742,7 +733,6 @@
             call errdp  ( '#', vmod(3)                                )
             call errint ( '#', i                                      )
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'ZZMKSPIN'                                  )
             return
 
          end if
@@ -774,7 +764,6 @@
             call errdp  ( '#', vmod(3)                                )
             call errint ( '#', i                                      )
             call sigerr ( 'SPICE(BUG)'                                )
-            call chkout ( 'ZZMKSPIN'                                  )
             return
 
          end if
@@ -812,10 +801,7 @@
                     call zzvoxcvo ( vixyz, nvox,  cgscal, &
                                     cgxyz, cgoff, cgof1d  )
 
-                    if ( failed() ) then
-                       call chkout ( 'ZZMKSPIN' )
-                       return
-                    end if
+                    if ( failed() ) return
 
                     cvid = zzvox2id ( cgxyz, cgrdim )
 
@@ -839,10 +825,7 @@
                     call zzaddlnk ( ixptr,  i,     maxptr, &
                                     mxcell, vxptr, ncell, cells )
 
-                    if ( failed() ) then
-                       call chkout ( 'ZZMKSPIN' )
-                       return
-                    end if
+                    if ( failed() ) return
 
 
                  end do
@@ -879,6 +862,5 @@
                       maxvxl, vxptr,  nvxlst, vxlist )
 
 
-      call chkout ( 'ZZMKSPIN' )
       return
       end

@@ -137,11 +137,9 @@
 !
 !        Sorry, no other types of segments are supported.
 !
-         call chkin  ( 'ZZEKRPLK'                             )
          call setmsg ( 'The segment type # is not supported.' )
          call errint ( '#',   stype                           )
          call sigerr ( 'SPICE(INVALIDTYPE)'                   )
-         call chkout ( 'ZZEKRPLK'                             )
          return
 
       end if

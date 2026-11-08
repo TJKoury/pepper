@@ -185,11 +185,7 @@
 
 
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'VALIDC')
-      end if
+      if ( return() ) return
 
 
 !
@@ -203,7 +199,6 @@
          call errint ( '#', size )
          call errint ( '#', n    )
          call sigerr ( 'SPICE(INVALIDSIZE)' )
-         call chkout ( 'VALIDC' )
          return
       end if
 
@@ -220,6 +215,5 @@
       call scardc ( card, a )
 
 
-      call chkout ( 'VALIDC' )
       return
       end

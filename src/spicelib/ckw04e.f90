@@ -268,11 +268,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CKW04E' )
-      end if
+      if ( return() ) return
 
 !
 !     This is simple, just call the routine which ends a generic
@@ -280,12 +276,7 @@
 !
       call sgwes ( handle )
 
-      if ( failed() ) then
-
-         call chkout ( 'CKW04E' )
-         return
-
-      end if
+      if ( failed() ) return
 
 !
 !     Now update the descriptor with the end time. Locate the segment
@@ -303,7 +294,6 @@
                        'not be found by a DAF search. This  '        // &
                        'indicates a serious error.  Contact NAIF.'   )
          call sigerr ( 'SPICE(BUG)'                                  )
-         call chkout ( 'CKW04E'                                      )
          return
 
       end if
@@ -325,7 +315,6 @@
 !
 !     All done.
 !
-      call chkout( 'CKW04E' )
 
       return
 

@@ -189,11 +189,8 @@
       data                  apex / 3  *  0.0_wp       /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZPDCMPL' )
 
 !
 !     Treat points on the Z axis as a special case. The
@@ -240,7 +237,6 @@
 
          end if
 
-         call chkout ( 'ZZPDCMPL' )
          return
 
       end if
@@ -256,10 +252,7 @@
 !
       call zzelnaxx ( re, rp, lat, xincpt, yincpt )
 
-      if ( failed() ) then
-         call chkout ( 'ZZPDCMPL' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Ideally YINCPT is zero if and only if LAT is zero.
@@ -278,7 +271,6 @@
             rel = lt
          end if
 
-         call chkout ( 'ZZPDCMPL' )
          return
 
       end if
@@ -403,6 +395,5 @@
 
       end if
 
-      call chkout ( 'ZZPDCMPL' )
       return
       end

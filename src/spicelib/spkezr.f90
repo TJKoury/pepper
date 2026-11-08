@@ -583,11 +583,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKEZR' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialization.
@@ -624,7 +620,6 @@
          call errch  ( '#', targ                                  )
          call errch  ( '#', obs                                   )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKEZR'                                   )
          return
 
       end if
@@ -649,7 +644,6 @@
          call errch  ( '#', targ                                  )
          call errch  ( '#', obs                                   )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKEZR'                                   )
          return
 
       end if
@@ -660,6 +654,5 @@
       call spkez   ( targid, et, ref, abcorr, obsid, starg, lt )
 
 
-      call chkout ( 'SPKEZR' )
       return
       end

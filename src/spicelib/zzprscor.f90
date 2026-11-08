@@ -233,9 +233,7 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if ( first ) then
 !
@@ -278,12 +276,10 @@
 
       if ( loc == 0 ) then
 
-         call chkin  ( 'ZZPRSCOR' )
          call setmsg ( 'Aberration correction specification # is not '// &
                        'recognized.'                                  )
          call errch  ( '#',  abcorr                                   )
          call sigerr ( 'SPICE(INVALIDOPTION)'                         )
-         call chkout ( 'ZZPRSCOR'                                     )
          return
 
       end if

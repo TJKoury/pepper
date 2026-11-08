@@ -225,8 +225,6 @@
       if ( return () ) then
          isrot = .false.
          return
-      else
-         call chkin ( 'ISROT' )
       end if
 
 !
@@ -239,7 +237,6 @@
          call setmsg ( 'NTOL should be non-negative; it is #.' )
          call errdp  ( '#',  ntol                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
-         call chkout ( 'ISROT'                                 )
          return
 
       else if ( dtol < 0.0_wp ) then
@@ -249,7 +246,6 @@
          call setmsg ( 'DTOL should be non-negative; it is #.' )
          call errdp  ( '#',  dtol                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'ISROT'                  )
          return
 
       end if
@@ -283,6 +279,5 @@
          isrot = .false.
       end if
 
-      call chkout ( 'ISROT' )
       return
       end

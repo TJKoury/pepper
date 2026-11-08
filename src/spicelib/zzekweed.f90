@@ -186,11 +186,9 @@
 !
       if ( ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
 
-         call chkin  ( 'ZZEKWEED'                                      )
          call setmsg ( 'The number of join row sets in the union is #' )
          call errint ( '#', njrs                                       )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         call chkout ( 'ZZEKWEED'                                      )
          return
 
       end if

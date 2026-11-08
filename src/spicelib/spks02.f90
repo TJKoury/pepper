@@ -167,11 +167,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS02' )
-      end if
+      if ( return () ) return
 
 !
 !     The segment is made up of a number of logical records, each
@@ -240,6 +236,5 @@
       data( 4 ) = real( nrec, wp   )
       call dafada ( data, 4 )
 
-      call chkout ( 'SPKS02' )
       return
       end

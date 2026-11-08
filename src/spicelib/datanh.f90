@@ -144,7 +144,6 @@
          datanh = 0.0_wp
          return
       else
-         call chkin ( 'DATANH' )
          datanh = 0.0_wp
       end if
 
@@ -156,13 +155,11 @@
          call setmsg ( 'DATANH: Argument out of range.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
 
-         call chkout ( 'DATANH' )
          return
       end if
 
       datanh = 0.5_wp * dlog ( (1.0_wp+x) / (1.0_wp-x) )
 
-      call chkout ( 'DATANH' )
 
       return
       end

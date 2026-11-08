@@ -166,11 +166,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKTRFR' )
 
 !
 !     Read in the root node.
@@ -192,7 +189,6 @@
          call errhan ( '#',  handle                                  )
          call errint ( '#',  tree                                    )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
-         call chkout ( 'ZZEKTRFR'                                    )
          return
 
       end if
@@ -316,6 +312,5 @@
       end do
 
 
-      call chkout ( 'ZZEKTRFR' )
       return
       end

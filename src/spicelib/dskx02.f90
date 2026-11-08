@@ -1039,11 +1039,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKX02' )
 
 !
 !     Until we have better knowledge we assume there is no intersection.
@@ -1065,7 +1062,6 @@
 
          call setmsg ( 'Ray direction is the zero vector.' )
          call sigerr ( 'SPICE(RAYISZEROVECTOR)'            )
-         call chkout ( 'DSKX02'                            )
          return
 
       end if
@@ -1116,10 +1112,7 @@
                        vtxbds, voxsiz, voxori, vgrext, &
                        cgscal, vtxnpl, voxnpt, voxnpl         )
 
-         if ( failed() ) then
-            call chkout ( 'DSKX02' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Compute the grid dimensions in units of km. First check
@@ -1130,7 +1123,6 @@
             //            'in the DSK file attached to handle #.' )
             call errint ( '#', handle                             )
             call sigerr ( 'SPICE(INVALIDVALUE)'                   )
-            call chkout ( 'DSKX02'                                )
             return
 
          end if
@@ -1153,7 +1145,6 @@
             call setmsg ( 'Coarse grid scale = #; should be >= 1.' )
             call errint ( '#', cgscal                              )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-            call chkout ( 'DSKX02'                                 )
             return
 
          end if
@@ -1176,7 +1167,6 @@
             call errint ( '#', ncgr                                    )
             call errint ( '#', maxcgr                                  )
             call sigerr ( 'SPICE(GRIDTOOLARGE)'                        )
-            call chkout ( 'DSKX02'                                     )
             return
 
          end if
@@ -1185,10 +1175,7 @@
 
          call dskgd  ( handle, dladsc, dskdsc )
 
-         if ( failed() ) then
-            call chkout ( 'DSKX02' )
-            return
-         end if
+         if ( failed() ) return
 
          corsys = nint( dskdsc(sysidx) )
 
@@ -1216,10 +1203,7 @@
 !
       call zzraybox ( vertex, raydir, voxori, grdext, vtx2, boxhit )
 
-      if ( .not. boxhit ) then
-         call chkout ( 'DSKX02' )
-         return
-      end if
+      if ( .not. boxhit ) return
 
 !
 !     Convert the grid intercept to voxel space coordinates.
@@ -1232,19 +1216,13 @@
 !
       call xdda ( coord, udir, vgrext, nvxlst, nvxout, voxlst )
 
-      if ( failed() ) then
-         call chkout ( 'DSKX02' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We don't expect the voxel list to be empty, but leave now
 !     if it is.
 !
-      if ( nvxout == 0 ) then
-         call chkout ( 'DSKX02' )
-         return
-      end if
+      if ( nvxout == 0 ) return
 
 !
 !     Rather than using the original observer's location, we use a
@@ -1335,10 +1313,7 @@
 !     If the voxel list became empty after compression, we're
 !     done.
 !
-      if ( nvxout == 0 ) then
-         call chkout( 'DSKX02' )
-         return
-      end if
+      if ( nvxout == 0 ) return
 
 !
 !     Initialize PNTR in case the voxel list is empty.
@@ -1400,10 +1375,7 @@
 
             call dski02 ( handle, dladsc, kwvxpt, j, 1, dim, voxptr )
 
-            if ( failed() ) then
-               call chkout ( 'DSKX02' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( voxptr == -1 ) then
 
@@ -1416,10 +1388,7 @@
                call dski02 ( handle, dladsc, kwvxpl, voxptr, &
                              1,      dim,    nplate          )
 
-               if ( failed() ) then
-                  call chkout ( 'DSKX02' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -1433,10 +1402,7 @@
                   call dski02 ( handle,   dladsc, kwvxpl, &
                                 voxptr+1, nplate, dim,    platid(pntr) )
 
-                  if ( failed() ) then
-                     call chkout ( 'DSKX02' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   plroom = plroom - nplate
 
@@ -1448,7 +1414,6 @@
                   call errint ( '#', plroom                         )
                   call errint ( '#', maxpl                          )
                   call sigerr ( 'SPICE(ARRAYTOOSMALL)'              )
-                  call chkout ( 'DSKX02'                            )
                   return
 
                end if
@@ -1549,10 +1514,7 @@
 !        If something went wrong up above there is no point in
 !        going on from here.
 !
-         if ( failed() ) then
-            call chkout ( 'DSKX02' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Now examine each plate in the PLATID list for this voxel group.
@@ -1603,10 +1565,7 @@
                   call dski02 ( handle, dladsc, kwplat, &
                                 start,  3,      dim,    vids )
 
-                  if ( failed() ) then
-                     call chkout ( 'DSKX02' )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 Fetch the vertices themselves.
@@ -1634,10 +1593,7 @@
                                       start,  3,      dim, &
                                       points(1,k)            )
 
-                        if ( failed() ) then
-                           call chkout ( 'DSKX02' )
-                           return
-                        end if
+                        if ( failed() ) return
 
 !
 !                       If there's room, buffer this vertex.
@@ -1836,6 +1792,5 @@
 !
 !     That's all folks.
 !
-      call chkout ( 'DSKX02' )
       return
       end

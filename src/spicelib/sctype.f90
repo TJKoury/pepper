@@ -190,12 +190,10 @@
 
       end if
 
-      call chkin ( 'SCTYPE' )
 !
 !     Get the type from the type 1 subsystem.
 !
       call scty01 ( sc, sctype )
 
-      call chkout ( 'SCTYPE' )
       return
       end

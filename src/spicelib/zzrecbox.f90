@@ -155,9 +155,7 @@
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Get local copies of the bounds of the volume element.
@@ -170,14 +168,12 @@
 
          if ( l(i) <= 0.0_wp ) then
 
-            call chkin  ( 'ZZRECBOX'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &
             //            'must be strictly increasing.'           )
             call errint ( '#',  i                                  )
             call errdp  ( '#',  mincor(i)                          )
             call errdp  ( '#',  maxcor(i)                          )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                )
-            call chkout ( 'ZZRECBOX'                               )
             return
 
          end if

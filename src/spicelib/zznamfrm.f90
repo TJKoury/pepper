@@ -227,9 +227,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check/update POOL state counter.
@@ -255,7 +253,6 @@
 !
 !        Check in because NAMFRM may fail.
 !
-         call chkin  ( 'ZZNAMFRM' )
 
 !
 !        POOL state changed, or the saved name was never successfully
@@ -270,7 +267,6 @@
 !
 !        Check out.
 !
-         call chkout ( 'ZZNAMFRM' )
 
       end if
 

@@ -169,11 +169,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFRCR' )
-      end if
+      if ( return () ) return
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
@@ -181,10 +177,7 @@
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'DAFRCR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Now make certain that the string to receive the contents of
@@ -204,10 +197,7 @@
 !
          call zzddhhlu ( handle, 'DAF', .false., unit )
 
-         if ( failed() ) then
-            call chkout ( 'DAFRCR' )
-            return
-         end if
+         if ( failed() ) return
 
          read (unit, &
                rec=recno, &
@@ -222,6 +212,5 @@
 
       end if
 
-      call chkout ( 'DAFRCR' )
       return
       end

@@ -187,11 +187,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZEKTR1S' )
 
 !
 !     Make sure the input tree is empty.
@@ -206,7 +203,6 @@
          call errhan ( '#',  handle                        )
          call errint ( '#',  tree                          )
          call sigerr ( 'SPICE(NONEMPTYTREE)'               )
-         call chkout ( 'ZZEKTR1S'                          )
          return
 
       end if
@@ -292,7 +288,6 @@
          call errhan ( '#',  handle                                  )
          call errint ( '#',  tree                                    )
          call sigerr ( 'SPICE(COUNTTOOLARGE)'                        )
-         call chkout ( 'ZZEKTR1S'                                    )
          return
 
       end if
@@ -851,6 +846,5 @@
       call dasudi ( handle, base+trnnod, base+trnnod, totnod )
 
 
-      call chkout ( 'ZZEKTR1S' )
       return
       end

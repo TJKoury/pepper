@@ -1760,11 +1760,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 !
 !     Counter initialization is done separately.
@@ -1787,10 +1784,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -1839,7 +1833,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1859,7 +1852,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1875,7 +1867,6 @@
          //            'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( rname                                        )
          return
 
       end if
@@ -1887,10 +1878,7 @@
 
       call frinfo ( fixfid, fixctr, fixcls, fixcid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -1900,7 +1888,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -1917,7 +1904,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fixctr                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -1950,10 +1936,7 @@
          call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( subtyp == ' ' ) then
@@ -1962,7 +1945,6 @@
             //            'was not found in the method string #.'   )
             call errch  ( '#', method                               )
             call sigerr ( 'SPICE(INVALIDSUBTYPE)'                   )
-            call chkout ( rname                                     )
             return
 
          end if
@@ -1984,7 +1966,6 @@
             //            'string was <#>.'                  )
             call errch  ( '#', shpstr                        )
             call sigerr ( 'SPICE(BUG)'                       )
-            call chkout ( rname                              )
             return
 
          end if
@@ -2016,7 +1997,6 @@
                call errch  ( '#', subtyp                         )
                call errch  ( '#', method                         )
                call sigerr ( 'SPICE(INVALIDSUBTYPE)'             )
-               call chkout ( rname                               )
                return
 
             end if
@@ -2055,15 +2035,11 @@
          //            'SUBPNT for details.'                      )
          call errch  ( '#',  method                               )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                     )
-         call chkout ( rname                                      )
          return
 
       end if
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
@@ -2107,10 +2083,7 @@
 !
       call spkezp ( trgcde, et, fixref, abcorr, obscde, tpos, lt )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Negate the target's position to obtain the position of the
@@ -2136,10 +2109,7 @@
 !
       call zzgftreb ( trgcde, radii )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       range  = vnorm(obspos)
 
@@ -2153,7 +2123,6 @@
          call errch  ( '#', obsrvr                         )
          call errch  ( '#', target                         )
          call sigerr ( 'SPICE(NOSEPARATION)'               )
-         call chkout ( rname                               )
          return
 
       end if
@@ -2170,10 +2139,7 @@
          call nearpt ( obspos, radii(1), radii(2), radii(3), &
                        spoint, alt                           )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        If the target is an ellipsoid, the NEARPT call above does
@@ -2191,10 +2157,7 @@
             call zzsbfxr ( trgcde, nsurf,  srflst, trgepc, &
                            fixfid, obspos, dvec,   spoint, fnd )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 
@@ -2208,7 +2171,6 @@
                call errch  ( '#', obsrvr                            )
                call errch  ( '#', target                            )
                call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'              )
-               call chkout ( rname                                  )
                return
 
             end if
@@ -2237,10 +2199,7 @@
             call surfpt ( obspos, tpos, radii(1), radii(2), radii(3), &
                           spoint, fnd                                )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2249,7 +2208,6 @@
                call setmsg ( 'No intercept of observer-target ' &
                //            'ray was found.'                  )
                call sigerr ( 'SPICE(DEGENERATECASE)'           )
-               call chkout ( rname                             )
                return
 
             end if
@@ -2266,10 +2224,7 @@
             call zzsbfxr ( trgcde, nsurf,  srflst, trgepc, &
                            fixfid, obspos, dvec,   spoint, fnd )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 
@@ -2284,7 +2239,6 @@
                call errch  ( '#', obsrvr                           )
                call errch  ( '#', target                           )
                call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'             )
-               call chkout ( rname                                 )
                return
 
             end if
@@ -2300,10 +2254,7 @@
 
       end if
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If we're not using light time and stellar aberration
@@ -2323,7 +2274,6 @@
 !
          call vsub ( spoint, obspos, srfvec )
 
-         call chkout ( rname )
          return
 
       end if
@@ -2354,10 +2304,7 @@
 !
       call spkssb ( obscde, et, 'J2000', ssbost )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the variables required to evaluate the
@@ -2378,10 +2325,7 @@
 !
          call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Find the position of the observer relative to the target.
@@ -2391,10 +2335,7 @@
          call vsub   ( ssbost,  ssbtst, j2pos         )
          call pxform ( 'J2000', fixref, trgepc, xform )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call mxv ( xform, j2pos, obspos )
 
@@ -2455,10 +2396,7 @@
             call nearpt ( obspos, radii(1), radii(2), radii(3), &
                           spoint, alt                           )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           If the target is an ellipsoid, the NEARPT call above
@@ -2477,10 +2415,7 @@
                call zzsbfxr ( trgcde, nsurf,  srflst, trgepc, &
                               fixfid, obspos, dvec,   spoint, fnd )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( .not. fnd ) then
 
@@ -2495,7 +2430,6 @@
                   call errch  ( '#', obsrvr                         )
                   call errch  ( '#', target                         )
                   call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'           )
-                  call chkout ( rname                               )
                   return
 
                end if
@@ -2528,10 +2462,7 @@
                call surfpt ( obspos,   dvec,   radii(1), radii(2), &
                              radii(3), spoint, fnd                )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( .not. fnd ) then
 !
@@ -2541,7 +2472,6 @@
                   call setmsg ( 'No intercept of observer-target ' &
                   //            'ray was found.'                  )
                   call sigerr ( 'SPICE(DEGENERATECASE)'           )
-                  call chkout ( rname                             )
                   return
 
                end if
@@ -2556,10 +2486,7 @@
                call zzsbfxr ( trgcde, nsurf,  srflst, trgepc, &
                               fixfid, obspos, dvec,   spoint, fnd )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( .not. fnd ) then
 
@@ -2574,7 +2501,6 @@
                   call errch  ( '#', obsrvr                           )
                   call errch  ( '#', target                           )
                   call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'             )
-                  call chkout ( rname                                 )
                   return
 
                end if
@@ -2590,10 +2516,7 @@
 
          end if
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Compute a new light time estimate and new target epoch.
@@ -2630,6 +2553,5 @@
 !
       call vsub ( spoint, obspos, srfvec )
 
-      call chkout ( rname )
       return
       end

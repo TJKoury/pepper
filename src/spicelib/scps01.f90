@@ -393,11 +393,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SCPS01' )
-      end if
+      if ( return () ) return
 
 !
 !     Start off with the error flag and message set for a regular
@@ -424,10 +420,7 @@
 !
 !     Don't try to continue if we had a lookup error.
 !
-      if ( failed() ) then
-         call chkout( 'SCPS01' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If our clock string is blank, we can stop now.
@@ -439,7 +432,6 @@
 
          error = .true.
 
-         call chkout ( 'SCPS01' )
          return
 
       end if
@@ -476,7 +468,6 @@
          call repmi ( msg, '#', n,      msg )
          call repmi ( msg, '#', nfield, msg )
 
-         call chkout ( 'SCPS01' )
          return
 
       end if
@@ -503,7 +494,6 @@
             call repmc ( msg, '#', cmp(i), msg )
             call repmc ( msg, '#', clkstr, msg )
 
-            call chkout ( 'SCPS01' )
             return
 
          end if
@@ -527,7 +517,6 @@
             call repmc ( msg, '#', cmp(i), msg )
             call repmc ( msg, '#', clkstr, msg )
 
-            call chkout ( 'SCPS01' )
             return
 
          end if
@@ -549,6 +538,5 @@
 
       msg   = ' '
 
-      call chkout ( 'SCPS01' )
       return
       end

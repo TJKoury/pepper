@@ -174,8 +174,6 @@
       if ( return() ) then
          sydimc = 0
          return
-      else
-         call chkin ( 'SYDIMC' )
       end if
 
 !
@@ -200,6 +198,5 @@
       end if
 
 
-      call chkout ( 'SYDIMC' )
       return
       end

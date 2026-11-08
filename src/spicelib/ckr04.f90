@@ -394,11 +394,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKR04' )
-      end if
+      if ( return () ) return
 
 !
 !     Set initial value of the found flag to "NOT FOUND".
@@ -430,7 +426,6 @@
                        'Type is #'                                 )
          call errint ( '#', icd(3)                                 )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
-         call chkout ( 'CKR04'                                     )
          return
 
       end if
@@ -446,7 +441,6 @@
             call setmsg ( 'Segment does not contain angular '     // &
                           'velocity data.'                        )
             call sigerr ( 'SPICE(NOAVDATA)'                       )
-            call chkout ( 'CKR04'                                 )
             return
 
          end if
@@ -464,10 +458,7 @@
 !
       call sgfrvi ( handle, descr, sclkdp, value, indx, exist )
 
-      if ( failed() ) then
-         call chkout ( 'CKR04' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. exist ) then
 
@@ -479,10 +470,7 @@
          indx = 1
          call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-         if ( failed() ) then
-            call chkout ( 'CKR04' )
-            return
-         end if
+         if ( failed() ) return
 
          midpt1 = record( 1 )
          rad1   = record( 2 )
@@ -515,10 +503,7 @@
 
             call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-            if ( failed() ) then
-               call chkout ( 'CKR04' )
-               return
-            end if
+            if ( failed() ) return
 
             midpt1 = record( 1 )
             rad1   = record( 2 )
@@ -563,10 +548,7 @@
 !
             call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-            if ( failed() ) then
-               call chkout ( 'CKR04' )
-               return
-            end if
+            if ( failed() ) return
 
             midpt1 = record( 1 )
             rad1   = record( 2 )
@@ -590,10 +572,7 @@
                call sgfpkt ( handle, descr, indx + 1, indx + 1, record, &
                                                                ends )
 
-               if ( failed() ) then
-                  call chkout ( 'CKR04' )
-                  return
-               end if
+               if ( failed() ) return
 
                midpt2 = record( 1 )
                rad2   = record( 2 )
@@ -697,7 +676,6 @@
 !
 !     All done.
 !
-      call chkout ( 'CKR04' )
 
       return
 

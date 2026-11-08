@@ -262,11 +262,9 @@
 
       if ( iostat /= 0  ) then
 
-         call chkin  ( 'ZZGFDSPS'                                      )
          call setmsg ( 'Error writing to standard output: IOSTAT = #.' )
          call errint ( '#', iostat                                     )
          call sigerr ( 'SPICE(WRITEFAILED)'                            )
-         call chkout ( 'ZZGFDSPS'                                      )
          return
 
       end if

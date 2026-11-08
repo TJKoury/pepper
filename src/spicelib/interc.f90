@@ -191,7 +191,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'INTERC' )
 
 !
 !     Make sure output set elements are long enough.
@@ -207,7 +206,6 @@
 
          call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         call chkout ( 'INTERC' )
          return
 
       end if
@@ -300,7 +298,6 @@
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-      call chkout ( 'INTERC' )
 
       return
       end

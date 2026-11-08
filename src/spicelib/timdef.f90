@@ -315,11 +315,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'TIMDEF' )
 
 !
 !     Normalize the input.
@@ -363,7 +360,6 @@
 
                call errch  ( '#', value )
                call sigerr ( 'SPICE(BADDEFAULTVALUE)'  )
-               call chkout ( 'TIMDEF' )
                return
             end if
 
@@ -396,7 +392,6 @@
 
                call errch  ( '#', value               )
                call sigerr ( 'SPICE(BADDEFAULTVALUE)' )
-               call chkout ( 'TIMDEF'                 )
                return
 
             end if
@@ -422,7 +417,6 @@
                //            '''MIXED''. ' )
                call errch  ( '#', value    )
                call sigerr ( 'SPICE(BADDEFAULTVALUE)' )
-               call chkout ( 'TIMDEF'                 )
                return
 
             end if
@@ -439,13 +433,11 @@
 
             call errch  ( '#', item            )
             call sigerr ( 'SPICE(BADTIMEITEM)' )
-            call chkout ( 'TIMDEF'             )
             return
 
 
          end if
 
-         call chkout ( 'TIMDEF' )
          return
 
       else if ( myactn == 'GET' ) then
@@ -465,7 +457,6 @@
             //            '''SYSTEM'', or ''ZONE'' ' )
             call errch  ( '#', item )
             call sigerr ( 'SPICE(BADTIMEITEM)' )
-            call chkout ( 'TIMDEF' )
             return
 
          end if
@@ -479,12 +470,10 @@
 
          call errch  ( '#', action )
          call sigerr ( 'SPICE(BADACTION)' )
-         call chkout ( 'TIMDEF' )
          return
 
 
       end if
 
-      call chkout ( 'TIMDEF' )
       return
       end

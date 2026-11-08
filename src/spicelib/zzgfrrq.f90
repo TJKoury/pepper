@@ -174,11 +174,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin  ( 'ZZGFRRQ' )
-      end if
+      if ( return () ) return
 
 !
 !     We just want the range rate of TARG relative to OBS.
@@ -188,10 +184,7 @@
       ref = 'J2000'
       call spkez ( targ, et, ref, abcorr, obs, state, lt )
 
-      if (  failed() ) then
-          call chkout (  'ZZGFRRQ' )
-          return
-      end if
+      if (  failed() ) return
 
 !
 !     Calculate the derivative from the STATE vector.
@@ -201,7 +194,6 @@
 !
 !     All done.
 !
-      call chkout (  'ZZGFRRQ' )
       return
 
       end

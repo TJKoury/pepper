@@ -225,10 +225,8 @@
 
       if ( errmsg /= ' ' ) then
 
-         call chkin  ( 'PRSDP'               )
          call setmsg ( errmsg                )
          call sigerr ( 'SPICE(NOTADPNUMBER)' )
-         call chkout ( 'PRSDP'               )
          return
 
       end if

@@ -177,11 +177,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'IRFTRN' )
-      end if
+      if ( return () ) return
 
 !
 !     Encode the reference frame names, and find the transformation
@@ -191,6 +187,5 @@
       call irfnum ( refb,  codeb        )
       call irfrot ( codea, codeb, rotab )
 
-      call chkout ( 'IRFTRN' )
       return
       end

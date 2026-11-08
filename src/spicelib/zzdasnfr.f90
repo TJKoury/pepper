@@ -213,11 +213,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDASNFR')
-      end if
+      if ( return() ) return
 
 !
 !     On the first pass, format the PRENUL and PSTNUL strings,
@@ -318,12 +314,10 @@
          close ( unit = lun, status = 'DELETE' )
 
          call sigerr ( 'SPICE(DASWRITEFAIL)' )
-         call chkout ( 'ZZDASNFR'            )
          return
 
       end if
 
-      call chkout ( 'ZZDASNFR' )
 
       return
       end

@@ -176,8 +176,6 @@
       if ( return () ) then
          sydimd = 0
          return
-      else
-         call chkin ( 'SYDIMD' )
       end if
 
 !
@@ -202,6 +200,5 @@
       end if
 
 
-      call chkout ( 'SYDIMD' )
       return
       end

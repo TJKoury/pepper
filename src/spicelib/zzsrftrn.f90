@@ -434,15 +434,11 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZSRFTRN'                                    )
       call setmsg ( 'ZZSRFTRN is an umbrella routine. It should ' &
       //            'never be called directly.'                   )
       call sigerr ( 'SPICE(BOGUSENTRY)'                           )
-      call chkout ( 'ZZSRFTRN'                                    )
       return
 
 
@@ -594,11 +590,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSRFN2C' )
 
 !
 !     No result has been found.
@@ -630,10 +623,7 @@
 !
          call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSRFN2C' )
-            return
-         end if
+         if ( failed() ) return
 
          pass1  = .false.
 
@@ -658,10 +648,7 @@
                          extker, nkvar,  snmhls, snmpol, &
                          snmidx, sidhls, sidpol, sididx )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSRFN2C' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -669,10 +656,7 @@
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      if ( .not. extker ) then
-         call chkout ( 'ZZSRFN2C' )
-         return
-      end if
+      if ( .not. extker ) return
 
 !
 !     Get a "normalized" copy of the input name: left-justified,
@@ -721,7 +705,6 @@
 
       end if
 
-      call chkout ( 'ZZSRFN2C' )
       return
 
 
@@ -880,11 +863,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSRFC2N' )
 
 !
 !     No result has been found.
@@ -916,10 +896,7 @@
 !
          call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSRFC2N' )
-            return
-         end if
+         if ( failed() ) return
 
 
          pass1  = .false.
@@ -946,10 +923,7 @@
                          extker, nkvar,  snmhls, snmpol, &
                          snmidx, sidhls, sidpol, sididx )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSRFC2N' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -957,10 +931,7 @@
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      if ( .not. extker ) then
-         call chkout ( 'ZZSRFC2N' )
-         return
-      end if
+      if ( .not. extker ) return
 
 !
 !     Find the hash value of the squished input name.
@@ -997,7 +968,6 @@
 
       end if
 
-      call chkout ( 'ZZSRFC2N' )
       return
 
 
@@ -1151,16 +1121,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 
       if ( pass1 ) then
 !
 !        Check in because ZZSRFKER can fail.
 !
-         call chkin ( 'ZZSRFTRK' )
 !
 !        Initialize the surface kernel variable update counter
 !        and the local pool counter. Note that this routine
@@ -1187,11 +1154,8 @@
 !        Check out here since this routine doesn't check out
 !        before its normal exit.
 !
-         call chkout ( 'ZZSRFTRK' )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
          pass1  = .false.
 
@@ -1206,7 +1170,6 @@
 !
 !        Check in because ZZSRFKER can fail.
 !
-         call chkin ( 'ZZSRFTRK' )
 
 !
 !        Conservatively increment the ZZSRFTRN state counter in
@@ -1221,11 +1184,8 @@
                          extker, nkvar,  snmhls, snmpol, &
                          snmidx, sidhls, sidpol, sididx )
 
-         call chkout ( 'ZZSRFTRK' )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
       end if
 

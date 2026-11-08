@@ -223,14 +223,11 @@
       if ( return() ) then
          elemi = .false.
          return
-      else
-         call chkin ( 'ELEMI' )
       end if
 !
 !     Just a binary search.
 !
       elemi = ( bsrchi ( item, cardi ( a ), a(1) ) /= 0 )
 
-      call chkout ( 'ELEMI' )
       return
       end

@@ -467,11 +467,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ET2UTC' )
 
 !
 !     Convert FORMAT to uppercase for ease of comparison. Make sure it's
@@ -493,7 +490,6 @@
 
          call errch  ( '#', format )
          call sigerr ( 'SPICE(INVALIDTIMEFORMAT)' )
-         call chkout ( 'ET2UTC' )
          return
 
       end if
@@ -512,17 +508,13 @@
 
          call ttrans ( 'TDB',  'JDUTC',        tvec )
 
-         if ( failed() ) then
-            call chkout ( 'ET2UTC' )
-            return
-         end if
+         if ( failed() ) return
 
          call dpstrf ( tvec(1), myprec+7, 'F', str  )
          call prefix ( 'JD', 0,                str  )
 
          utcstr = str
 
-         call chkout ( 'ET2UTC' )
          return
 
       end if
@@ -611,10 +603,7 @@
 
          call ttrans ( 'TAI', 'YMD', tvec )
 
-         if ( failed() ) then
-            call chkout ( 'ET2UTC' )
-            return
-         end if
+         if ( failed() ) return
 
          year        = nint( tvec(1) )
          month       = nint( tvec(2) )
@@ -668,10 +657,7 @@
 
          call ttrans ( 'TAI', 'YD', tvec )
 
-         if ( failed() ) then
-            call chkout ( 'ET2UTC' )
-            return
-         end if
+         if ( failed() ) return
 
          year   = nint( tvec(1) )
          month  = 1
@@ -781,7 +767,6 @@
             //            'supported in ISO format. ' )
             call errint ( '#', year )
             call sigerr ( 'SPICE(YEAROUTOFRANGE)'  )
-            call chkout ( 'ET2UTC' )
             return
 
          end if
@@ -796,7 +781,6 @@
 
       utcstr = str
 
-      call chkout ( 'ET2UTC' )
       return
 
 

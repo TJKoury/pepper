@@ -789,13 +789,9 @@
 !
 !     Nobody has any business calling SPKBSR directly.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'SPKBSR' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'SPKBSR' )
 
       return
 
@@ -1051,11 +1047,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKLEF' )
-      end if
+      if ( return () ) return
 
 !
 !     Any time we load a file, there is a possibility that the
@@ -1086,10 +1078,7 @@
 !
       call dafopr ( fname, handle )
 
-      if ( failed() ) then
-         call chkout ( 'SPKLEF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine if the file is already in the table.
@@ -1201,7 +1190,6 @@
                           'with # entries.'         )
             call errint ( '#', ftsize               )
             call sigerr ( 'SPICE(SPKFILETABLEFULL)' )
-            call chkout ( 'SPKLEF'                  )
             return
 
          end if
@@ -1301,7 +1289,6 @@
       fthan(nft) = handle
       ftnum(nft) = next
 
-      call chkout ( 'SPKLEF' )
       return
 
 
@@ -1525,11 +1512,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKUEF' )
 
 !
 !     All of the stored segments from the file must be removed
@@ -1540,10 +1524,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex == 0 ) then
-         call chkout ( 'SPKUEF' )
-         return
-      end if
+      if ( findex == 0 ) return
 
 !
 !     First get rid of the entry in the file table. Close the file
@@ -1641,7 +1622,6 @@
 
       end do
 
-      call chkout ( 'SPKUEF' )
       return
 
 
@@ -1949,11 +1929,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKSFS' )
 
 !
 !     Buffering segments involves maintaining three tables:  the
@@ -1969,7 +1946,6 @@
          call setmsg ( 'At least one SPK file needs to be loaded '   // &
                        'by SPKLEF before beginning a search.'       )
          call sigerr ( 'SPICE(NOLOADEDFILES)'                       )
-         call chkout ( 'SPKSFS'                                     )
          return
       end if
 
@@ -2131,7 +2107,6 @@
 
                found  = .true.
 
-               call chkout ( 'SPKSFS' )
                return
 
             end if
@@ -2342,10 +2317,7 @@
 
             call dafbfs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'SPKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             status = 'NEW SEGMENTS'
 
@@ -2370,10 +2342,7 @@
 
             call daffna ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'SPKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2389,10 +2358,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'SPKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (       ( icd(1) == body   ) &
                     .and. ( dcd(1) <= dcd(2) )  ) then
@@ -2440,10 +2406,7 @@
 
             call dafbbs ( fthan( findex ) )
 
-            if ( failed() ) then
-               call chkout ( 'SPKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
 
             status = 'OLD SEGMENTS'
@@ -2472,10 +2435,7 @@
 !
             call daffpa ( fnd )
 
-            if ( failed() ) then
-               call chkout ( 'SPKSFS' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
 !
@@ -2492,10 +2452,7 @@
                call dafgs ( descr )
                call dafus ( descr, nd, ni, dcd, icd )
 
-               if ( failed() ) then
-                  call chkout ( 'SPKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if (       ( icd(1) == body   ) &
                     .and. ( dcd(1) <= dcd(2) )  )  then
@@ -2576,7 +2533,6 @@
                   call moved ( descr, dscsiz, btprvd(1,bindex) )
                   btchkp(bindex) =  .true.
 
-                  call chkout ( 'SPKSFS' )
                   return
 
                end if
@@ -2805,10 +2761,7 @@
                call moved ( descr, dscsiz, stdes(1,new) )
                call dafgn ( stidnt(new) )
 
-               if ( failed() ) then
-                  call chkout ( 'SPKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              If the current list is empty, this append operation
@@ -2850,10 +2803,7 @@
                call moved ( descr, dscsiz, stdes( 1,new ) )
                call dafgn ( stidnt( new ) )
 
-               if ( failed() ) then
-                  call chkout ( 'SPKSFS' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( btbeg(bindex) <= 0 ) then
 !
@@ -3008,7 +2958,6 @@
                      tail = lnktl ( crflbg, stpool )
                      call lnkfsl ( p, tail, stpool )
 
-                     call chkout ( 'SPKSFS' )
                      return
 
                   end if
@@ -3052,10 +3001,7 @@
                   call dafgs ( descr )
                   call dafus ( descr, nd, ni, dcd, icd )
 
-                  if ( failed() ) then
-                     call chkout ( 'SPKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( body == icd(1) ) then
 !
@@ -3083,10 +3029,7 @@
 !
                         call dafgn ( ident )
 
-                        if ( failed() ) then
-                           call chkout ( 'SPKSFS' )
-                           return
-                        end if
+                        if ( failed() ) return
 
                         handle = fthan( findex )
                         found  = .true.
@@ -3112,7 +3055,6 @@
 !
                         btexp(bindex) = btexp(bindex) + btruex(bindex)
 
-                        call chkout ( 'SPKSFS' )
                         return
 
                      end if
@@ -3121,10 +3063,7 @@
 
                   call daffpa ( fnd )
 
-                  if ( failed() ) then
-                     call chkout ( 'SPKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                end do
 
@@ -3138,10 +3077,7 @@
                   call dafbbs ( fthan( findex ) )
                   call daffpa ( fnd             )
 
-                  if ( failed() ) then
-                     call chkout ( 'SPKSFS' )
-                     return
-                  end if
+                  if ( failed() ) return
 
                end if
 
@@ -3188,6 +3124,5 @@
       end if
 
 
-      call chkout ( 'SPKSFS' )
       return
       end

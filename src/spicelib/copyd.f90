@@ -148,7 +148,6 @@
 !     Set up the error processing.
 !
       if ( return() ) return
-      call chkin ( 'COPYD' )
 
 
 !
@@ -178,12 +177,10 @@
 
          call excess ( card - size, 'cell' )
          call sigerr ( 'SPICE(CELLTOOSMALL)' )
-         call chkout ( 'COPYD' )
          return
 
       end if
 
 
-      call chkout ( 'COPYD' )
       return
       end

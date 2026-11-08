@@ -245,18 +245,13 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'BODC2N' )
-      end if
+      if ( return() ) return
 
       call zzbodc2n ( code, name, found )
 !
 !     No need for any error checking, since all we do is check out
 !     and return anyway. We leave the error checking to the caller.
 !
-      call chkout ( 'BODC2N' )
       return
 
       end

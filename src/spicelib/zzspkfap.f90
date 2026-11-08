@@ -422,11 +422,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( rname )
 
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -436,10 +433,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -480,7 +474,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( rname                                )
          return
 
       end if
@@ -492,19 +485,13 @@
       call zzspkflt ( trgsub, et,    ref, abcorr, &
                       stobs,  starg, lt,  dlt     )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If stellar aberration corrections are not needed, we're
 !     already done.
 !
-      if ( .not. usestl ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( .not. usestl ) return
 
 !
 !     Get the stellar aberration correction and its time derivative.
@@ -525,6 +512,5 @@
       call vadd ( dpcorr, starg(4), corvel )
       call vequ ( corvel, starg(4)         )
 
-      call chkout ( rname )
       return
       end

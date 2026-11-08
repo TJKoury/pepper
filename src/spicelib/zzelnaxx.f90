@@ -213,19 +213,15 @@
       real(wp)              normal ( 3 )
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
       if (  ( a <= 0.0_wp ) .or. ( b <= 0.0_wp )  ) then
 
-         call chkin  ( 'ZZELNAXX'                             )
          call setmsg ( 'Semi-axis lengths were A = #; B = #. ' &
          //            'Both must be positive.'               )
          call errdp  ( '#',  a                                )
          call errdp  ( '#',  b                                )
          call sigerr ( 'SPICE(NONPOSITIVEAXIS)'               )
-         call chkout ( 'ZZELNAXX'                             )
          return
 
       end if

@@ -440,23 +440,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASACU' )
-      end if
+      if ( return () ) return
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASACU' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Get the number of comment characters, and some other stuff that
 !     we will not be using.
@@ -465,23 +456,13 @@
                             nresvr, nresvc, &
                             ncomr,  ncomc   )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASACU' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Get an available logical unit for the comment scratch file.
 !
       call getlun ( scrlun )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASACU' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Attempt to open the comment scratch file.
 !
@@ -493,7 +474,6 @@
                        ' IOSTAT = #.'                              )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEOPENFAILED)'                     )
-         call chkout ( 'DASACU'                                    )
          return
 
       end if
@@ -514,7 +494,6 @@
          if ( failed() ) then
 
             close       ( scrlun   )
-            call chkout ( 'DASACU' )
             return
 
          end if
@@ -532,7 +511,6 @@
             call errch  ( '#', begmrk                                 )
             call errfnm ( '#', comlun                                 )
             call sigerr ( 'SPICE(MARKERNOTFOUND)'                     )
-            call chkout ( 'DASACU'                                    )
             return
 
          end if
@@ -557,7 +535,6 @@
             if ( failed() ) then
 
                close       ( scrlun   )
-               call chkout ( 'DASACU' )
                return
 
             end if
@@ -591,7 +568,6 @@
                                          ' comments. Value: #'       )
                            call errint ( '#', intchr                 )
                            call sigerr ( 'SPICE(ILLEGALCHARACTER)'   )
-                           call chkout ( 'DASACU'                    )
                            return
 
                      end if
@@ -609,7 +585,6 @@
             if ( failed() ) then
 
                close       ( scrlun   )
-               call chkout ( 'DASACU' )
                return
 
             end if
@@ -631,7 +606,6 @@
             if ( failed() ) then
 
                close       ( scrlun   )
-               call chkout ( 'DASACU' )
                return
 
             end if
@@ -692,7 +666,6 @@
                                          ' #'                        )
                            call errint ( '#', intchr                 )
                            call sigerr ( 'SPICE(ILLEGALCHARACTER)'   )
-                           call chkout ( 'DASACU'                    )
                            return
 
                      end if
@@ -710,7 +683,6 @@
             if ( failed() ) then
 
                close       ( scrlun   )
-               call chkout ( 'DASACU' )
                return
 
             end if
@@ -729,7 +701,6 @@
                call errch  ( '#', endmrk                           )
                call errfnm ( '#', comlun                           )
                call sigerr ( 'SPICE(MARKERNOTFOUND)'               )
-               call chkout ( 'DASACU'                              )
                return
 
             end if
@@ -754,7 +725,6 @@
          if ( failed() ) then
 
             close       ( scrlun   )
-            call chkout ( 'DASACU' )
             return
 
          end if
@@ -789,7 +759,6 @@
          if ( failed() ) then
 
             close       ( scrlun   )
-            call chkout ( 'DASACU' )
             return
 
          end if
@@ -801,6 +770,5 @@
 !
       close ( scrlun )
 
-      call chkout ( 'DASACU' )
       return
       end

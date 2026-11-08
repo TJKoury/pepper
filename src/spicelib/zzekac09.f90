@@ -189,11 +189,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKAC09' )
-      end if
+      if ( return () ) return
 
 !
 !     Grab the column's attributes.  Initialize the maximum non-blank
@@ -221,7 +217,6 @@
          call errint ( '#', class                                      )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKAC09'                                      )
          return
 
       end if
@@ -237,7 +232,6 @@
                        '9 supports fixed-length strings only.'         )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKAC09'                                      )
          return
 
       end if
@@ -252,7 +246,6 @@
          call setmsg ( 'String length # is just plain wrong.' )
          call errint ( '#',  l                                )
          call sigerr ( 'SPICE(INVALIDSIZE)'                   )
-         call chkout ( 'ZZEKAC09'                             )
          return
 
       end if
@@ -371,6 +364,5 @@
 
       end if
 
-      call chkout ( 'ZZEKAC09' )
       return
       end

@@ -411,17 +411,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZHSC' )
-      end if
+      if ( return() ) return
 
 !
 !     Signal bogus entry error and check out.
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZHSC' )
 
       return
 
@@ -539,7 +534,6 @@
 !
 !     Standard SPICE error handling.
 !
-      call chkin  ( 'ZZHSCINI' )
 
       if ( hashsz > 0 ) then
 
@@ -564,12 +558,8 @@
 !
       i = zzhash2( ' ', hashsz )
 
-      if ( failed() ) then
-         call chkout ( 'ZZHSCINI' )
-         return
-      end if
+      if ( failed() ) return
 
-      call chkout ( 'ZZHSCINI' )
 
       return
 
@@ -690,9 +680,7 @@
 !     Standard SPICE error handling. No checking-in here. We will do it
 !     when we have to.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Set flag indicating whether the hash is full.
@@ -825,12 +813,10 @@
 !
       if ( full .and. .not. lfound ) then
 
-         call chkin  ( 'ZZHSCADD' )
 
          call setmsg ( 'The hash has no room for any more items.')
          call sigerr ( 'SPICE(HASHISFULL)' )
 
-         call chkout ( 'ZZHSCADD' )
          return
 
       end if
@@ -943,9 +929,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Use hash function to get index of the head node.
@@ -1266,11 +1250,9 @@
 
          avail = 0
 
-         call chkin  ( 'ZZHSCINF'                           )
          call setmsg ( 'Parameter ''#'' is not recognized.' )
          call errch  ( '#', item                            )
          call sigerr ( 'SPICE(ITEMNOTRECOGNIZED)'           )
-         call chkout ( 'ZZHSCINF'                           )
 
       end if
 

@@ -274,11 +274,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASACR' )
 
 !
 !     Programmer's note: the calls to
@@ -302,10 +299,7 @@
 !
       call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      if ( failed() ) then
-         call chkout ( 'DASACR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     It's a mistake to use a negative value of N.
@@ -316,7 +310,6 @@
                        'non-negative.  Actual number requested was #.' )
          call errint ( '#',  n                                         )
          call sigerr ( 'SPICE(DASINVALIDCOUNT)'                        )
-         call chkout ( 'DASACR'                                        )
          return
 
       end if
@@ -563,6 +556,5 @@
                     lastrc, &
                     lastwd )
 
-      call chkout ( 'DASACR' )
       return
       end

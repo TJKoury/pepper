@@ -121,8 +121,6 @@
       if ( return () ) then
          zzekstyp = 0
          return
-      else
-         call chkin ( 'ZZEKSTYP' )
       end if
 
 !
@@ -166,12 +164,10 @@
                        'contain all variable or all fixed count '   // &
                        'columns.'                                    )
          call sigerr ( 'SPICE(BADATTRIBUTES)'                        )
-         call chkout ( 'ZZEKSTYP'                                    )
          return
 
       end if
 
 
-      call chkout ( 'ZZEKSTYP' )
       return
       end

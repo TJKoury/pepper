@@ -200,11 +200,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCB2T' )
-      end if
+      if ( return () ) return
 
 !
 !     First, convert the binary data to text and write it to
@@ -223,7 +219,6 @@
          call errfnm ( 'FNM', unit                                    )
          call errint ( '#', iostat                                    )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
-         call chkout ( 'SPCB2T'                                       )
          return
       end if
 
@@ -249,10 +244,8 @@
          call errfnm ( 'FNM', unit                                    )
          call errint ( '#', iostat                                    )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
-         call chkout ( 'SPCB2T'                                       )
          return
       end if
 
-      call chkout ( 'SPCB2T' )
       return
       end

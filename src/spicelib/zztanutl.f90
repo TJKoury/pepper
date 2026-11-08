@@ -185,9 +185,7 @@
       save                  svnrml
       save                  svvrtx
 
-      call chkin  ( 'ZZTANUTL'          )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZTANUTL'          )
       return
 
 
@@ -444,11 +442,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZTANINI' )
 
 !
 !     Check for zero vectors on input.
@@ -457,7 +452,6 @@
 
          call setmsg ( 'Input axis vector is the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                     )
-         call chkout ( 'ZZTANINI'                              )
          return
 
       end if
@@ -466,7 +460,6 @@
 
          call setmsg ( 'Input reference vector is the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                          )
-         call chkout ( 'ZZTANINI'                                   )
          return
 
       end if
@@ -481,7 +474,6 @@
          call setmsg ( 'Curve type code # was not recognized.' )
          call errint ( '#', curve                              )
          call sigerr ( 'SPICE(BADCURVETYPE)'                   )
-         call chkout ( 'ZZTANINI'                              )
          return
 
       end if
@@ -500,7 +492,6 @@
             //            'computation.'                         )
             call errdp  ( '#', srcrad                            )
             call sigerr ( 'SPICE(BADSOURCERADIUS)'               )
-            call chkout ( 'ZZTANINI'                             )
             return
 
          end if
@@ -521,7 +512,6 @@
          call setmsg ( 'Input reference vector and axis vector ' &
          //            'are linearly dependent.'                 )
          call sigerr ( 'SPICE(DEGENERATECASE)'                   )
-         call chkout ( 'ZZTANINI'                                )
          return
 
       end if
@@ -563,12 +553,10 @@
          call setmsg ( 'Target shape code # was not recognized.' )
          call errint ( '#', shape                                )
          call sigerr ( 'SPICE(BADSHAPE)'                         )
-         call chkout ( 'ZZTANINI'                                )
          return
 
       end if
 
-      call chkout ( 'ZZTANINI' )
       return
 
 
@@ -736,11 +724,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZTANSTA' )
 
 
       if ( svcurv == lmbcrv ) then
@@ -808,11 +793,9 @@
          call setmsg ( 'Bad curve type code #.' )
          call errint ( '#', svcurv              )
          call sigerr ( 'SPICE(BUG)'             )
-         call chkout ( 'ZZTANSTA'               )
          return
 
       end if
 
-      call chkout ( 'ZZTANSTA' )
       return
       end

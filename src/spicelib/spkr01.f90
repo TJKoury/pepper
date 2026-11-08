@@ -184,11 +184,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKR01' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the segment descriptor.
@@ -234,7 +230,6 @@
          offr = (begin - 1) + (recno - 1) * 71
          call dafgda ( handle, offr+1, offr+71, record )
 
-         call chkout ( 'SPKR01' )
          return
       end if
 
@@ -258,7 +253,6 @@
             offr = (begin - 1) + (recno - 1) * 71
             call dafgda ( handle, offr+1, offr+71, record )
 
-            call chkout ( 'SPKR01' )
             return
          end if
       end do
@@ -276,6 +270,5 @@
       call dafgda ( handle, offr+1, offr+71, record )
 
 
-      call chkout ( 'SPKR01' )
       return
       end

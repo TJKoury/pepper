@@ -247,17 +247,13 @@
 
       call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( icheck == ifalse ) then
 
-         call chkin  ( 'ZZEKQCON'                                )
          call setmsg ( 'Encoded query has not been semantically '// &
                        'checked.'                                )
          call sigerr ( 'SPICE(NOTSEMCHECKED)'                    )
-         call chkout ( 'ZZEKQCON'                                )
          return
 
       end if
@@ -268,12 +264,10 @@
 
       if (  ( n < 1 ) .or. ( n > ncns )  ) then
 
-         call chkin  ( 'ZZEKQCON'                                      )
          call setmsg ( 'Constraint index # is out of valid range 1:#.' )
          call errint ( '#',  n                                         )
          call errint ( '#',  ncns                                      )
          call sigerr ( 'SPICE(INVALIDINDEX)'                           )
-         call chkout ( 'ZZEKQCON'                                      )
          return
 
       end if

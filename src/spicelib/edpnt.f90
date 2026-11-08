@@ -196,22 +196,18 @@
 !
 !     Use discovery check-in.
 !
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if (      ( a <= 0.0_wp ) &
            .or. ( b <= 0.0_wp ) &
            .or. ( c <= 0.0_wp ) ) then
 
-         call chkin  ( 'EDPNT'                            )
          call setmsg ( 'Ellipsoid radii must be strictly ' &
          //            'positive but are (#, #, #).'      )
          call errdp  ( '#', a                             )
          call errdp  ( '#', b                             )
          call errdp  ( '#', c                             )
          call sigerr ( 'SPICE(INVALIDRADII)'              )
-         call chkout ( 'EDPNT'                            )
          return
 
       end if
@@ -222,11 +218,9 @@
 !
       if ( vzero(p) ) then
 
-         call chkin  ( 'EDPNT'                            )
          call setmsg ( 'Input point was the zero vector. ' &
          //            'A non-zero vector is required.'   )
          call sigerr ( 'SPICE(ZEROVECTOR)'                )
-         call chkout ( 'EDPNT'                            )
          return
 
       end if
@@ -242,7 +236,6 @@
 !        We expect that LEVEL will be non-negative, but it could
 !        be zero. We check for negative values as a precaution.
 !
-         call chkin  ( 'EDPNT'                                    )
          call setmsg ( 'Input point''s level surface parameter ' &
          //            'was non-positive. The point is too close ' &
          //            'to the origin to be scaled to the ' &
@@ -251,7 +244,6 @@
          call errdp  ( '#', p(2)                                  )
          call errdp  ( '#', p(3)                                  )
          call sigerr ( 'SPICE(POINTTOOSMALL)'                     )
-         call chkout ( 'EDPNT'                                    )
          return
 
       end if

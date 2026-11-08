@@ -376,11 +376,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKPARS' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the encoded query each time, for safety.
@@ -390,7 +386,6 @@
       if ( failed() ) then
          error  =  .true.
          prserr =  'SPICE(BUG):  encoded query init failed.'
-         call chkout ( 'ZZEKPARS' )
          return
       end if
 
@@ -1754,6 +1749,5 @@
       end if
 
 
-      call chkout ( 'ZZEKPARS' )
       return
       end

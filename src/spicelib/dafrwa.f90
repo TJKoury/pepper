@@ -128,12 +128,10 @@
          return
 
       else if ( recno <= 0  .or.  wordno <= 0 ) then
-         call chkin  ( 'DAFRWA'                           )
          call setmsg ( 'No address for record #, word #.' )
          call errint ( '#', recno                         )
          call errint ( '#', wordno                        )
          call sigerr ( 'SPICE(DAFNOSUCHADDR)'             )
-         call chkout ( 'DAFRWA'                           )
          return
       end if
 
@@ -269,11 +267,9 @@
          return
 
       else if ( addr <= 0 ) then
-         call chkin  ( 'DAFARW'                         )
          call setmsg ( 'No record, word for address #.' )
          call errint ( '#', addr                        )
          call sigerr ( 'SPICE(DAFNOSUCHADDR)'           )
-         call chkout ( 'DAFARW'                         )
          return
       end if
 

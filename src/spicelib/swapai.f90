@@ -355,11 +355,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SWAPAI' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -370,7 +366,6 @@
          call setmsg ( 'Number of elements in the first group is *.' )
          call errint ( '*', n                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
-         call chkout ( 'SWAPAI' )
          return
 
       else if ( m < 0 ) then
@@ -378,7 +373,6 @@
          call setmsg ( 'Number of elements in the second group is *.' )
          call errint ( '*', m                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
-         call chkout ( 'SWAPAI' )
          return
 
       else if ( locn < 1 ) then
@@ -386,7 +380,6 @@
          call setmsg ( 'Location of the first group is *.' )
          call errint ( '*', locn             )
          call sigerr ( 'SPICE(INVALIDINDEX)' )
-         call chkout ( 'SWAPAI' )
          return
 
       else if ( locm < 1 ) then
@@ -394,7 +387,6 @@
          call setmsg ( 'Location of the second group is *.' )
          call errint ( '*', locm             )
          call sigerr ( 'SPICE(INVALIDINDEX)' )
-         call chkout ( 'SWAPAI' )
          return
 
       end if
@@ -421,7 +413,6 @@
       if ( lm < ln + nn ) then
          call setmsg ( 'Elements to be swapped are not distinct.' )
          call sigerr ( 'SPICE(NOTDISTINCT)' )
-         call chkout ( 'SWAPAI' )
          return
       end if
 
@@ -454,6 +445,5 @@
 
       end if
 
-      call chkout ( 'SWAPAI' )
       return
       end

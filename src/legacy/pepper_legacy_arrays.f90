@@ -5,559 +5,765 @@
 ! These keep the original SPICELIB interface for existing callers (such as
 ! the tspice tests). New code should use pepper_arrays directly.
 
+      !> Determine if all the entries in an array of logicals are .TRUE.
+      !>
+      !> Legacy interface: calls alltru of module pepper_arrays.
       logical function alltru ( logcls, n )
       use pepper_arrays, only: pepper_alltru => alltru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )
-      integer(ip)           n
+      logical               logcls ( * )  !! An array of logicals.
+      integer(ip)           n  !! Number of elements in the array LOGCLS.
       alltru = pepper_alltru ( logcls, n )
       end function alltru
 
+      !> Do a binary search for a given value within an array of character
+      !> strings, accompanied by an order vector. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> Legacy interface: calls bschoc of module pepper_arrays.
       integer(ip) function bschoc ( value, ndim, array, order )
       use pepper_arrays, only: pepper_bschoc => bschoc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value
-      integer(ip)      ndim
-      character(*)     array ( * )
-      integer(ip)      order ( * )
+      character(*)     value  !! Key value to be found in ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      character(*)     array ( * )  !! Character string array to search.
+      integer(ip)      order ( * )  !! Order vector.
       bschoc = pepper_bschoc ( value, ndim, array, order )
       end function bschoc
 
+      !> Do a binary search for a given value within an integer array,
+      !> accompanied by an order vector. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> Legacy interface: calls bschoi of module pepper_arrays.
       integer(ip) function bschoi ( value, ndim, array, order )
       use pepper_arrays, only: pepper_bschoi => bschoi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      value
-      integer(ip)      ndim
-      integer(ip)      array ( * )
-      integer(ip)      order ( * )
+      integer(ip)      value  !! Value to find in ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      integer(ip)      array ( * )  !! Array to be searched.
+      integer(ip)      order ( * )  !! Order vector.
       bschoi = pepper_bschoi ( value, ndim, array, order )
       end function bschoi
 
+      !> Do a binary search for a given value within a character array,
+      !> assumed to be in nondecreasing order. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> Legacy interface: calls bsrchc of module pepper_arrays.
       integer(ip) function bsrchc ( value, ndim, array )
       use pepper_arrays, only: pepper_bsrchc => bsrchc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value
-      integer(ip)      ndim
-      character(*)     array ( * )
+      character(*)     value  !! Key value to be found in ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      character(*)     array ( * )  !! Character string array to search.
       bsrchc = pepper_bsrchc ( value, ndim, array )
       end function bsrchc
 
+      !> Do a binary search for a given value within a double precision
+      !> array, assumed to be in nondecreasing order. Return the index of
+      !> the matching array entry, or zero if the key value is not found.
+      !>
+      !> Legacy interface: calls bsrchd of module pepper_arrays.
       integer(ip) function bsrchd ( value, ndim, array )
       use pepper_arrays, only: pepper_bsrchd => bsrchd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           value
-      integer(ip)        ndim
-      real(wp)           array ( * )
+      real(wp)           value  !! Value to find in ARRAY.
+      integer(ip)        ndim  !! Dimension of ARRAY.
+      real(wp)           array ( * )  !! Array to be searched.
       bsrchd = pepper_bsrchd ( value, ndim, array )
       end function bsrchd
 
+      !> Do a binary search for a given value within an integer array,
+      !> assumed to be in nondecreasing order. Return the index of the
+      !> matching array entry, or zero if the key value is not found.
+      !>
+      !> Legacy interface: calls bsrchi of module pepper_arrays.
       integer(ip) function bsrchi ( value, ndim, array )
       use pepper_arrays, only: pepper_bsrchi => bsrchi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      value
-      integer(ip)      ndim
-      integer(ip)      array ( * )
+      integer(ip)      value  !! Value to find in ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      integer(ip)      array ( * )  !! Array to be searched.
       bsrchi = pepper_bsrchi ( value, ndim, array )
       end function bsrchi
 
+      !> Fill an array of strings with blank strings.
+      !>
+      !> Legacy interface: calls clearc of module pepper_arrays.
       subroutine clearc ( ndim, array )
       use pepper_arrays, only: pepper_clearc => clearc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)         ndim
-      character(*)        array ( * )
+      integer(ip)         ndim  !! Number of elements of ARRAY to be set to blank.
+      character(*)        array ( * )  !! Array of strings to be filled with blank strings.
       call pepper_clearc ( ndim, array )
       end subroutine clearc
 
+      !> Fill a double precision array with zeros.
+      !>
+      !> Legacy interface: calls cleard of module pepper_arrays.
       subroutine cleard ( ndim, array )
       use pepper_arrays, only: pepper_cleard => cleard
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim
-      real(wp)           array ( * )
+      integer(ip)        ndim  !! The number of elements of ARRAY which are to be set to zero.
+      real(wp)           array ( * )  !! Double precision array to be filled.
       call pepper_cleard ( ndim, array )
       end subroutine cleard
 
+      !> Fill an integer array with zeros.
+      !>
+      !> Legacy interface: calls cleari of module pepper_arrays.
       subroutine cleari ( ndim, array )
       use pepper_arrays, only: pepper_cleari => cleari
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)   ndim
-      integer(ip)   array ( * )
+      integer(ip)   ndim  !! The number of elements of ARRAY which are to be set to zero.
+      integer(ip)   array ( * )  !! Integer array to be filled.
       call pepper_cleari ( ndim, array )
       end subroutine cleari
 
+      !> Fill a character string array with a specified string.
+      !>
+      !> Legacy interface: calls fillc of module pepper_arrays.
       subroutine fillc ( value, ndim, array )
       use pepper_arrays, only: pepper_fillc => fillc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value
-      integer(ip)      ndim
-      character(*)     array ( * )
+      character(*)     value  !! Character string value to be placed in ARRAY.
+      integer(ip)      ndim  !! The number of elements in ARRAY.
+      character(*)     array ( * )  !! Character string array which is to be filled.
       call pepper_fillc ( value, ndim, array )
       end subroutine fillc
 
+      !> Fill a double precision array with a specified value.
+      !>
+      !> Legacy interface: calls filld of module pepper_arrays.
       subroutine filld ( value, ndim, array )
       use pepper_arrays, only: pepper_filld => filld
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              value
-      integer(ip)           ndim
-      real(wp)              array ( * )
+      real(wp)              value  !! Double precision value to be placed in all the elements of ARRAY.
+      integer(ip)           ndim  !! The number of elements in ARRAY.
+      real(wp)              array ( * )  !! Double precision array which is to be filled.
       call pepper_filld ( value, ndim, array )
       end subroutine filld
 
+      !> Fill an integer array with a specified value.
+      !>
+      !> Legacy interface: calls filli of module pepper_arrays.
       subroutine filli ( value, ndim, array )
       use pepper_arrays, only: pepper_filli => filli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           value
-      integer(ip)           ndim
-      integer(ip)           array ( * )
+      integer(ip)           value  !! Integer value to be placed in all the elements of ARRAY.
+      integer(ip)           ndim  !! The number of elements in ARRAY.
+      integer(ip)           array ( * )  !! Integer array which is to be filled.
       call pepper_filli ( value, ndim, array )
       end subroutine filli
 
+      !> Determine whether an array of N items contains the integers
+      !> 1 through N.
+      !>
+      !> Legacy interface: calls isordv of module pepper_arrays.
       logical function isordv ( array, n )
       use pepper_arrays, only: pepper_isordv => isordv
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array (*)
-      integer(ip)           n
+      integer(ip)           array (*)  !! Array of integers.
+      integer(ip)           n  !! Number of integers in ARRAY.
       isordv = pepper_isordv ( array, n )
       end function isordv
 
+      !> Search for a given value within a character string array. Return
+      !> the index of the first matching array entry, or zero if the key
+      !> value was not found.
+      !>
+      !> Legacy interface: calls isrchc of module pepper_arrays.
       integer(ip) function  isrchc ( value, ndim, array )
       use pepper_arrays, only: pepper_isrchc => isrchc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value
-      integer(ip)      ndim
-      character(*)     array ( * )
+      character(*)     value  !! Key value to be found in ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      character(*)     array ( * )  !! Character string array to search.
       isrchc = pepper_isrchc ( value, ndim, array )
       end function isrchc
 
+      !> Search for a given value within a double precision array. Return
+      !> the index of the first matching array entry, or zero if the key
+      !> value was not found.
+      !>
+      !> Legacy interface: calls isrchd of module pepper_arrays.
       integer(ip) function  isrchd ( value, ndim, array )
       use pepper_arrays, only: pepper_isrchd => isrchd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           value
-      integer(ip)        ndim
-      real(wp)           array ( * )
+      real(wp)           value  !! Key value to be found in ARRAY.
+      integer(ip)        ndim  !! Dimension of ARRAY.
+      real(wp)           array ( * )  !! Double precision array to search.
       isrchd = pepper_isrchd ( value, ndim, array )
       end function isrchd
 
+      !> Search for a given value within a integer array. Return
+      !> the index of the first matching array entry, or zero if
+      !> the key value was not found.
+      !>
+      !> Legacy interface: calls isrchi of module pepper_arrays.
       integer(ip) function  isrchi ( value, ndim, array )
       use pepper_arrays, only: pepper_isrchi => isrchi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) value
-      integer(ip) ndim
-      integer(ip) array ( * )
+      integer(ip) value  !! Key value to be found in ARRAY.
+      integer(ip) ndim  !! Dimension of ARRAY.
+      integer(ip) array ( * )  !! Integer array to search.
       isrchi = pepper_isrchi ( value, ndim, array )
       end function isrchi
 
+      !> Find the index of the array element closest to a given number X
+      !> in an array of non-decreasing numbers.
+      !>
+      !> Legacy interface: calls lstcld of module pepper_arrays.
       integer(ip) function  lstcld ( x, n, array )
       use pepper_arrays, only: pepper_lstcld => lstcld
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x
-      integer(ip)        n
-      real(wp)           array ( * )
+      real(wp)           x  !! Search value.
+      integer(ip)        n  !! Number of elements in ARRAY.
+      real(wp)           array ( * )  !! Array to be searched.
       lstcld = pepper_lstcld ( x, n, array )
       end function lstcld
 
+      !> Find the index of the array element closest to a given integer X
+      !> in an array of non-decreasing integers.
+      !>
+      !> Legacy interface: calls lstcli of module pepper_arrays.
       integer(ip) function  lstcli ( x, n, array )
       use pepper_arrays, only: pepper_lstcli => lstcli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           x
-      integer(ip)           n
-      integer(ip)           array ( * )
+      integer(ip)           x  !! Search value.
+      integer(ip)           n  !! Number of elements in ARRAY.
+      integer(ip)           array ( * )  !! Array to be searched.
       lstcli = pepper_lstcli ( x, n, array )
       end function lstcli
 
+      !> Find the index of the largest array element less than or equal to
+      !> a given character string in an ordered array of character strings.
+      !>
+      !> Legacy interface: calls lstlec of module pepper_arrays.
       integer(ip) function  lstlec ( string, n, array )
       use pepper_arrays, only: pepper_lstlec => lstlec
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string
-      integer(ip)      n
-      character(*)     array ( * )
+      character(*)     string  !! Upper bound value to search against.
+      integer(ip)      n  !! Number of elements in ARRAY.
+      character(*)     array ( * )  !! Array of possible lower bounds.
       lstlec = pepper_lstlec ( string, n, array )
       end function lstlec
 
+      !> Find the index of the largest array element less than or equal
+      !> to a given number X in an array of non-decreasing numbers.
+      !>
+      !> Legacy interface: calls lstled of module pepper_arrays.
       integer(ip) function  lstled ( x, n, array )
       use pepper_arrays, only: pepper_lstled => lstled
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x
-      integer(ip)        n
-      real(wp)           array ( * )
+      real(wp)           x  !! Upper bound value to search against.
+      integer(ip)        n  !! Number of elements in ARRAY.
+      real(wp)           array ( * )  !! Array of possible lower bounds.
       lstled = pepper_lstled ( x, n, array )
       end function lstled
 
+      !> Find the index of the largest array element less than or equal
+      !> to a given integer X in an array of non-decreasing integers.
+      !>
+      !> Legacy interface: calls lstlei of module pepper_arrays.
       integer(ip) function  lstlei ( x, n, array )
       use pepper_arrays, only: pepper_lstlei => lstlei
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x
-      integer(ip)      n
-      integer(ip)      array ( * )
+      integer(ip)      x  !! Upper bound value to search against.
+      integer(ip)      n  !! Number of elements in ARRAY.
+      integer(ip)      array ( * )  !! Array of possible lower bounds.
       lstlei = pepper_lstlei ( x, n, array )
       end function lstlei
 
+      !> Find the index of the largest array element less than a given
+      !> character string in an ordered array of character strings.
+      !>
+      !> Legacy interface: calls lstltc of module pepper_arrays.
       integer(ip) function  lstltc ( string, n, array )
       use pepper_arrays, only: pepper_lstltc => lstltc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string
-      integer(ip)      n
-      character(*)     array ( * )
+      character(*)     string  !! Upper bound value to search against.
+      integer(ip)      n  !! Number of elements in ARRAY.
+      character(*)     array ( * )  !! Array of possible lower bounds.
       lstltc = pepper_lstltc ( string, n, array )
       end function lstltc
 
+       !> Find the index of the largest array element less than
+       !> a given number X in an array of non-decreasing numbers.
+       !>
+       !> Legacy interface: calls lstltd of module pepper_arrays.
        integer(ip) function  lstltd ( x, n, array )
       use pepper_arrays, only: pepper_lstltd => lstltd
        use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x
-      integer(ip)        n
-      real(wp)           array ( * )
+      real(wp)           x  !! Upper bound value to search against.
+      integer(ip)        n  !! Number of elements in ARRAY.
+      real(wp)           array ( * )  !! Array of possible lower bounds.
       lstltd = pepper_lstltd ( x, n, array )
       end function lstltd
 
+      !> Find the index of the largest array element less than
+      !> a given integer X in an array of non-decreasing integers.
+      !>
+      !> Legacy interface: calls lstlti of module pepper_arrays.
       integer(ip) function  lstlti ( x, n, array )
       use pepper_arrays, only: pepper_lstlti => lstlti
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x
-      integer(ip)      n
-      integer(ip)      array ( * )
+      integer(ip)      x  !! Upper bound value to search against.
+      integer(ip)      n  !! Number of elements in ARRAY.
+      integer(ip)      array ( * )  !! Array of possible lower bounds.
       lstlti = pepper_lstlti ( x, n, array )
       end function lstlti
 
+      !> Locate the maximum element of a character array.
+      !>
+      !> Legacy interface: calls maxac of module pepper_arrays.
       subroutine maxac ( array, ndim, maxval, loc )
       use pepper_arrays, only: pepper_maxac => maxac
       use pepper_kinds, only: ip
       implicit none
-      character(*)    array ( * )
-      integer(ip)     ndim
-      character(*)    maxval
-      integer(ip)     loc
+      character(*)    array ( * )  !! Array.
+      integer(ip)     ndim  !! Number of elements in ARRAY.
+      character(*)    maxval  !! Maximum value in ARRAY.
+      integer(ip)     loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxac ( array, ndim, maxval, loc )
       end subroutine maxac
 
+      !> Locate the maximum element of a DP array.
+      !>
+      !> Legacy interface: calls maxad of module pepper_arrays.
       subroutine maxad ( array, ndim, maxval, loc )
       use pepper_arrays, only: pepper_maxad => maxad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              array ( * )
-      integer(ip)           ndim
-      real(wp)              maxval
-      integer(ip)           loc
+      real(wp)              array ( * )  !! Array.
+      integer(ip)           ndim  !! Number of elements in ARRAY.
+      real(wp)              maxval  !! Maximum value in ARRAY.
+      integer(ip)           loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxad ( array, ndim, maxval, loc )
       end subroutine maxad
 
+      !> Locate the maximum element of an integer array.
+      !>
+      !> Legacy interface: calls maxai of module pepper_arrays.
       subroutine maxai ( array, ndim, maxval, loc )
       use pepper_arrays, only: pepper_maxai => maxai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array ( * )
-      integer(ip)           ndim
-      integer(ip)           maxval
-      integer(ip)           loc
+      integer(ip)           array ( * )  !! Array.
+      integer(ip)           ndim  !! Number of elements in ARRAY.
+      integer(ip)           maxval  !! Maximum value in ARRAY.
+      integer(ip)           loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxai ( array, ndim, maxval, loc )
       end subroutine maxai
 
+      !> Locate the minimum element of a character array.
+      !>
+      !> Legacy interface: calls minac of module pepper_arrays.
       subroutine minac ( array, ndim, minval, loc )
       use pepper_arrays, only: pepper_minac => minac
       use pepper_kinds, only: ip
       implicit none
-      character(*)    array ( * )
-      integer(ip)     ndim
-      character(*)    minval
-      integer(ip)     loc
+      character(*)    array ( * )  !! Array.
+      integer(ip)     ndim  !! Number of elements in ARRAY.
+      character(*)    minval  !! Minimum value in ARRAY.
+      integer(ip)     loc  !! Location of MINVAL in ARRAY.
       call pepper_minac ( array, ndim, minval, loc )
       end subroutine minac
 
+      !> Locate the minimum element of a DP array.
+      !>
+      !> Legacy interface: calls minad of module pepper_arrays.
       subroutine minad ( array, ndim, minval, loc )
       use pepper_arrays, only: pepper_minad => minad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              array ( * )
-      integer(ip)           ndim
-      real(wp)              minval
-      integer(ip)           loc
+      real(wp)              array ( * )  !! Array.
+      integer(ip)           ndim  !! Number of elements in ARRAY.
+      real(wp)              minval  !! Minimum value in ARRAY.
+      integer(ip)           loc  !! Location of MINVAL in ARRAY.
       call pepper_minad ( array, ndim, minval, loc )
       end subroutine minad
 
+      !> Locate the minimum element of an integer array.
+      !>
+      !> Legacy interface: calls minai of module pepper_arrays.
       subroutine minai ( array, ndim, minval, loc )
       use pepper_arrays, only: pepper_minai => minai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array ( * )
-      integer(ip)           ndim
-      integer(ip)           minval
-      integer(ip)           loc
+      integer(ip)           array ( * )  !! Array.
+      integer(ip)           ndim  !! Number of elements in ARRAY.
+      integer(ip)           minval  !! Minimum value in ARRAY.
+      integer(ip)           loc  !! Location of MINVAL in ARRAY.
       call pepper_minai ( array, ndim, minval, loc )
       end subroutine minai
 
+      !> Copy the elements of one character array into another
+      !> array.
+      !>
+      !> Legacy interface: calls movec of module pepper_arrays.
       subroutine movec ( arrfrm, ndim, arrto )
       use pepper_arrays, only: pepper_movec => movec
       use pepper_kinds, only: ip
       implicit none
-      character(*)    arrfrm ( * )
-      integer(ip)     ndim
-      character(*)    arrto  ( * )
+      character(*)    arrfrm ( * )  !! Character array to be moved.
+      integer(ip)     ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      character(*)    arrto  ( * )  !! Destination array.
       call pepper_movec ( arrfrm, ndim, arrto )
       end subroutine movec
 
+      !> Copy the elements of one double precision array into another
+      !> array.
+      !>
+      !> Legacy interface: calls moved of module pepper_arrays.
       subroutine moved ( arrfrm, ndim, arrto )
       use pepper_arrays, only: pepper_moved => moved
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              arrfrm ( * )
-      integer(ip)           ndim
-      real(wp)              arrto  ( * )
+      real(wp)              arrfrm ( * )  !! Double precision array to be moved.
+      integer(ip)           ndim  !! Number of elements to copy.
+      real(wp)              arrto  ( * )  !! Destination array.
       call pepper_moved ( arrfrm, ndim, arrto )
       end subroutine moved
 
+      !> Copy the elements of one integer array into another
+      !> array.
+      !>
+      !> Legacy interface: calls movei of module pepper_arrays.
       subroutine movei ( arrfrm, ndim, arrto )
       use pepper_arrays, only: pepper_movei => movei
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)     arrfrm ( * )
-      integer(ip)     ndim
-      integer(ip)     arrto  ( * )
+      integer(ip)     arrfrm ( * )  !! Integer array to be moved.
+      integer(ip)     ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      integer(ip)     arrto  ( * )  !! Destination array.
       call pepper_movei ( arrfrm, ndim, arrto )
       end subroutine movei
 
+      !> Determine if none the entries in an array of logicals are .TRUE.
+      !>
+      !> Legacy interface: calls notru of module pepper_arrays.
       logical function notru ( logcls, n )
       use pepper_arrays, only: pepper_notru => notru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )
-      integer(ip)           n
+      logical               logcls ( * )  !! An array of logicals.
+      integer(ip)           n  !! Number of elements in the array LOGCLS.
       notru = pepper_notru ( logcls, n )
       end function notru
 
+      !> Determine the order of elements in an array of character strings.
+      !>
+      !> Legacy interface: calls orderc of module pepper_arrays.
       subroutine orderc ( array, ndim, iorder )
       use pepper_arrays, only: pepper_orderc => orderc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     array  ( * )
-      integer(ip)      ndim
-      integer(ip)      iorder ( * )
+      character(*)     array  ( * )  !! Input array.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      integer(ip)      iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderc ( array, ndim, iorder )
       end subroutine orderc
 
+      !> Determine the order of elements in a double precision array.
+      !>
+      !> Legacy interface: calls orderd of module pepper_arrays.
       subroutine orderd ( array, ndim, iorder )
       use pepper_arrays, only: pepper_orderd => orderd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array  ( * )
-      integer(ip)        ndim
-      integer(ip)        iorder ( * )
+      real(wp)           array  ( * )  !! Input array.
+      integer(ip)        ndim  !! Dimension of ARRAY.
+      integer(ip)        iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderd ( array, ndim, iorder )
       end subroutine orderd
 
+      !> Determine the order of elements in an integer array.
+      !>
+      !> Legacy interface: calls orderi of module pepper_arrays.
       subroutine orderi ( array, ndim, iorder )
       use pepper_arrays, only: pepper_orderi => orderi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )
-      integer(ip)      ndim
-      integer(ip)      iorder ( * )
+      integer(ip)      array  ( * )  !! Input array.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      integer(ip)      iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderi ( array, ndim, iorder )
       end subroutine orderi
 
+      !> Return the product of the elements of a double precision array.
+      !>
+      !> Legacy interface: calls prodad of module pepper_arrays.
       real(wp) function  prodad ( array, n )
       use pepper_arrays, only: pepper_prodad => prodad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array ( * )
-      integer(ip)        n
+      real(wp)           array ( * )  !! Input array.
+      integer(ip)        n  !! Number of elements in ARRAY.
       prodad = pepper_prodad ( array, n )
       end function prodad
 
+      !> Return the product of the elements of an integer array.
+      !>
+      !> Legacy interface: calls prodai of module pepper_arrays.
       integer(ip) function  prodai ( array, n )
       use pepper_arrays, only: pepper_prodai => prodai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )
-      integer(ip)      n
+      integer(ip)      array  ( * )  !! Input array.
+      integer(ip)      n  !! Number of elements in ARRAY.
       prodai = pepper_prodai ( array, n )
       end function prodai
 
+      !> Reorder the elements of an array of character strings according to
+      !> a given order vector.
+      !>
+      !> Legacy interface: calls reordc of module pepper_arrays.
       subroutine reordc ( iorder, ndim, array )
       use pepper_arrays, only: pepper_reordc => reordc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      iorder ( * )
-      integer(ip)      ndim
-      character(*)     array  ( * )
+      integer(ip)      iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      character(*)     array  ( * )  !! Array to be re-ordered.
       call pepper_reordc ( iorder, ndim, array )
       end subroutine reordc
 
+      !> Reorder the elements of a double precision array according to a
+      !> given order vector.
+      !>
+      !> Legacy interface: calls reordd of module pepper_arrays.
       subroutine reordd ( iorder, ndim, array )
       use pepper_arrays, only: pepper_reordd => reordd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        iorder ( * )
-      integer(ip)        ndim
-      real(wp)           array  ( * )
+      integer(ip)        iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip)        ndim  !! Dimension of ARRAY.
+      real(wp)           array  ( * )  !! Array to be re-ordered.
       call pepper_reordd ( iorder, ndim, array )
       end subroutine reordd
 
+      !> Reorder the elements of an integer array according to a given
+      !> order vector.
+      !>
+      !> Legacy interface: calls reordi of module pepper_arrays.
       subroutine reordi ( iorder, ndim, array )
       use pepper_arrays, only: pepper_reordi => reordi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      iorder ( * )
-      integer(ip)      ndim
-      integer(ip)      array  ( * )
+      integer(ip)      iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip)      ndim  !! Dimension of ARRAY.
+      integer(ip)      array  ( * )  !! Array to be re-ordered.
       call pepper_reordi ( iorder, ndim, array )
       end subroutine reordi
 
+      !> Reorder the elements of a logical array according to a given order
+      !> vector.
+      !>
+      !> Legacy interface: calls reordl of module pepper_arrays.
       subroutine reordl ( iorder, ndim, array )
       use pepper_arrays, only: pepper_reordl => reordl
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           iorder ( * )
-      integer(ip)           ndim
-      logical               array  ( * )
+      integer(ip)           iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip)           ndim  !! Dimension of ARRAY.
+      logical               array  ( * )  !! Array to be re-ordered.
       call pepper_reordl ( iorder, ndim, array )
       end subroutine reordl
 
+      !> Remove duplicate elements from a character array.
+      !>
+      !> Legacy interface: calls rmdupc of module pepper_arrays.
       subroutine rmdupc ( nelt, array )
       use pepper_arrays, only: pepper_rmdupc => rmdupc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      nelt
-      character(*)     array   (*)
+      integer(ip)      nelt  !! Number of elements in the array.
+      character(*)     array   (*)  !! Input/output array.
       call pepper_rmdupc ( nelt, array )
       end subroutine rmdupc
 
+      !> Remove duplicate elements from a double precision array.
+      !>
+      !> Legacy interface: calls rmdupd of module pepper_arrays.
       subroutine rmdupd ( nelt, array )
       use pepper_arrays, only: pepper_rmdupd => rmdupd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)      nelt
-      real(wp) array   (*)
+      integer(ip)      nelt  !! Number of elements in the array.
+      real(wp) array   (*)  !! Input/output array.
       call pepper_rmdupd ( nelt, array )
       end subroutine rmdupd
 
+      !> Remove duplicate elements from an integer array.
+      !>
+      !> Legacy interface: calls rmdupi of module pepper_arrays.
       subroutine rmdupi ( nelt, array )
       use pepper_arrays, only: pepper_rmdupi => rmdupi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      nelt
-      integer(ip)      array   (*)
+      integer(ip)      nelt  !! Number of elements in the array.
+      integer(ip)      array   (*)  !! Input/output array.
       call pepper_rmdupi ( nelt, array )
       end subroutine rmdupi
 
+      !> Indicate whether two integer arrays are equal.
+      !>
+      !> Legacy interface: calls sameai of module pepper_arrays.
       logical function sameai ( a1, a2, ndim )
       use pepper_arrays, only: pepper_sameai => sameai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           a1 ( * )
-      integer(ip)           a2 ( * )
-      integer(ip)           ndim
+      integer(ip)           a1 ( * )  !! First array to be compared.
+      integer(ip)           a2 ( * )  !! Second array to be compared.
+      integer(ip)           ndim  !! Dimension of A1 and A2.
       sameai = pepper_sameai ( a1, a2, ndim )
       end function sameai
 
+      !> Sort an array of character strings according to the ASCII
+      !> collating sequence using the Shell Sort algorithm.
+      !>
+      !> Legacy interface: calls shellc of module pepper_arrays.
       subroutine shellc ( ndim, array )
       use pepper_arrays, only: pepper_shellc => shellc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ndim
-      character(*)     array ( * )
+      integer(ip)      ndim  !! Dimension of the array.
+      character(*)     array ( * )  !! The array.
       call pepper_shellc ( ndim, array )
       end subroutine shellc
 
+      !> Sort a double precision array using the Shell Sort algorithm.
+      !>
+      !> Legacy interface: calls shelld of module pepper_arrays.
       subroutine shelld ( ndim, array )
       use pepper_arrays, only: pepper_shelld => shelld
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim
-      real(wp)           array ( * )
+      integer(ip)        ndim  !! Dimension of the array.
+      real(wp)           array ( * )  !! The array.
       call pepper_shelld ( ndim, array )
       end subroutine shelld
 
+      !> Sort an integer array using the Shell Sort algorithm.
+      !>
+      !> Legacy interface: calls shelli of module pepper_arrays.
       subroutine shelli ( ndim, array )
       use pepper_arrays, only: pepper_shelli => shelli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ndim
-      integer(ip)      array ( * )
+      integer(ip)      ndim  !! Dimension of the array.
+      integer(ip)      array ( * )  !! The array.
       call pepper_shelli ( ndim, array )
       end subroutine shelli
 
+      !> Determine if some of the entries in an array of logicals are
+      !> .FALSE.
+      !>
+      !> Legacy interface: calls somfls of module pepper_arrays.
       logical function somfls ( logcls, n )
       use pepper_arrays, only: pepper_somfls => somfls
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )
-      integer(ip)           n
+      logical               logcls ( * )  !! An array of logicals.
+      integer(ip)           n  !! Number of elements in the array LOGCLS.
       somfls = pepper_somfls ( logcls, n )
       end function somfls
 
+      !> Determine if some of the entries in an array of logicals are
+      !> .TRUE.
+      !>
+      !> Legacy interface: calls somtru of module pepper_arrays.
       logical function somtru ( logcls, n )
       use pepper_arrays, only: pepper_somtru => somtru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )
-      integer(ip)           n
+      logical               logcls ( * )  !! An array of logicals.
+      integer(ip)           n  !! Number of elements in the array LOGCLS.
       somtru = pepper_somtru ( logcls, n )
       end function somtru
 
+      !> Return the sum of the elements of a double precision array.
+      !>
+      !> Legacy interface: calls sumad of module pepper_arrays.
       real(wp) function sumad ( array, n )
       use pepper_arrays, only: pepper_sumad => sumad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array  ( * )
-      integer(ip)        n
+      real(wp)           array  ( * )  !! Input array.
+      integer(ip)        n  !! Number of elements in ARRAY.
       sumad = pepper_sumad ( array, n )
       end function sumad
 
+      !> Return the sum of the elements of an integer array.
+      !>
+      !> Legacy interface: calls sumai of module pepper_arrays.
       integer(ip) function sumai ( array, n )
       use pepper_arrays, only: pepper_sumai => sumai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )
-      integer(ip)      n
+      integer(ip)      array  ( * )  !! Input array.
+      integer(ip)      n  !! Number of elements in ARRAY.
       sumai = pepper_sumai ( array, n )
       end function sumai
 
+      !> Swap the contents of two character strings.
+      !>
+      !> Legacy interface: calls swapc of module pepper_arrays.
       subroutine swapc ( a, b )
       use pepper_arrays, only: pepper_swapc => swapc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     a
-      character(*)     b
+      character(*)     a  !! First string.
+      character(*)     b  !! Second string.
       call pepper_swapc ( a, b )
       end subroutine swapc
 
+      !> Swap the contents of two double precision variables.
+      !>
+      !> Legacy interface: calls swapd of module pepper_arrays.
       subroutine swapd ( a, b )
       use pepper_arrays, only: pepper_swapd => swapd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a
-      real(wp)           b
+      real(wp)           a  !! First variable.
+      real(wp)           b  !! Second variable.
       call pepper_swapd ( a, b )
       end subroutine swapd
 
+      !> Swap the contents of two integer variables.
+      !>
+      !> Legacy interface: calls swapi of module pepper_arrays.
       subroutine swapi ( a, b )
       use pepper_arrays, only: pepper_swapi => swapi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      a
-      integer(ip)      b
+      integer(ip)      a  !! First variable.
+      integer(ip)      b  !! Second variable.
       call pepper_swapi ( a, b )
       end subroutine swapi

@@ -530,11 +530,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( rname )
-      end if
+      if ( return () ) return
 
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -544,10 +540,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The aberration correction flag is recognized; save it.
@@ -581,7 +574,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( rname                                )
          return
 
       end if
@@ -629,6 +621,5 @@
       call zzspkas0 ( targ,   et,  ref,   abcorr, &
                       ssbobs, acc, starg, lt,     dlt )
 
-      call chkout ( rname )
       return
       end

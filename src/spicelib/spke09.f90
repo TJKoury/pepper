@@ -220,9 +220,7 @@
 !
 !     Discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     We'll transpose the state information in the input record

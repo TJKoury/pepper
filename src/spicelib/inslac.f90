@@ -205,11 +205,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'INSLAC' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -227,7 +223,6 @@
          call setmsg ( 'Location was *.'     )
          call errint ( '*', loc              )
          call sigerr ( 'SPICE(INVALIDINDEX)' )
-         call chkout ( 'INSLAC' )
          return
 
       end if
@@ -263,6 +258,5 @@
 
 
 
-      call chkout ( 'INSLAC' )
       return
       end

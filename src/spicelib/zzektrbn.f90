@@ -184,11 +184,9 @@
 
       if ( ( left == root ) .or. ( right == root )  ) then
 
-         call chkin  ( 'ZZEKTRBN'                                  )
          call setmsg ( 'Input node is root; only children can be ' // &
                        'balanced.'                                 )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZEKTRBN'                                  )
 
       end if
 
@@ -213,7 +211,6 @@
       if (      (  sum >  2*mxkeyc  ) &
            .or. (  sum <  2*mnkeyc  )   )  then
 
-         call chkin  ( 'ZZEKTRBN'                                      )
          call setmsg ( 'Node # and right sibling # contain # and # '  // &
                        'keys respectively; count sum should be in '   // &
                        'range #:#.'                                    )
@@ -224,7 +221,6 @@
          call errint ( '#',  2*mnkeyc                                  )
          call errint ( '#',  2*mxkeyc                                  )
          call sigerr ( 'SPICE(BUG)'                                    )
-         call chkout ( 'ZZEKTRBN'                                      )
          return
 
       end if

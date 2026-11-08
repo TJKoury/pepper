@@ -583,11 +583,8 @@
       data                  limit / 0.0_wp   /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'OSCLTX' )
 
       if ( pass1 ) then
 
@@ -612,10 +609,7 @@
 !
       call oscelt ( state, et, mu, elts )
 
-      if ( failed() ) then
-         call chkout ( 'OSCLTX' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Due to checks made by OSCELT, we know that MU and RMAG
@@ -681,10 +675,7 @@
 !
          call twovec ( eccvec, 1, pole, 3, xmat )
 
-         if ( failed() ) then
-            call chkout ( 'OSCLTX' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Transform the input position to the perifocal frame and
@@ -749,7 +740,6 @@
 !
 !        This is the parabolic case.
 !
-         call chkout ( 'OSCLTX' )
          return
 
       end if
@@ -761,7 +751,6 @@
 !
 !        We can't safely compute E.
 !
-         call chkout ( 'OSCLTX' )
          return
 
       end if
@@ -777,7 +766,6 @@
 !        We can't safely compute A. The case of E equal to 0
 !        gets the code to this point.
 !
-         call chkout ( 'OSCLTX' )
          return
 
       end if
@@ -845,6 +833,5 @@
 !
       elts( 11 ) = tau
 
-      call chkout ( 'OSCLTX' )
       return
       end

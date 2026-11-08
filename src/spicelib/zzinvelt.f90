@@ -242,11 +242,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZINVELT' )
 
 
       if ( margin < 0.0_wp ) then
@@ -254,7 +251,6 @@
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZINVELT'                               )
          return
 
       end if
@@ -283,12 +279,10 @@
          call setmsg ( 'Coordinate system code # was not recognized.' )
          call errint ( '#', corsys                                    )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
-         call chkout ( 'ZZINVELT'                                     )
          return
 
       end if
 
-      call chkout ( 'ZZINVELT' )
       return
       end
 

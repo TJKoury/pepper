@@ -247,11 +247,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZCKCV06' )
 
 !
 !     Check tolerance value.
@@ -262,7 +259,6 @@
                        'was #.'                                       )
          call errdp  ( '#',  tol                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZCKCV06'                                     )
          return
 
       end if
@@ -283,7 +279,6 @@
                           'values are SCLK and TDB.'                )
             call errch  ( '#',  timsys                              )
             call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-            call chkout ( 'ZZCKCV06'                                )
             return
 
          end if
@@ -337,10 +332,7 @@
 !
          call dafgda ( handle, ivlbas+i, ivlbas+i+1, ivlbds )
 
-         if ( failed() ) then
-            call chkout ( 'ZZCKCV06' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Now find the last epoch of this mini-segment, since
@@ -352,10 +344,7 @@
 !
          call dafgda ( handle, ptrbas+i, ptrbas+i+1, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'ZZCKCV06' )
-            return
-         end if
+         if ( failed() ) return
 
          minie = ( arrbeg - 1 )  +  nint( buffer(2) )  -  1
 
@@ -364,10 +353,7 @@
 !
          call dafgda ( handle, minie, minie, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'ZZCKCV06' )
-            return
-         end if
+         if ( failed() ) return
 
          nrec = nint( buffer(1) )
 
@@ -385,10 +371,7 @@
 
          call dafgda ( handle, epaddr, epaddr, lstepc )
 
-         if ( failed() ) then
-            call chkout ( 'ZZCKCV06' )
-            return
-         end if
+         if ( failed() ) return
 
 
          begin  = ivlbds(1)
@@ -430,10 +413,7 @@
             call sct2e ( sclkid, finish, et )
             finish = et
 
-            if ( failed() ) then
-               call chkout ( 'ZZCKCV06' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -444,16 +424,12 @@
 
             call wninsd ( begin, finish, schedl )
 
-            if ( failed() ) then
-               call chkout ( 'ZZCKCV06' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
       end do
 
 
-      call chkout ( 'ZZCKCV06' )
       return
       end

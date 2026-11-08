@@ -278,23 +278,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFDC' )
-      end if
+      if ( return () ) return
 !
 !     Verify that the DAF attached to HANDLE was opened with write
 !     access.
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFDC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Read the file record to obtain the current number of comment
 !     records in the DAF attached to HANDLE. We will also get back some
@@ -304,12 +295,7 @@
 
       ncomr = fward - 2
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFDC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
@@ -320,17 +306,11 @@
 !
          call dafrrr ( handle, ncomr )
 
-         if ( failed() ) then
-
-            call chkout ( 'DAFDC' )
-            return
-
-         end if
+         if ( failed() ) return
 
       end if
 !
 !     We're done now, so goodbye.
 !
-      call chkout ( 'DAFDC' )
       return
       end

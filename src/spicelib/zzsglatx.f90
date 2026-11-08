@@ -258,11 +258,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSGLATX' )
 
 !
 !     Start by computing latitude at the segment's endpoints.
@@ -307,7 +304,6 @@
 !        segment endpoints, and possibly at every point on the
 !        segment. We've already computed the outputs.
 !
-         call chkout ( 'ZZSGLATX' )
          return
 
       end if
@@ -341,7 +337,6 @@
 !        round-off error) with the X-Y plane. We've already computed
 !        the outputs.
 !
-         call chkout ( 'ZZSGLATX' )
          return
 
       end if
@@ -386,10 +381,7 @@
 
          call inrypl ( p1, dir, plane2, nxpts, t )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSGLATX' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( nxpts == 1 ) then
 !
@@ -449,6 +441,5 @@
 !     In all of the numbered cases the extrema occur at the endpoints.
 !     and have been found already. In all cases, the outputs are set.
 !
-      call chkout ( 'ZZSGLATX' )
       return
       end

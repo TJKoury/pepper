@@ -166,11 +166,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZCKSPK' )
 !
 !     Make sure the values of ND and NI associated with this file
 !     have the correct values.
@@ -180,7 +177,6 @@
       if (     thisnd /= nd &
           .or. thisni /= ni ) then
          ckspk = '?'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -193,7 +189,6 @@
 
       if ( failed () ) then
          ckspk = '?'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -204,7 +199,6 @@
       if ( .not. found ) then
 
          ckspk = '?'
-         call chkout ( 'ZZCKSPK' )
          return
 
       end if
@@ -227,13 +221,11 @@
 !
       if ( angvel == 0 ) then
          ckspk   = 'CK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
       if ( angvel > 1 ) then
          ckspk   = 'SPK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -244,7 +236,6 @@
 !
       if ( ic(cenid) == 0 ) then
          ckspk   = 'SPK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -264,7 +255,6 @@
 
       if ( .not. spkok ) then
          ckspk = 'CK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -276,7 +266,6 @@
 !
       if ( lastdp /= real(nspk, wp) ) then
          ckspk   = 'CK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 !
@@ -286,7 +275,6 @@
 !
       if ( type /= 2 ) then
          ckspk = 'SPK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 !
@@ -297,7 +285,6 @@
 
       if ( .not. ck2ok ) then
          ckspk = 'SPK'
-         call chkout ( 'ZZCKSPK' )
          return
       end if
 
@@ -390,7 +377,6 @@
 
       end if
 
-      call chkout ( 'ZZCKSPK' )
       return
 
       end

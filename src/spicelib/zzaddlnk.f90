@@ -212,11 +212,8 @@
 !
 !     Standard RETURN test.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'ZZADDLNK' )
 
 !
 !     Test the pointer array index AVAL.
@@ -228,7 +225,6 @@
          call errint ( '#1', aval                               )
          call errint ( '#2', maxa                               )
          call sigerr ( 'SPICE(AVALOUTOFRANGE)'                  )
-         call chkout ( 'ZZADDLNK'                               )
          return
 
       end if
@@ -245,7 +241,6 @@
          call errint ( '#1', ncell                         )
          call errint ( '#2', cellsz                        )
          call sigerr ( 'SPICE(CELLARRAYTOOSMALL)'          )
-         call chkout ( 'ZZADDLNK'                          )
          return
 
       end if
@@ -259,6 +254,5 @@
 
       pntrs(aval)    = ncell
 
-      call chkout ( 'ZZADDLNK' )
       return
       end

@@ -371,11 +371,8 @@
       data                  pass1 / .true. /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'BLTFRM' )
 !
 !     The output set starts out empty.
 !
@@ -392,10 +389,7 @@
                        bnmlst, bnmpol, bnmnms, bnmidx, &
                        bidlst, bidpol, bidids, bididx )
 
-         if ( failed() ) then
-            call chkout ( 'BLTFRM' )
-            return
-         end if
+         if ( failed() ) return
 
          pass1 = .false.
 
@@ -414,7 +408,6 @@
          //            'value is not supported.'                  )
          call errint ( '#',  frmcls                               )
          call sigerr ( 'SPICE(BADFRAMECLASS)'                     )
-         call chkout ( 'BLTFRM'                                   )
          return
 
       end if
@@ -430,7 +423,6 @@
          call errint ( '#', sizei(idset)                        )
          call errint ( '#', nframe                              )
          call sigerr ( 'SPICE(SETTOOSMALL)'                     )
-         call chkout ( 'BLTFRM'                                 )
          return
 
       end if
@@ -474,6 +466,5 @@
 !
       call scardi ( to, idset )
 
-      call chkout ( 'BLTFRM' )
       return
       end

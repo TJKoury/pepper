@@ -217,11 +217,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZREFCH1')
 !
 !     Do the obvious thing first.  If FRAME1 and FRAME2 are the
 !     same then we simply return the identity matrix.
@@ -229,7 +226,6 @@
       if ( frame1 == frame2 ) then
 
          call ident  ( rotate )
-         call chkout ( 'ZZREFCH1' )
          return
 
       end if
@@ -239,10 +235,7 @@
 !
       call frinfo ( frame1, cent, class, clssid, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZREFCH1' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -250,7 +243,6 @@
          //            'for a reference frame. ' )
          call errint ( '#', frame1 )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-         call chkout ( 'ZZREFCH1' )
          return
 
       end if
@@ -258,10 +250,7 @@
 
       call frinfo ( frame2, cent, class, clssid, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZREFCH1' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -269,7 +258,6 @@
          //            'for a reference frame. ' )
          call errint ( '#', frame2 )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
-         call chkout ( 'ZZREFCH1' )
          return
 
       end if
@@ -294,10 +282,7 @@
          call zzrotgt1 ( frame(node),   et, &
                          rot(1,1,node), frame(node+1), found  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZREFCH1' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( found ) then
 !
@@ -328,10 +313,7 @@
 !
          call zzrotgt1 ( frame(node), et, rot(1,1,node), relto, found )
 
-         if ( failed() ) then
-            call chkout ( 'ZZREFCH1' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( found  ) then
@@ -401,7 +383,6 @@
 !        ZZRXR which multiplies a series of matrices.
 !
          call zzrxr (  rot, node-1, rotate )
-         call chkout ( 'ZZREFCH1' )
          return
 
       end if
@@ -454,10 +435,7 @@
 !
             call zzrotgt1 ( this,  et, rot2(1,1,put), relto, found  )
 
-            if ( failed() ) then
-               call chkout ( 'ZZREFCH1' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( found ) then
                this   = relto
@@ -474,10 +452,7 @@
 !
             call zzrotgt1 ( this,  et, tmprot, relto,  found  )
 
-            if ( failed() ) then
-               call chkout ( 'ZZREFCH1' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( found ) then
 !
@@ -542,7 +517,6 @@
 !           unfortunate situation could arise if a frame kernel
 !           is corrupted.
 !
-            call chkout ( 'ZZREFCH1' )
             return
 
          end if
@@ -552,7 +526,6 @@
 !
          call setmsg ( errmsg                  )
          call sigerr ( 'SPICE(NOFRAMECONNECT)' )
-         call chkout ( 'ZZREFCH1'              )
          return
 
       end if
@@ -580,7 +553,6 @@
       call xpose ( rot2(1,1,get), rot(1,1,cmnode) )
       call zzrxr ( rot,   cmnode, rotate          )
 
-      call chkout ( 'ZZREFCH1' )
       return
 
       end

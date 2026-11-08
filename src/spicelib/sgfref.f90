@@ -166,11 +166,8 @@
       integer(ip)           mynref
       integer(ip)           myreft
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SGFREF' )
 !
 !     Perform the needed initialization
 !
@@ -178,10 +175,7 @@
       call sgmeta ( handle, descr, rdrtyp, myreft )
       call sgmeta ( handle, descr, nref,   mynref )
 
-      if ( failed() ) then
-         call chkout ( 'SGFREF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Perform checks on the inputs for reasonableness.
@@ -198,7 +192,6 @@
          call errint ( '#', first                                  )
          call errint ( '#', last                                   )
          call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'                 )
-         call chkout ( 'SGFREF'                                    )
          return
 
       end if
@@ -211,7 +204,6 @@
          call errint ( '#', last                                   )
          call errint ( '#', first                                  )
          call sigerr ( 'SPICE(REQUESTOUTOFORDER)'                  )
-         call chkout ( 'SGFREF'                                    )
          return
 
       end if
@@ -231,10 +223,7 @@
 
          call dafgda ( handle, b, e, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SGFREF' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Now simply compute the reference values using the implicit
 !        model for them.
@@ -257,10 +246,7 @@
 
          call dafgda ( handle, b, e, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SGFREF' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Now simply compute the reference values using the implicit
 !        model for them.
@@ -299,12 +285,10 @@
          //            ' update. '                                 )
          call errint ( '#', myreft                                 )
          call sigerr ( 'SPICE(UNKNOWNREFDIR)'                      )
-         call chkout ( 'SGFREF'                                    )
          return
 
       end if
 
-      call chkout ( 'SGFREF' )
       return
 
       end

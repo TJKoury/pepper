@@ -214,11 +214,9 @@
 !
       if ( size < 1 ) then
 
-         call chkin  ( 'LNKINI'                             )
          call setmsg ( 'A linked list cannot have # nodes.' )
          call errint ( '#', size                            )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                )
-         call chkout ( 'LNKINI'                             )
          return
 
       end if

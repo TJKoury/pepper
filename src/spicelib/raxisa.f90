@@ -429,11 +429,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'RAXISA' )
-      end if
+      if ( return() ) return
 
 !
 !     Construct the quaternion corresponding to the input rotation
@@ -444,10 +440,7 @@
 !
 !     Check FAILED and return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'RAXISA' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The quaternion we've just constructed is of the form:
@@ -478,7 +471,6 @@
 
       end if
 
-      call chkout ( 'RAXISA' )
       return
 
       end

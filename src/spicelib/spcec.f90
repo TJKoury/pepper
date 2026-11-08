@@ -231,21 +231,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPCEC' )
-      end if
+      if ( return () ) return
 
 !
 !     First, check to see if HANDLE is a legitimate DAF handle.
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-         call chkout ( 'SPCEC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Read the file record to find out if the DAF contains any
@@ -258,10 +251,7 @@
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
       nrr = fward - 2
 
-      if ( nrr == 0 ) then
-         call chkout ( 'SPCEC' )
-         return
-      end if
+      if ( nrr == 0 ) return
 
 !
 !     We need to read directly from the SPK or CK file, using a logical
@@ -269,10 +259,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      if ( failed() ) then
-         call chkout ( 'SPCEC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Load the contents of the reserved records into individual lines,
@@ -300,7 +287,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FNM', dafu                                 )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'SPCEC'                                     )
             return
          end if
 
@@ -311,7 +297,6 @@
 !
             if ( record(c:c) == eot ) then
 
-               call chkout ( 'SPCEC' )
                return
 
 !
@@ -333,7 +318,6 @@
                                 'named FNM.  Value of IOSTAT is #.'   )
                   call errint ( '#', iostat                           )
                   call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
-                  call chkout ( 'SPCEC'                               )
                   return
                end if
 
@@ -354,6 +338,5 @@
 
       end do
 
-      call chkout ( 'SPCEC' )
       return
       end

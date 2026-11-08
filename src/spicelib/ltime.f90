@@ -272,11 +272,8 @@
       integer(ip)           bcentr
       integer(ip)           r
 
-      if ( return() )then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'LTIME' )
 !
 !     First perform the obvious error check.
 !
@@ -288,7 +285,6 @@
          r =  rtrim  (      dir              )
          call errch  ( '#', dir(1:r)         )
          call sigerr ( 'SPICE(BADDIRECTION)' )
-         call chkout ( 'LTIME'               )
          return
 
       end if
@@ -366,7 +362,6 @@
          elapsd = 0.0_wp
       end if
 
-      call chkout ( 'LTIME' )
       return
 
       end

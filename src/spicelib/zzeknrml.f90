@@ -659,11 +659,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKNRML' )
-      end if
+      if ( return () ) return
 
 !
 !     No error at this point.
@@ -675,7 +671,6 @@
          error  = .true.
          prserr = 'Too many tokens in query; max allowed is #.'
          call repmi  ( prserr, '#', maxtok, prserr )
-         call chkout ( 'ZZEKNRML'                  )
          return
       end if
 
@@ -692,7 +687,6 @@
       if ( .not. fnd ) then
          error   =  .true.
          prserr  =  'Missing WHERE keyword.'
-         call chkout ( 'ZZEKNRML' )
          return
       end if
 
@@ -726,7 +720,6 @@
       if ( whrsiz == 0 ) then
          error   =  .true.
          prserr  =  'Empty WHERE clause.'
-         call chkout ( 'ZZEKNRML' )
          return
       end if
 
@@ -968,7 +961,6 @@
                prserr  =  'Unexpected keyword # found at location #.'
                call repmc  ( prserr, '#', query(lxb:lxe), prserr )
                call repmi  ( prserr, '#', lxb,            prserr )
-               call chkout ( 'ZZEKNRML'                          )
                return
 
             end if
@@ -983,7 +975,6 @@
             prserr  =  'Unexpected token # found at location #.'
             call repmc  ( prserr, '#', query(lxb:lxe), prserr )
             call repmi  ( prserr, '#', lxb,            prserr )
-            call chkout ( 'ZZEKNRML'                          )
             return
 
          end if
@@ -1092,7 +1083,6 @@
 
          error  = .true.
          prserr = 'Too few tokens in WHERE clause.'
-         call chkout ( 'ZZEKNRML' )
          return
 
       else
@@ -1162,7 +1152,6 @@
                prserr = 'WHERE clause ran out of tokens '            // &
                         'unexpectedly.  This may be due to an '      // &
                         'extra left parenthesis.'
-               call chkout ( 'ZZEKNRML' )
                return
 
             end if
@@ -1283,7 +1272,6 @@
                   error  = .true.
                   prserr = 'Tokens were missing from comparison '   // &
                            'relation.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -1297,7 +1285,6 @@
                   error  = .true.
                   prserr = 'NULL values are not allowed in BETWEEN ' // &
                            'or NOT BETWEEN clauses.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -1358,7 +1345,6 @@
                   prserr =  'Token sequence must be followed '      // &
                             'by a value.'
 
-                  call chkout ( 'ZZEKNRML' )
                   return
 
 
@@ -1371,7 +1357,6 @@
                   prserr =  'Token must be followed by the AND ' // &
                             'operator.'
 
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -1416,7 +1401,6 @@
                   error  = .true.
                   prserr = 'Tokens were missing from comparison '   // &
                            'relation.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -1460,7 +1444,6 @@
                      error  = .true.
                      prserr = 'NULL values are not allowed in ' // &
                               'BETWEEN or NOT BETWEEN clauses.'
-                     call chkout ( 'ZZEKNRML' )
                      return
 
                   end if
@@ -1500,7 +1483,6 @@
                   if ( lnknfn(rlpool) < 1 ) then
                      error  = .true.
                      prserr = 'Relation table is full.'
-                     call chkout ( 'ZZEKNRML' )
                      return
                   end if
 
@@ -1522,7 +1504,6 @@
                   if ( lnknfn(cjpool) < 1 ) then
                      error  = .true.
                      prserr = 'Conjunction table is full.'
-                     call chkout ( 'ZZEKNRML' )
                      return
                   end if
 
@@ -1539,7 +1520,6 @@
                   if ( lnknfn(djpool) < 1 ) then
                      error  = .true.
                      prserr = 'Disjunction table is full.'
-                     call chkout ( 'ZZEKNRML' )
                      return
                   end if
 
@@ -1623,7 +1603,6 @@
                         if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1644,7 +1623,6 @@
                         if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
                            prserr = 'Conjunction table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1670,7 +1648,6 @@
                         if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1750,7 +1727,6 @@
                         if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1771,7 +1747,6 @@
                         if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
                            prserr = 'Conjunction table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1797,7 +1772,6 @@
                         if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -1841,7 +1815,6 @@
                      error  =  .true.
                      prserr = 'Token following BETWEEN operator is ' // &
                               'invalid.'
-                     call chkout ( 'ZZEKNRML' )
                      return
 
                   end if
@@ -1856,7 +1829,6 @@
                   prserr =  'Token sequence must be followed '      // &
                             'by a value.'
 
-                  call chkout ( 'ZZEKNRML' )
                   return
 
 
@@ -1869,7 +1841,6 @@
                   prserr =  'Token must be followed by a '          // &
                             'comparison operator.'
 
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -1904,7 +1875,6 @@
 
                      error  = .true.
                      prserr = 'More tokens expected.'
-                     call chkout ( 'ZZEKNRML' )
                      return
 
                   end if
@@ -1931,7 +1901,6 @@
                      error  =  .true.
                      prserr = 'Unexpected right parenthesis '      // &
                               'found.'
-                     call chkout ( 'ZZEKNRML' )
                      return
 
                   end if
@@ -1945,7 +1914,6 @@
 
                   error  =  .true.
                   prserr =  'More tokens expected.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
 !
@@ -2113,7 +2081,6 @@
                         if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
-                           call chkout ( 'ZZEKNRML' )
                            return
                         end if
 
@@ -2131,7 +2098,6 @@
                            if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
-                              call chkout ( 'ZZEKNRML' )
                               return
                            end if
 
@@ -2155,7 +2121,6 @@
                            if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
-                              call chkout ( 'ZZEKNRML' )
                               return
                            end if
 
@@ -2254,7 +2219,6 @@
                   error  =  .true.
                   prserr =  'Unexpected token found following '       // &
                             'valid expression.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -2277,7 +2241,6 @@
                   error  = .true.
                   prserr = 'Tokens were missing from logical '        // &
                            'expression.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                else if ( mtcode(second) == lgroup ) then
@@ -2358,7 +2321,6 @@
                      if ( lnknfn(djpool) < 1 ) then
                         error  = .true.
                         prserr = 'Disjunction table is full.'
-                        call chkout ( 'ZZEKNRML' )
                         return
                      end if
 
@@ -2367,7 +2329,6 @@
                      if ( lnknfn(cjpool) < 1  ) then
                         error  = .true.
                         prserr = 'Conjunction table is full.'
-                        call chkout ( 'ZZEKNRML' )
                         return
                      end if
 
@@ -2431,7 +2392,6 @@
                               if ( lnknfn(cjpool) < 1 ) then
                                  error  = .true.
                                  prserr = 'Conjunction table is full.'
-                                 call chkout ( 'ZZEKNRML' )
                                  return
                               end if
 
@@ -2456,7 +2416,6 @@
                            if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
-                              call chkout ( 'ZZEKNRML' )
                               return
                            end if
 
@@ -2466,7 +2425,6 @@
                            if ( lnknfn(djpool) < 1  ) then
                               error  = .true.
                               prserr = 'Disjunction table is full.'
-                              call chkout ( 'ZZEKNRML' )
                               return
                            end if
 
@@ -2589,7 +2547,6 @@
 !
                   error  = .true.
                   prserr = 'Token following NOT operator was invalid.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -2618,7 +2575,6 @@
 !
                error  =  .true.
                prserr = 'Unexpected token found.'
-               call chkout ( 'ZZEKNRML' )
                return
 
             end if
@@ -2705,7 +2661,6 @@
             else
                error  =  .true.
                prserr =  'Syntax error:  badly formed WHERE clause.'
-               call chkout ( 'ZZEKNRML' )
                return
             end if
 
@@ -2795,7 +2750,6 @@
                   prserr =  'NULL values can only be used with the ' // &
                             'operators "IS NULL", "NOT NULL", '      // &
                             'or equivalents.'
-                  call chkout ( 'ZZEKNRML' )
                   return
 
                end if
@@ -2901,6 +2855,5 @@
       end do
 
 
-      call chkout ( 'ZZEKNRML' )
       return
       end

@@ -193,11 +193,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PCKE03' )
-      end if
+      if ( return () ) return
 
 !
 !     The first number in the record is the number of Chebyshev
@@ -350,6 +346,5 @@
          end do
       end do
 
-      call chkout ( 'PCKE03' )
       return
       end

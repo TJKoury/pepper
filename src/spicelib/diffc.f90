@@ -197,7 +197,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'DIFFC' )
 
 !
 !     Make sure output set elements are long enough.
@@ -212,7 +211,6 @@
 
          call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         call chkout ( 'DIFFC' )
          return
 
       end if
@@ -318,7 +316,6 @@
 
       end if
 
-      call chkout ( 'DIFFC' )
 
       return
       end

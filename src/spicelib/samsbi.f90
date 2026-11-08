@@ -215,9 +215,7 @@
       samsbi = .false.
 
       do i = b1, e1
-         if ( nechr( str1(i:i), str2(j:j) ) ) then
-            return
-         end if
+         if ( nechr( str1(i:i), str2(j:j) ) ) return
          j = j + 1
       end do
 

@@ -181,7 +181,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'UNIONI' )
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -298,7 +297,6 @@
       end if
 
 
-      call chkout ( 'UNIONI' )
 
       return
       end

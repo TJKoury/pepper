@@ -224,11 +224,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STCC01' )
-      end if
+      if ( return () ) return
 
 !
 !     More initial values.
@@ -253,7 +249,6 @@
       if ( numseg <= 0 ) then
          errmsg = 'File contains no data.'
          istyp1 = .false.
-         call chkout ( 'STCC01' )
          return
       end if
 
@@ -273,7 +268,6 @@
             if ( tmptnm /= tnmprv ) then
                errmsg = 'File contains more than one data table.'
                istyp1 = .false.
-               call chkout ( 'STCC01' )
                return
             end if
 
@@ -292,7 +286,6 @@
       if ( ncols < cat1nc ) then
          errmsg = 'File contains too few data columns.'
          istyp1 = .false.
-         call chkout ( 'STCC01' )
          return
       end if
 
@@ -317,7 +310,6 @@
                      ' is not found or'                     // &
                      ' improperly declared in the file.'
             istyp1 = .false.
-            call chkout ( 'STCC01' )
             return
          end if
 
@@ -333,6 +325,5 @@
 
       call ekcls ( tmphnd )
 
-      call chkout ( 'STCC01' )
       return
       end

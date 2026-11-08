@@ -284,11 +284,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZDDHF2H' )
-      end if
+      if ( return() ) return
 
 !
 !     First check to see if FNAME is blank.  If so, set FOUND to .FALSE.
@@ -301,7 +297,6 @@
          handle = 0
          opened = .false.
          exists = .false.
-         call chkout ( 'ZZDDHF2H' )
          return
 
       end if
@@ -329,7 +324,6 @@
          call setmsg ( 'INQUIRE failed. Value of IOSTAT was #.' )
          call errint ( '#', iostat                              )
          call sigerr ( 'SPICE(INQUIREFAILED)'                   )
-         call chkout ( 'ZZDDHF2H'                               )
          return
       end if
 
@@ -350,7 +344,6 @@
 
          found  = .false.
          handle = 0
-         call chkout ( 'ZZDDHF2H' )
          return
 
       end if
@@ -376,7 +369,6 @@
          if ( uindex == 0 ) then
             handle = 0
             found  = .false.
-            call chkout ( 'ZZDDHF2H' )
             return
          end if
 
@@ -387,7 +379,6 @@
 !
          handle = uthan(uindex)
          found  = handle /= 0
-         call chkout ( 'ZZDDHF2H' )
          return
 
       end if
@@ -404,7 +395,6 @@
       if ( failed() ) then
          handle = 0
          found  = .false.
-         call chkout ( 'ZZDDHF2H' )
          return
       end if
 
@@ -447,7 +437,6 @@
          call errch  ( '#', fname                                     )
          call errint ( '#', iostat                                    )
          call sigerr ( 'SPICE(FILEOPENFAILED)'                        )
-         call chkout ( 'ZZDDHF2H'                                     )
          return
 
       end if
@@ -524,7 +513,6 @@
             call setmsg ( 'INQUIRE failed. Value of IOSTAT was #.' )
             call errint ( '#', iostat                              )
             call sigerr ( 'SPICE(INQUIREFAILED)'                   )
-            call chkout ( 'ZZDDHF2H'                               )
             return
 
          end if
@@ -562,7 +550,6 @@
 
       call zzddhrmu ( uindex, nft, utcst, uthan, utlck,  utlun, nut )
 
-      call chkout ( 'ZZDDHF2H' )
       return
 
       end

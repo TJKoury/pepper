@@ -434,11 +434,8 @@
 
       logical               found
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'KPLFRM' )
 
 !
 !     The output set starts out empty.
@@ -458,7 +455,6 @@
          //            'value is not supported.'                  )
          call errint ( '#',  frmcls                               )
          call sigerr ( 'SPICE(BADFRAMECLASS)'                     )
-         call chkout ( 'KPLFRM'                                   )
          return
 
       end if
@@ -608,7 +604,6 @@
                               call errint ( '#', sizei(idset)          )
                               call errint ( '#', to+1                  )
                               call sigerr ( 'SPICE(SETTOOSMALL)'       )
-                              call chkout ( 'KPLFRM'                   )
                               return
 
                            end if
@@ -659,6 +654,5 @@
 !
       call validi ( sizei(idset), to, idset )
 
-      call chkout ( 'KPLFRM' )
       return
       end

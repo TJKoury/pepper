@@ -1241,11 +1241,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'GFOCCE' )
 
 !
 !     Check the result window's size.
@@ -1256,7 +1253,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
-         call chkout ( 'GFOCCE'                                )
          return
 
       end if
@@ -1274,7 +1270,6 @@
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
          call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
-         call chkout ( 'GFOCCE'                                )
          return
 
       end if
@@ -1302,7 +1297,6 @@
          //            'at least one of these targets ' &
          //            'must be an extended object.'     )
          call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'        )
-         call chkout ( 'GFOCCE'                          )
          return
 
       end if
@@ -1315,10 +1309,7 @@
                        back,   lbshap, bframe, obsrvr, &
                        abcorr                         )
 
-      if ( failed() ) then
-         call chkout ( 'GFOCCE' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Prepare the progress reporter if appropriate.
@@ -1346,10 +1337,7 @@
                          result   )
 
 
-         if (  failed()  ) then
-            call chkout ( 'GFOCCE'  )
-            return
-         end if
+         if (  failed()  ) return
 
          if ( bail ) then
 !
@@ -1360,7 +1348,6 @@
 !              An interrupt has been issued. Return now regardless of
 !              whether the search has been completed.
 !
-               call chkout ( 'GFOCCE' )
                return
 
             end if
@@ -1376,6 +1363,5 @@
          call udrepf
       end if
 
-      call chkout ( 'GFOCCE' )
       return
       end

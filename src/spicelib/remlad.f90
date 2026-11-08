@@ -193,11 +193,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'REMLAD' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -211,7 +207,6 @@
          call setmsg ( 'Location was *.'     )
          call errint ( '*', loc              )
          call sigerr ( 'SPICE(INVALIDINDEX)' )
-         call chkout ( 'REMLAD' )
          return
 
 !
@@ -222,7 +217,6 @@
 
          call setmsg ( 'Trying to remove non-existent elements.' )
          call sigerr ( 'SPICE(NONEXISTELEMENTS)' )
-         call chkout ( 'REMLAD' )
          return
 
 
@@ -251,6 +245,5 @@
 
 
 
-      call chkout ( 'REMLAD' )
       return
       end

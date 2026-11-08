@@ -331,11 +331,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'PCK03A' )
-      end if
+      if ( return() ) return
 
 !
 !     First, check to see if the number of coefficient sets and epochs
@@ -349,7 +345,6 @@
          call errhan ( '#', handle                                   )
          call errint ( '#', ncsets                                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'PCK03A'                                      )
          return
 
       end if
@@ -364,7 +359,6 @@
 !     Leave it up to the caller.
 !
 
-      call chkout ( 'PCK03A' )
       return
 
       end

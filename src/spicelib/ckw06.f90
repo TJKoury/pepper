@@ -789,11 +789,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'CKW06' )
 
 !
 !     Start with a parameter compatibility check.
@@ -806,7 +803,6 @@
          call errint ( '#',  maxrsz                       )
          call errint ( '#',  ckmrsz                       )
          call sigerr ( 'SPICE(BUG)'                       )
-         call chkout ( 'CKW06'                            )
          return
 
       end if
@@ -822,7 +818,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'CKW06'                                     )
          return
 
       end if
@@ -837,7 +832,6 @@
          call setmsg ( 'The reference frame # is not supported.' )
          call errch  ( '#', ref                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
-         call chkout ( 'CKW06'                                   )
          return
 
       end if
@@ -850,7 +844,6 @@
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                   )
-         call chkout ( 'CKW06'                                 )
          return
 
       end if
@@ -868,7 +861,6 @@
             call setmsg ( 'The segment identifier contains ' &
             //            'nonprintable characters'         )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'        )
-            call chkout ( 'CKW06'                           )
             return
 
          end if
@@ -884,7 +876,6 @@
          //            'this count must be positive.' )
          call errint ( '#', nmini                     )
          call sigerr ( 'SPICE(INVALIDCOUNT)'          )
-         call chkout ( 'CKW06'                        )
          return
 
       end if
@@ -910,7 +901,6 @@
             call errdp  ( '#', ivlbds(i+1)                      )
             call errdp  ( '#', ivlbds(i+1) - ivlbds(i)          )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'             )
-            call chkout ( 'CKW06'                               )
             return
 
          end if
@@ -938,7 +928,6 @@
          call errdp  ( '#', last                               )
          call errdp  ( '#', ivlbds(nmini+1)                    )
          call sigerr ( 'SPICE(COVERAGEGAP)'                    )
-         call chkout ( 'CKW06'                                 )
          return
 
       end if
@@ -975,7 +964,6 @@
             call errint ( '#', npkts(i)                                )
             call errint ( '#', i                                       )
             call sigerr ( 'SPICE(TOOFEWPACKETS)'                       )
-            call chkout ( 'CKW06'                                      )
             return
 
          end if
@@ -994,7 +982,6 @@
             call errint ( '#',  subtyp                     )
             call errint ( '#',  i                          )
             call sigerr ( 'SPICE(INVALIDSUBTYPE)'          )
-            call chkout ( 'CKW06'                          )
             return
 
          end if
@@ -1018,7 +1005,6 @@
             call errint ( '#',  i                                  )
             call errdp  ( '#',  rates(i)                           )
             call sigerr ( 'SPICE(INVALIDSCLKRATE)'                 )
-            call chkout ( 'CKW06'                                  )
             return
 
          end if
@@ -1043,7 +1029,6 @@
             call errint ( '#', degres(i)                      )
             call errint ( '#', maxdeg                         )
             call sigerr ( 'SPICE(INVALIDDEGREE)'              )
-            call chkout ( 'CKW06'                             )
             return
 
          end if
@@ -1066,7 +1051,6 @@
             call errint ( '#', degres(i)                         )
             call errint ( '#', subtps(i)                         )
             call sigerr ( 'SPICE(BADWINDOWSIZE)'                 )
-            call chkout ( 'CKW06'                                )
             return
 
          end if
@@ -1099,7 +1083,6 @@
                call errint ( '#',  k                             )
                call errdp  ( '#',  sclkdp(k+1)                   )
                call sigerr ( 'SPICE(TIMESOUTOFORDER)'            )
-               call chkout ( 'CKW06'                             )
                return
 
             end if
@@ -1120,7 +1103,6 @@
             call errdp  ( '#',  ivlbds(i)                           )
             call errdp  ( '#',  sclkdp(bepix)                       )
             call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
-            call chkout ( 'CKW06'                                   )
             return
 
          else if (  sclkdp(eepix) < ivlbds(i) ) then
@@ -1131,7 +1113,6 @@
             call errdp  ( '#',  ivlbds(i)                           )
             call errdp  ( '#',  sclkdp(eepix)                       )
             call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
-            call chkout ( 'CKW06'                                   )
             return
 
          end if
@@ -1157,7 +1138,6 @@
                call errint ( '#', j                               )
                call errint ( '#', i                               )
                call sigerr ( 'SPICE(ZEROQUATERNION)'              )
-               call chkout ( 'CKW06'                              )
                return
 
             end if
@@ -1194,7 +1174,6 @@
                   call errint ( '#', i                                 )
                   call errint ( '#', j-1                               )
                   call sigerr ( 'SPICE(BADQUATSIGN)'                   )
-                  call chkout ( 'CKW06'                                )
                   return
 
                end if
@@ -1318,10 +1297,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'CKW06' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Re-initialize the mini-segment packet array indices,
@@ -1403,10 +1379,7 @@
          call dafada ( real( winsiz, wp    ),  1 )
          call dafada ( real( npkts(i), wp  ),  1 )
 
-         if ( failed() ) then
-            call chkout ( 'CKW06' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1511,6 +1484,5 @@
 !
       call dafena
 
-      call chkout ( 'CKW06' )
       return
       end

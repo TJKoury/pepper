@@ -222,10 +222,8 @@
 
       if ( errmsg /= ' ' ) then
 
-         call chkin  ( 'PRSINT'               )
          call setmsg ( errmsg                 )
          call sigerr ( 'SPICE(NOTANINTEGER)'  )
-         call chkout ( 'PRSINT'               )
          return
 
       end if

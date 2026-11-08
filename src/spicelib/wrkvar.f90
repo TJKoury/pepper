@@ -195,11 +195,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'WRKVAR' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -267,6 +263,5 @@
       end if
 
 
-      call chkout ( 'WRKVAR' )
       return
       end

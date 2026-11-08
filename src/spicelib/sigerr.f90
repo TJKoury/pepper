@@ -398,7 +398,6 @@
 !
 !           Create a frozen copy of the traceback:
 !
-            call freeze
 
 !
 !           Now we output the error data that are available at this

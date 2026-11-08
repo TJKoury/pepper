@@ -188,11 +188,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS08' )
-      end if
+      if ( return () ) return
 
 !
 !     Look up the following items:
@@ -212,14 +208,7 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (      (  end   <   begin                    ) &
-           .or. (  end   <   start                    ) &
-           .or. (  begin > ( start + (nrec-1)*step )  )   ) then
-
-         call chkout ( 'SPKS08' )
-         return
-
-      end if
+      if (      (  end   <   begin                    ) .or. (  end   <   start                    ) .or. (  begin > ( start + (nrec-1)*step )  )   ) return
 
 !
 !     Compute the index of the state having the last epoch
@@ -291,6 +280,5 @@
       call dafada (  real( degree, wp ),                  1  )
       call dafada (  real( rec(2) - rec(1) + 1, wp ),     1  )
 
-      call chkout ( 'SPKS08' )
       return
       end

@@ -341,11 +341,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKR02' )
-      end if
+      if ( return () ) return
 
 !
 !     To minimize the number of file reads performed during the search,
@@ -393,7 +389,6 @@
                        'Type is #'                                 )
          call errint ( '#', icd(3)                                 )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
-         call chkout ( 'CKR02'                                     )
          return
 
       end if
@@ -588,7 +583,6 @@
 
          else
 
-            call chkout ( 'CKR02' )
             return
 
          end if
@@ -631,7 +625,6 @@
 
                else
 
-                  call chkout ( 'CKR02' )
                   return
 
                end if
@@ -668,7 +661,6 @@
 
                else
 
-                  call chkout ( 'CKR02' )
                   return
 
                end if
@@ -706,6 +698,5 @@
 !
 !     That is all.
 !
-      call chkout ( 'CKR02' )
       return
       end

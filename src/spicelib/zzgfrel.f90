@@ -618,11 +618,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFREL' )
 
 !
 !     Make sure we have enough workspace windows.
@@ -634,7 +631,6 @@
          call errint ( '#',  nw                                      )
          call errint ( '#',  nwreq                                   )
          call sigerr ( 'SPICE(TOOFEWWINDOWS)'                        )
-         call chkout ( 'ZZGFREL'                                     )
          return
 
       end if
@@ -648,7 +644,6 @@
          //            'at least 2.'                               )
          call errint ( '#',  mw                                    )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'ZZGFREL'                                   )
          return
 
       end if
@@ -662,7 +657,6 @@
          //            'at least 2.'                             )
          call errint ( '#',  sized(result)                       )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                 )
-         call chkout ( 'ZZGFREL'                                 )
          return
 
       end if
@@ -688,7 +682,6 @@
                      'ABSMAX.'                                        )
          call errch  ('#', relate                                     )
          call sigerr ('SPICE(NOTRECOGNIZED)'                          )
-         call chkout ('ZZGFREL'                                       )
          return
 
       end if
@@ -701,7 +694,6 @@
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'ZZGFREL'                             )
          return
 
       end if
@@ -718,7 +710,6 @@
                           'comparison operators except ABSMAX and ' // &
                           'ABSMIN' )
             call sigerr ( 'SPICE(INVALIDVALUE)'                     )
-            call chkout ( 'ZZGFREL'                                 )
             return
 
          end if
@@ -732,7 +723,6 @@
       if ( cardd(cnfine) == 0 ) then
 
          call scardd ( 0, result )
-         call chkout ('ZZGFREL' )
          return
 
       end if
@@ -751,10 +741,7 @@
       name(1) = decres
       name(2) = incres
 
-      if (  failed() ) then
-         call chkout (  'ZZGFREL' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     For equality constraints, we work with a somewhat expanded
@@ -775,10 +762,7 @@
       call copyd  ( cnfine,     work(b,confin) )
       call wnexpd ( addl, addr, work(b,confin) )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFREL' )
-         return
-      end if
+      if (  failed() ) return
 
 !
 !     Make a local copy of the reference value.
@@ -820,10 +804,7 @@
                          finish,  tol,    rpt,     udrepu, &
                          work(b,decres) )
 
-         if (  failed()  ) then
-            call chkout ( 'ZZGFREL'  )
-            return
-         end if
+         if (  failed()  ) return
 
          if ( bail ) then
 
@@ -833,7 +814,6 @@
                   call udrepf
                end if
 
-               call chkout ( 'ZZGFREL' )
                return
 
             end if
@@ -885,7 +865,6 @@
 
          call zzgfwsts ( work(b,decres), cnfine, '()', result )
 
-         call chkout (  'ZZGFREL' )
          return
 
 
@@ -899,7 +878,6 @@
 
          call zzgfwsts ( work(b,decres), cnfine,  '()',  result )
 
-         call chkout (  'ZZGFREL' )
          return
 
       end if
@@ -968,10 +946,7 @@
 
                call udfunc ( endpt(want), value )
 
-               if (  failed() ) then
-                  call chkout (  'ZZGFREL' )
-                  return
-               end if
+               if (  failed() ) return
 
 !
 !              Initialize the extreme value. This step will
@@ -1036,10 +1011,7 @@
 
             end do
 
-            if (  failed() ) then
-               call chkout (  'ZZGFREL' )
-               return
-            end if
+            if (  failed() ) return
 
 !
 !           When we go to the next schedule, the min and max are at
@@ -1052,12 +1024,7 @@
 !
 !        If the adjustment is zero, we're done.
 !
-         if ( adjust == 0.0_wp ) then
-
-            call chkout (  'ZZGFREL' )
-            return
-
-         end if
+         if ( adjust == 0.0_wp ) return
 
 !
 !        We have a non-zero adjustment. we have the extreme value. Now
@@ -1086,10 +1053,7 @@
 
       call wndifd ( work(b,confin), work(b,decres), work(b,incres) )
 
-      if (  failed() ) then
-         call chkout (  'ZZGFREL' )
-         return
-      end if
+      if (  failed() ) return
 
 
 !
@@ -1151,16 +1115,10 @@
                             finish, tol,     rpt,     udrepu, &
                             result                           )
 
-            if (  failed()  ) then
-               call chkout ( 'ZZGFREL'  )
-               return
-            end if
+            if (  failed()  ) return
 
             if ( bail ) then
-               if ( udbail () ) then
-                  call chkout ( 'ZZGFREL' )
-                  return
-               end if
+               if ( udbail () ) return
             end if
 
          end do
@@ -1221,10 +1179,7 @@
             call zzwninsd ( result(i), result(i), &
                             contxt,    work(b,tempw) )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFREL' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -1244,6 +1199,5 @@
 
       end if
 
-      call chkout ( 'ZZGFREL' )
       return
       end

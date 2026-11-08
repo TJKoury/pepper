@@ -270,11 +270,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKPVN' )
-      end if
+      if ( return () ) return
 
 !
 !     Unpacking the segment descriptor will tell us the center,
@@ -347,10 +343,7 @@
 !
          call sgfcon ( handle, descr, 1, 1, record(1) )
 
-         if ( failed() ) then
-            call chkout ( 'SPKPVN' )
-            return
-         end if
+         if ( failed() ) return
 
          recsiz = nstate * int(record(1)) + 3
 
@@ -365,7 +358,6 @@
             call errint ( '#', recsiz                                )
             call errint ( '#', maxrec                                )
             call sigerr ( 'SPICE(SPKRECTOOLARGE)'                    )
-            call chkout ( 'SPKPVN'                                    )
             return
 
          end if
@@ -405,11 +397,9 @@
          //            'contain this SPK data type. ' )
          call errint ( '#', type               )
          call sigerr ( 'SPICE(SPKTYPENOTSUPP)' )
-         call chkout ( 'SPKPVN'                 )
          return
       end if
 
 
-      call chkout ( 'SPKPVN' )
       return
       end

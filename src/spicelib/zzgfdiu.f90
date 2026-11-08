@@ -196,9 +196,7 @@
 !
 !     This routine should never be called directly.
 !
-      call chkin  ( 'ZZGFDIU'           )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZGFDIU'           )
       return
 
 
@@ -342,11 +340,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFDIIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
@@ -362,7 +357,6 @@
          //            'version of the SPICE Toolkit. '           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFDIIN'                                 )
          return
 
       end if
@@ -379,7 +373,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFDIIN'                                 )
          return
 
       end if
@@ -395,7 +388,6 @@
          call errch  ( '#', obsrvr                         )
          call errch  ( '#', target                         )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
-         call chkout ( 'ZZGFDIIN'                          )
          return
 
       end if
@@ -413,12 +405,8 @@
 !
       call zzvalcor ( svcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFDIIN' )
-         return
-      end if
+      if ( failed() ) return
 
-      call chkout ( 'ZZGFDIIN' )
       return
 
 
@@ -552,18 +540,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFDIDC' )
 
       call spkez ( svtarg, et, 'J2000', svcorr, svobs, state, lt )
 
-      if (  failed() ) then
-          call chkout ( 'ZZGFDIDC' )
-          return
-      end if
+      if (  failed() ) return
 
 !
 !     The observer-target distance is decreasing if and only
@@ -572,7 +554,6 @@
 !
       decres  =  vdot( state, state(4) )  <  0.0_wp
 
-      call chkout  ( 'ZZGFDIDC' )
       return
 
 
@@ -684,15 +665,11 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFDIGQ' )
 
       call zzgfdiq ( svtarg, et, svcorr, svobs, dist )
 
-      call chkout ( 'ZZGFDIGQ' )
       return
 
       end

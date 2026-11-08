@@ -374,11 +374,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'LSPCN' )
 
 !
 !     Initialization.
@@ -408,7 +405,6 @@
                        'version of the SPICE Toolkit.'            )
          call errch  ( '#', body                                  )
          call sigerr ( 'SPICE(NOTRANSLATION)'                     )
-         call chkout ( 'LSPCN'                                    )
          return
 
       end if
@@ -453,10 +449,7 @@
 !
       call twovec ( uavel, 3, npole, 2, trans )
 
-      if ( failed() ) then
-         call chkout ( 'LSPCN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We'll find the position of the Sun relative to this frame.
@@ -481,6 +474,5 @@
 !
       call recrad ( pos, radius, lspcn, lat )
 
-      call chkout ( 'LSPCN' )
       return
       end

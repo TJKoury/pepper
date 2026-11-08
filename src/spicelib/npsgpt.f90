@@ -191,9 +191,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Find a direction vector defined by the endpoints.
@@ -219,9 +217,7 @@
 !
       call nplnpt ( ep1, seg, point, lnear, dist )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Determine whether LNEAR is on the segment, "before" EP1, or

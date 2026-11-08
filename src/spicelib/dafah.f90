@@ -877,9 +877,7 @@
       if ( return () ) then
          return
       else
-         call chkin  ( 'DAFAH' )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'DAFAH' )
       end if
 
       return
@@ -1306,11 +1304,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFOPR' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -1328,10 +1322,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFOPR' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -1343,7 +1334,6 @@
 
       if ( findex /= 0 ) then
          ftlnk(findex) = ftlnk(findex) + 1
-         call chkout ( 'DAFOPR' )
          return
       end if
 
@@ -1367,7 +1357,6 @@
                          ' binary DAF file ''#''.'                   )
          call errch    ( '#', fname                                  )
          call sigerr   ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout   ( 'DAFOPR'                                    )
          return
 
       end if
@@ -1390,7 +1379,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DAFOPR' )
       return
 
 
@@ -1818,11 +1806,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFOPW' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -1844,7 +1828,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DAFFTFULL)'                              )
-         call chkout ( 'DAFOPW'                                        )
          return
 
       end if
@@ -1857,10 +1840,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFOPW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Retrieve ND and NI from the file record.
@@ -1883,7 +1863,6 @@
          call errch    ( '#', fname                                  )
          call errint   ( '#', iostat                                 )
          call sigerr   ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout   ( 'DAFOPW'                                    )
          return
 
       end if
@@ -1906,7 +1885,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DAFOPW' )
       return
 
 
@@ -2251,11 +2229,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFONW' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -2275,7 +2249,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DAFFTFULL)'                              )
-         call chkout ( 'DAFONW'                                        )
          return
 
       end if
@@ -2287,7 +2260,6 @@
 
          call setmsg ( 'The file type is blank.' )
          call sigerr ( 'SPICE(BLANKFILETYPE)'    )
-         call chkout ( 'DAFONW'                  )
          return
 
       end if
@@ -2305,7 +2277,6 @@
             call setmsg ( 'The file type contains nonprinting' // &
                           ' characters.'                        )
             call sigerr ( 'SPICE(ILLEGALCHARACTER)'             )
-            call chkout ( 'DAFONW'                              )
             return
 
          end if
@@ -2331,7 +2302,6 @@
          call errint ( '#', nd                               )
          call errint ( '#', maxnd                            )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
-         call chkout ( 'DAFONW'                              )
          return
 
       end if
@@ -2342,7 +2312,6 @@
          call errint ( '#', ni                               )
          call errint ( '#', maxni                            )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
-         call chkout ( 'DAFONW'                              )
          return
 
       end if
@@ -2353,7 +2322,6 @@
          call errint ( '#', nd + (ni+1)/2                         )
          call errint ( '#', maxsum                                )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'                  )
-         call chkout ( 'DAFONW'                                   )
          return
 
       end if
@@ -2367,7 +2335,6 @@
                        'number (#) of records.'                        )
          call errint ( '#', resv                                       )
          call sigerr ( 'SPICE(DAFNORESV)'                              )
-         call chkout ( 'DAFONW'                                        )
          return
 
       end if
@@ -2380,10 +2347,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFONW' )
-         return
-      end if
+      if ( failed() ) return
 
       ifn    = ifname
       fnd    = nd
@@ -2403,10 +2367,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFONW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the system file format.
@@ -2431,10 +2392,7 @@
 !     the file record to the logical unit.  In the event an error
 !     occurs, checkout and return.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFONW' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Write NULL filled reserved records.
@@ -2466,7 +2424,6 @@
                call errch  ( '#', fname                                )
                call errint ( '#', iostat                               )
                call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
-               call chkout ( 'DAFONW'                                  )
                return
 
             end if
@@ -2485,7 +2442,6 @@
          call errch    ( '#', fname                                )
          call errint   ( '#', iostat                               )
          call sigerr   ( 'SPICE(DAFWRITEFAIL)'                     )
-         call chkout   ( 'DAFONW'                                  )
          return
 
       end if
@@ -2500,7 +2456,6 @@
          call errch    ( '#', fname                                )
          call errint   ( '#', iostat                               )
          call sigerr   ( 'SPICE(DAFWRITEFAIL)'                     )
-         call chkout   ( 'DAFONW'                                  )
          return
 
       end if
@@ -2520,7 +2475,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DAFONW' )
       return
 
 
@@ -2833,11 +2787,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFOPN' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -2857,7 +2807,6 @@
          call errint ( '#', ftsize                                     )
          call errch  ( '#', fname                                      )
          call sigerr ( 'SPICE(DAFFTFULL)'                              )
-         call chkout ( 'DAFOPN'                                        )
          return
 
       end if
@@ -2871,7 +2820,6 @@
          call errint ( '#', nd                               )
          call errint ( '#', maxnd                            )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
-         call chkout ( 'DAFOPN'                              )
          return
 
       end if
@@ -2882,7 +2830,6 @@
          call errint ( '#', ni                               )
          call errint ( '#', maxni                            )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
-         call chkout ( 'DAFOPN'                              )
          return
 
       end if
@@ -2893,7 +2840,6 @@
          call errint ( '#', nd + (ni+1)/2                         )
          call errint ( '#', maxsum                                )
          call sigerr ( 'SPICE(DAFINVALIDPARAMS)'                  )
-         call chkout ( 'DAFOPN'                                   )
          return
 
       end if
@@ -2907,7 +2853,6 @@
                        'number (#) of records.'                        )
          call errint ( '#', resv                                       )
          call sigerr ( 'SPICE(DAFNORESV)'                              )
-         call chkout ( 'DAFOPN'                                        )
          return
 
       end if
@@ -2920,10 +2865,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFOPN' )
-         return
-      end if
+      if ( failed() ) return
 
       ifn    = ifname
       fnd    = nd
@@ -2943,10 +2885,7 @@
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      if ( failed() ) then
-         call chkout( 'DAFOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the system file format.
@@ -2970,10 +2909,7 @@
 !     the file record to the logical unit.  In the event an error
 !     occurs, checkout and return.
 !
-      if ( failed() ) then
-         call chkout ( 'DAFOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Write NULL filled reserved records.
@@ -2997,7 +2933,6 @@
                call errch  ( '#', fname                                )
                call errint ( '#', iostat                               )
                call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
-               call chkout ( 'DAFOPN'                                  )
                return
 
             end if
@@ -3017,7 +2952,6 @@
          call errch  ( '#', fname                                )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
-         call chkout ( 'DAFOPN'                                  )
          return
 
       end if
@@ -3033,7 +2967,6 @@
          call errch  ( '#', fname                                )
          call errint ( '#', iostat                               )
          call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
-         call chkout ( 'DAFOPN'                                  )
          return
 
       end if
@@ -3053,7 +2986,6 @@
 !
       call insrti ( handle, fhlist )
 
-      call chkout ( 'DAFOPN' )
       return
 
 
@@ -3411,11 +3343,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFCLS' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -3460,7 +3388,6 @@
 
       end if
 
-      call chkout ( 'DAFCLS' )
       return
 
 
@@ -3731,11 +3658,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFHSF' )
-      end if
+      if ( return () ) return
 
       findex = isrchi ( handle, nft, fthan )
 
@@ -3752,7 +3675,6 @@
 
       end if
 
-      call chkout ( 'DAFHSF' )
       return
 
 
@@ -3962,15 +3884,10 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFHLU' )
-      end if
+      if ( return () ) return
 
       call zzddhhlu ( handle, 'DAF', .true., unit )
 
-      call chkout ( 'DAFHLU' )
       return
 
 
@@ -4143,11 +4060,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFLUH' )
-      end if
+      if ( return () ) return
 
       call zzddhluh ( unit, handle, found )
 
@@ -4156,7 +4069,6 @@
          call setmsg ( 'There is no file open with unit = #' )
          call errint ( '#', unit                             )
          call sigerr ( 'SPICE(DAFNOSUCHUNIT)'                )
-         call chkout ( 'DAFLUH'                              )
          return
       end if
 
@@ -4172,11 +4084,9 @@
          call errfnm ( '#', unit                               )
          call errint ( '#', unit                               )
          call sigerr ( 'SPICE(DAFNOSUCHUNIT)'                  )
-         call chkout ( 'DAFLUH'                                )
          return
       end if
 
-      call chkout ( 'DAFLUH' )
       return
 
 
@@ -4368,11 +4278,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFHFN' )
-      end if
+      if ( return () ) return
 
       call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
@@ -4380,13 +4286,11 @@
          call setmsg ( 'There is no file open with handle = #' )
          call errint ( '#', handle                             )
          call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
-         call chkout ( 'DAFHFN'                                )
          return
       end if
 
       fname = dafnam
 
-      call chkout ( 'DAFHFN' )
       return
 
 
@@ -4610,11 +4514,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFFNH' )
-      end if
+      if ( return () ) return
 
       call zzddhfnh ( fname, handle, found )
 
@@ -4624,7 +4524,6 @@
                        'file name = ''#'''                          )
          call errch  ( '#', fname                                   )
          call sigerr ( 'SPICE(DAFNOSUCHFILE)'                       )
-         call chkout ( 'DAFFNH'                                     )
          return
       end if
 
@@ -4638,11 +4537,9 @@
          call setmsg ( 'The file, ''#'', is not a DAF.' )
          call errch  ( '#', fname                       )
          call sigerr ( 'SPICE(DAFNOSUCHFILE)'           )
-         call chkout ( 'DAFFNH'                         )
          return
       end if
 
-      call chkout ( 'DAFFNH' )
       return
 
 
@@ -4812,11 +4709,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFHOF' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -4833,7 +4726,6 @@
 !
       call copyi ( fhlist, fhset )
 
-      call chkout ( 'DAFHOF' )
       return
 
 
@@ -5087,11 +4979,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFSIH' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the handle list, if necessary.
@@ -5117,7 +5005,6 @@
          call setmsg ( 'Unrecognized access type.  Type was #. ' )
          call errch  ( '#', access                               )
          call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-         call chkout ( 'DAFSIH'                                  )
          return
 
       end if
@@ -5138,7 +5025,6 @@
          call setmsg ( 'There is no file open with handle = #' )
          call errint ( '#', handle                             )
          call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
-         call chkout ( 'DAFSIH'                                )
          return
 
 !
@@ -5153,7 +5039,6 @@
          call errint ( '#', handle                               )
          call errch  ( '#', dafnam                               )
          call sigerr ( 'SPICE(DAFINVALIDACCESS)'                 )
-         call chkout ( 'DAFSIH'                                  )
          return
 
       end if
@@ -5161,6 +5046,5 @@
 !
 !     The DAF's handle is o.k.
 !
-      call chkout ( 'DAFSIH' )
       return
       end

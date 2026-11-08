@@ -163,23 +163,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASDC' )
-      end if
+      if ( return () ) return
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASDC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Read the file record to obtain the current number of comment
 !     records in the DAS file attached to HANDLE. We will also get
@@ -190,12 +181,7 @@
                     nresvr, nresvc, &
                     ncomr,  ncomc   )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASDC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
@@ -204,12 +190,7 @@
 
          call dasrcr ( handle, ncomr )
 
-         if ( failed() ) then
-
-            call chkout ( 'DASDC' )
-            return
-
-         end if
+         if ( failed() ) return
 !
 !        Now we need to update the DAS file record.
 !
@@ -221,12 +202,7 @@
                        nresvr, nresvc, &
                        ncomr,  ncomc   )
 
-         if ( failed() ) then
-
-            call chkout ( 'DASDC' )
-            return
-
-         end if
+         if ( failed() ) return
 !
 !        Zero out the number of comment characters, and write the
 !        updated file record to the file.
@@ -238,17 +214,11 @@
                        nresvr, nresvc, &
                        ncomr,  ncomc   )
 
-         if ( failed() ) then
-
-            call chkout ( 'DASDC' )
-            return
-
-         end if
+         if ( failed() ) return
 
       end if
 !
 !     We're done now, so goodbye.
 !
-      call chkout ( 'DASDC' )
       return
       end

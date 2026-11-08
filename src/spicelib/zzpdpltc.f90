@@ -202,11 +202,8 @@
 !
       zzpdpltc = .false.
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZPDPLTC' )
 
 
 !
@@ -217,7 +214,6 @@
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-          call chkout ( 'ZZPDPLTC'                 )
           return
 
       end if
@@ -233,7 +229,6 @@
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-          call chkout ( 'ZZPDPLTC'                       )
           return
 
       end if
@@ -317,10 +312,7 @@
 !
             call zzelnaxx ( a, b, lat, xxpt, yxpt )
 
-            if ( failed() ) then
-               call chkout ( 'ZZPDPLTC' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           We check the point's distance from the Z axis. This can be
@@ -346,6 +338,5 @@
       end if
 
 
-      call chkout ( 'ZZPDPLTC' )
       return
       end

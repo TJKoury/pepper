@@ -321,16 +321,11 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'TXTOPN' )
-      end if
+      if ( return () ) return
 
       if ( fname == ' ' ) then
          call setmsg ( 'A blank string is unacceptable as a file name' )
          call sigerr ( 'SPICE(BLANKFILENAME)'                          )
-         call chkout ( 'TXTOPN'                                        )
          return
       end if
 
@@ -348,10 +343,8 @@
          call errch  ( '#', fname                              )
          call errint ( '#', iostat                             )
          call sigerr ( 'SPICE(FILEOPENFAILED)'                 )
-         call chkout ( 'TXTOPN'                                )
          return
       end if
 
-      call chkout ( 'TXTOPN' )
       return
       end

@@ -418,11 +418,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKGR03' )
-      end if
+      if ( return () ) return
 
 !
 !     The unpacked descriptor contains the following information
@@ -453,7 +449,6 @@
                        'descriptor shows type = #.'                    )
          call errint ( '#', icd( 3 )                                   )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
-         call chkout ( 'CKGR03'                                        )
          return
       end if
 
@@ -482,7 +477,6 @@
          call errint ( '#', recno                                      )
          call errint ( '#', nrec                                       )
          call sigerr ( 'SPICE(CKNONEXISTREC)'                          )
-         call chkout ( 'CKGR03'                                        )
          return
       end if
 
@@ -502,6 +496,5 @@
 
       call dafgda ( handle, addr, addr, record( 1 ) )
 
-      call chkout ( 'CKGR03' )
       return
       end

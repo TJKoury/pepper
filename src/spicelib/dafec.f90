@@ -702,11 +702,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFEC' )
-      end if
+      if ( return () ) return
 !
 !     If this is the first time that this routine has been called,
 !     we need to initialize the character value of the end-of-line
@@ -738,12 +734,7 @@
 !
       call dafsih ( handle, 'READ' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFEC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check for a nonpositive BUFFER size.
 !
@@ -752,7 +743,6 @@
          call setmsg ( 'The output buffer size was not positive: #.' )
          call errint ( '#', bufsiz                                   )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
-         call chkout ( 'DAFEC'                                       )
          return
 
       end if
@@ -762,10 +752,7 @@
 !
       call zzddhhlu ( handle, 'DAF', .false., daflun )
 
-      if ( failed() ) then
-         call chkout ( 'DAFEC' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Get the length of a single character string in the buffer.
 !
@@ -809,12 +796,7 @@
 !
          call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-         if ( failed() ) then
-
-            call chkout ( 'DAFEC' )
-            return
-
-         end if
+         if ( failed() ) return
 !
 !        Compute the number of comment records and the number of
 !        comment characters. In order to perform these calculations,
@@ -846,7 +828,6 @@
                   call errfnm ( '#', daflun                      )
                   call errint ( '#', iostat                      )
                   call sigerr ( 'SPICE(FILEREADFAILED)'          )
-                  call chkout ( 'DAFEC'                          )
                   return
 
                end if
@@ -888,7 +869,6 @@
                              ' the comments could not be found.'   )
                call errfnm ( '#', daflun                           )
                call sigerr ( 'SPICE(BADCOMMENTAREA)'               )
-               call chkout ( 'DAFEC'                               )
                return
 
             else if ( found ) then
@@ -915,7 +895,6 @@
 
             n    = 0
             done = .true.
-            call chkout ( 'DAFEC' )
             return
 
          end if
@@ -946,7 +925,6 @@
             call errint ( '*', iostat                             )
             call errfnm ( 'FILE', daflun                          )
             call sigerr ( 'SPICE(FILEREADFAILED)'                 )
-            call chkout ( 'DAFEC'                                 )
             return
 
          end if
@@ -996,7 +974,6 @@
                   call errint ( '#', linlen                           )
                   call errint ( '#', i                                )
                   call sigerr ( 'SPICE(COMMENTTOOLONG)'               )
-                  call chkout ( 'DAFEC'                               )
                   return
 
                end if
@@ -1020,7 +997,6 @@
                   call errfnm ( '#', daflun                       )
                   call errint ( '#', iostat                       )
                   call sigerr ( 'SPICE(FILEREADFAILED)'           )
-                  call chkout ( 'DAFEC'                           )
                   return
 
                end if
@@ -1047,7 +1023,6 @@
                call errint ( '#',ncomc                              )
                call errfnm ( '#',daflun                             )
                call sigerr ( 'SPICE(BADCOMMENTAREA)'                )
-               call chkout ( 'DAFEC'                                )
                return
 
             end if
@@ -1129,7 +1104,6 @@
                              ' and another file could not be added.'  )
                call errint ( '#',ftsize                               )
                call sigerr ( 'SPICE(FILETABLEFULL)'                   )
-               call chkout ( 'DAFEC'                                  )
                return
 
             end if
@@ -1156,6 +1130,5 @@
 
       end if
 
-      call chkout ( 'DAFEC' )
       return
       end

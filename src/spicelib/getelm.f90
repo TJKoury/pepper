@@ -730,11 +730,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GETELM' )
 
 !
 !     Pass the input to the parse routine...
@@ -750,11 +747,9 @@
          call setmsg ( 'Error in TLE set. #' )
          call errch  ( '#', error  )
          call sigerr ( 'SPICE(BADTLE)' )
-         call chkout ( 'GETELM' )
          return
 
       end if
 
-      call chkout ( 'GETELM' )
       return
       end

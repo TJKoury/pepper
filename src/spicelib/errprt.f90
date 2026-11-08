@@ -316,7 +316,6 @@
 !     Executable Code:
 !
 
-      call chkin ( 'ERRPRT' )
 
 !
 !     We first initialize the message selection flags to
@@ -501,6 +500,5 @@
 
       end if
 
-      call chkout ( 'ERRPRT' )
       return
       end

@@ -244,11 +244,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DASAC' )
-      end if
+      if ( return () ) return
 !
 !     The lines of text in BUFFER will be ``packed'' into DAS comment
 !     records: the significant portion of each comment line from BUFFER
@@ -273,24 +269,14 @@
 !
       call dassih ( handle, 'WRITE' )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASAC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Convert the DAS file handle to its corresponding Fortran logical
 !     unit number for reading and writing comment records.
 !
       call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASAC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
@@ -301,7 +287,6 @@
          call errfnm ( '#', daslun                                    )
          call errint ( '#', n                                         )
          call sigerr ( 'SPICE(INVALIDARGUMENT)'                       )
-         call chkout ( 'DASAC'                                        )
          return
 
       end if
@@ -337,7 +322,6 @@
                                 ' buffer. Value: #'                 )
                   call errint ( '#', ichar( buffer(i)(j:j) )        )
                   call sigerr ( 'SPICE(ILLEGALCHARACTER)'           )
-                  call chkout ( 'DASAC'                             )
                   return
 
             end if
@@ -368,12 +352,7 @@
                     nresvr, nresvc, &
                     ncomr,  ncomc   )
 
-      if ( failed() ) then
-
-         call chkout ( 'DASAC' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Determine the amount of free space in the comment area. If
 !     there are some comment records allocated, the space available
@@ -416,10 +395,7 @@
 
          call dasacr ( handle, newrec )
 
-         if ( failed() ) then
-            call chkout ( 'DASAC' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Update the value for the number of comment records to include
@@ -470,10 +446,7 @@
 
          call dasioc ( 'READ', daslun, recno, crecrd )
 
-         if ( failed() ) then
-            call chkout ( 'DASAC' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 !
@@ -500,10 +473,7 @@
 
                call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-               if ( failed() ) then
-                  call chkout ( 'DASAC' )
-                  return
-               end if
+               if ( failed() ) return
 
                recno  = recno + 1
                curpos = 1
@@ -527,10 +497,7 @@
 
             call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-            if ( failed() ) then
-               call chkout ( 'DASAC' )
-               return
-            end if
+            if ( failed() ) return
 
             recno  = recno + 1
             curpos = 1
@@ -553,10 +520,7 @@
 !
       call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-      if ( failed() ) then
-         call chkout ( 'DASAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     And finally, we need to update the number of comment characters
@@ -573,6 +537,5 @@
 !     the calling routine to catch an error that may occur during
 !     the call to DASWFR.
 !
-      call chkout ( 'DASAC' )
       return
       end

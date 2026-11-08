@@ -1159,17 +1159,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ILUMIN' )
 
       call illumg ( method,  target,  '10',    et, &
                     fixref,  abcorr,  obsrvr,  spoint, &
                     trgepc,  srfvec,  phase,   incdnc,  emissn )
 
 
-      call chkout ( 'ILUMIN' )
       return
       end

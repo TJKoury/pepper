@@ -279,11 +279,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'PJELPL' )
-      end if
+      if ( return () ) return
 
 !
 !     Find generating vectors of the input ellipse.
@@ -360,6 +356,5 @@
 !
       call cgv2el ( prjctr, prjvc1, prjvc2, elout )
 
-      call chkout ( 'PJELPL' )
       return
       end

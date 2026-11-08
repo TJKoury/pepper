@@ -183,9 +183,7 @@
                             'PTMEMM', 'ANGMRG', 'LONALI' &
                                    /
 
-      call chkin  ( 'DSKTOL' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'DSKTOL' )
       return
 
 
@@ -349,12 +347,10 @@
 !
       if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 
-         call chkin  ( 'DSKGTL'                                     )
          call setmsg ( 'Valid keyword range is 1:#; keyword was #.' )
          call errint ( '#', ndspar                                  )
          call errint ( '#', keywrd                                  )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                     )
-         call chkout ( 'DSKGTL'                                     )
          return
 
       end if
@@ -550,11 +546,8 @@
 !-&
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin  ( 'DSKSTL' )
 
 
       if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
@@ -563,7 +556,6 @@
          call errint ( '#', ndspar                                  )
          call errint ( '#', keywrd                                  )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                     )
-         call chkout ( 'DSKSTL'                                     )
          return
 
       end if
@@ -573,7 +565,6 @@
          call setmsg ( 'The parameter # cannot be modified.' )
          call errch  ( '#', names(keywrd)                    )
          call sigerr ( 'SPICE(IMMUTABLEVALUE)'               )
-         call chkout ( 'DSKSTL'                              )
          return
 
       end if
@@ -585,6 +576,5 @@
 !
       dppars(keywrd) = dpval
 
-      call chkout ( 'DSKSTL' )
       return
       end

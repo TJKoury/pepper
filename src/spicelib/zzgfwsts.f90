@@ -183,11 +183,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGFWSTS')
 
 !
 !     Store the maximum number of endpoints that can be loaded into
@@ -233,7 +230,6 @@
          //            'supplied was ''#''. ' )
          call errch  ( '#', inclsn )
          call sigerr ( 'SPICE(UNKNOWNINCLUSION)'  )
-         call chkout ( 'ZZGFWSTS' )
          return
 
       end if
@@ -363,6 +359,5 @@
 
       end if
 
-      call chkout ( 'ZZGFWSTS' )
       return
       end

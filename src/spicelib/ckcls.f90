@@ -331,11 +331,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'CKCLS' )
 
 !
 !     Get the access method for the file. Currently, if HANDLE < 0, the
@@ -363,10 +360,7 @@
          call dafbfs ( handle )
          call daffna ( found )
 
-         if ( failed () ) then
-            call chkout ( 'CKCLS' )
-            return
-         end if
+         if ( failed () ) return
 
          if ( .not. found ) then
 
@@ -376,7 +370,6 @@
             //            ' called.'                                   )
             call errhan ( '#', handle                                  )
             call sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
-            call chkout ( 'CKCLS'                                      )
             return
 
          end if
@@ -390,7 +383,6 @@
 !     No need to check FAILED() here, since we just return. The caller
 !     should check it though.
 !
-      call chkout ( 'CKCLS' )
       return
 
       end

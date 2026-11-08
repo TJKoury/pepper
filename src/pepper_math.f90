@@ -28,6 +28,10 @@ contains
 
 !$Procedure APPROX ( Approximate equality )
 
+      !> Return .TRUE. if two double precision numbers are equal to
+      !> within some tolerance.
+      !>
+      !> The function is .TRUE. whenever |X - Y| <= TOL.
       elemental logical function approx ( x, y, tol )
       use pepper_kinds, only: wp
 
@@ -49,20 +53,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      real(wp), intent(in) :: y
-      real(wp), intent(in) :: tol
+      real(wp), intent(in) :: x  !! Double precision numbers.
+      real(wp), intent(in) :: y  !! Double precision numbers.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X,
-!     Y          I   Double precision numbers.
-!     TOL        I   Tolerance.
-!
-!     The function is .TRUE. whenever |X - Y| <= TOL.
-!
 ! $ Detailed_Input
 !
 !     X,
@@ -157,6 +151,8 @@ contains
 
 !$Procedure AXISAR ( Axis and angle to rotation )
 
+      !> Construct a rotation matrix that rotates vectors by a specified
+      !> angle about a specified axis.
       pure subroutine axisar ( axis, angle, r )
       use pepper_kinds, only: ip, wp
 
@@ -178,18 +174,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: axis  ( 3 )
-      real(wp), intent(in) :: angle
-      real(wp), intent(out) :: r     ( 3, 3 )
+      real(wp), intent(in) :: axis  ( 3 )  !! Rotation axis.
+      real(wp), intent(in) :: angle  !! Rotation angle, in radians.
+      real(wp), intent(out) :: r     ( 3, 3 )  !! Rotation matrix corresponding to AXIS and ANGLE.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     AXIS       I   Rotation axis.
-!     ANGLE      I   Rotation angle, in radians.
-!     R          O   Rotation matrix corresponding to AXIS and ANGLE.
-!
 ! $ Detailed_Input
 !
 !     AXIS,
@@ -532,6 +520,8 @@ contains
 
 !$Procedure AZLREC ( AZ/EL to rectangular coordinates )
 
+      !> Convert from range, azimuth and elevation of a point to
+      !> rectangular coordinates.
       pure subroutine azlrec ( range, az, el, azccw, elplsz, rectan )
       use pepper_kinds, only: wp
 
@@ -553,24 +543,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: range
-      real(wp), intent(in) :: az
-      real(wp), intent(in) :: el
-      logical, intent(in) :: azccw
-      logical, intent(in) :: elplsz
-      real(wp), intent(out) :: rectan ( 3 )
+      real(wp), intent(in) :: range  !! Distance of the point from the origin.
+      real(wp), intent(in) :: az  !! Azimuth in radians.
+      real(wp), intent(in) :: el  !! Elevation in radians.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of a point.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RANGE      I   Distance of the point from the origin.
-!     AZ         I   Azimuth in radians.
-!     EL         I   Elevation in radians.
-!     AZCCW      I   Flag indicating how azimuth is measured.
-!     ELPLSZ     I   Flag indicating how elevation is measured.
-!     RECTAN     O   Rectangular coordinates of a point.
-!
 ! $ Detailed_Input
 !
 !     RANGE    is the distance of the point from the origin. The
@@ -1183,6 +1162,12 @@ contains
 
 !$Procedure BRCKTD ( Bracket a d.p. value within an interval )
 
+      !> Bracket a double precision number. That is, given a number and an
+      !> acceptable interval, make sure that the number is contained in the
+      !> interval. (If the number is already in the interval, leave it
+      !> alone. If not, set it to the nearest endpoint of the interval.)
+      !>
+      !> The function returns the bracketed number.
       elemental real(wp) function brcktd ( number, end1, end2 )
       use pepper_kinds, only: wp
 
@@ -1207,20 +1192,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: number
-      real(wp), intent(in) :: end1
-      real(wp), intent(in) :: end2
+      real(wp), intent(in) :: number  !! Number to be bracketed.
+      real(wp), intent(in) :: end1  !! One of the bracketing endpoints for NUMBER.
+      real(wp), intent(in) :: end2  !! The other bracketing endpoint for NUMBER.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NUMBER     I   Number to be bracketed.
-!     END1       I   One of the bracketing endpoints for NUMBER.
-!     END2       I   The other bracketing endpoint for NUMBER.
-!
-!     The function returns the bracketed number.
-!
 ! $ Detailed_Input
 !
 !     NUMBER   is the number to be bracketed. That is, the
@@ -1489,6 +1464,12 @@ contains
 
 !$Procedure BRCKTI ( Bracket an integer value within an interval )
 
+      !> Bracket an integer number. That is, given a number and an
+      !> acceptable interval, make sure that the number is contained in the
+      !> interval. (If the number is already in the interval, leave it
+      !> alone. If not, set it to the nearest endpoint of the interval.)
+      !>
+      !> The function returns the bracketed number.
       elemental integer(ip)  function brckti ( number, end1, end2 )
       use pepper_kinds, only: ip
 
@@ -1513,20 +1494,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: number
-      integer(ip), intent(in) :: end1
-      integer(ip), intent(in) :: end2
+      integer(ip), intent(in) :: number  !! Number to be bracketed.
+      integer(ip), intent(in) :: end1  !! One of the bracketing endpoints for NUMBER.
+      integer(ip), intent(in) :: end2  !! The other bracketing endpoint for NUMBER.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NUMBER     I   Number to be bracketed.
-!     END1       I   One of the bracketing endpoints for NUMBER.
-!     END2       I   The other bracketing endpoint for NUMBER.
-!
-!     The function returns the bracketed number.
-!
 ! $ Detailed_Input
 !
 !     NUMBER   is the number to be bracketed. That is, the
@@ -1792,6 +1763,9 @@ contains
 
 !$Procedure CHBDER ( Derivatives of a Chebyshev expansion )
 
+      !> Return the value of a polynomial and its first NDERIV
+      !> derivatives, evaluated at the input X, using the coefficients of
+      !> the Chebyshev expansion of the polynomial.
       pure subroutine chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
       use pepper_kinds, only: ip, wp
 
@@ -1815,26 +1789,14 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: cp     (      * )
-      integer(ip), intent(in) :: degp
-      real(wp), intent(in) :: x2s    (      2 )
-      real(wp), intent(in) :: x
-      integer(ip), intent(in) :: nderiv
-      real(wp), intent(inout) :: partdp ( 3, 0:* )
-      real(wp), intent(out) :: dpdxs  (    0:* )
+      real(wp), intent(in) :: cp     (      * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip), intent(in) :: degp  !! Degree of polynomial.
+      real(wp), intent(in) :: x2s    (      2 )  !! Transformation parameters of polynomial.
+      real(wp), intent(in) :: x  !! Value for which the polynomial is to be evaluated.
+      integer(ip), intent(in) :: nderiv  !! The number of derivatives to compute.
+      real(wp), intent(inout) :: partdp ( 3, 0:* )  !! Workspace provided for computing derivatives.
+      real(wp), intent(out) :: dpdxs  (    0:* )  !! Array of the derivatives of the polynomial.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     CP         I   DEGP+1 Chebyshev polynomial coefficients.
-!     DEGP       I   Degree of polynomial.
-!     X2S        I   Transformation parameters of polynomial.
-!     X          I   Value for which the polynomial is to be evaluated.
-!     NDERIV     I   The number of derivatives to compute.
-!     PARTDP    I-O  Workspace provided for computing derivatives.
-!     DPDXS      O   Array of the derivatives of the polynomial.
-!
 ! $ Detailed_Input
 !
 !     CP       is an array of coefficients a polynomial with respect
@@ -2237,6 +2199,9 @@ contains
 
 !$Procedure CHBINT ( Interpolate a Chebyshev expansion )
 
+      !> Return the value of a polynomial and its derivative, evaluated at
+      !> the input X, using the coefficients of the Chebyshev expansion of
+      !> the polynomial.
       pure subroutine chbint ( cp, degp, x2s, x, p, dpdx )
       use pepper_kinds, only: ip, wp
 
@@ -2260,24 +2225,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: cp  ( * )
-      integer(ip), intent(in) :: degp
-      real(wp), intent(in) :: x2s ( 2 )
-      real(wp), intent(in) :: x
-      real(wp), intent(out) :: p
-      real(wp), intent(out) :: dpdx
+      real(wp), intent(in) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip), intent(in) :: degp  !! Degree of polynomial.
+      real(wp), intent(in) :: x2s ( 2 )  !! Transformation parameters of polynomial.
+      real(wp), intent(in) :: x  !! Value for which the polynomial is to be evaluated
+      real(wp), intent(out) :: p  !! Value of the polynomial at X
+      real(wp), intent(out) :: dpdx  !! Value of the derivative of the polynomial at X
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     CP         I   DEGP+1 Chebyshev polynomial coefficients.
-!     DEGP       I   Degree of polynomial.
-!     X2S        I   Transformation parameters of polynomial.
-!     X          I   Value for which the polynomial is to be evaluated
-!     P          O   Value of the polynomial at X
-!     DPDX       O   Value of the derivative of the polynomial at X
-!
 ! $ Detailed_Input
 !
 !     CP       is an array of coefficients of a polynomial with
@@ -2588,6 +2542,8 @@ contains
 
 !$Procedure CHBVAL ( Value of a Chebyshev polynomial expansion )
 
+      !> Return the value of a polynomial evaluated at the input X using
+      !> the coefficients for the Chebyshev expansion of the polynomial.
       pure subroutine chbval ( cp, degp, x2s, x, p )
       use pepper_kinds, only: ip, wp
 
@@ -2610,22 +2566,12 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: cp  ( * )
-      integer(ip), intent(in) :: degp
-      real(wp), intent(in) :: x2s ( 2 )
-      real(wp), intent(in) :: x
-      real(wp), intent(out) :: p
+      real(wp), intent(in) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip), intent(in) :: degp  !! Degree of polynomial.
+      real(wp), intent(in) :: x2s ( 2 )  !! Transformation parameters of polynomial.
+      real(wp), intent(in) :: x  !! Value for which the polynomial is to be evaluated.
+      real(wp), intent(out) :: p  !! Value of the polynomial at X.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     CP         I   DEGP+1 Chebyshev polynomial coefficients.
-!     DEGP       I   Degree of polynomial.
-!     X2S        I   Transformation parameters of polynomial.
-!     X          I   Value for which the polynomial is to be evaluated.
-!     P          O   Value of the polynomial at X.
-!
 ! $ Detailed_Input
 !
 !     CP       is an array of coefficients a polynomial with respect
@@ -2894,6 +2840,7 @@ contains
 
 !$Procedure CYLLAT ( Cylindrical to latitudinal )
 
+      !> Convert from cylindrical to latitudinal coordinates.
       elemental subroutine cyllat ( r, clon, z,  radius, lon, lat )
       use pepper_kinds, only: wp
 
@@ -2914,24 +2861,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: clon
-      real(wp), intent(in) :: z
-      real(wp), intent(out) :: radius
-      real(wp), intent(out) :: lon
-      real(wp), intent(out) :: lat
+      real(wp), intent(in) :: r  !! Distance of point from Z axis.
+      real(wp), intent(in) :: clon  !! Cylindrical angle of point from XZ plane(radians).
+      real(wp), intent(in) :: z  !! Height of point above XY plane.
+      real(wp), intent(out) :: radius  !! Distance of point from origin.
+      real(wp), intent(out) :: lon  !! Longitude of point (radians).
+      real(wp), intent(out) :: lat  !! Latitude of point (radians).
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of point from Z axis.
-!     CLON       I   Cylindrical angle of point from XZ plane(radians).
-!     Z          I   Height of point above XY plane.
-!     RADIUS     O   Distance of point from origin.
-!     LON        O   Longitude of point (radians).
-!     LAT        O   Latitude of point (radians).
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the input point from Z axis.
@@ -3339,6 +3275,7 @@ contains
 
 !$Procedure CYLREC ( Cylindrical to rectangular )
 
+      !> Convert from cylindrical to rectangular coordinates.
       pure subroutine cylrec ( r, clon, z,  rectan )
       use pepper_kinds, only: wp
 
@@ -3359,20 +3296,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: clon
-      real(wp), intent(in) :: z
-      real(wp), intent(out) :: rectan ( 3 )
+      real(wp), intent(in) :: r  !! Distance of a point from Z axis.
+      real(wp), intent(in) :: clon  !! Angle (radians) of a point from XZ plane
+      real(wp), intent(in) :: z  !! Height of a point above XY plane.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     R          I   Distance of a point from Z axis.
-!     CLON       I   Angle (radians) of a point from XZ plane
-!     Z          I   Height of a point above XY plane.
-!     RECTAN     O   Rectangular coordinates of the point.
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the point of interest from Z-axis.
@@ -3717,6 +3645,7 @@ contains
 
 !$Procedure CYLSPH ( Cylindrical to spherical )
 
+      !> Convert from cylindrical to spherical coordinates.
       elemental subroutine cylsph ( r, clon, z,  radius, colat, slon )
       use pepper_kinds, only: wp
 
@@ -3737,24 +3666,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: clon
-      real(wp), intent(in) :: z
-      real(wp), intent(out) :: radius
-      real(wp), intent(out) :: colat
-      real(wp), intent(out) :: slon
+      real(wp), intent(in) :: r  !! Distance of point from Z axis.
+      real(wp), intent(in) :: clon  !! Angle (radians) of point from XZ plane.
+      real(wp), intent(in) :: z  !! Height of point above XY plane.
+      real(wp), intent(out) :: radius  !! Distance of point from origin.
+      real(wp), intent(out) :: colat  !! Polar angle (co-latitude in radians) of point.
+      real(wp), intent(out) :: slon  !! Azimuthal angle (longitude) of point (radians).
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     R          I   Distance of point from Z axis.
-!     CLON       I   Angle (radians) of point from XZ plane.
-!     Z          I   Height of point above XY plane.
-!     RADIUS     O   Distance of point from origin.
-!     COLAT      O   Polar angle (co-latitude in radians) of point.
-!     SLON       O   Azimuthal angle (longitude) of point (radians).
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the point of interest from Z axis.
@@ -4163,6 +4081,9 @@ contains
 
 !$Procedure DCBRT ( Double precision cube root )
 
+      !> Return the cube root of a double precision number.
+      !>
+      !> The function returns the cube root of the input value.
       elemental real(wp) function  dcbrt ( x )
       use pepper_kinds, only: wp
 
@@ -4183,16 +4104,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
+      real(wp), intent(in) :: x  !! Number whose cube root is desired.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I     Number whose cube root is desired.
-!
-!     The function returns the cube root of the input value.
-!
 ! $ Detailed_Input
 !
 !     X        is a double precision value.
@@ -4284,6 +4197,10 @@ contains
 
 !$Procedure DET  ( Determinant of a double precision 3x3 matrix )
 
+      !> Compute the determinant of a double precision 3x3 matrix.
+      !>
+      !> The function returns the value of the determinant found by direct
+      !> application of the definition of the determinant.
       pure real(wp) function  det ( m1 )
       use pepper_kinds, only: wp
 
@@ -4304,17 +4221,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1 ( 3,3 )
+      real(wp), intent(in) :: m1 ( 3,3 )  !! Matrix whose determinant is to be found.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Matrix whose determinant is to be found.
-!
-!     The function returns the value of the determinant found by direct
-!     application of the definition of the determinant.
-!
 ! $ Detailed_Input
 !
 !     M1       is any double precision, 3x3 matrix.
@@ -4453,6 +4361,8 @@ contains
 
 !$Procedure DRDCYL (Derivative of rectangular w.r.t. cylindrical)
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> cylindrical to rectangular coordinates.
       pure subroutine drdcyl ( r, clon, z, jacobi )
       use pepper_kinds, only: ip, wp
 
@@ -4475,20 +4385,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: clon
-      real(wp), intent(in) :: z
-      real(wp), intent(out) :: jacobi ( 3, 3 )
+      real(wp), intent(in) :: r  !! Distance of a point from the origin.
+      real(wp), intent(in) :: clon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(in) :: z  !! Height of the point above the XY plane.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of a point from the origin.
-!     CLON       I   Angle of the point from the XZ plane in radians.
-!     Z          I   Height of the point above the XY plane.
-!     JACOBI     O   Matrix of partial derivatives.
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the point of interest from Z-axis.
@@ -4840,6 +4741,8 @@ contains
 
 !$Procedure DRDLAT ( Derivative of rectangular w.r.t. latitudinal )
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> latitudinal to rectangular coordinates.
       pure subroutine drdlat ( r, lon, lat, jacobi )
       use pepper_kinds, only: ip, wp
 
@@ -4862,20 +4765,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: lon
-      real(wp), intent(in) :: lat
-      real(wp), intent(out) :: jacobi ( 3, 3 )
+      real(wp), intent(in) :: r  !! Distance of a point from the origin.
+      real(wp), intent(in) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(in) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of a point from the origin.
-!     LON        I   Angle of the point from the XZ plane in radians.
-!     LAT        I   Angle of the point from the XY plane in radians.
-!     JACOBI     O   Matrix of partial derivatives.
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of a point from the origin.
@@ -5231,6 +5125,8 @@ contains
 
 !$Procedure DRDSPH ( Derivative of rectangular w.r.t. spherical )
 
+      !> Compute the Jacobian matrix of the transformation from spherical
+      !> to rectangular coordinates.
       pure subroutine drdsph ( r, colat, slon, jacobi )
       use pepper_kinds, only: ip, wp
 
@@ -5253,20 +5149,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: colat
-      real(wp), intent(in) :: slon
-      real(wp), intent(out) :: jacobi ( 3, 3 )
+      real(wp), intent(in) :: r  !! Distance of a point from the origin.
+      real(wp), intent(in) :: colat  !! Angle of the point from the positive Z-axis.
+      real(wp), intent(in) :: slon  !! Angle of the point from the XY plane.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of a point from the origin.
-!     COLAT      I   Angle of the point from the positive Z-axis.
-!     SLON       I   Angle of the point from the XY plane.
-!     JACOBI     O   Matrix of partial derivatives.
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of a point from the origin.
@@ -5635,6 +5522,8 @@ contains
 
 !$Procedure DUCRSS ( Unit Normalized Cross Product and Derivative )
 
+      !> Compute the unit vector parallel to the cross product of
+      !> two 3-dimensional vectors and the derivative of this unit vector.
       pure subroutine ducrss ( s1, s2, sout )
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
@@ -5657,18 +5546,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s1   ( 6 )
-      real(wp), intent(in) :: s2   ( 6 )
-      real(wp), intent(out) :: sout ( 6 )
+      real(wp), intent(in) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
+      real(wp), intent(in) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
+      real(wp), intent(out) :: sout ( 6 )  !! Unit vector and derivative of the cross product.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S1         I   Left hand state for cross product and derivative.
-!     S2         I   Right hand state for cross product and derivative.
-!     SOUT       O   Unit vector and derivative of the cross product.
-!
 ! $ Detailed_Input
 !
 !     S1       is any state vector. Typically, this might represent the
@@ -5994,6 +5875,8 @@ contains
 
 !$Procedure DVCRSS ( Derivative of Vector cross product )
 
+      !> Compute the cross product of two 3-dimensional vectors
+      !> and the derivative of this cross product.
       pure subroutine dvcrss ( s1, s2, sout )
       use pepper_kinds, only: wp
 
@@ -6015,18 +5898,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s1   ( 6 )
-      real(wp), intent(in) :: s2   ( 6 )
-      real(wp), intent(out) :: sout ( 6 )
+      real(wp), intent(in) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
+      real(wp), intent(in) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
+      real(wp), intent(out) :: sout ( 6 )  !! State associated with cross product of positions.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S1         I   Left hand state for cross product and derivative.
-!     S2         I   Right hand state for cross product and derivative.
-!     SOUT       O   State associated with cross product of positions.
-!
 ! $ Detailed_Input
 !
 !     S1       is any state vector. Typically, this might represent the
@@ -6392,6 +6267,10 @@ contains
 
 !$Procedure DVDOT  ( Derivative of Vector Dot Product, 3-D )
 
+      !> Compute the derivative of the dot product of two double
+      !> precision position vectors.
+      !>
+      !> The function returns the derivative of the dot product <S1,S2>
       pure real(wp) function dvdot ( s1, s2 )
       use pepper_kinds, only: wp
 
@@ -6413,18 +6292,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s1 ( 6 )
-      real(wp), intent(in) :: s2 ( 6 )
+      real(wp), intent(in) :: s1 ( 6 )  !! First state vector in the dot product.
+      real(wp), intent(in) :: s2 ( 6 )  !! Second state vector in the dot product.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S1         I   First state vector in the dot product.
-!     S2         I   Second state vector in the dot product.
-!
-!     The function returns the derivative of the dot product <S1,S2>
-!
 ! $ Detailed_Input
 !
 !     S1       is any state vector. The components are in order
@@ -6588,6 +6458,8 @@ contains
 
 !$Procedure DVHAT ( Derivative and unit vector "V-hat" of a state)
 
+      !> Find the unit vector corresponding to a state vector and the
+      !> derivative of the unit vector.
       pure subroutine dvhat ( s1, sout )
       use pepper_kinds, only: ip, wp
 
@@ -6610,16 +6482,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s1   ( 6 )
-      real(wp), intent(out) :: sout ( 6 )
+      real(wp), intent(in) :: s1   ( 6 )  !! State to be normalized.
+      real(wp), intent(out) :: sout ( 6 )  !! Unit vector S1 / |S1|, and its time derivative.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S1         I   State to be normalized.
-!     SOUT       O   Unit vector S1 / |S1|, and its time derivative.
-!
 ! $ Detailed_Input
 !
 !     S1       is any double precision state. If the position
@@ -6883,6 +6748,10 @@ contains
 
 !$Procedure DVNORM ( Derivative of vector norm )
 
+       !> Calculate the derivative of the norm of a 3-vector.
+       !>
+       !> The function returns the derivative of the norm of the position
+       !> component of the input STATE vector.
        pure real(wp) function dvnorm( state )
        use pepper_kinds, only: wp
 
@@ -6904,18 +6773,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: state ( 6 )
+      real(wp), intent(in) :: state ( 6 )  !! A 6-vector composed of three coordinates and their derivatives.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STATE      I   A 6-vector composed of three coordinates and their
-!                    derivatives.
-!
-!     The function returns the derivative of the norm of the position
-!     component of the input STATE vector.
-!
 ! $ Detailed_Input
 !
 !     STATE    is a double precision 6-vector, the second three
@@ -7152,6 +7011,9 @@ contains
 
 !$Procedure EL2CGV ( Ellipse to center and generating vectors )
 
+      !> Convert a SPICE ellipse to a center vector and two generating
+      !> vectors. The selected generating vectors are semi-axes of the
+      !> ellipse.
       pure subroutine el2cgv ( ellips, center, smajor, sminor )
       use pepper_kinds, only: ip, wp
 
@@ -7177,20 +7039,11 @@ contains
       integer(ip)           ubel
       parameter           ( ubel    =   9 )
 
-      real(wp), intent(in) :: ellips ( ubel )
-      real(wp), intent(out) :: center (    3 )
-      real(wp), intent(out) :: smajor (    3 )
-      real(wp), intent(out) :: sminor (    3 )
+      real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
+      real(wp), intent(out) :: center (    3 )  !! Center and semi-axes of ELLIPS.
+      real(wp), intent(out) :: smajor (    3 )  !! Center and semi-axes of ELLIPS.
+      real(wp), intent(out) :: sminor (    3 )  !! Center and semi-axes of ELLIPS.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ELLIPS     I   A SPICE ellipse.
-!     CENTER,
-!     SMAJOR,
-!     SMINOR     O   Center and semi-axes of ELLIPS.
-!
 ! $ Detailed_Input
 !
 !     ELLIPS   is a SPICE ellipse.
@@ -7492,6 +7345,9 @@ contains
 
 !$Procedure EVEN  ( Is an integer even? )
 
+      !> Determine whether an integer is even.
+      !>
+      !> The function returns .TRUE. if IVAL is even, otherwise .FALSE.
       elemental logical function even ( ival )
       use pepper_kinds, only: ip
 
@@ -7511,16 +7367,8 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ival
+      integer(ip), intent(in) :: ival  !! The integer in question.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IVAL       I   The integer in question.
-!
-!     The function returns .TRUE. if IVAL is even, otherwise .FALSE.
-!
 ! $ Detailed_Input
 !
 !     IVAL     is the integer to be tested for evenness.
@@ -7622,6 +7470,11 @@ contains
 
 !$Procedure EXACT ( Round to exact value )
 
+      !> Round an input double precision number to a specified exact value
+      !> if the number and the value are equal to within some tolerance.
+      !>
+      !> The function returns VALUE whenever |NUMBER - VALUE| < TOL.
+      !> -
       elemental real(wp) function exact ( number, value, tol )
       use pepper_kinds, only: wp
 
@@ -7643,21 +7496,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: number
-      real(wp), intent(in) :: value
-      real(wp), intent(in) :: tol
+      real(wp), intent(in) :: number  !! Double precision number.
+      real(wp), intent(in) :: value  !! Target value.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NUMBER     I   Double precision number.
-!     VALUE      I   Target value.
-!     TOL        I   Tolerance.
-!
-!     The function returns VALUE whenever |NUMBER - VALUE| < TOL.
-!                                                          -
-!
 ! $ Detailed_Input
 !
 !     NUMBER   is an arbitrary double precision number.
@@ -7750,6 +7592,9 @@ contains
 
 !$Procedure FRAME ( Build a right handed coordinate frame )
 
+      !> Build a right handed orthonormal frame (x,y,z) from a
+      !> 3-dimensional input vector, where the X-axis of the resulting
+      !> frame is parallel to the original input vector.
       pure subroutine frame ( x, y, z )
       use pepper_kinds, only: ip, wp
 
@@ -7772,18 +7617,10 @@ contains
 
       implicit none
 
-      real(wp), intent(inout) :: x ( 3 )
-      real(wp), intent(out) :: y ( 3 )
-      real(wp), intent(out) :: z ( 3 )
+      real(wp), intent(inout) :: x ( 3 )  !! Input vector. A parallel unit vector on output.
+      real(wp), intent(out) :: y ( 3 )  !! Unit vector in the plane orthogonal to X.
+      real(wp), intent(out) :: z ( 3 )  !! Unit vector given by the cross product <X,Y>.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  ------------------------------------------------
-!     X         I-O  Input vector. A parallel unit vector on output.
-!     Y          O   Unit vector in the plane orthogonal to X.
-!     Z          O   Unit vector given by the cross product <X,Y>.
-!
 ! $ Detailed_Input
 !
 !     X        is a 3-dimensional vector used to form the first vector
@@ -8029,6 +7866,9 @@ contains
 
 !$Procedure GCD ( Greatest Common Divisor )
 
+      !> Return the greatest common divisor of two integers.
+      !>
+      !> The function returns the greatest common divisor of A and B.
       elemental integer(ip) function gcd ( a, b )
       use pepper_kinds, only: ip
 
@@ -8049,18 +7889,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: a
-      integer(ip), intent(in) :: b
+      integer(ip), intent(in) :: a  !! Any integer
+      integer(ip), intent(in) :: b  !! Any integer
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   Any integer
-!     B          I   Any integer
-!
-!     The function returns the greatest common divisor of A and B.
-!
 ! $ Detailed_Input
 !
 !     A        is any integer.
@@ -8195,6 +8026,7 @@ contains
 
 !$Procedure IDENT ( Return the 3x3 identity matrix )
 
+      !> Return the 3x3 identity matrix.
       pure subroutine ident ( matrix )
       use pepper_kinds, only: wp
 
@@ -8214,14 +8046,8 @@ contains
 
       implicit none
 
-      real(wp), intent(out) :: matrix ( 3, 3 )
+      real(wp), intent(out) :: matrix ( 3, 3 )  !! The 3x3 identity matrix.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     O   The 3x3 identity matrix.
-!
 ! $ Detailed_Input
 !
 !     None.
@@ -8404,6 +8230,10 @@ contains
 
 !$Procedure INSANG ( Inside Tetrahedral Angle )
 
+      !> Determine if a given vector lies inside the solid tetrahedral
+      !> angle determined by 3 vectors. If it does, return the
+      !> point where the scale factor such that SCALE*V lies in the
+      !> plane spanned by E1, E2, and E3.
       pure subroutine insang ( v, e1, e2, e3, found, scale )
       use pepper_kinds, only: wp
 
@@ -8426,24 +8256,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v     ( 3 )
-      real(wp), intent(in) :: e1    ( 3 )
-      real(wp), intent(in) :: e2    ( 3 )
-      real(wp), intent(in) :: e3    ( 3 )
-      logical, intent(out) :: found
-      real(wp), intent(out) :: scale
+      real(wp), intent(in) :: v     ( 3 )  !! Vector to test for "betweenness"
+      real(wp), intent(in) :: e1    ( 3 )  !! First edge of the tetrahedral angle
+      real(wp), intent(in) :: e2    ( 3 )  !! Second edge of the tetrahedral angle
+      real(wp), intent(in) :: e3    ( 3 )  !! Third edge of the tetrahedral angle
+      logical, intent(out) :: found  !! Indicates whether V lies in the solid angle
+      real(wp), intent(out) :: scale  !! Scale times V is in the triangle E1,E2,E3
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V          I   Vector to test for "betweenness"
-!     E1         I   First edge of the tetrahedral angle
-!     E2         I   Second edge of the tetrahedral angle
-!     E3         I   Third edge of the tetrahedral angle
-!     FOUND      O   Indicates whether V lies in the solid angle
-!     SCALE      O   Scale times V is in the triangle E1,E2,E3
-!
 ! $ Detailed_Input
 !
 !     V        is a 3-vector. This is the vector to test to see
@@ -8752,6 +8571,7 @@ contains
 
 !$Procedure INVERT ( Invert a 3x3 matrix )
 
+      !> Generate the inverse of a 3x3 matrix.
       pure subroutine invert ( m, mout )
       use pepper_kinds, only: wp
       use pepper_arrays, only: filld
@@ -8773,17 +8593,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m    ( 3,3 )
-      real(wp), intent(out) :: mout ( 3,3 )
+      real(wp), intent(in) :: m    ( 3,3 )  !! Matrix to be inverted.
+      real(wp), intent(out) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will be the zero matrix.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M          I   Matrix to be inverted.
-!     MOUT       O   Inverted matrix (M)**-1. If M is singular, then
-!                    MOUT will be the zero matrix.
-!
 ! $ Detailed_Input
 !
 !     M        is an arbitrary 3x3 matrix. The limits on the size of
@@ -9013,6 +8825,7 @@ contains
 
 !$Procedure LATCYL ( Latitudinal to cylindrical coordinates )
 
+      !> Convert from latitudinal coordinates to cylindrical coordinates.
       elemental subroutine latcyl ( radius, lon, lat, r, clon, z )
       use pepper_kinds, only: wp
 
@@ -9033,24 +8846,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: radius
-      real(wp), intent(in) :: lon
-      real(wp), intent(in) :: lat
-      real(wp), intent(out) :: r
-      real(wp), intent(out) :: clon
-      real(wp), intent(out) :: z
+      real(wp), intent(in) :: radius  !! Distance of a point from the origin.
+      real(wp), intent(in) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(in) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp), intent(out) :: r  !! Distance of the point from the Z axis.
+      real(wp), intent(out) :: clon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(out) :: z  !! Height of the point above the XY plane.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RADIUS     I   Distance of a point from the origin.
-!     LON        I   Angle of the point from the XZ plane in radians.
-!     LAT        I   Angle of the point from the XY plane in radians.
-!     R          O   Distance of the point from the Z axis.
-!     CLON       O   Angle of the point from the XZ plane in radians.
-!     Z          O   Height of the point above the XY plane.
-!
 ! $ Detailed_Input
 !
 !     RADIUS   is the distance of a point from the origin.
@@ -9511,6 +9313,7 @@ contains
 
 !$Procedure LATREC ( Latitudinal to rectangular coordinates )
 
+      !> Convert from latitudinal coordinates to rectangular coordinates.
       pure subroutine latrec ( radius, lon, lat, rectan )
       use pepper_kinds, only: wp
 
@@ -9531,20 +9334,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: radius
-      real(wp), intent(in) :: lon
-      real(wp), intent(in) :: lat
-      real(wp), intent(out) :: rectan ( 3 )
+      real(wp), intent(in) :: radius  !! Distance of a point from the origin.
+      real(wp), intent(in) :: lon  !! Longitude of point in radians.
+      real(wp), intent(in) :: lat  !! Latitude of point in radians.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RADIUS     I   Distance of a point from the origin.
-!     LON        I   Longitude of point in radians.
-!     LAT        I   Latitude of point in radians.
-!     RECTAN     O   Rectangular coordinates of the point.
-!
 ! $ Detailed_Input
 !
 !     RADIUS   is the distance of a point from the origin.
@@ -9923,6 +9717,7 @@ contains
 
 !$Procedure LATSPH ( Latitudinal to spherical coordinates )
 
+      !> Convert from latitudinal coordinates to spherical coordinates.
       elemental subroutine latsph ( radius, lon, lat,  rho, colat, slon )
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi
@@ -9944,24 +9739,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: radius
-      real(wp), intent(in) :: lon
-      real(wp), intent(in) :: lat
-      real(wp), intent(out) :: rho
-      real(wp), intent(out) :: colat
-      real(wp), intent(out) :: slon
+      real(wp), intent(in) :: radius  !! Distance of a point from the origin.
+      real(wp), intent(in) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(in) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp), intent(out) :: rho  !! Distance of the point from the origin.
+      real(wp), intent(out) :: colat  !! Angle of the point from positive Z axis (radians).
+      real(wp), intent(out) :: slon  !! Angle of the point from the XZ plane (radians).
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RADIUS     I   Distance of a point from the origin.
-!     LON        I   Angle of the point from the XZ plane in radians.
-!     LAT        I   Angle of the point from the XY plane in radians.
-!     RHO        O   Distance of the point from the origin.
-!     COLAT      O   Angle of the point from positive Z axis (radians).
-!     SLON       O   Angle of the point from the XZ plane (radians).
-!
 ! $ Detailed_Input
 !
 !     RADIUS   is the distance of a point from the origin.
@@ -10374,6 +10158,7 @@ contains
 
 !$Procedure MEQU ( Matrix equal to another, 3x3 )
 
+      !> Set one double precision 3x3 matrix equal to another.
       pure subroutine mequ ( m1, mout )
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
@@ -10395,16 +10180,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1   ( 3, 3 )
-      real(wp), intent(out) :: mout ( 3, 3 )
+      real(wp), intent(in) :: m1   ( 3, 3 )  !! Input matrix.
+      real(wp), intent(out) :: mout ( 3, 3 )  !! Output matrix equal to M1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Input matrix.
-!     MOUT       O   Output matrix equal to M1.
-!
 ! $ Detailed_Input
 !
 !     M1       is an arbitrary input 3x3 matrix. There are no
@@ -10535,6 +10313,8 @@ contains
 
 !$Procedure MEQUG  ( Matrix equal to another, general dimension )
 
+      !> Set one double precision matrix of arbitrary size equal to
+      !> another.
       pure subroutine mequg ( m1, nr, nc, mout )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
@@ -10557,20 +10337,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nr
-      integer(ip), intent(in) :: nc
-      real(wp), intent(in) :: m1   ( nr,nc )
-      real(wp), intent(out) :: mout ( nr,nc )
+      integer(ip), intent(in) :: nr  !! Row dimension of M1 (and also MOUT).
+      integer(ip), intent(in) :: nc  !! Column dimension of M1 (and also MOUT).
+      real(wp), intent(in) :: m1   ( nr,nc )  !! Input matrix.
+      real(wp), intent(out) :: mout ( nr,nc )  !! Output matrix equal to M1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Input matrix.
-!     NR         I   Row dimension of M1 (and also MOUT).
-!     NC         I   Column dimension of M1 (and also MOUT).
-!     MOUT       O   Output matrix equal to M1.
-!
 ! $ Detailed_Input
 !
 !     M1       is an arbitrary-sized double precision matrix.
@@ -10667,6 +10438,7 @@ contains
 
 !$Procedure MTXM  ( Matrix transpose times matrix, 3x3 )
 
+      !> Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
       pure subroutine mtxm ( m1, m2, mout )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
@@ -10687,19 +10459,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1   ( 3,3 )
-      real(wp), intent(in) :: m2   ( 3,3 )
-      real(wp), intent(out) :: mout ( 3,3 )
+      real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(out) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) * M2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   3x3 double precision matrix.
-!     M2         I   3x3 double precision matrix.
-!     MOUT       O   3x3 double precision matrix which is the product
-!                    (M1**T) * M2.
-!
 ! $ Detailed_Input
 !
 !     M1       is any 3x3 double precision matrix. Typically,
@@ -10879,6 +10642,9 @@ contains
 
 !$Procedure MTXMG ( Matrix transpose times matrix, general dimension )
 
+      !> Multiply the transpose of a matrix with another matrix,
+      !> both of arbitrary size. (The dimensions of the matrices must be
+      !> compatible with this multiplication.)
       pure subroutine mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
       use pepper_kinds, only: ip, wp
 
@@ -10900,25 +10666,13 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nc1
-      integer(ip), intent(in) :: nr1r2
-      integer(ip), intent(in) :: nc2
-      real(wp), intent(in) :: m1   ( nr1r2,nc1 )
-      real(wp), intent(in) :: m2   ( nr1r2,nc2 )
-      real(wp), intent(out) :: mout ( nc1,  nc2 )
+      integer(ip), intent(in) :: nc1  !! Column dimension of M1 and row dimension of MOUT.
+      integer(ip), intent(in) :: nr1r2  !! Row dimension of both M1 and M2.
+      integer(ip), intent(in) :: nc2  !! Column dimension of both M2 and MOUT.
+      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(in) :: m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
+      real(wp), intent(out) :: mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Left-hand matrix whose transpose is to be
-!                    multiplied.
-!     M2         I   Right-hand matrix to be multiplied.
-!     NC1        I   Column dimension of M1 and row dimension of MOUT.
-!     NR1R2      I   Row dimension of both M1 and M2.
-!     NC2        I   Column dimension of both M2 and MOUT.
-!     MOUT       O   Product matrix M1**T * M2.
-!
 ! $ Detailed_Input
 !
 !     M1       is an double precision matrix of arbitrary dimension
@@ -11119,6 +10873,8 @@ contains
 
 !$Procedure MTXV ( Matrix transpose times vector, 3x3 )
 
+      !> Multiply the transpose of a 3x3 matrix on the left with a vector
+      !> on the right.
       pure subroutine mtxv ( m, vin, vout )
       use pepper_kinds, only: ip, wp
 
@@ -11140,19 +10896,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m      ( 3,3 )
-      real(wp), intent(in) :: vin    (   3 )
-      real(wp), intent(out) :: vout   (   3 )
+      real(wp), intent(in) :: m      ( 3,3 )  !! 3X3 double precision matrix.
+      real(wp), intent(in) :: vin    (   3 )  !! 3-dimensional double precision vector.
+      real(wp), intent(out) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the product M**T * VIN.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M          I   3X3 double precision matrix.
-!     VIN        I   3-dimensional double precision vector.
-!     VOUT       O   3-dimensional double precision vector. VOUT is
-!                    the product M**T * VIN.
-!
 ! $ Detailed_Input
 !
 !     M        is an arbitrary 3x3 double precision matrix.
@@ -11346,6 +11093,8 @@ contains
 
 !$Procedure MTXVG ( Matrix transpose times vector, general dimension )
 
+      !> Multiply the transpose of a matrix and a vector of
+      !> arbitrary size.
       pure subroutine mtxvg ( m1, v2, nc1, nr1r2, vout )
       use pepper_kinds, only: ip, wp
 
@@ -11367,23 +11116,12 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nc1
-      integer(ip), intent(in) :: nr1r2
-      real(wp), intent(in) :: m1   ( nr1r2,nc1 )
-      real(wp), intent(in) :: v2   ( nr1r2     )
-      real(wp), intent(out) :: vout (       nc1 )
+      integer(ip), intent(in) :: nc1  !! Column dimension of M1 and length of VOUT.
+      integer(ip), intent(in) :: nr1r2  !! Row dimension of M1 and length of V2.
+      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(in) :: v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
+      real(wp), intent(out) :: vout (       nc1 )  !! Product vector M1**T * V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Left-hand matrix whose transpose is to be
-!                    multiplied.
-!     V2         I   Right-hand vector to be multiplied.
-!     NC1        I   Column dimension of M1 and length of VOUT.
-!     NR1R2      I   Row dimension of M1 and length of V2.
-!     VOUT       O   Product vector M1**T * V2.
-!
 ! $ Detailed_Input
 !
 !     M1       is a double precision matrix of arbitrary size whose
@@ -11563,6 +11301,7 @@ contains
 
 !$Procedure MXM ( Matrix times matrix, 3x3 )
 
+      !> Multiply two 3x3 matrices.
       pure subroutine mxm ( m1, m2, mout )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
@@ -11583,18 +11322,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1   ( 3,3 )
-      real(wp), intent(in) :: m2   ( 3,3 )
-      real(wp), intent(out) :: mout ( 3,3 )
+      real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(out) :: mout ( 3,3 )  !! The 3x3 double precision matrix product M1*M2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   3x3 double precision matrix.
-!     M2         I   3x3 double precision matrix.
-!     MOUT       O   The 3x3 double precision matrix product M1*M2.
-!
 ! $ Detailed_Input
 !
 !     M1       is an arbitrary 3x3 double precision matrix.
@@ -11795,6 +11526,7 @@ contains
 
 !$Procedure MXMG ( Matrix times matrix, general dimension )
 
+      !> Multiply two double precision matrices of arbitrary size.
       pure subroutine mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
       use pepper_kinds, only: ip, wp
 
@@ -11814,24 +11546,13 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nr1
-      integer(ip), intent(in) :: nc1r2
-      integer(ip), intent(in) :: nc2
-      real(wp), intent(in) :: m1   ( nr1,   nc1r2 )
-      real(wp), intent(in) :: m2   ( nc1r2, nc2   )
-      real(wp), intent(out) :: mout ( nr1,   nc2   )
+      integer(ip), intent(in) :: nr1  !! Row dimension of M1 (and also MOUT).
+      integer(ip), intent(in) :: nc1r2  !! Column dimension of M1 and row dimension of M2.
+      integer(ip), intent(in) :: nc2  !! Column dimension of M2 (and also MOUT).
+      real(wp), intent(in) :: m1   ( nr1,   nc1r2 )  !! NR1   x NC1R2 double precision matrix.
+      real(wp), intent(in) :: m2   ( nc1r2, nc2   )  !! NC1R2 x NC2   double precision matrix.
+      real(wp), intent(out) :: mout ( nr1,   nc2   )  !! NR1 x NC2 double precision matrix.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   NR1   x NC1R2 double precision matrix.
-!     M2         I   NC1R2 x NC2   double precision matrix.
-!     NR1        I   Row dimension of M1 (and also MOUT).
-!     NC1R2      I   Column dimension of M1 and row dimension of M2.
-!     NC2        I   Column dimension of M2 (and also MOUT).
-!     MOUT       O   NR1 x NC2 double precision matrix.
-!
 ! $ Detailed_Input
 !
 !     M1       is any double precision matrix of arbitrary size.
@@ -12020,6 +11741,7 @@ contains
 
 !$Procedure MXMT ( Matrix times matrix transpose, 3x3 )
 
+      !> Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
       pure subroutine mxmt ( m1, m2, mout )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
@@ -12040,18 +11762,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1   ( 3,3 )
-      real(wp), intent(in) :: m2   ( 3,3 )
-      real(wp), intent(out) :: mout ( 3,3 )
+      real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(out) :: mout ( 3,3 )  !! The product M1 times transpose of M2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   3x3 double precision matrix.
-!     M2         I   3x3 double precision matrix.
-!     MOUT       O   The product M1 times transpose of M2.
-!
 ! $ Detailed_Input
 !
 !     M1       is an arbitrary 3x3 double precision matrix.
@@ -12265,6 +11979,8 @@ contains
 
 !$Procedure MXMTG  ( Matrix times matrix transpose, general dimension )
 
+      !> Multiply a matrix and the transpose of a matrix, both of
+      !> arbitrary size.
       pure subroutine mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
       use pepper_kinds, only: ip, wp
 
@@ -12285,25 +12001,13 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nr1
-      integer(ip), intent(in) :: nc1c2
-      integer(ip), intent(in) :: nr2
-      real(wp), intent(in) :: m1   ( nr1,nc1c2 )
-      real(wp), intent(in) :: m2   ( nr2,nc1c2 )
-      real(wp), intent(out) :: mout ( nr1,nr2   )
+      integer(ip), intent(in) :: nr1  !! Row dimension of M1 and row dimension of MOUT.
+      integer(ip), intent(in) :: nc1c2  !! Column dimension of M1 and column dimension of M2.
+      integer(ip), intent(in) :: nr2  !! Row dimension of M2 and column dimension of MOUT.
+      real(wp), intent(in) :: m1   ( nr1,nc1c2 )  !! Left-hand matrix to be multiplied.
+      real(wp), intent(in) :: m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(out) :: mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Left-hand matrix to be multiplied.
-!     M2         I   Right-hand matrix whose transpose is to be
-!                    multiplied.
-!     NR1        I   Row dimension of M1 and row dimension of MOUT.
-!     NC1C2      I   Column dimension of M1 and column dimension of M2.
-!     NR2        I   Row dimension of M2 and column dimension of MOUT.
-!     MOUT       O   Product matrix M1 * M2**T.
-!
 ! $ Detailed_Input
 !
 !     M1       is any double precision matrix of arbitrary size.
@@ -12506,6 +12210,8 @@ contains
 
 !$Procedure MXV ( Matrix times vector, 3x3 )
 
+      !> Multiply a 3x3 double precision matrix with a 3-dimensional
+      !> double precision vector.
       pure subroutine mxv ( m, vin, vout )
       use pepper_kinds, only: ip, wp
 
@@ -12527,19 +12233,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m      ( 3, 3 )
-      real(wp), intent(in) :: vin    (    3 )
-      real(wp), intent(out) :: vout   (    3 )
+      real(wp), intent(in) :: m      ( 3, 3 )  !! 3x3 double precision matrix.
+      real(wp), intent(in) :: vin    (    3 )  !! 3-dimensional double precision vector.
+      real(wp), intent(out) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the product M*VIN.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M          I   3x3 double precision matrix.
-!     VIN        I   3-dimensional double precision vector.
-!     VOUT       O   3-dimensional double precision vector. VOUT is
-!                    the product M*VIN.
-!
 ! $ Detailed_Input
 !
 !     M        is an arbitrary 3x3 double precision matrix.
@@ -12706,6 +12403,7 @@ contains
 
 !$Procedure MXVG ( Matrix time vector, general dimension )
 
+      !> Multiply a matrix and a vector of arbitrary size.
       pure subroutine mxvg ( m1, v2, nr1, nc1r2, vout )
       use pepper_kinds, only: ip, wp
 
@@ -12726,22 +12424,12 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nr1
-      integer(ip), intent(in) :: nc1r2
-      real(wp), intent(in) :: m1   ( nr1,nc1r2 )
-      real(wp), intent(in) :: v2   (     nc1r2 )
-      real(wp), intent(out) :: vout ( nr1       )
+      integer(ip), intent(in) :: nr1  !! Row dimension of M1 and length of VOUT.
+      integer(ip), intent(in) :: nc1r2  !! Column dimension of M1 and length of V2.
+      real(wp), intent(in) :: m1   ( nr1,nc1r2 )  !! Left-hand matrix to be multiplied.
+      real(wp), intent(in) :: v2   (     nc1r2 )  !! Right-hand vector to be multiplied.
+      real(wp), intent(out) :: vout ( nr1       )  !! Product vector M1*V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   Left-hand matrix to be multiplied.
-!     V2         I   Right-hand vector to be multiplied.
-!     NR1        I   Row dimension of M1 and length of VOUT.
-!     NC1R2      I   Column dimension of M1 and length of V2.
-!     VOUT       O   Product vector M1*V2.
-!
 ! $ Detailed_Input
 !
 !     M1       is a double precision matrix of arbitrary size which
@@ -12906,6 +12594,9 @@ contains
 
 !$Procedure ODD ( Is a number odd? )
 
+      !> Determine whether an integer is odd.
+      !>
+      !> The function returns .TRUE. if IVAL is odd, otherwise .FALSE.
       elemental logical function  odd ( ival )
       use pepper_kinds, only: ip
 
@@ -12925,16 +12616,8 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ival
+      integer(ip), intent(in) :: ival  !! The integer in question.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IVAL       I   The integer in question.
-!
-!     The function returns .TRUE. if IVAL is odd, otherwise .FALSE.
-!
 ! $ Detailed_Input
 !
 !     IVAL     is the integer to be tested for oddness.
@@ -13041,6 +12724,11 @@ contains
 
 !$Procedure OPSGND ( Opposite Sign Double Precision Numbers )
 
+      !> Return .TRUE. if two given double precision numbers have opposite
+      !> signs.
+      !>
+      !> The function returns .TRUE. when the double precision numbers X
+      !> and Y have opposite signs.
       elemental logical function opsgnd  ( x, y )
       use pepper_kinds, only: wp
 
@@ -13061,19 +12749,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      real(wp), intent(in) :: y
+      real(wp), intent(in) :: x  !! A double precision number
+      real(wp), intent(in) :: y  !! A double precision number
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   A double precision number
-!     Y          I   A double precision number
-!
-!     The function returns .TRUE. when the double precision numbers X
-!     and Y have opposite signs.
-!
 ! $ Detailed_Input
 !
 !     X        is any double precision number.
@@ -13180,6 +12858,10 @@ contains
 
 !$Procedure OPSGNI  ( Opposite Sign Integers )
 
+      !> Return .TRUE. if two given integer numbers have opposite signs.
+      !>
+      !> The function returns .TRUE. when the integer numbers X and Y have
+      !> opposite signs.
       elemental logical function opsgni  ( x, y )
       use pepper_kinds, only: ip
 
@@ -13199,19 +12881,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: x
-      integer(ip), intent(in) :: y
+      integer(ip), intent(in) :: x  !! An integer.
+      integer(ip), intent(in) :: y  !! An integer.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   An integer.
-!     Y          I   An integer.
-!
-!     The function returns .TRUE. when the integer numbers X and Y have
-!     opposite signs.
-!
 ! $ Detailed_Input
 !
 !     X        is any integer number.
@@ -13323,6 +12995,10 @@ contains
 
 !$Procedure PL2NVC ( Plane to normal vector and constant )
 
+      !> Return a unit normal vector and constant that define a specified
+      !> plane.
+      !>
+      !> UBPL       P   SPICE plane upper bound.
       pure subroutine pl2nvc ( plane, normal, konst )
       use pepper_kinds, only: ip, wp
 
@@ -13348,20 +13024,10 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-      real(wp), intent(in) :: plane  ( ubpl )
-      real(wp), intent(out) :: normal (    3 )
-      real(wp), intent(out) :: konst
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      real(wp), intent(out) :: normal (    3 )  !! A normal vector and constant defining the geometric plane represented by PLANE.
+      real(wp), intent(out) :: konst  !! A normal vector and constant defining the geometric plane represented by PLANE.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     PLANE      I   A SPICE plane.
-!     NORMAL,
-!     KONST      O   A normal vector and constant defining the
-!                    geometric plane represented by PLANE.
-!     UBPL       P   SPICE plane upper bound.
-!
 ! $ Detailed_Input
 !
 !     PLANE    is a SPICE plane.
@@ -13716,6 +13382,8 @@ contains
 
 !$Procedure PL2NVP ( Plane to normal vector and point )
 
+      !> Return a unit normal vector and point that define a specified
+      !> plane.
       pure subroutine pl2nvp ( plane, normal, point )
       use pepper_kinds, only: ip, wp
 
@@ -13741,18 +13409,10 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl   =    4 )
 
-      real(wp), intent(in) :: plane  ( ubpl )
-      real(wp), intent(out) :: normal (    3 )
-      real(wp), intent(out) :: point  (    3 )
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      real(wp), intent(out) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
+      real(wp), intent(out) :: point  (    3 )  !! A unit normal vector and point that define PLANE.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     PLANE      I   A SPICE plane.
-!     NORMAL,
-!     POINT      O   A unit normal vector and point that define PLANE.
-!
 ! $ Detailed_Input
 !
 !     PLANE    is a SPICE plane.
@@ -13885,6 +13545,8 @@ contains
 
 !$Procedure PL2PSV ( Plane to point and spanning vectors )
 
+      !> Return a point and two orthogonal spanning vectors that generate
+      !> a specified plane.
       pure subroutine pl2psv ( plane, point, span1, span2 )
       use pepper_kinds, only: ip, wp
 
@@ -13910,21 +13572,11 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
 
-      real(wp), intent(in) :: plane ( ubpl )
-      real(wp), intent(out) :: point (    3 )
-      real(wp), intent(out) :: span1 (    3 )
-      real(wp), intent(out) :: span2 (    3 )
+      real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane.
+      real(wp), intent(out) :: point (    3 )  !! A point in the input plane and two vectors spanning the input plane.
+      real(wp), intent(out) :: span1 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
+      real(wp), intent(out) :: span2 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     PLANE      I   A SPICE plane.
-!     POINT,
-!     SPAN1,
-!     SPAN2      O   A point in the input plane and two vectors
-!                    spanning the input plane.
-!
 ! $ Detailed_Input
 !
 !     PLANE    is a SPICE plane.
@@ -14155,6 +13807,9 @@ contains
 
 !$Procedure PLTEXP ( Plate expander )
 
+      !> Expand a triangular plate by a specified amount. The expanded
+      !> plate is co-planar with, and has the same orientation as, the
+      !> original. The centroids of the two plates coincide.
       pure subroutine pltexp ( iverts, delta, overts )
       use pepper_kinds, only: wp
 
@@ -14178,18 +13833,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: iverts ( 3, 3 )
-      real(wp), intent(in) :: delta
-      real(wp), intent(out) :: overts ( 3, 3 )
+      real(wp), intent(in) :: iverts ( 3, 3 )  !! Vertices of the plate to be expanded.
+      real(wp), intent(in) :: delta  !! Fraction by which the plate is to be expanded.
+      real(wp), intent(out) :: overts ( 3, 3 )  !! Vertices of the expanded plate.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IVERTS     I   Vertices of the plate to be expanded.
-!     DELTA      I   Fraction by which the plate is to be expanded.
-!     OVERTS     O   Vertices of the expanded plate.
-!
 ! $ Detailed_Input
 !
 !     IVERTS   is an array containing three vertices of a triangular
@@ -14422,6 +14069,8 @@ contains
 
 !$Procedure PLTNRM ( DSK, compute outward normal of plate )
 
+      !> Compute an outward normal vector of a triangular plate.
+      !> The vector does not necessarily have unit length.
       pure subroutine pltnrm ( v1, v2, v3, normal )
       use pepper_kinds, only: wp
 
@@ -14444,20 +14093,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1     ( 3 )
-      real(wp), intent(in) :: v2     ( 3 )
-      real(wp), intent(in) :: v3     ( 3 )
-      real(wp), intent(out) :: normal ( 3 )
+      real(wp), intent(in) :: v1     ( 3 )  !! Vertices of a plate.
+      real(wp), intent(in) :: v2     ( 3 )  !! Vertices of a plate.
+      real(wp), intent(in) :: v3     ( 3 )  !! Vertices of a plate.
+      real(wp), intent(out) :: normal ( 3 )  !! Plate's outward normal vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1,
-!     V2,
-!     V3         I   Vertices of a plate.
-!     NORMAL     O   Plate's outward normal vector.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -14596,6 +14236,8 @@ contains
 
 !$Procedure POLYDS ( Compute a Polynomial and its Derivatives )
 
+      !> Compute the value of a polynomial and its first
+      !> NDERIV derivatives at the value T.
       pure subroutine polyds ( coeffs, deg, nderiv, t, p )
       use pepper_kinds, only: ip, wp
 
@@ -14618,22 +14260,12 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: coeffs ( 0:* )
-      integer(ip), intent(in) :: deg
-      integer(ip), intent(in) :: nderiv
-      real(wp), intent(in) :: t
-      real(wp), intent(out) :: p      ( 0:* )
+      real(wp), intent(in) :: coeffs ( 0:* )  !! Coefficients of the polynomial to be evaluated.
+      integer(ip), intent(in) :: deg  !! Degree of the polynomial to be evaluated.
+      integer(ip), intent(in) :: nderiv  !! Number of derivatives to compute.
+      real(wp), intent(in) :: t  !! Point to evaluate the polynomial and derivatives
+      real(wp), intent(out) :: p      ( 0:* )  !! Value of polynomial and derivatives.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     COEFFS     I   Coefficients of the polynomial to be evaluated.
-!     DEG        I   Degree of the polynomial to be evaluated.
-!     NDERIV     I   Number of derivatives to compute.
-!     T          I   Point to evaluate the polynomial and derivatives
-!     P          O   Value of polynomial and derivatives.
-!
 ! $ Detailed_Input
 !
 !     COEFFS   are the coefficients of the polynomial that is
@@ -14967,6 +14599,8 @@ contains
 
 !$Procedure Q2M ( Quaternion to matrix )
 
+      !> Find the rotation matrix corresponding to a specified unit
+      !> quaternion.
       pure subroutine q2m ( q, r )
       use pepper_kinds, only: wp
 
@@ -14989,16 +14623,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: q ( 0 : 3 )
-      real(wp), intent(out) :: r ( 3,  3 )
+      real(wp), intent(in) :: q ( 0 : 3 )  !! A unit quaternion.
+      real(wp), intent(out) :: r ( 3,  3 )  !! A rotation matrix corresponding to Q.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     Q          I   A unit quaternion.
-!     R          O   A rotation matrix corresponding to Q.
-!
 ! $ Detailed_Input
 !
 !     Q        is a unit-length SPICE-style quaternion. Q has the
@@ -15577,6 +15204,8 @@ contains
 
 !$Procedure QDQ2AV (Quaternion and quaternion derivative to a.v.)
 
+      !> Derive angular velocity from a unit quaternion and its derivative
+      !> with respect to time.
       pure subroutine qdq2av ( q, dq, av )
       use pepper_kinds, only: wp
 
@@ -15599,18 +15228,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: q    ( 0 : 3 )
-      real(wp), intent(in) :: dq   ( 0 : 3 )
-      real(wp), intent(out) :: av   ( 3 )
+      real(wp), intent(in) :: q    ( 0 : 3 )  !! Unit SPICE quaternion.
+      real(wp), intent(in) :: dq   ( 0 : 3 )  !! Derivative of Q with respect to time.
+      real(wp), intent(out) :: av   ( 3 )  !! Angular velocity defined by Q and DQ.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     Q          I   Unit SPICE quaternion.
-!     DQ         I   Derivative of Q with respect to time.
-!     AV         O   Angular velocity defined by Q and DQ.
-!
 ! $ Detailed_Input
 !
 !     Q        is a unit length 4-vector representing a
@@ -16308,6 +15929,7 @@ contains
 
 !$Procedure QXQ (Quaternion times quaternion)
 
+      !> Multiply two quaternions.
       pure subroutine qxq ( q1, q2, qout )
       use pepper_kinds, only: wp
 
@@ -16329,18 +15951,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: q1   ( 0 : 3 )
-      real(wp), intent(in) :: q2   ( 0 : 3 )
-      real(wp), intent(out) :: qout ( 0 : 3 )
+      real(wp), intent(in) :: q1   ( 0 : 3 )  !! First SPICE quaternion factor.
+      real(wp), intent(in) :: q2   ( 0 : 3 )  !! Second SPICE quaternion factor.
+      real(wp), intent(out) :: qout ( 0 : 3 )  !! Product of Q1 and Q2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     Q1         I   First SPICE quaternion factor.
-!     Q2         I   Second SPICE quaternion factor.
-!     QOUT       O   Product of Q1 and Q2.
-!
 ! $ Detailed_Input
 !
 !     Q1       is a 4-vector representing a SPICE-style
@@ -16895,6 +16509,8 @@ contains
 
 !$Procedure RADREC ( Range, RA and DEC to rectangular coordinates )
 
+      !> Convert from range, right ascension, and declination to
+      !> rectangular coordinates.
       pure subroutine radrec ( range, ra, dec, rectan )
       use pepper_kinds, only: wp
 
@@ -16916,20 +16532,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: range
-      real(wp), intent(in) :: ra
-      real(wp), intent(in) :: dec
-      real(wp), intent(out) :: rectan ( 3 )
+      real(wp), intent(in) :: range  !! Distance of a point from the origin.
+      real(wp), intent(in) :: ra  !! Right ascension of point in radians.
+      real(wp), intent(in) :: dec  !! Declination of point in radians.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  ---------------------------------------------------
-!     RANGE      I   Distance of a point from the origin.
-!     RA         I   Right ascension of point in radians.
-!     DEC        I   Declination of point in radians.
-!     RECTAN     O   Rectangular coordinates of the point.
-!
 ! $ Detailed_Input
 !
 !     RANGE    is the distance of the point from the origin. Input
@@ -17282,6 +16889,8 @@ contains
 
 !$Procedure RAV2XF ( Rotation and angular velocity to transform )
 
+      !> Determine a state transformation matrix from a rotation matrix
+      !> and the angular velocity of the rotation.
       pure subroutine rav2xf ( rot, av, xform )
       use pepper_kinds, only: ip, wp
 
@@ -17302,18 +16911,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rot    ( 3, 3 )
-      real(wp), intent(in) :: av     ( 3    )
-      real(wp), intent(out) :: xform  ( 6, 6 )
+      real(wp), intent(in) :: rot    ( 3, 3 )  !! Rotation matrix.
+      real(wp), intent(in) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! State transformation associated with ROT and AV.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ROT        I   Rotation matrix.
-!     AV         I   Angular velocity vector.
-!     XFORM      O   State transformation associated with ROT and AV.
-!
 ! $ Detailed_Input
 !
 !     ROT      is a rotation matrix that gives the transformation from
@@ -17698,6 +17299,8 @@ contains
 
 !$Procedure RECAZL ( Rectangular coordinates to AZ/EL )
 
+      !> Convert rectangular coordinates of a point to range, azimuth and
+      !> elevation.
       pure subroutine recazl ( rectan, azccw, elplsz, range, az, el )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
@@ -17720,24 +17323,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rectan ( 3 )
-      logical, intent(in) :: azccw
-      logical, intent(in) :: elplsz
-      real(wp), intent(out) :: range
-      real(wp), intent(out) :: az
-      real(wp), intent(out) :: el
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      logical, intent(in) :: azccw  !! Flag indicating how Azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how Elevation is measured.
+      real(wp), intent(out) :: range  !! Distance of the point from the origin.
+      real(wp), intent(out) :: az  !! Azimuth in radians.
+      real(wp), intent(out) :: el  !! Elevation in radians.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RECTAN     I   Rectangular coordinates of a point.
-!     AZCCW      I   Flag indicating how Azimuth is measured.
-!     ELPLSZ     I   Flag indicating how Elevation is measured.
-!     RANGE      O   Distance of the point from the origin.
-!     AZ         O   Azimuth in radians.
-!     EL         O   Elevation in radians.
-!
 ! $ Detailed_Input
 !
 !     RECTAN   are the rectangular coordinates of a point.
@@ -18308,6 +17900,7 @@ contains
 
 !$Procedure RECCYL ( Rectangular to cylindrical coordinates )
 
+      !> Convert from rectangular to cylindrical coordinates.
       pure subroutine reccyl ( rectan, r, clon, z )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
@@ -18329,20 +17922,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rectan(3)
-      real(wp), intent(out) :: r
-      real(wp), intent(out) :: clon
-      real(wp), intent(out) :: z
+      real(wp), intent(in) :: rectan(3)  !! Rectangular coordinates of a point.
+      real(wp), intent(out) :: r  !! Distance of the point from Z axis.
+      real(wp), intent(out) :: clon  !! Angle (radians) of the point from XZ plane
+      real(wp), intent(out) :: z  !! Height of the point above XY plane.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     RECTAN     I   Rectangular coordinates of a point.
-!     R          O   Distance of the point from Z axis.
-!     CLON       O   Angle (radians) of the point from XZ plane
-!     Z          O   Height of the point above XY plane.
-!
 ! $ Detailed_Input
 !
 !     RECTAN   are the rectangular coordinates of the point of
@@ -18711,6 +18295,7 @@ contains
 
 !$Procedure RECLAT ( Rectangular to latitudinal coordinates )
 
+      !> Convert from rectangular coordinates to latitudinal coordinates.
       pure subroutine reclat ( rectan, radius, lon, lat )
       use pepper_kinds, only: wp
 
@@ -18731,20 +18316,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rectan ( 3 )
-      real(wp), intent(out) :: radius
-      real(wp), intent(out) :: lon
-      real(wp), intent(out) :: lat
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp), intent(out) :: radius  !! Distance of a point from the origin.
+      real(wp), intent(out) :: lon  !! Longitude of point in radians.
+      real(wp), intent(out) :: lat  !! Latitude of point in radians.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RECTAN     I   Rectangular coordinates of the point.
-!     RADIUS     O   Distance of a point from the origin.
-!     LON        O   Longitude of point in radians.
-!     LAT        O   Latitude of point in radians.
-!
 ! $ Detailed_Input
 !
 !     RECTAN   are the rectangular coordinates of a point.
@@ -19133,6 +18709,8 @@ contains
 
 !$Procedure RECRAD ( Rectangular coordinates to RA and DEC )
 
+      !> Convert rectangular coordinates to range, right ascension,
+      !> and declination.
       pure subroutine recrad ( rectan, range, ra, dec )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
@@ -19155,20 +18733,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rectan ( 3 )
-      real(wp), intent(out) :: range
-      real(wp), intent(out) :: ra
-      real(wp), intent(out) :: dec
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp), intent(out) :: range  !! Distance of the point from the origin.
+      real(wp), intent(out) :: ra  !! Right ascension in radians.
+      real(wp), intent(out) :: dec  !! Declination in radians.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RECTAN     I   Rectangular coordinates of a point.
-!     RANGE      O   Distance of the point from the origin.
-!     RA         O   Right ascension in radians.
-!     DEC        O   Declination in radians.
-!
 ! $ Detailed_Input
 !
 !     RECTAN   are the rectangular coordinates of a point.
@@ -19325,6 +18894,7 @@ contains
 
 !$Procedure RECSPH ( Rectangular to spherical coordinates )
 
+      !> Convert from rectangular coordinates to spherical coordinates.
       pure subroutine recsph ( rectan, r, colat, slon  )
       use pepper_kinds, only: wp
 
@@ -19345,20 +18915,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: rectan ( 3 )
-      real(wp), intent(out) :: r
-      real(wp), intent(out) :: colat
-      real(wp), intent(out) :: slon
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp), intent(out) :: r  !! Distance of the point from the origin.
+      real(wp), intent(out) :: colat  !! Angle of the point from the Z-axis (radians)
+      real(wp), intent(out) :: slon  !! Longitude of the point (radians).
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     RECTAN     I   Rectangular coordinates of a point.
-!     R          O   Distance of the point from the origin.
-!     COLAT      O   Angle of the point from the Z-axis (radians)
-!     SLON       O   Longitude of the point (radians).
-!
 ! $ Detailed_Input
 !
 !     RECTAN   are the rectangular coordinates of a point.
@@ -19736,6 +19297,10 @@ contains
 
 !$Procedure SHARPR ( Sharpen a rotation )
 
+      !> Adjust the columns of a matrix that is "nearly" a rotation
+      !> so that they are numerically unit length and orthogonal,
+      !> going from left to right in the usual printed presentation
+      !> of a matrix.
       pure subroutine sharpr ( rot )
       use pepper_kinds, only: wp
 
@@ -19758,14 +19323,8 @@ contains
 
       implicit none
 
-      real(wp), intent(inout) :: rot ( 3, 3 )
+      real(wp), intent(inout) :: rot ( 3, 3 )  !! The rotation matrix to be sharpened.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ROT       I-O  The rotation matrix to be sharpened.
-!
 ! $ Detailed_Input
 !
 !     ROT      is a 3x3 matrix that is nearly a rotation matrix.
@@ -19877,6 +19436,11 @@ contains
 
 !$Procedure SMSGND  ( Same Sign Double Precision Numbers )
 
+      !> Return .TRUE. if two given double precision numbers have the same
+      !> sign.
+      !>
+      !> The function returns .TRUE. if the input arguments have the same
+      !> sign.
       elemental logical function smsgnd ( x, y )
       use pepper_kinds, only: wp
 
@@ -19897,19 +19461,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      real(wp), intent(in) :: y
+      real(wp), intent(in) :: x  !! A double precision number
+      real(wp), intent(in) :: y  !! A double precision number
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   A double precision number
-!     Y          I   A double precision number
-!
-!     The function returns .TRUE. if the input arguments have the same
-!     sign.
-!
 ! $ Detailed_Input
 !
 !     X        is any double precision number.
@@ -20013,6 +19567,10 @@ contains
 
 !$Procedure SMSGNI  ( Same Sign Integer Numbers )
 
+      !> Return .TRUE. if two given integer numbers have the same sign.
+      !>
+      !> The function returns .TRUE. if the input arguments have the same
+      !> sign.
       elemental logical function smsgni ( x, y )
       use pepper_kinds, only: ip
 
@@ -20032,19 +19590,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: x
-      integer(ip), intent(in) :: y
+      integer(ip), intent(in) :: x  !! An integer.
+      integer(ip), intent(in) :: y  !! An integer.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X          I   An integer.
-!     Y          I   An integer.
-!
-!     The function returns .TRUE. if the input arguments have the same
-!     sign.
-!
 ! $ Detailed_Input
 !
 !     X        is any integer.
@@ -20148,6 +19696,7 @@ contains
 
 !$Procedure SPHCYL ( Spherical to cylindrical coordinates )
 
+      !> Convert from spherical coordinates to cylindrical coordinates.
       elemental subroutine sphcyl ( radius, colat, slon, r, clon, z )
       use pepper_kinds, only: wp
 
@@ -20168,24 +19717,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: radius
-      real(wp), intent(in) :: colat
-      real(wp), intent(in) :: slon
-      real(wp), intent(out) :: r
-      real(wp), intent(out) :: clon
-      real(wp), intent(out) :: z
+      real(wp), intent(in) :: radius  !! Distance of point from origin.
+      real(wp), intent(in) :: colat  !! Polar angle (co-latitude in radians) of point.
+      real(wp), intent(in) :: slon  !! Azimuthal angle (longitude) of point (radians).
+      real(wp), intent(out) :: r  !! Distance of point from Z axis.
+      real(wp), intent(out) :: clon  !! Angle (radians) of point from XZ plane.
+      real(wp), intent(out) :: z  !! Height of point above XY plane.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     RADIUS     I   Distance of point from origin.
-!     COLAT      I   Polar angle (co-latitude in radians) of point.
-!     SLON       I   Azimuthal angle (longitude) of point (radians).
-!     R          O   Distance of point from Z axis.
-!     CLON       O   Angle (radians) of point from XZ plane.
-!     Z          O   Height of point above XY plane.
-!
 ! $ Detailed_Input
 !
 !     RADIUS   is the distance of the point from origin.
@@ -20639,6 +20177,7 @@ contains
 
 !$Procedure SPHLAT ( Spherical to latitudinal coordinates )
 
+      !> Convert from spherical coordinates to latitudinal coordinates.
       elemental subroutine sphlat ( r, colat, slon, radius, lon, lat )
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi
@@ -20660,24 +20199,13 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: colat
-      real(wp), intent(in) :: slon
-      real(wp), intent(out) :: radius
-      real(wp), intent(out) :: lon
-      real(wp), intent(out) :: lat
+      real(wp), intent(in) :: r  !! Distance of the point from the origin.
+      real(wp), intent(in) :: colat  !! Angle of the point from positive Z axis (radians).
+      real(wp), intent(in) :: slon  !! Angle of the point from the XZ plane (radians).
+      real(wp), intent(out) :: radius  !! Distance of a point from the origin
+      real(wp), intent(out) :: lon  !! Angle of the point from the XZ plane in radians
+      real(wp), intent(out) :: lat  !! Angle of the point from the XY plane in radians
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of the point from the origin.
-!     COLAT      I   Angle of the point from positive Z axis (radians).
-!     SLON       I   Angle of the point from the XZ plane (radians).
-!     RADIUS     O   Distance of a point from the origin
-!     LON        O   Angle of the point from the XZ plane in radians
-!     LAT        O   Angle of the point from the XY plane in radians
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the point from the origin.
@@ -21088,6 +20616,7 @@ contains
 
 !$Procedure SPHREC ( Spherical to rectangular coordinates )
 
+      !> Convert from spherical coordinates to rectangular coordinates.
       pure subroutine sphrec ( r, colat, slon, rectan  )
       use pepper_kinds, only: wp
 
@@ -21108,20 +20637,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: r
-      real(wp), intent(in) :: colat
-      real(wp), intent(in) :: slon
-      real(wp), intent(out) :: rectan ( 3 )
+      real(wp), intent(in) :: r  !! Distance of a point from the origin.
+      real(wp), intent(in) :: colat  !! Angle of the point from the Z-axis in radians.
+      real(wp), intent(in) :: slon  !! Angle of the point from the XZ plane in radians.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     R          I   Distance of a point from the origin.
-!     COLAT      I   Angle of the point from the Z-axis in radians.
-!     SLON       I   Angle of the point from the XZ plane in radians.
-!     RECTAN     O   Rectangular coordinates of the point.
-!
 ! $ Detailed_Input
 !
 !     R        is the distance of the point from the origin.
@@ -21497,6 +21017,9 @@ contains
 
 !$Procedure TRACE ( Trace of a 3x3 matrix )
 
+      !> Return the trace of a 3x3 matrix.
+      !>
+      !> The function returns the trace of MATRIX.
       pure real(wp) function  trace ( matrix )
       use pepper_kinds, only: wp
 
@@ -21516,16 +21039,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: matrix ( 3, 3 )
+      real(wp), intent(in) :: matrix ( 3, 3 )  !! 3x3 matrix of double precision numbers.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     I   3x3 matrix of double precision numbers.
-!
-!     The function returns the trace of MATRIX.
-!
 ! $ Detailed_Input
 !
 !     MATRIX   is a double precision 3x3 matrix.
@@ -21677,6 +21192,10 @@ contains
 
 !$Procedure TRACEG ( Trace of a matrix, general dimension )
 
+      !> Return the trace of a square matrix of arbitrary dimension.
+      !>
+      !> The function returns the trace of the square matrix of arbitrary
+      !> dimension MATRIX.
       pure real(wp) function  traceg ( matrix, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -21696,19 +21215,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: matrix ( ndim,ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of the matrix.
+      real(wp), intent(in) :: matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision numbers.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     I     NDIM x NDIM matrix of double precision numbers.
-!     NDIM       I     Dimension of the matrix.
-!
-!     The function returns the trace of the square matrix of arbitrary
-!     dimension MATRIX.
-!
 ! $ Detailed_Input
 !
 !     MATRIX   is a double precision square matrix of arbitrary
@@ -21880,6 +21389,7 @@ contains
 
 !$Procedure UCRSS ( Unitized cross product, 3x3 )
 
+      !> Compute the normalized cross product of two 3-vectors.
       pure subroutine ucrss ( v1, v2, vout )
       use pepper_kinds, only: wp
 
@@ -21899,18 +21409,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(in) :: v2   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! Left vector for cross product.
+      real(wp), intent(in) :: v2   ( 3 )  !! Right vector for cross product.
+      real(wp), intent(out) :: vout ( 3 )  !! Normalized cross product of V1 and V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Left vector for cross product.
-!     V2         I   Right vector for cross product.
-!     VOUT       O   Normalized cross product of V1 and V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -22154,6 +21656,7 @@ contains
 
 !$Procedure UNORM ( Unit vector and norm, 3 dimensional )
 
+      !> Normalize a double precision 3-vector and return its magnitude.
       pure subroutine unorm ( v1, vout, vmag )
       use pepper_kinds, only: wp
 
@@ -22173,18 +21676,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
-      real(wp), intent(out) :: vmag
+      real(wp), intent(in) :: v1   ( 3 )  !! Vector to be normalized.
+      real(wp), intent(out) :: vout ( 3 )  !! Unit vector V1 / |V1|.
+      real(wp), intent(out) :: vmag  !! Magnitude of V1, i.e. |V1|.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector to be normalized.
-!     VOUT       O   Unit vector V1 / |V1|.
-!     VMAG       O   Magnitude of V1, i.e. |V1|.
-!
 ! $ Detailed_Input
 !
 !     V1       is an arbitrary 3-vector, including the
@@ -22365,6 +21860,8 @@ contains
 
 !$Procedure UNORMG ( Unit vector and norm, general dimension )
 
+      !> Normalize a double precision vector of arbitrary dimension and
+      !> return its magnitude.
       pure subroutine unormg ( v1, ndim, vout, vmag )
       use pepper_kinds, only: ip, wp
 
@@ -22385,20 +21882,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: v1   ( ndim )
-      real(wp), intent(out) :: vout ( ndim )
-      real(wp), intent(out) :: vmag
+      integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp), intent(in) :: v1   ( ndim )  !! Vector to be normalized.
+      real(wp), intent(out) :: vout ( ndim )  !! Unit vector V1 / ||V1||.
+      real(wp), intent(out) :: vmag  !! Magnitude of V1, i.e. ||V1||.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector to be normalized.
-!     NDIM       I   Dimension of V1 (and also VOUT).
-!     VOUT       O   Unit vector V1 / ||V1||.
-!     VMAG       O   Magnitude of V1, i.e. ||V1||.
-!
 ! $ Detailed_Input
 !
 !     V1       is an arbitrary double precision n-dimensional vector,
@@ -22594,6 +22082,7 @@ contains
 
 !$Procedure VADD ( Vector addition, 3 dimensional )
 
+      !> Add two double precision 3-dimensional vectors.
       pure subroutine vadd ( v1, v2, vout )
       use pepper_kinds, only: wp
 
@@ -22613,18 +22102,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(in) :: v2   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! First vector to be added.
+      real(wp), intent(in) :: v2   ( 3 )  !! Second vector to be added.
+      real(wp), intent(out) :: vout ( 3 )  !! Sum vector, V1 + V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector to be added.
-!     V2         I   Second vector to be added.
-!     VOUT       O   Sum vector, V1 + V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -22786,6 +22267,7 @@ contains
 
 !$Procedure VADDG ( Vector addition, general dimension )
 
+      !> Add two vectors of arbitrary dimension.
       pure subroutine vaddg ( v1, v2, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -22805,20 +22287,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: v1   ( ndim )
-      real(wp), intent(in) :: v2   ( ndim )
-      real(wp), intent(out) :: vout ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of V1, V2, and VOUT.
+      real(wp), intent(in) :: v1   ( ndim )  !! First vector to be added.
+      real(wp), intent(in) :: v2   ( ndim )  !! Second vector to be added.
+      real(wp), intent(out) :: vout ( ndim )  !! Sum vector, V1 + V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector to be added.
-!     V2         I   Second vector to be added.
-!     NDIM       I   Dimension of V1, V2, and VOUT.
-!     VOUT       O   Sum vector, V1 + V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -22999,6 +22472,7 @@ contains
 
 !$Procedure VCRSS ( Vector cross product, 3 dimensions )
 
+      !> Compute the cross product of two 3-dimensional vectors.
       pure subroutine vcrss ( v1, v2, vout )
       use pepper_kinds, only: wp
 
@@ -23018,18 +22492,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(in) :: v2   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! Left hand vector for cross product.
+      real(wp), intent(in) :: v2   ( 3 )  !! Right hand vector for cross product.
+      real(wp), intent(out) :: vout ( 3 )  !! Cross product V1 x V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Left hand vector for cross product.
-!     V2         I   Right hand vector for cross product.
-!     VOUT       O   Cross product V1 x V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -23219,6 +22685,9 @@ contains
 
 !$Procedure VDIST ( Vector distance )
 
+      !> Return the distance between two three-dimensional vectors.
+      !>
+      !> The function returns the distance between V1 and V2.
       pure real(wp) function  vdist ( v1, v2 )
       use pepper_kinds, only: wp
 
@@ -23238,19 +22707,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( 3 )
-      real(wp), intent(in) :: v2 ( 3 )
+      real(wp), intent(in) :: v1 ( 3 )  !! Two 3-vectors.
+      real(wp), intent(in) :: v2 ( 3 )  !! Two 3-vectors.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!
-!     V1,
-!     V2         I   Two 3-vectors.
-!
-!     The function returns the distance between V1 and V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -23396,6 +22855,9 @@ contains
 
 !$Procedure VDISTG ( Vector distance, general dimension )
 
+      !> Return the distance between two vectors of arbitrary dimension.
+      !>
+      !> The function returns the distance between V1 and V2.
       pure real(wp) function vdistg ( v1, v2, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -23415,20 +22877,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( * )
-      real(wp), intent(in) :: v2   ( * )
-      integer(ip), intent(in) :: ndim
+      real(wp), intent(in) :: v1   ( * )  !! Two vectors of arbitrary dimension.
+      real(wp), intent(in) :: v2   ( * )  !! Two vectors of arbitrary dimension.
+      integer(ip), intent(in) :: ndim  !! The common dimension of V1 and V2
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1,
-!     V2         I   Two vectors of arbitrary dimension.
-!     NDIM       I   The common dimension of V1 and V2
-!
-!     The function returns the distance between V1 and V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -23594,6 +23046,10 @@ contains
 
 !$Procedure VDOT ( Vector dot product, 3 dimensions )
 
+      !> Compute the dot product of two double precision, 3-dimensional
+      !> vectors.
+      !>
+      !> The function returns the value of the dot product of V1 and V2.
       pure real(wp) function vdot ( v1, v2 )
       use pepper_kinds, only: wp
 
@@ -23614,18 +23070,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( 3 )
-      real(wp), intent(in) :: v2 ( 3 )
+      real(wp), intent(in) :: v1 ( 3 )  !! First vector in the dot product.
+      real(wp), intent(in) :: v2 ( 3 )  !! Second vector in the dot product.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector in the dot product.
-!     V2         I   Second vector in the dot product.
-!
-!     The function returns the value of the dot product of V1 and V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -23805,6 +23252,9 @@ contains
 
 !$Procedure VDOTG ( Vector dot product, general dimension )
 
+      !> Compute the dot product of two vectors of arbitrary dimension.
+      !>
+      !> The function returns the value of the dot product of V1 and V2.
       pure real(wp) function vdotg ( v1, v2, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -23824,20 +23274,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1  ( * )
-      real(wp), intent(in) :: v2  ( * )
-      integer(ip), intent(in) :: ndim
+      real(wp), intent(in) :: v1  ( * )  !! First vector in the dot product.
+      real(wp), intent(in) :: v2  ( * )  !! Second vector in the dot product.
+      integer(ip), intent(in) :: ndim  !! Dimension of V1 and V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector in the dot product.
-!     V2         I   Second vector in the dot product.
-!     NDIM       I   Dimension of V1 and V2.
-!
-!     The function returns the value of the dot product of V1 and V2.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -24032,6 +23472,8 @@ contains
 
 !$Procedure VEQU ( Vector equality, 3 dimensions )
 
+      !> Make one double precision 3-dimensional vector equal to
+      !> another.
       pure subroutine vequ ( vin, vout )
       use pepper_kinds, only: wp
 
@@ -24053,17 +23495,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: vin   ( 3 )
-      real(wp), intent(out) :: vout  ( 3 )
+      real(wp), intent(in) :: vin   ( 3 )  !! Double precision 3-dimensional vector.
+      real(wp), intent(out) :: vout  ( 3 )  !! Double precision 3-dimensional vector set equal to VIN.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VIN        I   Double precision 3-dimensional vector.
-!     VOUT       O   Double precision 3-dimensional vector set equal
-!                    to VIN.
-!
 ! $ Detailed_Input
 !
 !     VIN      is an arbitrary, double precision 3-dimensional vector.
@@ -24212,6 +23646,8 @@ contains
 
 !$Procedure VEQUG ( Vector equality, general dimension )
 
+      !> Make one double precision vector of arbitrary dimension equal
+      !> to another.
       pure subroutine vequg ( vin, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -24233,19 +23669,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: vin   ( ndim )
-      real(wp), intent(out) :: vout  ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of VIN (and also VOUT).
+      real(wp), intent(in) :: vin   ( ndim )  !! Double precision n-dimensional vector.
+      real(wp), intent(out) :: vout  ( ndim )  !! Double precision n-dimensional vector set equal to VIN.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VIN        I   Double precision n-dimensional vector.
-!     NDIM       I   Dimension of VIN (and also VOUT).
-!     VOUT       O   Double precision n-dimensional vector set equal
-!                    to VIN.
-!
 ! $ Detailed_Input
 !
 !     VIN      is an arbitrary, double precision n-dimensional vector.
@@ -24405,6 +23832,8 @@ contains
 
 !$Procedure VHAT ( "V-Hat", unit vector along V, 3 dimensions )
 
+      !> Find the unit vector along a double precision 3-dimensional
+      !> vector.
       pure subroutine vhat ( v1, vout )
       use pepper_kinds, only: wp
 
@@ -24425,16 +23854,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! Vector to be normalized.
+      real(wp), intent(out) :: vout ( 3 )  !! Unit vector V1 / |V1|.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector to be normalized.
-!     VOUT       O   Unit vector V1 / |V1|.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision, 3-dimensional vector.
@@ -24615,6 +24037,8 @@ contains
 
 !$Procedure VHATG ( "V-Hat", unit vector along V, general dimension )
 
+      !> Find the unit vector along a double precision vector of
+      !> arbitrary dimension.
       pure subroutine vhatg ( v1, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -24635,18 +24059,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: v1   ( ndim )
-      real(wp), intent(out) :: vout ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp), intent(in) :: v1   ( ndim )  !! Vector to be normalized.
+      real(wp), intent(out) :: vout ( ndim )  !! Unit vector along V1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector to be normalized.
-!     NDIM       I   Dimension of V1 (and also VOUT).
-!     VOUT       O   Unit vector along V1.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision vector of arbitrary dimension.
@@ -24841,6 +24257,7 @@ contains
 
 !$Procedure VHATIP ( "V-Hat", 3-d unit vector along V, in place )
 
+      !> Scale a three-dimensional vector to unit length.
       pure subroutine vhatip ( v )
       use pepper_kinds, only: wp
 
@@ -24860,14 +24277,8 @@ contains
 
       implicit none
 
-      real(wp), intent(inout) :: v ( 3 )
+      real(wp), intent(inout) :: v ( 3 )  !! Vector to be normalized/unit vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V         I-O  Vector to be normalized/unit vector.
-!
 ! $ Detailed_Input
 !
 !     V        is any double precision, 3-dimensional vector. If this
@@ -25000,6 +24411,8 @@ contains
 
 !$Procedure VLCOM ( Vector linear combination, 3 dimensions )
 
+      !> Compute a vector linear combination of two double precision,
+      !> 3-dimensional vectors.
       pure subroutine vlcom ( a, v1, b, v2, sum )
       use pepper_kinds, only: wp
 
@@ -25020,22 +24433,12 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: a
-      real(wp), intent(in) :: v1  ( 3 )
-      real(wp), intent(in) :: b
-      real(wp), intent(in) :: v2  ( 3 )
-      real(wp), intent(out) :: sum ( 3 )
+      real(wp), intent(in) :: a  !! Coefficient of V1.
+      real(wp), intent(in) :: v1  ( 3 )  !! Vector in 3-space.
+      real(wp), intent(in) :: b  !! Coefficient of V2.
+      real(wp), intent(in) :: v2  ( 3 )  !! Vector in 3-space.
+      real(wp), intent(out) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   Coefficient of V1.
-!     V1         I   Vector in 3-space.
-!     B          I   Coefficient of V2.
-!     V2         I   Vector in 3-space.
-!     SUM        O   Linear vector combination A*V1 + B*V2.
-!
 ! $ Detailed_Input
 !
 !     A        is the double precision scalar variable that multiplies
@@ -25282,6 +24685,8 @@ contains
 
 !$Procedure VLCOM3 ( Vector linear combination, 3 dimensions )
 
+      !> Compute the vector linear combination of three double precision
+      !> 3-dimensional vectors.
       pure subroutine vlcom3 ( a, v1, b, v2, c, v3, sum )
       use pepper_kinds, only: wp
 
@@ -25302,26 +24707,14 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: a
-      real(wp), intent(in) :: v1  ( 3 )
-      real(wp), intent(in) :: b
-      real(wp), intent(in) :: v2  ( 3 )
-      real(wp), intent(in) :: c
-      real(wp), intent(in) :: v3  ( 3 )
-      real(wp), intent(out) :: sum ( 3 )
+      real(wp), intent(in) :: a  !! Coefficient of V1.
+      real(wp), intent(in) :: v1  ( 3 )  !! Vector in 3-space.
+      real(wp), intent(in) :: b  !! Coefficient of V2.
+      real(wp), intent(in) :: v2  ( 3 )  !! Vector in 3-space.
+      real(wp), intent(in) :: c  !! Coefficient of V3.
+      real(wp), intent(in) :: v3  ( 3 )  !! Vector in 3-space.
+      real(wp), intent(out) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2 + C*V3.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   Coefficient of V1.
-!     V1         I   Vector in 3-space.
-!     B          I   Coefficient of V2.
-!     V2         I   Vector in 3-space.
-!     C          I   Coefficient of V3.
-!     V3         I   Vector in 3-space.
-!     SUM        O   Linear vector combination A*V1 + B*V2 + C*V3.
-!
 ! $ Detailed_Input
 !
 !     A        is the double precision scalar variable that multiplies
@@ -25532,6 +24925,8 @@ contains
 
 !$Procedure VLCOMG ( Vector linear combination, general dimension )
 
+      !> Compute a vector linear combination of two double precision
+      !> vectors of arbitrary dimension.
       pure subroutine vlcomg ( n, a, v1, b, v2, sum )
       use pepper_kinds, only: ip, wp
 
@@ -25552,24 +24947,13 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: n
-      real(wp), intent(in) :: a
-      real(wp), intent(in) :: v1  ( n )
-      real(wp), intent(in) :: b
-      real(wp), intent(in) :: v2  ( n )
-      real(wp), intent(out) :: sum ( n )
+      integer(ip), intent(in) :: n  !! Dimension of vector space.
+      real(wp), intent(in) :: a  !! Coefficient of V1.
+      real(wp), intent(in) :: v1  ( n )  !! Vector in N-space.
+      real(wp), intent(in) :: b  !! Coefficient of V2.
+      real(wp), intent(in) :: v2  ( n )  !! Vector in N-space.
+      real(wp), intent(out) :: sum ( n )  !! Linear vector combination A*V1 + B*V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     N          I   Dimension of vector space.
-!     A          I   Coefficient of V1.
-!     V1         I   Vector in N-space.
-!     B          I   Coefficient of V2.
-!     V2         I   Vector in N-space.
-!     SUM        O   Linear vector combination A*V1 + B*V2.
-!
 ! $ Detailed_Input
 !
 !     N        is the dimension of V1, V2 and SUM.
@@ -25746,6 +25130,7 @@ contains
 
 !$Procedure VMINUG ( Negate vector, "-V", general dimension )
 
+      !> Negate a double precision vector of arbitrary dimension.
       pure subroutine vminug ( vin, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -25765,18 +25150,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: vin   ( ndim )
-      real(wp), intent(out) :: vout  ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of VIN (and also VOUT).
+      real(wp), intent(in) :: vin   ( ndim )  !! n-dimensional vector to be negated.
+      real(wp), intent(out) :: vout  ( ndim )  !! Negated vector -V1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VIN        I   n-dimensional vector to be negated.
-!     NDIM       I   Dimension of VIN (and also VOUT).
-!     VOUT       O   Negated vector -V1.
-!
 ! $ Detailed_Input
 !
 !     VIN      is any double precision vector of arbitrary size.
@@ -25942,6 +25319,7 @@ contains
 
 !$Procedure VMINUS ( Negate vector, "-V", 3 dimensions )
 
+      !> Negate a double precision 3-dimensional vector.
       pure subroutine vminus ( v1, vout )
       use pepper_kinds, only: wp
 
@@ -25961,16 +25339,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! Vector to be negated.
+      real(wp), intent(out) :: vout ( 3 )  !! Negated vector -V1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector to be negated.
-!     VOUT       O   Negated vector -V1.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision 3-dimensional vector.
@@ -26126,6 +25497,10 @@ contains
 
 !$Procedure VNORM ( Vector norm, 3 dimensions )
 
+      !> Compute the magnitude of a double precision 3-dimensional
+      !> vector.
+      !>
+      !> The function returns the magnitude of V1.
       pure real(wp) function vnorm ( v1 )
       use pepper_kinds, only: wp
 
@@ -26146,16 +25521,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( 3 )
+      real(wp), intent(in) :: v1 ( 3 )  !! Vector whose magnitude is to be found.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector whose magnitude is to be found.
-!
-!     The function returns the magnitude of V1.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision 3-dimensional vector.
@@ -26329,6 +25696,10 @@ contains
 
 !$Procedure VNORMG ( Vector norm, general dimension )
 
+      !> Compute the magnitude of a double precision vector of arbitrary
+      !> dimension.
+      !>
+      !> The function returns the magnitude of V1.
       pure real(wp) function vnormg ( v1, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -26349,18 +25720,9 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: v1   ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of V1.
+      real(wp), intent(in) :: v1   ( ndim )  !! Vector whose magnitude is to be found.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   Vector whose magnitude is to be found.
-!     NDIM       I   Dimension of V1.
-!
-!     The function returns the magnitude of V1.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision vector of arbitrary dimension.
@@ -26548,6 +25910,7 @@ contains
 
 !$Procedure VPACK ( Pack three scalar components into a vector )
 
+      !> Pack three scalar components into a vector.
       pure subroutine vpack ( x, y, z, v )
       use pepper_kinds, only: wp
 
@@ -26567,20 +25930,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: x
-      real(wp), intent(in) :: y
-      real(wp), intent(in) :: z
-      real(wp), intent(out) :: v ( 3 )
+      real(wp), intent(in) :: x  !! Scalar components of a vector.
+      real(wp), intent(in) :: y  !! Scalar components of a vector.
+      real(wp), intent(in) :: z  !! Scalar components of a vector.
+      real(wp), intent(out) :: v ( 3 )  !! Equivalent vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     X,
-!     Y,
-!     Z          I   Scalar components of a vector.
-!     V          O   Equivalent vector.
-!
 ! $ Detailed_Input
 !
 !     X,
@@ -26741,6 +26095,8 @@ contains
 
 !$Procedure VPERP ( Perpendicular component of a 3-vector )
 
+      !> Find the component of a vector that is perpendicular to a second
+      !> vector. All vectors are 3-dimensional.
       pure subroutine vperp ( a, b, p )
       use pepper_kinds, only: wp
 
@@ -26761,18 +26117,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: a ( 3 )
-      real(wp), intent(in) :: b ( 3 )
-      real(wp), intent(out) :: p ( 3 )
+      real(wp), intent(in) :: a ( 3 )  !! The vector whose orthogonal component is sought.
+      real(wp), intent(in) :: b ( 3 )  !! The vector used as the orthogonal reference.
+      real(wp), intent(out) :: p ( 3 )  !! The component of A orthogonal to B.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   The vector whose orthogonal component is sought.
-!     B          I   The vector used as the orthogonal reference.
-!     P          O   The component of A orthogonal to B.
-!
 ! $ Detailed_Input
 !
 !     A        is a double precision, 3-dimensional vector. It the
@@ -26934,6 +26282,8 @@ contains
 
 !$Procedure VPROJ ( Vector projection, 3 dimensions )
 
+      !> Compute the projection of one 3-dimensional vector onto another
+      !> 3-dimensional vector.
       pure subroutine vproj ( a, b, p )
       use pepper_kinds, only: wp
 
@@ -26954,18 +26304,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: a ( 3 )
-      real(wp), intent(in) :: b ( 3 )
-      real(wp), intent(out) :: p ( 3 )
+      real(wp), intent(in) :: a ( 3 )  !! The vector to be projected.
+      real(wp), intent(in) :: b ( 3 )  !! The vector onto which A is to be projected.
+      real(wp), intent(out) :: p ( 3 )  !! The projection of A onto B.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   The vector to be projected.
-!     B          I   The vector onto which A is to be projected.
-!     P          O   The projection of A onto B.
-!
 ! $ Detailed_Input
 !
 !     A        is a double precision, 3-dimensional vector. This
@@ -27205,6 +26547,8 @@ contains
 
 !$Procedure VPROJG ( Vector projection, general dimension )
 
+      !> Compute the projection of one vector onto another vector. All
+      !> vectors are of arbitrary dimension.
       pure subroutine vprojg ( a, b, ndim, p )
       use pepper_kinds, only: ip, wp
 
@@ -27225,20 +26569,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: a ( ndim )
-      real(wp), intent(in) :: b ( ndim )
-      real(wp), intent(out) :: p ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of A, B, and P.
+      real(wp), intent(in) :: a ( ndim )  !! The vector to be projected.
+      real(wp), intent(in) :: b ( ndim )  !! The vector onto which A is to be projected.
+      real(wp), intent(out) :: p ( ndim )  !! The projection of A onto B.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A          I   The vector to be projected.
-!     B          I   The vector onto which A is to be projected.
-!     NDIM       I   Dimension of A, B, and P.
-!     P          O   The projection of A onto B.
-!
 ! $ Detailed_Input
 !
 !     A        is a double precision vector of arbitrary dimension.
@@ -27458,6 +26793,10 @@ contains
 
 !$Procedure VREL ( Vector relative difference, 3 dimensions )
 
+      !> Return the relative difference between two 3-dimensional vectors.
+      !>
+      !> The function returns the relative difference between two
+      !> 3-dimensional vectors.
       pure real(wp) function vrel ( v1, v2  )
       use pepper_kinds, only: wp
 
@@ -27478,19 +26817,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( 3 )
-      real(wp), intent(in) :: v2 ( 3 )
+      real(wp), intent(in) :: v1 ( 3 )  !! Input vectors.
+      real(wp), intent(in) :: v2 ( 3 )  !! Input vectors.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1,
-!     V2         I   Input vectors.
-!
-!     The function returns the relative difference between two
-!     3-dimensional vectors.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -27678,6 +27007,11 @@ contains
 
 !$Procedure VRELG ( Vector relative difference, general dimension )
 
+      !> Return the relative difference between two vectors of general
+      !> dimension.
+      !>
+      !> The function returns the relative difference between two vectors
+      !> of general dimension.
       pure real(wp) function vrelg ( v1, v2, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -27699,21 +27033,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( * )
-      real(wp), intent(in) :: v2 ( * )
-      integer(ip), intent(in) :: ndim
+      real(wp), intent(in) :: v1 ( * )  !! Input vectors.
+      real(wp), intent(in) :: v2 ( * )  !! Input vectors.
+      integer(ip), intent(in) :: ndim  !! Dimension of V1 and V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1,
-!     V2         I   Input vectors.
-!     NDIM       I   Dimension of V1 and V2.
-!
-!     The function returns the relative difference between two vectors
-!     of general dimension.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -27927,6 +27250,8 @@ contains
 
 !$Procedure VROTV ( Vector rotation about an axis )
 
+      !> Rotate a vector about a specified axis vector by a specified
+      !> angle and return the rotated vector.
       pure subroutine vrotv ( v, axis, theta, r )
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
@@ -27949,20 +27274,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v    ( 3 )
-      real(wp), intent(in) :: axis ( 3 )
-      real(wp), intent(in) :: theta
-      real(wp), intent(out) :: r    ( 3 )
+      real(wp), intent(in) :: v    ( 3 )  !! Vector to be rotated.
+      real(wp), intent(in) :: axis ( 3 )  !! Axis of the rotation.
+      real(wp), intent(in) :: theta  !! Angle of rotation (radians).
+      real(wp), intent(out) :: r    ( 3 )  !! Result of rotating V about AXIS by THETA.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V          I   Vector to be rotated.
-!     AXIS       I   Axis of the rotation.
-!     THETA      I   Angle of rotation (radians).
-!     R          O   Result of rotating V about AXIS by THETA.
-!
 ! $ Detailed_Input
 !
 !     V        is a 3-dimensional vector to be rotated.
@@ -28150,6 +27466,7 @@ contains
 
 !$Procedure VSCL ( Vector scaling, 3 dimensions )
 
+      !> Multiply a scalar and a double precision 3-dimensional vector.
       pure subroutine vscl ( s, v1, vout )
       use pepper_kinds, only: wp
 
@@ -28169,18 +27486,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: s  !! Scalar to multiply a vector.
+      real(wp), intent(in) :: v1   ( 3 )  !! Vector to be multiplied.
+      real(wp), intent(out) :: vout ( 3 )  !! Product vector, S * V1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S          I   Scalar to multiply a vector.
-!     V1         I   Vector to be multiplied.
-!     VOUT       O   Product vector, S * V1.
-!
 ! $ Detailed_Input
 !
 !     S        is a double precision scalar used to multiply the vector
@@ -28349,6 +27658,8 @@ contains
 
 !$Procedure VSCLG ( Vector scaling, general dimension )
 
+      !> Multiply a scalar and a double precision vector of arbitrary
+      !> dimension.
       pure subroutine vsclg ( s, v1, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -28369,20 +27680,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: s
-      real(wp), intent(in) :: v1   ( ndim )
-      real(wp), intent(out) :: vout ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp), intent(in) :: s  !! Scalar to multiply a vector.
+      real(wp), intent(in) :: v1   ( ndim )  !! Vector to be multiplied.
+      real(wp), intent(out) :: vout ( ndim )  !! Product vector, S * V1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S          I   Scalar to multiply a vector.
-!     V1         I   Vector to be multiplied.
-!     NDIM       I   Dimension of V1 (and also VOUT).
-!     VOUT       O   Product vector, S * V1.
-!
 ! $ Detailed_Input
 !
 !     S        is a double precision scalar.
@@ -28558,6 +27860,8 @@ contains
 
 !$Procedure VSCLIP ( Vector scaling, 3 dimensions, in place )
 
+      !> Multiply a scalar and a 3-dimensional double precision vector,
+      !> replacing the input vector with the result.
       pure subroutine vsclip ( s, v )
       use pepper_kinds, only: wp
 
@@ -28578,16 +27882,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: s
-      real(wp), intent(inout) :: v ( 3 )
+      real(wp), intent(in) :: s  !! Scalar by which to multiply a vector.
+      real(wp), intent(inout) :: v ( 3 )  !! Vector to be multiplied/result of multiplication.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     S          I   Scalar by which to multiply a vector.
-!     V         I-O  Vector to be multiplied/result of multiplication.
-!
 ! $ Detailed_Input
 !
 !     S        is a double precision scalar used to multiply the vector
@@ -28685,6 +27982,12 @@ contains
 
 !$Procedure VSEP  ( Angular separation of vectors, 3 dimensions )
 
+      !> Find the separation angle in radians between two double
+      !> precision, 3-dimensional vectors. This angle is defined as zero
+      !> if either vector is zero.
+      !>
+      !> The function returns the angle between V1 and V2 expressed in
+      !> radians.
       pure real(wp) function vsep ( v1, v2 )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
@@ -28708,19 +28011,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( 3 )
-      real(wp), intent(in) :: v2 ( 3 )
+      real(wp), intent(in) :: v1 ( 3 )  !! First vector.
+      real(wp), intent(in) :: v2 ( 3 )  !! Second vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector.
-!     V2         I   Second vector.
-!
-!     The function returns the angle between V1 and V2 expressed in
-!     radians.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -28981,6 +28274,12 @@ contains
 
 !$Procedure VSEPG ( Angular separation of vectors, general dimension )
 
+      !> Find the separation angle in radians between two double precision
+      !> vectors of arbitrary dimension. This angle is defined as zero if
+      !> either vector is zero.
+      !>
+      !> The function returns the angle between V1 and V2 expressed in
+      !> radians.
       pure real(wp) function vsepg ( v1, v2, ndim )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
@@ -29004,21 +28303,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1 ( * )
-      real(wp), intent(in) :: v2 ( * )
-      integer(ip), intent(in) :: ndim
+      real(wp), intent(in) :: v1 ( * )  !! First vector.
+      real(wp), intent(in) :: v2 ( * )  !! Second vector.
+      integer(ip), intent(in) :: ndim  !! The number of elements in V1 and V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector.
-!     V2         I   Second vector.
-!     NDIM       I   The number of elements in V1 and V2.
-!
-!     The function returns the angle between V1 and V2 expressed in
-!     radians.
-!
 ! $ Detailed_Input
 !
 !     V1,
@@ -29304,6 +28592,8 @@ contains
 
 !$Procedure VSUB ( Vector subtraction, 3 dimensions )
 
+      !> Compute the difference between two double precision 3-dimensional
+      !> vectors.
       pure subroutine vsub ( v1, v2, vout )
       use pepper_kinds, only: wp
 
@@ -29324,18 +28614,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1   ( 3 )
-      real(wp), intent(in) :: v2   ( 3 )
-      real(wp), intent(out) :: vout ( 3 )
+      real(wp), intent(in) :: v1   ( 3 )  !! First vector (minuend).
+      real(wp), intent(in) :: v2   ( 3 )  !! Second vector (subtrahend).
+      real(wp), intent(out) :: vout ( 3 )  !! Difference vector, V1 - V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector (minuend).
-!     V2         I   Second vector (subtrahend).
-!     VOUT       O   Difference vector, V1 - V2.
-!
 ! $ Detailed_Input
 !
 !     V1       is a double precision 3-dimensional vector which is the
@@ -29519,6 +28801,8 @@ contains
 
 !$Procedure VSUBG ( Vector subtraction, general dimension )
 
+      !> Compute the difference between two double precision vectors of
+      !> arbitrary dimension.
       pure subroutine vsubg ( v1, v2, ndim, vout )
       use pepper_kinds, only: ip, wp
 
@@ -29539,20 +28823,11 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim
-      real(wp), intent(in) :: v1   ( ndim )
-      real(wp), intent(in) :: v2   ( ndim )
-      real(wp), intent(out) :: vout ( ndim )
+      integer(ip), intent(in) :: ndim  !! Dimension of V1, V2, and VOUT.
+      real(wp), intent(in) :: v1   ( ndim )  !! First vector (minuend).
+      real(wp), intent(in) :: v2   ( ndim )  !! Second vector (subtrahend).
+      real(wp), intent(out) :: vout ( ndim )  !! Difference vector, V1 - V2.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   First vector (minuend).
-!     V2         I   Second vector (subtrahend).
-!     NDIM       I   Dimension of V1, V2, and VOUT.
-!     VOUT       O   Difference vector, V1 - V2.
-!
 ! $ Detailed_Input
 !
 !     V1       is a double precision vector of arbitrary dimension which
@@ -29747,6 +29022,11 @@ contains
 
 !$Procedure VTMV ( Vector transpose times matrix times vector, 3 dim )
 
+      !> Multiply the transpose of a 3-dimensional column vector,
+      !> a 3x3 matrix, and a 3-dimensional column vector.
+      !>
+      !> The function returns the result of multiplying the transpose of
+      !> V1 by MATRIX by V2.
       pure real(wp) function vtmv ( v1, matrix, v2 )
       use pepper_kinds, only: ip, wp
 
@@ -29768,21 +29048,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v1     (   3 )
-      real(wp), intent(in) :: matrix ( 3,3 )
-      real(wp), intent(in) :: v2     (   3 )
+      real(wp), intent(in) :: v1     (   3 )  !! 3-dimensional double precision column vector.
+      real(wp), intent(in) :: matrix ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp), intent(in) :: v2     (   3 )  !! 3-dimensional double precision column vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   3-dimensional double precision column vector.
-!     MATRIX     I   3x3 double precision matrix.
-!     V2         I   3-dimensional double precision column vector.
-!
-!     The function returns the result of multiplying the transpose of
-!     V1 by MATRIX by V2.
-!
 ! $ Detailed_Input
 !
 !     V1       is any double precision 3-dimensional column vector.
@@ -29985,6 +29254,10 @@ contains
 
 !$Procedure VTMVG  ( Vector transpose times matrix times vector )
 
+      !> Multiply the transpose of a n-dimensional column vector,
+      !> a nxm matrix, and a m-dimensional column vector.
+      !>
+      !> The function returns the result of (V1**T * MATRIX * V2 ).
       pure real(wp) function vtmvg ( v1, matrix, v2, nrow, ncol )
       use pepper_kinds, only: ip, wp
 
@@ -30006,24 +29279,12 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nrow
-      integer(ip), intent(in) :: ncol
-      real(wp), intent(in) :: v1      ( nrow       )
-      real(wp), intent(in) :: matrix  ( nrow, ncol )
-      real(wp), intent(in) :: v2      (       ncol )
+      integer(ip), intent(in) :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
+      integer(ip), intent(in) :: ncol  !! Number of columns in MATRIX (number of rows in V2.)
+      real(wp), intent(in) :: v1      ( nrow       )  !! N-dimensional double precision column vector.
+      real(wp), intent(in) :: matrix  ( nrow, ncol )  !! NxM double precision matrix.
+      real(wp), intent(in) :: v2      (       ncol )  !! M-dimensional double precision column vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V1         I   N-dimensional double precision column vector.
-!     MATRIX     I   NxM double precision matrix.
-!     V2         I   M-dimensional double precision column vector.
-!     NROW       I   Number of rows in MATRIX (number of rows in V1.)
-!     NCOL       I   Number of columns in MATRIX (number of rows in V2.)
-!
-!     The function returns the result of (V1**T * MATRIX * V2 ).
-!
 ! $ Detailed_Input
 !
 !     V1       is an n-dimensional double precision vector.
@@ -30156,6 +29417,7 @@ contains
 
 !$Procedure VUPACK ( Unpack three scalar components from a vector )
 
+      !> Unpack three scalar components from a vector.
       pure subroutine vupack ( v, x, y, z )
       use pepper_kinds, only: wp
 
@@ -30175,20 +29437,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v ( 3 )
-      real(wp), intent(out) :: x
-      real(wp), intent(out) :: y
-      real(wp), intent(out) :: z
+      real(wp), intent(in) :: v ( 3 )  !! Input 3-dimensional vector.
+      real(wp), intent(out) :: x  !! Scalar components of the vector.
+      real(wp), intent(out) :: y  !! Scalar components of the vector.
+      real(wp), intent(out) :: z  !! Scalar components of the vector.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V          I   Input 3-dimensional vector.
-!     X,
-!     Y,
-!     Z          O   Scalar components of the vector.
-!
 ! $ Detailed_Input
 !
 !     V        is a double precision 3-dimensional vector.
@@ -30403,6 +29656,10 @@ contains
 
 !$Procedure VZERO    ( Is a vector the zero vector? )
 
+      !> Indicate whether a 3-vector is the zero vector.
+      !>
+      !> The function returns the value .TRUE. if and only if V is the
+      !> zero vector.
       pure logical function vzero ( v )
       use pepper_kinds, only: wp
 
@@ -30423,17 +29680,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v ( 3 )
+      real(wp), intent(in) :: v ( 3 )  !! Vector to be tested.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V          I   Vector to be tested.
-!
-!     The function returns the value .TRUE. if and only if V is the
-!     zero vector.
-!
 ! $ Detailed_Input
 !
 !     V        is a vector in 3-space.
@@ -30559,6 +29807,10 @@ contains
 
 !$Procedure VZEROG ( Is a vector the zero vector? -- general dim. )
 
+      !> Indicate whether an n-dimensional vector is the zero vector.
+      !>
+      !> The function returns the value .TRUE. if and only if V is the
+      !> zero vector.
       pure logical function vzerog ( v, ndim )
       use pepper_kinds, only: ip, wp
 
@@ -30579,19 +29831,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: v    ( * )
-      integer(ip), intent(in) :: ndim
+      real(wp), intent(in) :: v    ( * )  !! Vector to be tested.
+      integer(ip), intent(in) :: ndim  !! Dimension of V.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     V          I   Vector to be tested.
-!     NDIM       I   Dimension of V.
-!
-!     The function returns the value .TRUE. if and only if V is the
-!     zero vector.
-!
 ! $ Detailed_Input
 !
 !     V,
@@ -30873,6 +30115,8 @@ contains
 
 !$Procedure XF2RAV ( Transform to rotation and angular velocity)
 
+      !> Determine the rotation matrix and angular velocity of the
+      !> rotation from a state transformation matrix.
       pure subroutine xf2rav ( xform, rot, av )
       use pepper_kinds, only: ip, wp
 
@@ -30893,18 +30137,10 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: xform  ( 6, 6 )
-      real(wp), intent(out) :: rot    ( 3, 3 )
-      real(wp), intent(out) :: av     ( 3    )
+      real(wp), intent(in) :: xform  ( 6, 6 )  !! is a state transformation matrix.
+      real(wp), intent(out) :: rot    ( 3, 3 )  !! is the rotation associated with XFORM.
+      real(wp), intent(out) :: av     ( 3    )  !! is the angular velocity associated with XFORM.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     XFORM      I   is a state transformation matrix.
-!     ROT        O   is the rotation associated with XFORM.
-!     AV         O   is the angular velocity associated with XFORM.
-!
 ! $ Detailed_Input
 !
 !     XFORM    is a state transformation matrix from one frame
@@ -31205,6 +30441,7 @@ contains
 
 !$Procedure XPOSE ( Transpose a matrix, 3x3 )
 
+      !> Transpose a 3x3 matrix.
       pure subroutine xpose ( m1, mout )
       use pepper_kinds, only: wp
 
@@ -31224,16 +30461,9 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: m1   ( 3,3 )
-      real(wp), intent(out) :: mout ( 3,3 )
+      real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 matrix to be transposed.
+      real(wp), intent(out) :: mout ( 3,3 )  !! Transpose of M1.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     M1         I   3x3 matrix to be transposed.
-!     MOUT       O   Transpose of M1.
-!
 ! $ Detailed_Input
 !
 !     M1       is any double precision 3x3 matrix.
@@ -31415,6 +30645,8 @@ contains
 
 !$Procedure XPOSEG ( Transpose a matrix, general )
 
+      !> Transpose a matrix of arbitrary size (the matrix
+      !> need not be square).
       pure subroutine xposeg ( matrix, nrow, ncol, xposem )
       use pepper_kinds, only: ip, wp
 
@@ -31435,20 +30667,11 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: matrix ( 0:* )
-      integer(ip), intent(in) :: nrow
-      integer(ip), intent(in) :: ncol
-      real(wp), intent(out) :: xposem ( 0:* )
+      real(wp), intent(in) :: matrix ( 0:* )  !! Matrix to be transposed.
+      integer(ip), intent(in) :: nrow  !! Number of rows of input matrix MATRIX.
+      integer(ip), intent(in) :: ncol  !! Number of columns of input matrix MATRIX.
+      real(wp), intent(out) :: xposem ( 0:* )  !! Transposed matrix.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     I   Matrix to be transposed.
-!     NROW       I   Number of rows of input matrix MATRIX.
-!     NCOL       I   Number of columns of input matrix MATRIX.
-!     XPOSEM     O   Transposed matrix.
-!
 ! $ Detailed_Input
 !
 !     MATRIX   is a matrix to be transposed.
@@ -31718,6 +30941,7 @@ contains
 
 !$Procedure XPSGIP ( Transpose a matrix, general dimension, in place )
 
+      !> Transpose a matrix of arbitrary size and shape in place.
       pure subroutine xpsgip ( nrow, ncol, matrix )
       use pepper_kinds, only: ip, wp
 
@@ -31737,18 +30961,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: nrow
-      integer(ip), intent(in) :: ncol
-      real(wp), intent(inout) :: matrix ( 0 : * )
+      integer(ip), intent(in) :: nrow  !! Number of rows of input matrix.
+      integer(ip), intent(in) :: ncol  !! Number of columns of input matrix.
+      real(wp), intent(inout) :: matrix ( 0 : * )  !! Matrix to be transposed/transposed matrix.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     NROW       I   Number of rows of input matrix.
-!     NCOL       I   Number of columns of input matrix.
-!     MATRIX    I-O  Matrix to be transposed/transposed matrix.
-!
 ! $ Detailed_Input
 !
 !     NROW     is the number of rows of input matrix MATRIX.
@@ -31983,6 +31199,9 @@ contains
 !$Procedure      ZZMSXF ( Multiply sequence of state transformations )
 
 
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       pure subroutine zzmsxf ( matrix, n, output )
       use pepper_kinds, only: ip, wp
 
@@ -32006,18 +31225,10 @@ contains
 ! $ Declarations
 
       implicit none
-      real(wp), intent(in) :: matrix ( 6, 6, * )
-      integer(ip), intent(in) :: n
-      real(wp), intent(out) :: output ( 6, 6    )
+      real(wp), intent(in) :: matrix ( 6, 6, * )  !! A sequence of state transformation matrices
+      integer(ip), intent(in) :: n  !! The number of state transformation matrices
+      real(wp), intent(out) :: output ( 6, 6    )  !! The product of the state transformations.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     I   A sequence of state transformation matrices
-!     N          I   The number of state transformation matrices
-!     OUTPUT     O   The product of the state transformations.
-!
 ! $ Detailed_Input
 !
 !     MATRIX      is an array of 6x6 state transformation matrices.
@@ -32381,6 +31592,9 @@ contains
 !$Procedure      ZZRXR ( Multiply sequence of 3x3 matrices )
 
 
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       pure subroutine zzrxr ( matrix, n, output )
       use pepper_kinds, only: ip, wp
 
@@ -32404,18 +31618,10 @@ contains
 ! $ Declarations
 
       implicit none
-      real(wp), intent(in) :: matrix ( 3, 3, * )
-      integer(ip), intent(in) :: n
-      real(wp), intent(out) :: output ( 3, 3    )
+      real(wp), intent(in) :: matrix ( 3, 3, * )  !! A sequence of state transformation matrices
+      integer(ip), intent(in) :: n  !! The number of 3x3  matrices
+      real(wp), intent(out) :: output ( 3, 3    )  !! The product of the 3x3 matrices.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     MATRIX     I   A sequence of state transformation matrices
-!     N          I   The number of 3x3  matrices
-!     OUTPUT     O   The product of the 3x3 matrices.
-!
 ! $ Detailed_Input
 !
 !     MATRIX      is an array of 3x3  matrices.

@@ -374,11 +374,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'ZZGFCOST' )
 
 !
 !     No result was found yet.
@@ -417,7 +414,6 @@
          call setmsg ( 'The coordinate quantity # is not recognized.' )
          call errch  ( '#',  vecdef                                   )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
-         call chkout ( 'ZZGFCOST'                                     )
          return
 
       end if
@@ -433,6 +429,5 @@
 !        - a SPICE error occurred
 !
 
-      call chkout  ( 'ZZGFCOST' )
       return
       end

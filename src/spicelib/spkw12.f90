@@ -424,11 +424,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW12' )
-      end if
+      if ( return () ) return
 
 !
 !     Set the window size corresponding to the input degree.  This
@@ -446,7 +442,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW12'                                    )
          return
 
       end if
@@ -459,7 +454,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW12'                                  )
          return
 
       end if
@@ -477,7 +471,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW12'                                )
             return
 
          end if
@@ -495,7 +488,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', maxdeg                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW12'                                        )
          return
 
       end if
@@ -509,7 +501,6 @@
                        'for SPK type 12, the degree must be odd.'      )
          call errint ( '#', degree                                     )
          call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
-         call chkout ( 'SPKW12'                                        )
          return
 
       end if
@@ -527,7 +518,6 @@
          call errint ( '#', degree                                     )
          call errint ( '#', n                                          )
          call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
-         call chkout ( 'SPKW12'                                        )
          return
 
       end if
@@ -542,7 +532,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW12'                                    )
          return
 
       end if
@@ -555,7 +544,6 @@
          call setmsg ( 'The step size must be > 0 but was #. ' )
          call errdp  ( '#', step                               )
          call sigerr ( 'SPICE(INVALIDSTEPSIZE)'                )
-         call chkout ( 'SPKW12'                                )
          return
 
       end if
@@ -580,7 +568,6 @@
          call errdp  ( '#',    begtim-first                          )
          call errdp  ( '#',    tol                                   )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW12'                                      )
          return
 
       end if
@@ -606,7 +593,6 @@
          call errdp  ( '#',   last-ltime                             )
          call errdp  ( '#',   tol                                    )
          call sigerr ( 'SPICE(COVERAGEGAP)'                          )
-         call chkout ( 'SPKW12'                                      )
          return
 
       end if
@@ -624,10 +610,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW12' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The type 12 segment structure is eloquently described by this
@@ -667,6 +650,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW12' )
       return
       end

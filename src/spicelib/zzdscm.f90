@@ -449,11 +449,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDSCM' )
 
 !
 !     Constants
@@ -640,7 +637,6 @@
       xh2 =  -2.0_wp*s2*z22
       xh3 =  -2.0_wp*s2*(z23-z21)
 
-      call chkout ( 'ZZDSCM' )
 
       return
       end

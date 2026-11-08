@@ -453,11 +453,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKW19' )
 
 !
 !     Start with a parameter compatibility check.
@@ -470,7 +467,6 @@
          call errint ( '#',  maxrsz                         )
          call errint ( '#',  maxrec                         )
          call sigerr ( 'SPICE(BUG0)'                        )
-         call chkout ( 'SPKW19'                             )
          return
 
       end if
@@ -486,7 +482,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW19'                                    )
          return
 
       end if
@@ -501,7 +496,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW19'                                  )
          return
 
       end if
@@ -514,7 +508,6 @@
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                   )
-         call chkout ( 'SPKW19'                                )
          return
 
       end if
@@ -532,7 +525,6 @@
             call setmsg ( 'The segment identifier contains ' &
             //            'nonprintable characters'         )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'        )
-            call chkout ( 'SPKW19'                          )
             return
 
          end if
@@ -548,7 +540,6 @@
          //            'this count must be positive.'       )
          call errint ( '#', nintvl                          )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                )
-         call chkout ( 'SPKW19'                             )
          return
 
       end if
@@ -573,7 +564,6 @@
             call errdp  ( '#', ivlbds(i+1)                      )
             call errdp  ( '#', ivlbds(i+1) - ivlbds(i)          )
             call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'             )
-            call chkout ( 'SPKW19'                              )
             return
 
          end if
@@ -600,7 +590,6 @@
          call errdp  ( '#', last                               )
          call errdp  ( '#', ivlbds(nintvl+1)                   )
          call sigerr ( 'SPICE(COVERAGEGAP)'                    )
-         call chkout ( 'SPKW19'                                )
          return
 
       end if
@@ -637,7 +626,6 @@
             call errint ( '#', npkts(i)                                )
             call errint ( '#', i                                       )
             call sigerr ( 'SPICE(TOOFEWPACKETS)'                       )
-            call chkout ( 'SPKW19'                                     )
             return
 
          end if
@@ -656,7 +644,6 @@
             call errint ( '#',  subtyp                        )
             call errint ( '#',  i                             )
             call sigerr ( 'SPICE(INVALIDSUBTYPE)'             )
-            call chkout ( 'SPKW19'                            )
             return
 
          end if
@@ -695,7 +682,6 @@
             call errint ( '#', degres(i)                      )
             call errint ( '#', maxdeg                         )
             call sigerr ( 'SPICE(INVALIDDEGREE)'              )
-            call chkout ( 'SPKW19'                            )
             return
 
          end if
@@ -718,7 +704,6 @@
             call errint ( '#', degres(i)                         )
             call errint ( '#', subtps(i)                         )
             call sigerr ( 'SPICE(BADWINDOWSIZE)'                 )
-            call chkout ( 'SPKW19'                               )
             return
 
          end if
@@ -751,7 +736,6 @@
                call errint ( '#',  j                                )
                call errdp  ( '#',  epochs(k+1)                      )
                call sigerr ( 'SPICE(TIMESOUTOFORDER)'               )
-               call chkout ( 'SPKW19'                               )
                return
 
             end if
@@ -770,7 +754,6 @@
             call errdp  ( '#',  ivlbds(i)                           )
             call errdp  ( '#',  epochs(bepix)                       )
             call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
-            call chkout ( 'SPKW19'                                  )
             return
 
          else if (  epochs(eepix) < ivlbds(i+1) ) then
@@ -781,7 +764,6 @@
             call errdp  ( '#',  ivlbds(i+1)                         )
             call errdp  ( '#',  epochs(eepix)                       )
             call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
-            call chkout ( 'SPKW19'                                  )
             return
 
          end if
@@ -890,10 +872,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Re-initialize the mini-segment packet array indices,
@@ -985,10 +964,7 @@
          call dafada ( real( winsiz, wp    ),  1 )
          call dafada ( real( npkts(i), wp  ),  1 )
 
-         if ( failed() ) then
-            call chkout ( 'SPKW19' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1091,6 +1067,5 @@
 !
       call dafena
 
-      call chkout ( 'SPKW19' )
       return
       end

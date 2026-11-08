@@ -158,11 +158,8 @@
       integer(ip)           corsys
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZRYTELT' )
 
 
       corsys = nint( dskdsc(sysidx) )
@@ -189,11 +186,9 @@
          call setmsg( 'Coordinate system # is not supported.' )
          call errint( '#', corsys                             )
          call sigerr( 'SPICE(BADCOORDSYS)'                    )
-         call chkout( 'ZZRYTELT'                              )
          return
 
       end if
 
-      call chkout ( 'ZZRYTELT' )
       return
       end

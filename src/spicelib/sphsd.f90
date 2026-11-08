@@ -226,11 +226,9 @@
 
          sphsd = 0.0_wp
 
-         call chkin  ( 'SPHSD'                  )
          call setmsg ( 'Radius was #.'          )
          call errdp  ( '#', radius              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'SPHSD'                  )
          return
 
       end if

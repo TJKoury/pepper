@@ -335,15 +335,11 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKZ02' )
 
       call dski02 ( handle, dladsc, kwnv, 1, 1, n, nv )
       call dski02 ( handle, dladsc, kwnp, 1, 1, n, np )
 
-      call chkout ( 'DSKZ02' )
       return
       end

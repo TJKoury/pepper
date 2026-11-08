@@ -170,11 +170,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'PCKUDS' )
-      end if
+      if ( return() ) return
 !
 !     No judgments are made about the descriptor when we
 !     unpack it.  If things were done right when the descriptor
@@ -182,10 +178,7 @@
 !
       call dafus ( descr, nd, ni, dppart, ipart )
 
-      if ( failed() ) then
-         call chkout ( 'PCKUDS' )
-         return
-      end if
+      if ( failed() ) return
 
       body   = ipart(1)
       frame  = ipart(2)
@@ -196,7 +189,6 @@
       first  = dppart(1)
       last   = dppart(2)
 
-      call chkout ( 'PCKUDS' )
       return
 
       end

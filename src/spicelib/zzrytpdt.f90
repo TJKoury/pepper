@@ -316,11 +316,8 @@
 
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZRYTPDT' )
 
 
       if ( margin < 0.0_wp ) then
@@ -328,7 +325,6 @@
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZRYTPDT'                               )
          return
 
       end if
@@ -337,7 +333,6 @@
 
          call setmsg ( 'The ray''s direction was the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                         )
-         call chkout ( 'ZZRYTPDT'                                  )
          return
 
       end if
@@ -348,10 +343,7 @@
 !
       call zzinpdt ( vertex, bounds, corpar, margin, none, inside )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( inside ) then
 !
@@ -361,7 +353,6 @@
 
          call vequ ( vertex, xpt )
 
-         call chkout ( 'ZZRYTPDT' )
          return
 
       end if
@@ -386,10 +377,7 @@
       call zznrmlon( bounds(west,lonidx), bounds(east,lonidx), angmrg, &
                      minlon,              maxlon                      )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
       minlat = bounds( south, latidx )
       maxlat = bounds( north, latidx )
@@ -421,10 +409,7 @@
 
       end if
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     The vertex is outside the element.
@@ -449,17 +434,13 @@
 !
       call surfpt ( vertex, udir, emax, emax, pmax, srfx, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 !
 !        There are no intersections. The ray cannot hit the volume
 !        element.
 !
-         call chkout ( 'ZZRYTPDT' )
          return
 
       end if
@@ -472,10 +453,7 @@
 !
       call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( xin ) then
 !
@@ -500,7 +478,6 @@
 !           No other intersection can be closer to the vertex;
 !           we don't need to check the other surfaces.
 !
-            call chkout ( 'ZZRYTPDT' )
             return
 
          else
@@ -544,10 +521,7 @@
 !
          call zzelnaxx ( re, rp, maxlat, xincpt, yincpt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
          apex(1) = 0.0_wp
          apex(2) = 0.0_wp
@@ -571,10 +545,7 @@
 !
          call incnsg ( apex, z, angle, vertex, endpt2, nx, srfx, xpt2 )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Unlike the case of latitudinal coordinates, for planetodetic
@@ -647,10 +618,7 @@
 !
             call zzinpdt ( srfx, bounds, corpar, margin, latidx, xin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZRYTPDT' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if ( xin ) then
@@ -689,7 +657,6 @@
 !                       the volume element is on the other side of the
 !                       maximum latitude boundary.
 !
-                        call chkout ( 'ZZRYTPDT' )
                         return
 
                      end if
@@ -712,10 +679,7 @@
                call zzinpdt ( xpt2,   bounds, corpar, &
                               margin, latidx, xin    )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZRYTPDT' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( xin ) then
 !
@@ -765,10 +729,7 @@
 !
          call zzelnaxx ( re, rp, minlat, xincpt, yincpt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
          apex(1) = 0.0_wp
          apex(2) = 0.0_wp
@@ -777,10 +738,7 @@
          call incnsg ( apex,   z,  angle, vertex, &
                        endpt2, nx, srfx,  xpt2    )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Find the offset of the ray's vertex from the cone's apex,
@@ -847,10 +805,7 @@
 !
             call zzinpdt ( srfx, bounds, corpar, margin, latidx, xin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZRYTPDT' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( xin ) then
 !
@@ -887,7 +842,6 @@
 !                       the volume element is on the other side of the
 !                       minimum latitude boundary.
 !
-                        call chkout ( 'ZZRYTPDT' )
                         return
 
                      end if
@@ -910,10 +864,7 @@
                call zzinpdt ( xpt2,   bounds, corpar, &
                               margin, latidx, xin    )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZRYTPDT' )
-                  return
-               end if
+               if ( failed() ) return
 
 
                if ( xin ) then
@@ -933,7 +884,6 @@
 !                    However, it's not necessarily the best
 !                    solution. So we continue.
 !
-                     call chkout ( 'ZZRYTPDT' )
                      return
 
                   end if
@@ -980,10 +930,7 @@
 !
             call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZRYTPDT' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if ( xin ) then
@@ -1034,10 +981,7 @@
 !
             call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
-            if ( failed() ) then
-               call chkout ( 'ZZRYTPDT' )
-               return
-            end if
+            if ( failed() ) return
 
 
             if ( xin ) then
@@ -1083,10 +1027,7 @@
 !
       call surfpt ( vertex, udir, emin, emin, pmin, srfx, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( found ) then
@@ -1095,10 +1036,7 @@
 !
          call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( xin ) then
@@ -1130,20 +1068,14 @@
 
       call surfpt ( endpt2, negdir, emin, emin, pmin, srfx, found )
 
-      if ( failed() ) then
-         call chkout ( 'ZZRYTPDT' )
-         return
-      end if
+      if ( failed() ) return
 
 
       if ( found ) then
 
          call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-         if ( failed() ) then
-            call chkout ( 'ZZRYTPDT' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( xin ) then
@@ -1169,6 +1101,5 @@
 !
 !     NXPTS and XPT are set.
 !
-      call chkout ( 'ZZRYTPDT' )
       return
       end

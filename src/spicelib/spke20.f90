@@ -208,11 +208,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKE20' )
 
 !
 !     The first number in the record is the record size. This is the
@@ -235,7 +232,6 @@
          //            'should be positive but was #.'              )
          call errint ( '#', ncof                                    )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-         call chkout ( 'SPKE20'                                     )
          return
 
       end if
@@ -269,6 +265,5 @@
       call vadd ( record(posloc), intgrl, xyzdot )
 
 
-      call chkout ( 'SPKE20' )
       return
       end

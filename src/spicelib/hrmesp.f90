@@ -278,20 +278,16 @@
 !
 !     Check in only if an error is detected.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No data, no interpolation.
 !
       if ( n < 1 ) then
 
-         call chkin  ( 'HRMESP'                              )
          call setmsg ( 'Array size must be positive; was #.' )
          call errint ( '#',  n                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                  )
-         call chkout ( 'HRMESP'                              )
          return
 
       end if
@@ -302,10 +298,8 @@
 !
       if ( step == 0.0_wp ) then
 
-         call chkin  ( 'HRMESP'                 )
          call setmsg ( 'Step size was zero.'    )
          call sigerr ( 'SPICE(INVALIDSTEPSIZE)' )
-         call chkout ( 'HRMESP'                 )
          return
 
       end if

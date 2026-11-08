@@ -481,10 +481,8 @@
 !     If R is not a rotation matrix, we can't proceed.
 !
       if (  .not. isrot ( r, ntol, dtol )  ) then
-         call chkin  ( 'M2Q' )
          call setmsg ( 'Input matrix was not a rotation.' )
          call sigerr ( 'SPICE(NOTAROTATION)'              )
-         call chkout ( 'M2Q'                              )
          return
 
       end if

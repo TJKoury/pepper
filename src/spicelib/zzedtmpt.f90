@@ -244,11 +244,8 @@
       integer(ip)           nitr
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZEDTMPT' )
 
 !
 !     Check A, B, C, and R.
@@ -263,7 +260,6 @@
          call errdp  ( '#',  b                                  )
          call errdp  ( '#',  c                                  )
          call sigerr ( 'SPICE(INVALIDAXISLENGTH)'               )
-         call chkout ( 'ZZEDTMPT'                               )
          return
 
       end if
@@ -274,7 +270,6 @@
          //            'but was #.'                             )
          call errdp  ( '#',  r                                  )
          call sigerr ( 'SPICE(INVALIDRADIUS)'                   )
-         call chkout ( 'ZZEDTMPT'                               )
          return
 
       end if
@@ -287,7 +282,6 @@
          call setmsg ( 'AXIS must be a non-zero vector but is ' &
          //            'in fact zero.'                         )
          call sigerr ( 'SPICE(ZEROVECTOR)'                     )
-         call chkout ( 'ZZEDTMPT'                              )
          return
 
       end if
@@ -304,7 +298,6 @@
          call errdp  ( '#',  b                                  )
          call errdp  ( '#',  c                                  )
          call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                 )
-         call chkout ( 'ZZEDTMPT'                               )
          return
 
       end if
@@ -315,7 +308,6 @@
          call setmsg ( 'PLNVEC must be a non-zero vector but is ' &
          //            'in fact zero.'                           )
          call sigerr ( 'SPICE(ZEROVECTOR)'                       )
-         call chkout ( 'ZZEDTMPT'                                )
          return
 
       end if
@@ -357,7 +349,6 @@
          call setmsg ( 'Plane reference vector and axis are ' &
          //            'linearly dependent.'                 )
          call sigerr ( 'SPICE(DEGENERATECASE)'               )
-         call chkout ( 'ZZEDTMPT'                            )
          return
 
       end if
@@ -382,10 +373,7 @@
 !
          angle = dasine ( (maxr-1.0_wp) / d,  atol  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZEDTMPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Create the tangent point on the transformed target.
@@ -411,10 +399,7 @@
          angle = dasine ( (maxr+1.0_wp) / d,  atol  )
 
 
-         if ( failed() ) then
-            call chkout ( 'ZZEDTMPT' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Create the tangent point on the transformed target.
@@ -517,7 +502,6 @@
             //            'converge. Iteration count = #.' )
             call errint ( '#', nitr                        )
             call sigerr ( 'SPICE(NOCONVERGENCE)'           )
-            call chkout ( 'ZZEDTMPT'                       )
             return
 
          end if
@@ -532,6 +516,5 @@
       point(2) = b * targpt(2)
       point(3) = c * targpt(3)
 
-      call chkout ( 'ZZEDTMPT' )
       return
       end

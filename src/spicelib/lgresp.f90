@@ -319,11 +319,9 @@
 
          lgresp = 0.0_wp
 
-         call chkin  ( 'LGRESP'                              )
          call setmsg ( 'Array size must be positive; was #.' )
          call errint ( '#',  n                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                  )
-         call chkout ( 'LGRESP'                              )
          return
 
       end if
@@ -336,10 +334,8 @@
 
          lgresp = 0.0_wp
 
-         call chkin  ( 'LGRESP'                 )
          call setmsg ( 'Step size was zero.'    )
          call sigerr ( 'SPICE(INVALIDSTEPSIZE)' )
-         call chkout ( 'LGRESP'                 )
          return
 
       end if

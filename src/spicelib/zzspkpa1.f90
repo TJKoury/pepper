@@ -724,11 +724,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZSPKPA1' )
-      end if
+      if ( return () ) return
 
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -751,7 +747,6 @@
             call setmsg ( 'Requested aberration correction was #.' )
             call errch  ( '#', abcorr                              )
             call sigerr ( 'SPICE(SPKINVALIDOPTION)'                )
-            call chkout ( 'ZZSPKPA1'                                 )
             return
 
          end if
@@ -790,7 +785,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( 'ZZSPKPA1'                             )
          return
 
       end if
@@ -812,10 +806,7 @@
 !
       call zzspkgp1 ( targ,   et,   ref, ssb, ptarg, lt )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSPKPA1' )
-         return
-      end if
+      if ( failed() ) return
 
       call vsub   ( ptarg,  sobs,           tpos      )
       call vequ   ( tpos,   ptarg                     )
@@ -839,10 +830,7 @@
 
          call zzspkgp1 ( targ,   et + ltsign*lt, ref, ssb, ptarg, lt )
 
-         if ( failed() ) then
-            call chkout ( 'ZZSPKPA1' )
-            return
-         end if
+         if ( failed() ) return
 
          call vsub   ( ptarg,  sobs,     tpos )
          call vequ   ( tpos,   ptarg )
@@ -883,6 +871,5 @@
 
       end if
 
-      call chkout ( 'ZZSPKPA1' )
       return
       end

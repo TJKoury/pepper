@@ -199,19 +199,15 @@
 !
 !     This routine checks in only if an error is discovered.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     The normal vector must be non-zero.
 !
       if ( vzero (normal) ) then
 
-         call chkin  ( 'NVP2PL'                            )
          call setmsg ( 'Plane''s normal must be non-zero.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                 )
-         call chkout ( 'NVP2PL'                            )
          return
 
       end if

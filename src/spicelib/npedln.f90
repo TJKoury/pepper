@@ -340,11 +340,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'NPEDLN' )
-      end if
+      if ( return () ) return
 
 !
 !     The algorithm used in this routine has two parts.  The first
@@ -437,7 +433,6 @@
 
          call setmsg( 'Line direction vector is the zero vector. ' )
          call sigerr( 'SPICE(ZEROVECTOR)'                          )
-         call chkout( 'NPEDLN'                                     )
          return
 
 !
@@ -452,7 +447,6 @@
          call errdp  ( '#', b                               )
          call errdp  ( '#', c                               )
          call sigerr ( 'SPICE(INVALIDAXISLENGTH)'           )
-         call chkout ( 'NPEDLN'                             )
          return
 
       end if
@@ -478,7 +472,6 @@
          call errdp  ( '#', b                                        )
          call errdp  ( '#', c                                        )
          call sigerr ( 'SPICE(DEGENERATECASE)'                       )
-         call chkout ( 'NPEDLN'                                      )
          return
 
       end if
@@ -508,7 +501,6 @@
             dist  =  0.0_wp
 
             call vscl   ( scale,    pt(1,i),  pnear )
-            call chkout ( 'NPEDLN'                  )
             return
 
          end if
@@ -536,7 +528,6 @@
       if ( .not. xfound ) then
          call setmsg ( 'Candidate ellipse could not be found.'  )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )
-         call chkout ( 'NPEDLN'                                 )
          return
       end if
 
@@ -557,10 +548,7 @@
       call vprjp  ( sclpt,   prjpl,  prjpt         )
       call npelpt ( prjpt,   prjel,  prjnpt,  dist )
 
-      if ( failed() ) then
-         call chkout ( 'NPEDLN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Find the near point PNEAR on the ellipsoid by taking the inverse
@@ -577,7 +565,6 @@
       if ( .not. ifound ) then
          call setmsg ( 'Inverse projection could not be found.'  )
          call sigerr ( 'SPICE(DEGENERATECASE)'                   )
-         call chkout ( 'NPEDLN'                                  )
          return
       end if
 
@@ -589,6 +576,5 @@
       dist = scale * dist
 
 
-      call chkout ( 'NPEDLN' )
       return
       end

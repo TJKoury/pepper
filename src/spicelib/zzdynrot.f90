@@ -486,11 +486,8 @@
       data                  vname  / kwpri,           kwsec   /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( rname )
 
 
       if ( first ) then
@@ -605,10 +602,7 @@
 !
       call zzdynfid ( inname, infram, kwbfrm, basfrm )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       call frmnam   ( basfrm, basnam )
 
@@ -620,10 +614,7 @@
 !
       call zzdynvac ( inname, infram, kwstyl, 1, n, dynstl )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     At this time, the only supported dynamic frame definition style is
@@ -636,10 +627,7 @@
 !
          call zzdynvac ( inname, infram, kwffam, 1, n, dynfam )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          call cmprss ( ' ', 0, dynfam, tmpfam )
          call ucase  ( tmpfam,         dynfam )
@@ -669,10 +657,7 @@
 !
          call zzdynoad ( inname, infram, kwfrez, 1, n, t0, frozen )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. frozen ) then
 !
@@ -690,10 +675,7 @@
 !
          call zzdynoac ( inname, infram, kwrsta, 1, n, rotsta, fnd )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( fnd ) then
 !
@@ -715,7 +697,6 @@
                call errch  ( '#',  kvrotg                          )
                call errch  ( '#',  kvinrt                          )
                call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
-               call chkout ( rname                                 )
                return
 
             end if
@@ -739,7 +720,6 @@
             call errch  ( '#',  kwfrez                           )
             call errch  ( '#',  kwrsta                           )
             call sigerr ( 'SPICE(FRAMEDEFERROR)'                 )
-            call chkout ( rname                                  )
             return
 
          end if
@@ -764,7 +744,6 @@
             call errch  ( '#',  kwfrez                               )
             call errch  ( '#',  kwrsta                               )
             call sigerr ( 'SPICE(FRAMEDEFERROR)'                     )
-            call chkout ( rname                                      )
             return
 
          end if
@@ -786,10 +765,7 @@
 !
             call zzdynvac ( inname, infram, kwprcm, 1, n, prcmod )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Get the precession transformation.
@@ -820,7 +796,6 @@
                   call errch  ( '#',  kvm001                          )
                   call errch  ( '#',  ctrnam                          )
                   call sigerr ( 'SPICE(INVALIDSELECTION)'             )
-                  call chkout ( rname                                 )
                   return
 
                end if
@@ -855,7 +830,6 @@
                call errch  ( '#',  inname                          )
                call errch  ( '#',  prcmod                          )
                call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
-               call chkout ( rname                                 )
                return
 
             end if
@@ -872,10 +846,7 @@
 !
                call zzdynvac ( inname, infram, kwnutm, 1, n, nutmod )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Get the nutation transformation.
@@ -907,7 +878,6 @@
                      call errch  ( '#',  kvm002                       )
                      call errch  ( '#',  ctrnam                       )
                      call sigerr ( 'SPICE(INVALIDSELECTION)'          )
-                     call chkout ( rname                              )
                      return
 
                   end if
@@ -940,7 +910,6 @@
                   call errch  ( '#',  inname                          )
                   call errch  ( '#',  nutmod                          )
                   call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
-                  call chkout ( rname                                 )
                   return
 
                end if
@@ -953,10 +922,7 @@
 !
                call zzdynvac ( inname, infram, kwobqm, 1, n, oblmod )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              Get the obliquity transformation.
@@ -989,7 +955,6 @@
                      call errch  ( '#',  kvm003                       )
                      call errch  ( '#',  ctrnam                       )
                      call sigerr ( 'SPICE(INVALIDSELECTION)'          )
-                     call chkout ( rname                              )
                      return
 
                   end if
@@ -1026,7 +991,6 @@
                   call errch  ( '#',  inname                          )
                   call errch  ( '#',  oblmod                          )
                   call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
-                  call chkout ( rname                                 )
                   return
 
                end if
@@ -1077,10 +1041,7 @@
 !
                call zzdynvac ( inname, infram, itmaxe(i), 1, n, axname )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call cmprss ( ' ', 0, axname, axname )
                call ucase  ( axname,         axname )
@@ -1109,7 +1070,6 @@
                   call errint ( '#',  i                               )
                   call errch  ( '#',  axname                          )
                   call sigerr ( 'SPICE(INVALIDAXIS)'                  )
-                  call chkout ( rname                                 )
                   return
 
                end if
@@ -1128,10 +1088,7 @@
                call zzdynvac ( inname,  infram,  itmvdf(i), &
                                1,       n,       vecdef(i)   )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
                call ucase  ( vecdef(i),            vecdef(i) )
@@ -1157,10 +1114,7 @@
                   call zzspkzp0 ( targ,    t0,   'J2000', &
                                   abcorr,  obs,  v2(1,i),  lt )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 At this point, V2(*,I) contains position relative to
@@ -1194,10 +1148,7 @@
                   call zzspkez0 ( targ,    t0,   velfrm, &
                                   abcorr,  obs,  stemp,  lt )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 We'll work with the unit velocity vector.
@@ -1219,10 +1170,7 @@
 !
                   call zzvalcor ( abcorr, corblk )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( corblk(ltidx) ) then
 !
@@ -1252,7 +1200,6 @@
                         call errch  ( '#',  inname                 )
                         call errint ( '#',  frid                   )
                         call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'   )
-                        call chkout ( rname                        )
                         return
 
                      end if
@@ -1266,10 +1213,7 @@
                                         abcorr, obs, ctrpos,  vflt )
                         call zzcorepc ( abcorr, t0,  vflt,    vet  )
 
-                        if ( failed() ) then
-                           call chkout ( rname )
-                           return
-                        end if
+                        if ( failed() ) return
 
                      end if
 
@@ -1287,10 +1231,7 @@
 
                      call zzrefch0 ( frid,   j2000,  vet,      r2000 )
 
-                     if ( failed() ) then
-                        call chkout ( rname )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      call mxv      ( r2000,          v2(1,i),  ptemp )
                      call moved    ( ptemp,  3,      v2(1,i)         )
@@ -1355,7 +1296,6 @@
                      call errint ( '#',  targ                        )
                      call errch  ( '#',  inname                      )
                      call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'        )
-                     call chkout ( rname                             )
                      return
 
                   end if
@@ -1365,10 +1305,7 @@
 !
                   call zzgftreb ( targ, radii )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 Look up the Ith position vector in the target-fixed
@@ -1382,20 +1319,14 @@
 !                 We check FAILED() here because VMINUS is a simple
 !                 arithmetic routine that doesn't return on entry.
 !
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   call vminus   ( ptemp,  pobs )
 
                   call nearpt   ( pobs,   radii(1), radii(2), radii(3), &
                                   pnear,  alt                          )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
 !
 !                 Find the observer-near point vector in the current
@@ -1420,10 +1351,7 @@
 !
                   call zzrefch0 ( cfrmid, j2000, fet, tipm )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   call mxv ( tipm, ptemp, v2(1,i) )
 
@@ -1465,10 +1393,7 @@
                   call zzdynoac ( inname, infram, itmabc(i), &
                                   1,      n,      cvcorr,    fnd )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( .not. fnd ) then
                      cvcorr = 'NONE'
@@ -1476,10 +1401,7 @@
 
                   call zzprscor ( cvcorr, corblk )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
 
                   if ( .not. corblk(geoidx) ) then
@@ -1511,7 +1433,6 @@
                         call errch  ( '#',  inname                   )
                         call errch  ( '#',  cvcorr                   )
                         call sigerr ( 'SPICE(INVALIDOPTION)'         )
-                        call chkout ( rname                          )
                         return
 
                      end if
@@ -1544,7 +1465,6 @@
                            call errch  ( '#',  inname                 )
                            call errint ( '#',  frid                   )
                            call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'   )
-                           call chkout ( rname                        )
                            return
 
                         end if
@@ -1572,10 +1492,7 @@
 !
                            call zzcorepc ( cvcorr, t0, lt, fet )
 
-                           if ( failed() ) then
-                              call chkout ( rname )
-                              return
-                           end if
+                           if ( failed() ) return
 
                         end if
 
@@ -1597,10 +1514,7 @@
 
                         call zzspksb0 ( cvobs, t0, 'J2000', stobs )
 
-                        if ( failed() ) then
-                           call chkout ( rname )
-                           return
-                        end if
+                        if ( failed() ) return
 
                      end if
 
@@ -1612,10 +1526,7 @@
                   call zzdynvac ( inname,  infram,  itmspc(i), &
                                   1,       n,       spec       )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   call cmprss ( ' ', 0, spec, spec )
                   call ucase  ( spec,         spec )
@@ -1675,10 +1586,7 @@
 
                      end if
 
-                     if ( failed() ) then
-                        call chkout ( rname )
-                        return
-                     end if
+                     if ( failed() ) return
 
 !
 !                    Now  produce a direction vector.
@@ -1699,7 +1607,6 @@
                      call errch  ( '#',  inname                      )
                      call errch  ( '#',  spec                        )
                      call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-                     call chkout ( rname                             )
                      return
 
                   end if
@@ -1719,10 +1626,7 @@
 !
                      call zzrefch0 ( frid, j2000, fet, r2000 )
 
-                     if ( failed() ) then
-                        call chkout ( rname )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      call mxv ( r2000, dirvec, v2(1,i) )
 
@@ -1752,10 +1656,7 @@
 
                      end if
 
-                     if ( failed() ) then
-                        call chkout ( rname )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      call vequ ( ptemp, v2(1,i) )
 
@@ -1780,7 +1681,6 @@
                   call errch  ( '#',  inname                      )
                   call errch  ( '#',  vecdef(i)                   )
                   call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-                  call chkout ( rname                             )
                   return
 
                end if
@@ -1802,10 +1702,7 @@
 !
             call zzdynoad ( inname, infram, itmsep, 1, n, minsep, fnd )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( .not. fnd ) then
                minsep = lbsep
@@ -1852,7 +1749,6 @@
                call errch  ( '#',  timstr                             )
                call errch  ( '#',  kwatol                             )
                call sigerr ( 'SPICE(DEGENERATECASE)'                  )
-               call chkout ( rname                                    )
                return
 
             end if
@@ -1871,10 +1767,7 @@
 
                call zzrefch0 ( j2000,   basfrm,  t0,  r2000  )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call mxm ( r2000, rtemp, rotate )
 
@@ -1937,10 +1830,7 @@
 !
             call zzdynvac ( inname, infram, kwunit, 1, n, units )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Evaluate the angles at DELTA.  Convert angles from input
@@ -1980,10 +1870,7 @@
             call zzdynvac ( inname, infram, kwffrm, mxnfac, m, fframs )
             call zzdynvac ( inname, infram, kwtfrm, mxnfac, n, tframs )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             if ( n /= m ) then
 
@@ -1995,7 +1882,6 @@
                call errint ( '#',  m                            )
                call errint ( '#',  n                            )
                call sigerr ( 'SPICE(BADFRAMECOUNT)'             )
-               call chkout ( rname                              )
                return
 
             end if
@@ -2013,10 +1899,7 @@
 
             call zzrefch0 ( toid, fromid, t0, rotate )
 
-            if ( failed() ) then
-               call chkout ( rname )
-               return
-            end if
+            if ( failed() ) return
 
             do i = 2, n
 
@@ -2027,10 +1910,7 @@
 
                call zzrefch0 ( toid, fromid, t0, rotate )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call mxm   ( rotate, rtemp, rout   )
                call moved ( rout,  9,      rotate )
@@ -2048,7 +1928,6 @@
             call errch  ( '#',  dynfam                               )
             call errch  ( '#',  inname                               )
             call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-            call chkout ( rname                                      )
             return
 
          end if
@@ -2067,7 +1946,6 @@
          call errch  ( '#',  dynstl                               )
          call errch  ( '#',  inname                               )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2078,6 +1956,5 @@
 !
 !     ROTATE and BASFRM is set.
 !
-      call chkout ( rname )
       return
       end

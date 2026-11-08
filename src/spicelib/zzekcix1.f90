@@ -110,11 +110,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKCIX1' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually write anything, do every error
@@ -125,10 +121,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKCIX1' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     An empty type 1 segment is just an empty B*-tree.  The root
@@ -139,6 +132,5 @@
       call zzektrit ( handle, coldsc(ixpidx) )
 
 
-      call chkout ( 'ZZEKCIX1' )
       return
       end

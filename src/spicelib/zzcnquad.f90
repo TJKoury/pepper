@@ -191,11 +191,8 @@
       data                  invub / -1.0_wp  /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZCNQUAD' )
 
 !
 !     On the first pass, set the upper bound for the reciprocal
@@ -224,7 +221,6 @@
             n = -2
          end if
 
-         call chkout ( 'ZZCNQUAD' )
          return
 
       end if
@@ -508,6 +504,5 @@
 
       end if
 
-      call chkout ( 'ZZCNQUAD' )
       return
       end

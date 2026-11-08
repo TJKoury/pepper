@@ -251,16 +251,12 @@
 !     Changes to the long error message must be allowed, or we do
 !     nothing.
 !
-      if ( .not. allowd() ) then
-         return
-      end if
+      if ( .not. allowd() ) return
 
 !
 !     MARKER must have some non-blank characters, or we do nothing.
 !
-      if (  lastnb (marker) == 0  ) then
-         return
-      end if
+      if (  lastnb (marker) == 0  ) return
 
 !
 !     Get a copy of the current long error message.

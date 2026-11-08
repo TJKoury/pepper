@@ -221,16 +221,12 @@
 !
       call zzekreqi ( eqryi, 'NAMES_RESOLVED', irsolv )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( irsolv == ifalse ) then
 
-         call chkin  ( 'ZZEKTRES'                                  )
          call setmsg ( 'Names are not resolved in encoded query.'  )
          call sigerr ( 'SPICE(NAMESNOTRESOLVED)'                   )
-         call chkout ( 'ZZEKTRES'                                  )
          return
 
       end if

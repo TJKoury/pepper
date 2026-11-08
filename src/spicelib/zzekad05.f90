@@ -206,12 +206,10 @@
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
-         call chkin  ( 'ZZEKAD05'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
          call errint ( '#',  colidx                            )
          call errint ( '#',  nrec                              )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKAD05'                              )
          return
 
       end if
@@ -224,7 +222,6 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKAD05'                                  )
          call setmsg ( 'Column having index # in segment # does '  // &
                        'not allow nulls, but a null value was '    // &
                        'supplied for the element in record #.'     )
@@ -232,7 +229,6 @@
          call errint ( '#',  segdsc(snoidx)                        )
          call errint ( '#',  recno                                 )
          call sigerr ( 'SPICE(BADATTRIBUTE)'                       )
-         call chkout ( 'ZZEKAD05'                                  )
          return
 
       end if
@@ -244,14 +240,12 @@
 !
       if ( nvals < 1 ) then
 
-         call chkin  ( 'ZZEKAD05'                                  )
          call setmsg ( 'COLIDX = #;  segment = #; NVALS = #;  '  // &
                        'NVALS must be positive '                   )
          call errint ( '#',  colidx                                )
          call errint ( '#',  segdsc(snoidx)                        )
          call errint ( '#',  nvals                                 )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
-         call chkout ( 'ZZEKAD05'                                  )
          return
 
       end if
@@ -261,7 +255,6 @@
 
          if ( nvals /= coldsc(sizidx) ) then
 
-            call chkin  ( 'ZZEKAD05'                                   )
             call setmsg ( 'COLIDX = #;  segment = #; NVALS = #; '     // &
                           'declared entry size = #.  Sizes must match.')
             call errint ( '#',  colidx                                 )
@@ -269,7 +262,6 @@
             call errint ( '#',  nvals                                  )
             call errint ( '#',  coldsc(sizidx)                         )
             call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-            call chkout ( 'ZZEKAD05'                                   )
             return
 
          end if

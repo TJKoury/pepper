@@ -196,11 +196,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SYDUPC' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -334,6 +330,5 @@
       end if
 
 
-      call chkout ( 'SYDUPC' )
       return
       end

@@ -223,19 +223,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS18' )
-      end if
+      if ( return () ) return
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  >  end  ) then
-         call chkout ( 'SPKS18' )
-         return
-      end if
+      if (  begin  >  end  ) return
 
 !
 !     Read the segment structure metadata.
@@ -266,7 +259,6 @@
                        'type 18 record.'                          )
          call errint ( '#',  subtyp                               )
          call sigerr ( 'SPICE(INVALIDVALUE)'                      )
-         call chkout ( 'SPKS18'                                   )
          return
 
       end if
@@ -362,6 +354,5 @@
       call dafada ( real( winsiz, wp ),                  1 )
       call dafada ( real( rec(2) - rec(1) + 1, wp ),     1 )
 
-      call chkout ( 'SPKS18' )
       return
       end

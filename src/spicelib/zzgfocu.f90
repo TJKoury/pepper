@@ -418,11 +418,9 @@
 !     This routine should never be called directly.
 !
 
-      call chkin  ( 'ZZGFOCU' )
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      call chkout ( 'ZZGFOCU' )
       return
 
 
@@ -820,11 +818,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFOCIN' )
 
 !
 !     Find NAIF IDs for FRONT, BACK, and OBSRVR.
@@ -840,7 +835,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', front                                 )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFOCIN'                                 )
          return
 
       end if
@@ -857,7 +851,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', back                                  )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFOCIN'                                 )
          return
 
       end if
@@ -874,7 +867,6 @@
          //            'version of the SPICE toolkit. '           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'ZZGFOCIN'                                 )
          return
 
       end if
@@ -893,7 +885,6 @@
          call errch  ( '#', front                              )
          call errch  ( '#', back                               )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'              )
-         call chkout ( 'ZZGFOCIN'                              )
          return
 
       end if
@@ -947,10 +938,7 @@
          call zzprsmet ( idfrnt, svfmth, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCIN' )
-            return
-         end if
+         if ( failed() ) return
 
          if (  eqstr( shpstr, 'DSK' )  ) then
 
@@ -963,7 +951,6 @@
             //            'ELLIPSOID, POINT, and DSK.'       )
             call errch  ( '#', fshape                        )
             call sigerr ( 'SPICE(INVALIDSHAPE)'              )
-            call chkout ( 'ZZGFOCIN'                         )
             return
 
          end if
@@ -987,10 +974,7 @@
          call zzprsmet ( idfrnt, svbmth, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCIN' )
-            return
-         end if
+         if ( failed() ) return
 
          if (  eqstr( shpstr, 'DSK' )  ) then
 
@@ -1003,7 +987,6 @@
             //            'ELLIPSOID, POINT, and DSK.'       )
             call errch  ( '#', bshape                        )
             call sigerr ( 'SPICE(INVALIDSHAPE)'              )
-            call chkout ( 'ZZGFOCIN'                         )
             return
 
          end if
@@ -1022,7 +1005,6 @@
          //            'other shape must be ELLIPSOID or ' &
          //            'DSK.'                             )
          call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'         )
-         call chkout ( 'ZZGFOCIN'                         )
          return
 
       else if (      (        ( svfshp == dsshap ) &
@@ -1037,7 +1019,6 @@
          call errch  ( '#', svfshp                          )
          call errch  ( '#', svbshp                          )
          call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'           )
-         call chkout ( 'ZZGFOCIN'                           )
          return
 
        end if
@@ -1066,7 +1047,6 @@
          end do
 
          call sigerr ('SPICE(INVALIDOCCTYPE)'              )
-         call chkout ('ZZGFOCIN'                           )
          return
 
       end if
@@ -1085,7 +1065,6 @@
             //            'point targets.'                         )
             call errch  ( '#',  occtyp                             )
             call sigerr ( 'SPICE(BADTYPESHAPECOMBO)'               )
-            call chkout ( 'ZZGFOCIN'                               )
             return
 
          end if
@@ -1098,10 +1077,7 @@
 !
       call zzvalcor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFOCIN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Create a local aberration correction string without
@@ -1158,10 +1134,7 @@
 !
             call zzgftreb ( trgid, radii )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFOCIN' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Checks of radii have been completed.
@@ -1185,10 +1158,7 @@
 
             end if
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFOCIN' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 !
@@ -1213,7 +1183,6 @@
                //            'body-fixed frame name is blank.' )
                call errch  ( '#',  posnam                      )
                call sigerr ( 'SPICE(INVALIDFRAME)'             )
-               call chkout ( 'ZZGFOCIN'                        )
                return
 
             else
@@ -1222,10 +1191,7 @@
 !
                call namfrm ( fixfrm, ffrmid )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZGFOCIN' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( ffrmid == 0 ) then
 
@@ -1234,7 +1200,6 @@
                   call errch  ( '#',  posnam                       )
                   call errch  ( '#',  fixfrm                       )
                   call sigerr ( 'SPICE(INVALIDFRAME)'              )
-                  call chkout ( 'ZZGFOCIN'                         )
                   return
 
                end if
@@ -1245,10 +1210,7 @@
 !
                call frinfo ( ffrmid, center, frclss, clssid, found )
 
-               if ( failed() ) then
-                  call chkout ( 'ZZGFOCIN' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( .not. found ) then
 !
@@ -1262,7 +1224,6 @@
                   call errch  ( '#',  posnam                       )
                   call errch  ( '#',  fixfrm                       )
                   call sigerr ( 'SPICE(BUG)'                       )
-                  call chkout ( 'ZZGFOCIN'                         )
                   return
 
                end if
@@ -1280,7 +1241,6 @@
                   call errint ( '#',  trgid                        )
                   call errint ( '#',  center                       )
                   call sigerr ( 'SPICE(INVALIDFRAME)'              )
-                  call chkout ( 'ZZGFOCIN'                         )
                   return
 
                end if
@@ -1302,10 +1262,7 @@
 !
             call zzsudski ( trgid, nsurf, srflst, ffrmid )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFOCIN' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( i == 1 ) then
 
@@ -1356,7 +1313,6 @@
 !     We've performed shape, and if applicable, frame and radii
 !     checks for both targets.
 !
-      call chkout ( 'ZZGFOCIN' )
       return
 
 
@@ -1497,11 +1453,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin  ( 'ZZGFOCST' )
 
 !
 !     Initialize the state output.
@@ -1518,10 +1471,7 @@
       call spkezp ( svback,  time,   'J2000',  svcorr, &
                     svobs,   bckpos, ltback           )
 
-      if ( failed() ) then
-         call chkout ( 'ZZGFOCST' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Handle the cases of one and two extended targets
@@ -1540,10 +1490,7 @@
 
          call pxform   ( svbfrm, 'J2000', etbcor, mtemp  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCST' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Scale the columns of MTEMP by the axis lengths of the back
 !        target.
@@ -1556,10 +1503,7 @@
          call zzcorepc ( svcorr,  time,   ltfrnt, etfcor )
          call pxform   ( svffrm, 'J2000', etfcor, mtemp  )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCST' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        Scale the columns of MTEMP by the axis lengths of the second
 !        target.
@@ -1574,10 +1518,7 @@
 !
          occode = zzocced ( svorig, bckpos, bsmaxs, frtpos, fsmaxs )
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCST' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( occode == noocc ) then
@@ -1629,7 +1570,6 @@
 
          end if
 
-         call chkout ( 'ZZGFOCST' )
          return
 
 
@@ -1683,21 +1623,18 @@
 !
                call setmsg ( 'Observer is inside front target body.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                    )
-               call chkout ( 'ZZGFOCST'                              )
                return
 
             else if ( bdist == 0.0_wp ) then
 
                call setmsg ( 'Back target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                    )
-               call chkout ( 'ZZGFOCST'                              )
                return
 
             else if ( vnorm(bckfrt) <= svmnfr ) then
 
                call setmsg ( 'BACK target is inside FRONT target.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                  )
-               call chkout ( 'ZZGFOCST'                            )
                return
 
             end if
@@ -1713,21 +1650,18 @@
 !
                call setmsg ( 'Observer is inside back target body.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                   )
-               call chkout ( 'ZZGFOCST'                             )
                return
 
             else if ( fdist == 0.0_wp ) then
 
                call setmsg ( 'Front target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                     )
-               call chkout ( 'ZZGFOCST'                               )
                return
 
             else if ( vnorm(bckfrt) <= svmnbr ) then
 
                call setmsg ( 'FRONT target is inside BACK target.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                  )
-               call chkout ( 'ZZGFOCST'                            )
                return
 
             end if
@@ -1777,10 +1711,7 @@
 
             maxang = dasine ( srad / tdist,  atol )
 
-            if ( failed() ) then
-               call chkout ( 'ZZGFOCST' )
-               return
-            end if
+            if ( failed() ) return
 
             if ( trgsep > maxang ) then
 !
@@ -1788,7 +1719,6 @@
 !
                ocstat = .false.
 
-               call chkout ( 'ZZGFOCST' )
                return
 
             end if
@@ -1813,10 +1743,7 @@
             minang = dasine ( (1-alpha)*svmnbr / bdist, atol )
          end if
 
-         if ( failed() ) then
-            call chkout ( 'ZZGFOCST' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( trgsep < minang ) then
@@ -1877,7 +1804,6 @@
 !
 !           OCSTAT has been set.
 !
-            call chkout ( 'ZZGFOCST' )
             return
 
          end if
@@ -1899,10 +1825,7 @@
                           spoint, trgepc,  srfvec,  found )
 
 
-            if ( failed()) then
-               call chkout ( 'ZZGFOCST' )
-               return
-            end if
+            if ( failed()) return
 
             if ( found ) then
 !
@@ -1930,10 +1853,7 @@
                           svcorr, svonam,  'J2000', frtpos, &
                           spoint, trgepc,  srfvec,  found )
 
-            if ( failed()) then
-               call chkout ( 'ZZGFOCST' )
-               return
-            end if
+            if ( failed()) return
 
             if ( found ) then
 !
@@ -1968,11 +1888,9 @@
          call errch  ( '#', svfshp                              )
          call errch  ( '#', svbshp                              )
          call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'               )
-         call chkout ( 'ZZGFOCST'                               )
          return
 
       end if
 
-      call chkout ( 'ZZGFOCST' )
       return
       end

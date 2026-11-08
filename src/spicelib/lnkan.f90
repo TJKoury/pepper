@@ -227,12 +227,10 @@
 !
       if (  pool( nfrrow, nfrcol )  ==  0  ) then
 
-         call chkin  ( 'LNKAN'               )
          call setmsg ( 'There are no free nodes left for ' &
          //            'allocating in the supplied linked list ' &
          //            'pool. ' )
          call sigerr ( 'SPICE(NOFREENODES)'  )
-         call chkout ( 'LNKAN'               )
          return
 
       end if

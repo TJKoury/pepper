@@ -232,7 +232,6 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKRD03'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
          call errint ( '#',  colidx                            )
@@ -241,7 +240,6 @@
          call errint ( '#',  recno                             )
          call errhan ( '#',  handle                            )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKRD03'                              )
          return
 
       end if
@@ -343,7 +341,6 @@
 
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKRD03'                                    )
          call setmsg ( 'Attempted to read uninitialized column '    // &
                        'entry.  SEGNO = #; COLUMN = #; RECNO = #; ' // &
                        'EK = #'                                      )
@@ -352,7 +349,6 @@
          call errint ( '#',  recno                                   )
          call errhan ( '#',  handle                                  )
          call sigerr ( 'SPICE(UNINITIALIZED)'                        )
-         call chkout ( 'ZZEKRD03'                                    )
          return
 
 
@@ -364,7 +360,6 @@
 
          call zzekcnam ( handle,   coldsc, column )
 
-         call chkin  ( 'ZZEKRD03'                                )
          call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLUMN =  #; RECNO = #; EK = #'          )
          call errint ( '#',  segdsc(snoidx)                      )
@@ -372,7 +367,6 @@
          call errint ( '#',  recno                               )
          call errhan ( '#',  handle                              )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKRD03'                                )
          return
 
       end if

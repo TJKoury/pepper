@@ -227,11 +227,8 @@
 !
 !     Standard SPICE error handling
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDYNVAC' )
 
 !
 !     Prepare to check the name of the kernel variable we're about
@@ -241,10 +238,7 @@
 !
       call intstr ( frcode, cdestr )
 
-      if ( failed() ) then
-         call chkout ( 'ZZDYNVAC' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the lengths of the input frame code, name and item.
@@ -309,7 +303,6 @@
             call errint ( '#',  reqnam                              )
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            call chkout ( 'ZZDYNVAC'                                )
             return
 
 
@@ -342,7 +335,6 @@
             call errint ( '#',  kvnmln                              )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNVAC'                                )
             return
 
          end if
@@ -387,7 +379,6 @@
             call errint ( '#',  kvnmln                              )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNVAC'                                )
             return
 
 
@@ -414,7 +405,6 @@
             call errch  ( '#',  item                                )
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            call chkout ( 'ZZDYNVAC'                                )
             return
 
          end if
@@ -441,7 +431,6 @@
          call errch  ( '#',  kvname                                 )
          call errch  ( '#',  frname                                 )
          call sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
-         call chkout ( 'ZZDYNVAC'                                   )
          return
 
       end if
@@ -460,7 +449,6 @@
          call errint ( '#',  maxn                                   )
          call errint ( '#',  n                                      )
          call sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
-         call chkout ( 'ZZDYNVAC'                                   )
          return
 
       end if
@@ -476,11 +464,9 @@
                        'indicated it was present in pool.'  )
          call errch  ( '#',  kvname                         )
          call sigerr ( 'SPICE(BUG)'                         )
-         call chkout ( 'ZZDYNVAC'                           )
          return
 
       end if
 
-      call chkout ( 'ZZDYNVAC' )
       return
       end

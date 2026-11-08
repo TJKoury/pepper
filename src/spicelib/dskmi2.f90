@@ -769,11 +769,8 @@
       integer(ip)           vxpidx
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKMI2' )
 
 !
 !     Perform error checks on inputs.
@@ -785,7 +782,6 @@
          //            'be > 1.0.'                         )
          call errdp  ( '#',  finscl                        )
          call sigerr ( 'SPICE(BADFINEVOXELSCALE)'          )
-         call chkout ( 'DSKMI2'                            )
          return
 
       end if
@@ -796,7 +792,6 @@
          //            'be >= 1.'                           )
          call errint ( '#',  corscl                         )
          call sigerr ( 'SPICE(BADCOARSEVOXSCALE)'           )
-         call chkout ( 'DSKMI2'                             )
          return
 
       end if
@@ -809,7 +804,6 @@
          call errint ( '#',  nv                          )
          call errint ( '#',  maxvrt                      )
          call sigerr ( 'SPICE(BADVERTEXCOUNT)'           )
-         call chkout ( 'DSKMI2'                          )
          return
 
       end if
@@ -821,7 +815,6 @@
          call errint ( '#',  np                          )
          call errint ( '#',  maxplt                      )
          call sigerr ( 'SPICE(BADPLATECOUNT)'            )
-         call chkout ( 'DSKMI2'                          )
          return
 
       end if
@@ -836,7 +829,6 @@
          call errint ( '#',  worksz                         )
          call errint ( '#',  np                             )
          call sigerr ( 'SPICE(WORKSPACETOOSMALL)'           )
-         call chkout ( 'DSKMI2'                             )
          return
 
       end if
@@ -851,7 +843,6 @@
          call errint ( '#',  voxpsz                           )
          call errint ( '#',  corscl**3                        )
          call sigerr ( 'SPICE(PTRARRAYTOOSMALL)'              )
-         call chkout ( 'DSKMI2'                               )
          return
 
       end if
@@ -867,7 +858,6 @@
          call errint ( '#',  voxlsz                           )
          call errint ( '#',  np                               )
          call sigerr ( 'SPICE(PLATELISTTOOSMALL)'             )
-         call chkout ( 'DSKMI2'                               )
          return
 
       end if
@@ -913,7 +903,6 @@
          call errint ( '#',  spxisz                            )
          call errint ( '#',  reqsiz                            )
          call sigerr ( 'SPICE(INTINDEXTOOSMALL)'               )
-         call chkout ( 'DSKMI2'                                )
          return
 
       end if
@@ -955,10 +944,7 @@
                       spaixd(sivtbd), &
                       spaixi(sicgrd)           )
 
-      if ( failed() ) then
-         call chkout ( 'DSKMI2' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     At this point the voxel plate list is offset from the
@@ -1011,6 +997,5 @@
 
       end if
 
-      call chkout ( 'DSKMI2' )
       return
       end

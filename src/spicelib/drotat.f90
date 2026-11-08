@@ -187,12 +187,10 @@
       if (      ( iaxis > 3 ) &
            .or. ( iaxis < 1 ) ) then
 
-         call chkin  ( 'DROTAT' )
          call setmsg ( 'The input axis is out of range.  Its value '  // &
                        'is #.')
          call errint ( '#', iaxis       )
          call sigerr ( 'SPICE(BADAXIS)' )
-         call chkout ( 'DROTAT'         )
          return
 
       end if

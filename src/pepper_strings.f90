@@ -22,6 +22,8 @@ contains
 
 !$Procedure ASTRIP ( STRIP Ascii characters from a string )
 
+      !> Remove from a character string all characters which fall
+      !> between specified starting and ending characters, inclusive.
       elemental subroutine astrip ( instr, asciib, asciie, outstr )
       use pepper_kinds, only: ip
 
@@ -43,20 +45,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: instr
-      character(1), intent(in) :: asciib
-      character(1), intent(in) :: asciie
-      character(*), intent(out) :: outstr
+      character(*), intent(in) :: instr  !! Input string.
+      character(1), intent(in) :: asciib  !! First ASCII character in range to be stripped.
+      character(1), intent(in) :: asciie  !! Last ASCII character in range to be stripped.
+      character(*), intent(out) :: outstr  !! Output (stripped) string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     INSTR      I   Input string.
-!     ASCIIB     I   First ASCII character in range to be stripped.
-!     ASCIIE     I   Last ASCII character in range to be stripped.
-!     OUTSTR     O   Output (stripped) string.
-!
 ! $ Detailed_Input
 !
 !     INSTR    is a character string from which all characters
@@ -256,6 +249,10 @@ contains
 
 !$Procedure BEDEC  ( Be a decimal number? )
 
+      !> Determine whether a string represents a decimal number.
+      !>
+      !> The function returns .TRUE. if the string represents a decimal
+      !> number. Otherwise, it returns .FALSE.
       elemental logical function bedec  ( string )
       use pepper_kinds, only: ip
 
@@ -278,17 +275,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Character string.
-!
-!     The function returns .TRUE. if the string represents a decimal
-!     number. Otherwise, it returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     STRING   is any string.
@@ -532,6 +520,10 @@ contains
 
 !$Procedure BEINT  ( Be an Integer? )
 
+      !> Determine whether a string represents an integer.
+      !>
+      !> The function returns .TRUE. if the string represents an integer.
+      !> Otherwise, it returns .FALSE.
       elemental logical function beint  ( string )
       use pepper_kinds, only: ip
 
@@ -554,17 +546,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Character string.
-!
-!     The function returns .TRUE. if the string represents an integer.
-!     Otherwise, it returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     STRING   is any string.
@@ -755,6 +738,10 @@ contains
 
 !$Procedure BENUM  ( Be a number? )
 
+      !> Determine whether a string represents a number.
+      !>
+      !> The function returns .TRUE. if the string is a number.
+      !> Otherwise, it returns .FALSE.
       elemental logical function benum  ( string )
       use pepper_kinds, only: ip
 
@@ -777,17 +764,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Character string.
-!
-!     The function returns .TRUE. if the string is a number.
-!     Otherwise, it returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     STRING   is any string.
@@ -960,6 +938,10 @@ contains
 
 !$Procedure BEUNS  ( Be an unsigned integer? )
 
+      !> Determine whether a string represents an unsigned integer.
+      !>
+      !> The function returns .TRUE. if the string represents an unsigned
+      !> integer. Otherwise, it returns .FALSE.
       elemental logical function beuns  ( string )
       use pepper_kinds, only: ip
 
@@ -982,17 +964,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Character string.
-!
-!     The function returns .TRUE. if the string represents an unsigned
-!     integer. Otherwise, it returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     STRING   is any string.
@@ -1172,6 +1145,9 @@ contains
 
 !$Procedure CMPRSS ( Compress a character string )
 
+      !> Compress a character string by removing occurrences of
+      !> more than N consecutive occurrences of a specified
+      !> character.
       elemental subroutine cmprss ( delim, n, input, output )
       use pepper_kinds, only: ip
 
@@ -1195,20 +1171,11 @@ contains
 
       implicit none
 
-      character(1), intent(in) :: delim
-      integer(ip), intent(in) :: n
-      character(*), intent(in) :: input
-      character(*), intent(out) :: output
+      character(1), intent(in) :: delim  !! Delimiter to be compressed.
+      integer(ip), intent(in) :: n  !! Maximum consecutive occurrences of DELIM.
+      character(*), intent(in) :: input  !! Input string.
+      character(*), intent(out) :: output  !! Compressed string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     DELIM      I   Delimiter to be compressed.
-!     N          I   Maximum consecutive occurrences of DELIM.
-!     INPUT      I   Input string.
-!     OUTPUT     O   Compressed string.
-!
 ! $ Detailed_Input
 !
 !     DELIM    is the delimiter to be compressed out of the string.
@@ -1378,6 +1345,12 @@ contains
 
 !$Procedure CPOS ( Character position )
 
+      !> Find the first occurrence in a string of a character belonging
+      !> to a collection of characters, starting at a specified location,
+      !> searching forward.
+      !>
+      !> The function returns the index of the first character of STR
+      !> at or following index START that is in the collection CHARS.
       elemental integer(ip) function cpos ( str, chars, start )
       use pepper_kinds, only: ip
 
@@ -1401,21 +1374,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: chars
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! Any character string.
+      character(*), intent(in) :: chars  !! A collection of characters.
+      integer(ip), intent(in) :: start  !! Position to begin looking for one of CHARS
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   Any character string.
-!     CHARS      I   A collection of characters.
-!     START      I   Position to begin looking for one of CHARS
-!
-!     The function returns the index of the first character of STR
-!     at or following index START that is in the collection CHARS.
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -1591,6 +1553,12 @@ contains
 
 !$Procedure CPOSR ( Character position, reverse )
 
+      !> Find the first occurrence in a string of a character belonging
+      !> to a collection of characters, starting at a specified location,
+      !> searching in reverse.
+      !>
+      !> The function returns the index of the last character of STR
+      !> at or before index START that is in the collection CHARS.
       elemental integer(ip) function cposr ( str, chars, start )
       use pepper_kinds, only: ip
 
@@ -1614,21 +1582,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: chars
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! Any character string.
+      character(*), intent(in) :: chars  !! A collection of characters.
+      integer(ip), intent(in) :: start  !! Position to begin looking for one of CHARS
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   Any character string.
-!     CHARS      I   A collection of characters.
-!     START      I   Position to begin looking for one of CHARS
-!
-!     The function returns the index of the last character of STR
-!     at or before index START that is in the collection CHARS.
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -1811,6 +1768,9 @@ contains
 
 !$Procedure EQSTR ( Equivalent strings )
 
+      !> Determine whether two strings are equivalent.
+      !>
+      !> The function returns .TRUE. if A and B are equivalent.
       elemental logical function eqstr ( a, b )
       use pepper_kinds, only: ip
 
@@ -1837,18 +1797,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: a
-      character(*), intent(in) :: b
+      character(*), intent(in) :: a  !! Arbitrary character strings.
+      character(*), intent(in) :: b  !! Arbitrary character strings.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     A,
-!     B          I   Arbitrary character strings.
-!
-!     The function returns .TRUE. if A and B are equivalent.
-!
 ! $ Detailed_Input
 !
 !     A,
@@ -2286,6 +2237,12 @@ contains
 
 !$Procedure ESRCHC ( Equivalence search, character )
 
+      !> Search for a given value within a character string array.
+      !> Return the index of the first equivalent array entry, or zero
+      !> if no equivalent element is found.
+      !>
+      !> The function returns the index of the first array entry equivalent
+      !> to VALUE, or zero if none is found.
       pure integer(ip) function esrchc ( value, ndim, array )
       use pepper_kinds, only: ip
 
@@ -2308,21 +2265,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: value
-      integer(ip), intent(in) :: ndim
-      character(*), intent(in) :: array ( * )
+      character(*), intent(in) :: value  !! Key value to be found in ARRAY.
+      integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
+      character(*), intent(in) :: array ( * )  !! Character string array to search.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     VALUE      I   Key value to be found in ARRAY.
-!     NDIM       I   Dimension of ARRAY.
-!     ARRAY      I   Character string array to search.
-!
-!     The function returns the index of the first array entry equivalent
-!     to VALUE, or zero if none is found.
-!
 ! $ Detailed_Input
 !
 !     VALUE    is an arbitrary character string.
@@ -2447,6 +2393,8 @@ contains
 
 !$Procedure FNDNWD ( Find the next word after an index )
 
+      !> Find the beginning and end of the first word starting at
+      !> or after a specified character.
       elemental subroutine fndnwd ( string, start, b, e )
       use pepper_kinds, only: ip
 
@@ -2469,20 +2417,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      integer(ip), intent(in) :: start
-      integer(ip), intent(out) :: b
-      integer(ip), intent(out) :: e
+      character(*), intent(in) :: string  !! A string to examine for words.
+      integer(ip), intent(in) :: start  !! Position in the string to start looking for words.
+      integer(ip), intent(out) :: b  !! String position of first character of the word.
+      integer(ip), intent(out) :: e  !! String position of last character of the word.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   A string to examine for words.
-!     START      I   Position in the string to start looking for words.
-!     B          O   String position of first character of the word.
-!     E          O   String position of last character of the word.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a character string that potentially consists of
@@ -2677,6 +2616,11 @@ contains
 
 !$Procedure FRSTNB ( First non-blank character )
 
+      !> Return the index of the first non-blank character in
+      !> a character string.
+      !>
+      !> The function returns the index of the first non-blank character in
+      !> STRING.
       elemental integer(ip) function frstnb ( string )
       use pepper_kinds, only: ip
 
@@ -2699,17 +2643,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the index of the first non-blank character in
-!     STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -2826,6 +2761,12 @@ contains
 
 !$Procedure FRSTNP ( First non-printable character )
 
+      !> Return the index of the first non-printable character in a
+      !> character string. ASCII characters 32-126 are considered
+      !> printable by this routine. (Blanks are considered printable.)
+      !>
+      !> The function returns the index of first non-printable character in
+      !> STRING.
       elemental integer(ip) function frstnp ( string )
       use pepper_kinds, only: ip
 
@@ -2849,17 +2790,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the index of first non-printable character in
-!     STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -3015,6 +2947,12 @@ contains
 
 !$Procedure FRSTPC ( First printable character )
 
+      !> Return the index of the first printable character in a character
+      !> string. ASCII characters 33-126 are printable. (Blanks are not
+      !> considered printable.)
+      !>
+      !> The function returns the index of the first non-blank printable
+      !> character in STRING.
       elemental integer(ip) function frstpc ( string )
       use pepper_kinds, only: ip
 
@@ -3038,17 +2976,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!      VARIABLE  I/O  DESCRIPTION
-!      --------  ---  --------------------------------------------------
-!      STRING     I   Input character string.
-!
-!     The function returns the index of the first non-blank printable
-!     character in STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -3183,6 +3112,9 @@ contains
 
 !$Procedure KXTRCT ( Extract a substring starting with a keyword )
 
+      !> Locate a keyword in a string and extract the substring from
+      !> the beginning of the first word following the keyword to the
+      !> beginning of the first subsequent recognized terminator of a list.
       pure subroutine kxtrct ( keywd,  terms, nterms, &
                           wordsq, found, substr  )
       use pepper_kinds, only: ip
@@ -3208,25 +3140,13 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: keywd
-      character(*), intent(in) :: terms(*)
-      integer(ip), intent(in) :: nterms
-      character(*), intent(inout) :: wordsq
-      logical, intent(out) :: found
-      character(*), intent(out) :: substr
+      character(*), intent(in) :: keywd  !! Word that marks the beginning of text of interest.
+      character(*), intent(in) :: terms(*)  !! Set of words, any of which marks the end of text.
+      integer(ip), intent(in) :: nterms  !! Number of TERMS.
+      character(*), intent(inout) :: wordsq  !! String containing a sequence of words.
+      logical, intent(out) :: found  !! .TRUE. if the keyword is found in the string.
+      character(*), intent(out) :: substr  !! String from end of KEYWD to beginning of first TERMS item found.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     KEYWD      I   Word that marks the beginning of text of interest.
-!     TERMS      I   Set of words, any of which marks the end of text.
-!     NTERMS     I   Number of TERMS.
-!     WORDSQ    I-O  String containing a sequence of words.
-!     FOUND      O   .TRUE. if the keyword is found in the string.
-!     SUBSTR     O   String from end of KEYWD to beginning of first
-!                    TERMS item found.
-!
 ! $ Detailed_Input
 !
 !     KEYWD    is a word used to mark the start of text of interest.
@@ -3517,6 +3437,11 @@ contains
 
 !$Procedure LASTNB ( Last non-blank character )
 
+      !> Return the index of the last non-blank character in
+      !> a character string.
+      !>
+      !> The function returns the index of the last non-blank character in
+      !> STRING.
       elemental integer(ip) function  lastnb ( string )
       use pepper_kinds, only: ip
 
@@ -3539,17 +3464,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the index of the last non-blank character in
-!     STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -3670,6 +3586,12 @@ contains
 
 !$Procedure LASTPC ( Last printable character )
 
+      !> Return the index of the last printable character in a character
+      !> string. ASCII characters 33-126 are printable. (Blanks are not
+      !> considered printable.)
+      !>
+      !> The function returns the index of the last non-blank printable
+      !> character in STRING.
       elemental integer(ip) function  lastpc ( string )
       use pepper_kinds, only: ip
 
@@ -3693,17 +3615,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the index of the last non-blank printable
-!     character in STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -3838,6 +3751,7 @@ contains
 
 !$Procedure LBUILD ( Build a list in a character string )
 
+      !> Build a list of items delimited by a character.
       pure subroutine lbuild ( items, n, delim, list )
       use pepper_kinds, only: ip
 
@@ -3859,20 +3773,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: items ( * )
-      integer(ip), intent(in) :: n
-      character(*), intent(in) :: delim
-      character(*), intent(out) :: list
+      character(*), intent(in) :: items ( * )  !! Items in the list.
+      integer(ip), intent(in) :: n  !! Number of items in the list.
+      character(*), intent(in) :: delim  !! String used to delimit items.
+      character(*), intent(out) :: list  !! List of items delimited by DELIM.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ITEMS      I   Items in the list.
-!     N          I   Number of items in the list.
-!     DELIM      I   String used to delimit items.
-!     LIST       O   List of items delimited by DELIM.
-!
 ! $ Detailed_Input
 !
 !     ITEMS    are the items to be combined to make the output
@@ -4064,6 +3969,7 @@ contains
 
 !$Procedure LCASE ( Convert to lowercase )
 
+      !> Convert the characters in a string to lowercase.
       elemental subroutine lcase ( in, out )
       use pepper_kinds, only: ip
 
@@ -4084,16 +3990,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(out) :: out  !! Output string, all lowercase.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     OUT        O   Output string, all lowercase.
-!
 ! $ Detailed_Input
 !
 !     IN       is the input string.
@@ -4221,6 +4120,7 @@ contains
 
 !$Procedure LJUCRS ( Left-justify, Uppercase, Compress )
 
+      !> Left-justify, uppercase, and space-compress a character string.
       elemental subroutine ljucrs ( n, input, output )
       use pepper_kinds, only: ip
 
@@ -4242,18 +4142,10 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: n
-      character(*), intent(in) :: input
-      character(*), intent(out) :: output
+      integer(ip), intent(in) :: n  !! Maximum consecutive occurrences of space.
+      character(*), intent(in) :: input  !! Input string.
+      character(*), intent(out) :: output  !! Output string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     N          I      Maximum consecutive occurrences of space.
-!     INPUT      I      Input string.
-!     OUTPUT     O      Output string.
-!
 ! $ Detailed_Input
 !
 !     N        is the maximum number of consecutive occurrences
@@ -4439,6 +4331,7 @@ contains
 
 !$Procedure LJUST ( Left justify a character string )
 
+      !> Left-justify a character string.
       elemental subroutine ljust ( input, output )
       use pepper_kinds, only: ip
 
@@ -4460,16 +4353,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: input
-      character(*), intent(out) :: output
+      character(*), intent(in) :: input  !! Input character string.
+      character(*), intent(out) :: output  !! Output character string, left justified.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     INPUT      I   Input character string.
-!     OUTPUT     O   Output character string, left justified.
-!
 ! $ Detailed_Input
 !
 !     INPUT    is the input character string.
@@ -4632,6 +4518,7 @@ contains
 
 !$Procedure LPARSE ( Parse items from a list )
 
+      !> Parse a list of items delimited by a single character.
       pure subroutine lparse ( list, delim, nmax, n, items )
       use pepper_kinds, only: ip
 
@@ -4654,22 +4541,12 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: list
-      character(1), intent(in) :: delim
-      integer(ip), intent(in) :: nmax
-      integer(ip), intent(out) :: n
-      character(*), intent(out) :: items ( * )
+      character(*), intent(in) :: list  !! List of items delimited by DELIM.
+      character(1), intent(in) :: delim  !! Single character used to delimit items.
+      integer(ip), intent(in) :: nmax  !! Maximum number of items to return.
+      integer(ip), intent(out) :: n  !! Number of items in the list.
+      character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LIST       I   List of items delimited by DELIM.
-!     DELIM      I   Single character used to delimit items.
-!     NMAX       I   Maximum number of items to return.
-!     N          O   Number of items in the list.
-!     ITEMS      O   Items in the list, left justified.
-!
 ! $ Detailed_Input
 !
 !     LIST     is a list of items delimited by the single character
@@ -5118,6 +4995,7 @@ contains
 
 !$Procedure LPARSM ( Parse a list of items )
 
+      !> Parse a list of items separated by multiple delimiters.
       pure subroutine lparsm ( list, delims, nmax, n, items )
       use pepper_kinds, only: ip
 
@@ -5140,22 +5018,12 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: list
-      character(*), intent(in) :: delims
-      integer(ip), intent(in) :: nmax
-      integer(ip), intent(out) :: n
-      character(*), intent(out) :: items ( * )
+      character(*), intent(in) :: list  !! List of items delimited by DELIMS.
+      character(*), intent(in) :: delims  !! Single characters which delimit items.
+      integer(ip), intent(in) :: nmax  !! Maximum number of items to return.
+      integer(ip), intent(out) :: n  !! Number of items in the list.
+      character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     LIST       I    List of items delimited by DELIMS.
-!     DELIMS     I    Single characters which delimit items.
-!     NMAX       I    Maximum number of items to return.
-!     N          O    Number of items in the list.
-!     ITEMS      O    Items in the list, left justified.
-!
 ! $ Detailed_Input
 !
 !     LIST     is a list of items delimited by any one of the
@@ -5619,6 +5487,11 @@ contains
 
 !$Procedure LTRIM ( Left trim )
 
+      !> Return the maximum of 1 and the location of the first non-blank
+      !> character in the string.
+      !>
+      !> The function returns the maximum of 1 and the location of the
+      !> first non-blank character in STRING.
       elemental integer(ip) function ltrim ( string )
       use pepper_kinds, only: ip
 
@@ -5640,18 +5513,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! String to be trimmed.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!
-!     STRING     I   String to be trimmed.
-!
-!     The function returns the maximum of 1 and the location of the
-!     first non-blank character in STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a string to be trimmed: the location of the
@@ -5763,6 +5626,7 @@ contains
 
 !$Procedure LXQSTR ( Lex quoted string )
 
+      !> Scan (lex) a quoted string.
       elemental subroutine lxqstr ( string, qchar, first, last, nchar )
       use pepper_kinds, only: ip
 
@@ -5786,22 +5650,12 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      character(1), intent(in) :: qchar
-      integer(ip), intent(in) :: first
-      integer(ip), intent(out) :: last
-      integer(ip), intent(out) :: nchar
+      character(*), intent(in) :: string  !! String to be scanned.
+      character(1), intent(in) :: qchar  !! Quote delimiter character.
+      integer(ip), intent(in) :: first  !! Character position at which to start scanning.
+      integer(ip), intent(out) :: last  !! Character position of end of token.
+      integer(ip), intent(out) :: nchar  !! Number of characters in token.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   String to be scanned.
-!     QCHAR      I   Quote delimiter character.
-!     FIRST      I   Character position at which to start scanning.
-!     LAST       O   Character position of end of token.
-!     NCHAR      O   Number of characters in token.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a character string that may contain a `string
@@ -6100,6 +5954,11 @@ contains
 
 !$Procedure MATCHW ( Match string against wildcard template )
 
+      !> Determine whether a string is matched by a template containing
+      !> wild cards.
+      !>
+      !> The function returns .TRUE. if STRING matches TEMPL and otherwise
+      !> returns .FALSE.
       elemental logical function matchw ( string, templ, wstr, wchr )
       use pepper_kinds, only: ip
 
@@ -6121,23 +5980,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      character(*), intent(in) :: templ
-      character(1), intent(in) :: wstr
-      character(1), intent(in) :: wchr
+      character(*), intent(in) :: string  !! String to be tested.
+      character(*), intent(in) :: templ  !! Template (with wild cards) to test against STRING.
+      character(1), intent(in) :: wstr  !! Wild string token.
+      character(1), intent(in) :: wchr  !! Wild character token.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   String to be tested.
-!     TEMPL      I   Template (with wild cards) to test against STRING.
-!     WSTR       I   Wild string token.
-!     WCHR       I   Wild character token.
-!
-!     The function returns .TRUE. if STRING matches TEMPL and otherwise
-!     returns .FALSE.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string to be tested for a match
@@ -6610,6 +6457,11 @@ contains
 
 !$Procedure NBLEN ( Non blank length of a string )
 
+      !> Return the non-blank length of a character string. (That is,
+      !> the index of the last non-blank character when the string is
+      !> left-justified.)
+      !>
+      !> The function returns the non-blank length of STRING.
       elemental integer(ip) function  nblen ( string )
       use pepper_kinds, only: ip
 
@@ -6633,16 +6485,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the non-blank length of STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input character string.
@@ -6737,6 +6581,11 @@ contains
 
 !$Procedure NBWID ( Non-blank width of a character array )
 
+      !> Determine the non-blank width of a character array---that is,
+      !> the largest value of LASTNB for any element in the array.
+      !>
+      !> The function returns the index of the rightmost non-blank
+      !> character in the entire array of strings ARRAY.
       pure integer(ip) function nbwid ( array, nelt )
       use pepper_kinds, only: ip
 
@@ -6758,19 +6607,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: array   ( * )
-      integer(ip), intent(in) :: nelt
+      character(*), intent(in) :: array   ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements in the array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     NELT       I   Number of elements in the array.
-!
-!     The function returns the index of the rightmost non-blank
-!     character in the entire array of strings ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -6923,6 +6762,12 @@ contains
 
 !$Procedure NCPOS ( NOT character position )
 
+      !> Find the first occurrence in a string of a character NOT belonging
+      !> to a collection of characters, starting at a specified location,
+      !> searching forwards.
+      !>
+      !> The function returns the index of the first character of STR
+      !> at or following index START that is not in the collection CHARS.
       elemental integer(ip) function ncpos ( str, chars, start )
       use pepper_kinds, only: ip
 
@@ -6946,21 +6791,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: chars
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! Any character string.
+      character(*), intent(in) :: chars  !! A collection of characters.
+      integer(ip), intent(in) :: start  !! Position to begin looking for one not in CHARS
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   Any character string.
-!     CHARS      I   A collection of characters.
-!     START      I   Position to begin looking for one not in CHARS
-!
-!     The function returns the index of the first character of STR
-!     at or following index START that is not in the collection CHARS.
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -7124,6 +6958,12 @@ contains
 
 !$Procedure NCPOSR (NOT character position, reverse)
 
+      !> Find the first occurrence in a string of a character NOT
+      !> belonging to a collection of characters, starting at a
+      !> specified location, searching in reverse.
+      !>
+      !> The function returns the index of the last character of STR
+      !> at or before index START that is not in the collection CHARS.
       elemental integer(ip) function ncposr ( str, chars, start )
       use pepper_kinds, only: ip
 
@@ -7147,21 +6987,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: chars
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! Any character string.
+      character(*), intent(in) :: chars  !! A collection of characters.
+      integer(ip), intent(in) :: start  !! Position to begin looking for one not in CHARS
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   Any character string.
-!     CHARS      I   A collection of characters.
-!     START      I   Position to begin looking for one not in CHARS
-!
-!     The function returns the index of the last character of STR
-!     at or before index START that is not in the collection CHARS.
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -7324,6 +7153,8 @@ contains
 
 !$Procedure NEXTWD ( Next word in a character string )
 
+      !> Return the next word in a given character string, and
+      !> left justify the rest of the string.
       elemental subroutine nextwd ( string, next, rest )
       use pepper_kinds, only: ip
 
@@ -7346,18 +7177,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      character(*), intent(out) :: next
-      character(*), intent(out) :: rest
+      character(*), intent(in) :: string  !! Input character string.
+      character(*), intent(out) :: next  !! The next word in the string.
+      character(*), intent(out) :: rest  !! The remaining part of STRING, left-justified.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!     NEXT       O   The next word in the string.
-!     REST       O   The remaining part of STRING, left-justified.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input string to be parsed. Each word of this
@@ -7634,6 +7457,8 @@ contains
 
 !$Procedure NTHWD ( N'th word in a character string )
 
+      !> Return the Nth word in a character string, and its location
+      !> in the string.
       elemental subroutine nthwd ( string, nth, word, loc )
       use pepper_kinds, only: ip
 
@@ -7657,20 +7482,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      integer(ip), intent(in) :: nth
-      character(*), intent(out) :: word
-      integer(ip), intent(out) :: loc
+      character(*), intent(in) :: string  !! Input character string.
+      integer(ip), intent(in) :: nth  !! Index of the word to be returned.
+      character(*), intent(out) :: word  !! The NTH word in STRING.
+      integer(ip), intent(out) :: loc  !! Location of WORD in STRING.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!     NTH        I   Index of the word to be returned.
-!     WORD       O   The NTH word in STRING.
-!     LOC        O   Location of WORD in STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input string to be parsed. Each word of this
@@ -7970,6 +7786,7 @@ contains
 
 !$Procedure PARSQS ( Parse quoted string token )
 
+      !> Parse a quoted string token.
       elemental subroutine parsqs ( string, qchar, value, length, error, errmsg, &
                           ptr                                          )
       use pepper_kinds, only: ip
@@ -7994,26 +7811,14 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      character(1), intent(in) :: qchar
-      character(*), intent(out) :: value
-      integer(ip), intent(out) :: length
-      logical, intent(out) :: error
-      character(*), intent(out) :: errmsg
-      integer(ip), intent(out) :: ptr
+      character(*), intent(in) :: string  !! Quoted string to be parsed.
+      character(1), intent(in) :: qchar  !! Quote delimiter character.
+      character(*), intent(out) :: value  !! Parsed string.
+      integer(ip), intent(out) :: length  !! Number of significant characters in VALUE.
+      logical, intent(out) :: error  !! Logical error flag.
+      character(*), intent(out) :: errmsg  !! Message indicating whether errors have occurred.
+      integer(ip), intent(out) :: ptr  !! Position in string where an error occurred.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Quoted string to be parsed.
-!     QCHAR      I   Quote delimiter character.
-!     VALUE      O   Parsed string.
-!     LENGTH     O   Number of significant characters in VALUE.
-!     ERROR      O   Logical error flag.
-!     ERRMSG     O   Message indicating whether errors have occurred.
-!     PTR        O   Position in string where an error occurred.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a character string containing a `quoted string
@@ -8397,6 +8202,10 @@ contains
 
 !$Procedure PCWID ( Printable width of a character array )
 
+      !> Determine the printable width of a character array.
+      !>
+      !> The function returns the index of the rightmost printable
+      !> character in the entire array of strings ARRAY.
       pure integer(ip) function pcwid ( array, nelt )
       use pepper_kinds, only: ip
 
@@ -8417,19 +8226,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: array   ( * )
-      integer(ip), intent(in) :: nelt
+      character(*), intent(in) :: array   ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements in the array.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     ARRAY      I   Input array.
-!     NELT       I   Number of elements in the array.
-!
-!     The function returns the index of the rightmost printable
-!     character in the entire array of strings ARRAY.
-!
 ! $ Detailed_Input
 !
 !     ARRAY    is the input array.
@@ -8590,6 +8389,10 @@ contains
 
 !$Procedure POS ( Position of substring )
 
+      !> Find the first occurrence in a string of a substring, starting at
+      !> a specified location, searching forward.
+      !>
+      !> The function returns the index of SUBSTR in STR following START
       elemental integer(ip) function pos ( str, substr, start )
       use pepper_kinds, only: ip
 
@@ -8612,20 +8415,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: substr
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! A character string
+      character(*), intent(in) :: substr  !! Substring to locate in the character string.
+      integer(ip), intent(in) :: start  !! Where to start looking for SUBSTR in STR.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   A character string
-!     SUBSTR     I   Substring to locate in the character string.
-!     START      I   Where to start looking for SUBSTR in STR.
-!
-!     The function returns the index of SUBSTR in STR following START
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -8796,6 +8589,10 @@ contains
 
 !$Procedure POSR ( Position of substring, reverse search)
 
+      !> Find the first occurrence in a string of a substring, starting at
+      !> a specified location, searching in reverse.
+      !>
+      !> The function returns the index of SUBSTR in STR preceding START
       elemental integer(ip) function posr ( str, substr, start )
       use pepper_kinds, only: ip
 
@@ -8818,20 +8615,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str
-      character(*), intent(in) :: substr
-      integer(ip), intent(in) :: start
+      character(*), intent(in) :: str  !! A character string
+      character(*), intent(in) :: substr  !! Substring to locate in the character string.
+      integer(ip), intent(in) :: start  !! Where to start looking for SUBSTR in STR.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR        I   A character string
-!     SUBSTR     I   Substring to locate in the character string.
-!     START      I   Where to start looking for SUBSTR in STR.
-!
-!     The function returns the index of SUBSTR in STR preceding START
-!
 ! $ Detailed_Input
 !
 !     STR      is any character string.
@@ -9006,6 +8793,7 @@ contains
 
 !$Procedure PREFIX (Prefix a character string)
 
+      !> Add a prefix to a character string.
       elemental subroutine prefix ( pref, spaces, string )
       use pepper_kinds, only: ip
 
@@ -9027,18 +8815,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: pref
-      integer(ip), intent(in) :: spaces
-      character(*), intent(inout) :: string
+      character(*), intent(in) :: pref  !! Prefix.
+      integer(ip), intent(in) :: spaces  !! Number of spaces separating prefix and suffix.
+      character(*), intent(inout) :: string  !! Suffix on input, string on output.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     PREF       I   Prefix.
-!     SPACES     I   Number of spaces separating prefix and suffix.
-!     STRING    I-O  Suffix on input, string on output.
-!
 ! $ Detailed_Input
 !
 !     PREF     is the prefix to be added to the string. Trailing
@@ -9207,6 +8987,8 @@ contains
 
 !$Procedure QUOTE ( Enclose in quotes )
 
+      !> Enclose (quote) the non-blank part of a character string
+      !> between delimiting symbols.
       elemental subroutine quote ( in, left, right, out )
       use pepper_kinds, only: ip
 
@@ -9228,20 +9010,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      character(1), intent(in) :: left
-      character(1), intent(in) :: right
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      character(1), intent(in) :: left  !! Left delimiter.
+      character(1), intent(in) :: right  !! Right delimiter.
+      character(*), intent(out) :: out  !! Output (quoted) string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     LEFT       I   Left delimiter.
-!     RIGHT      I   Right delimiter.
-!     OUT        O   Output (quoted) string.
-!
 ! $ Detailed_Input
 !
 !     IN       is the input string to be quoted.
@@ -9363,6 +9136,8 @@ contains
 
 !$Procedure REPLCH ( Replace characters in a string )
 
+      !> Replace all occurrences of a single character with a second
+      !> character.
       elemental subroutine replch ( instr, old, new, outstr )
       use pepper_kinds, only: ip
 
@@ -9384,20 +9159,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: instr
-      character(1), intent(in) :: old
-      character(1), intent(in) :: new
-      character(*), intent(out) :: outstr
+      character(*), intent(in) :: instr  !! Input string.
+      character(1), intent(in) :: old  !! Character to be replaced.
+      character(1), intent(in) :: new  !! Replacement character.
+      character(*), intent(out) :: outstr  !! Output string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     INSTR      I   Input string.
-!     OLD        I   Character to be replaced.
-!     NEW        I   Replacement character.
-!     OUTSTR     O   Output string.
-!
 ! $ Detailed_Input
 !
 !     INSTR    is the input character string, possibly containing
@@ -9520,6 +9286,7 @@ contains
 
 !$Procedure REPLWD ( Replace a word )
 
+      !> Replace the Nth word in a string with a new word.
       elemental subroutine replwd ( instr, nth, new, outstr )
       use pepper_kinds, only: ip
 
@@ -9540,20 +9307,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: instr
-      integer(ip), intent(in) :: nth
-      character(*), intent(in) :: new
-      character(*), intent(out) :: outstr
+      character(*), intent(in) :: instr  !! Input string.
+      integer(ip), intent(in) :: nth  !! Number of the word to be replaced.
+      character(*), intent(in) :: new  !! Replacement word.
+      character(*), intent(out) :: outstr  !! Output string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     INSTR      I   Input string.
-!     NTH        I   Number of the word to be replaced.
-!     NEW        I   Replacement word.
-!     OUTSTR     O   Output string.
-!
 ! $ Detailed_Input
 !
 !     INSTR    is the input character string, possibly containing
@@ -9813,6 +9571,7 @@ contains
 
 !$Procedure REPMC  ( Replace marker with character string )
 
+      !> Replace a marker with a character string.
       elemental subroutine repmc ( in, marker, value, out )
       use pepper_kinds, only: ip
 
@@ -9834,20 +9593,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      character(*), intent(in) :: marker
-      character(*), intent(in) :: value
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      character(*), intent(in) :: value  !! Replacement string.
+      character(*), intent(out) :: out  !! Output string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     MARKER     I   Marker to be replaced.
-!     VALUE      I   Replacement string.
-!     OUT        O   Output string.
-!
 ! $ Detailed_Input
 !
 !     IN       is an arbitrary character string.
@@ -10127,6 +9877,7 @@ contains
 
 !$Procedure RJUST ( Right justify a character string )
 
+      !> Right justify a character string.
       elemental subroutine rjust ( input, output )
       use pepper_kinds, only: ip
 
@@ -10148,16 +9899,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: input
-      character(*), intent(out) :: output
+      character(*), intent(in) :: input  !! Input character string.
+      character(*), intent(out) :: output  !! Output character string, right justified.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     INPUT      I   Input character string.
-!     OUTPUT     O   Output character string, right justified.
-!
 ! $ Detailed_Input
 !
 !     INPUT    is the input character string.
@@ -10314,6 +10058,11 @@ contains
 
 !$Procedure RTRIM ( Right trim )
 
+      !> Return the maximum of 1 and the location of the last non-blank
+      !> character in the string.
+      !>
+      !> The function returns the maximum of 1 and the location of the
+      !> last non-blank character in STRING.
       elemental integer(ip) function rtrim ( string )
       use pepper_kinds, only: ip
 
@@ -10335,18 +10084,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! String to be trimmed.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!
-!     STRING     I   String to be trimmed.
-!
-!     The function returns the maximum of 1 and the location of the
-!     last non-blank character in STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a string to be trimmed: the location of the
@@ -10459,6 +10198,11 @@ contains
 
 !$Procedure SAMCH ( Same character )
 
+      !> Determine if two characters from different strings are the
+      !> same.
+      !>
+      !> The function returns .TRUE. if the two characters are the
+      !> same.
       elemental logical function samch ( str1, l1, str2, l2 )
       use pepper_kinds, only: ip
 
@@ -10479,23 +10223,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str1
-      integer(ip), intent(in) :: l1
-      character(*), intent(in) :: str2
-      integer(ip), intent(in) :: l2
+      character(*), intent(in) :: str1  !! A character string
+      integer(ip), intent(in) :: l1  !! The location (index) of a character in STR1
+      character(*), intent(in) :: str2  !! A character string
+      integer(ip), intent(in) :: l2  !! The location (index) of a character in STR2
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STR1       I   A character string
-!     L1         I   The location (index) of a character in STR1
-!     STR2       I   A character string
-!     L2         I   The location (index) of a character in STR2
-!
-!     The function returns .TRUE. if the two characters are the
-!     same.
-!
 ! $ Detailed_Input
 !
 !     STR1     is a character string
@@ -10637,6 +10369,9 @@ contains
 
 !$Procedure SAMSUB (Same substrings)
 
+      !> Determine whether or not two substrings are the same
+      !>
+      !> The function returns .TRUE. if the substrings are identical
       elemental logical function samsub ( str1, b1, e1,  str2, b2, e2 )
       use pepper_kinds, only: ip
 
@@ -10656,26 +10391,13 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: str1
-      integer(ip), intent(in) :: b1
-      integer(ip), intent(in) :: e1
-      character(*), intent(in) :: str2
-      integer(ip), intent(in) :: b2
-      integer(ip), intent(in) :: e2
+      character(*), intent(in) :: str1  !! A string
+      integer(ip), intent(in) :: b1  !! Beginning of a substring in STR1
+      integer(ip), intent(in) :: e1  !! End of s substring in STR1
+      character(*), intent(in) :: str2  !! A second string
+      integer(ip), intent(in) :: b2  !! The beginning of a substring in STR2
+      integer(ip), intent(in) :: e2  !! The end  of s substring in STR2
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  -------------------------------------------------
-!     STR1       I   A string
-!     B1         I   Beginning of a substring in STR1
-!     E1         I   End of s substring in STR1
-!     STR2       I   A second string
-!     B2         I   The beginning of a substring in STR2
-!     E2         I   The end  of s substring in STR2
-!
-!     The function returns .TRUE. if the substrings are identical
-!
 ! $ Detailed_Input
 !
 !     STR1     is a character string
@@ -10845,6 +10567,8 @@ contains
 
 !$Procedure SCANRJ ( Scan --- reject tokens )
 
+      !> Reject those tokens descriptors whose identities are among those
+      !> of a specific collection.
       pure subroutine scanrj ( ids, n, ntokns, ident, beg, end )
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
@@ -10867,24 +10591,13 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ids  ( * )
-      integer(ip), intent(in) :: n
-      integer(ip), intent(inout) :: ntokns
-      integer(ip), intent(inout) :: ident  ( * )
-      integer(ip), intent(inout) :: beg    ( * )
-      integer(ip), intent(inout) :: end    ( * )
+      integer(ip), intent(in) :: ids  ( * )  !! value of id's of tokens that should be dumped.
+      integer(ip), intent(in) :: n  !! number of id's.
+      integer(ip), intent(inout) :: ntokns  !! number of tokens input. The number kept.
+      integer(ip), intent(inout) :: ident  ( * )  !! identity of each of the tokens.
+      integer(ip), intent(inout) :: beg    ( * )  !! indices of beginning of tokens.
+      integer(ip), intent(inout) :: end    ( * )  !! indices of endings of tokens.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IDS        I   value of id's of tokens that should be dumped.
-!     N          I   number of id's.
-!     NTOKNS    I-O  number of tokens input. The number kept.
-!     IDENT     I-O  identity of each of the tokens.
-!     BEG       I-O  indices of beginning of tokens.
-!     END       I-O  indices of endings of tokens.
-!
 ! $ Detailed_Input
 !
 !     IDS      is a list of the identity codes that we will want to
@@ -11039,6 +10752,9 @@ contains
 
 !$Procedure SHIFTL ( Shift left )
 
+      !> Shift the contents of a character string to the left.
+      !> Characters moved past the beginning of the input string are
+      !> lost. Vacant spaces are filled with a specified character.
       elemental subroutine shiftl ( in, nshift, fillc, out )
       use pepper_kinds, only: ip
 
@@ -11061,20 +10777,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      integer(ip), intent(in) :: nshift
-      character(1), intent(in) :: fillc
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      integer(ip), intent(in) :: nshift  !! Number of times to shift.
+      character(1), intent(in) :: fillc  !! Character to fill spaces left vacant.
+      character(*), intent(out) :: out  !! Shifted string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     NSHIFT     I   Number of times to shift.
-!     FILLC      I   Character to fill spaces left vacant.
-!     OUT        O   Shifted string.
-!
 ! $ Detailed_Input
 !
 !     IN       is the input character string.
@@ -11264,6 +10971,9 @@ contains
 
 !$Procedure SHIFTR ( Shift right )
 
+      !> Shift the contents of a character string to the right.
+      !> Characters moved past the end of the input string are
+      !> lost. Vacant spaces are filled with a specified character.
       elemental subroutine shiftr ( in, nshift, fillc, out )
       use pepper_kinds, only: ip
 
@@ -11286,20 +10996,11 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      integer(ip), intent(in) :: nshift
-      character(1), intent(in) :: fillc
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      integer(ip), intent(in) :: nshift  !! Number of times to shift.
+      character(1), intent(in) :: fillc  !! Character to fill spaces left vacant.
+      character(*), intent(out) :: out  !! Shifted string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     NSHIFT     I   Number of times to shift.
-!     FILLC      I   Character to fill spaces left vacant.
-!     OUT        O   Shifted string.
-!
 ! $ Detailed_Input
 !
 !     IN       is the input character string.
@@ -11488,6 +11189,7 @@ contains
 
 !$Procedure SIGDGT ( Retain significant digits )
 
+      !> Retain only the significant digits in a numeric string.
       elemental subroutine sigdgt ( in, out )
       use pepper_kinds, only: ip
 
@@ -11508,16 +11210,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input numeric string.
+      character(*), intent(out) :: out  !! Numeric string, with insignificant digits removed.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input numeric string.
-!     OUT        O   Numeric string, with insignificant digits removed.
-!
 ! $ Detailed_Input
 !
 !     IN       is a numeric string.
@@ -11835,6 +11530,7 @@ contains
 
 !$Procedure SUFFIX (Suffix a character string)
 
+      !> Add a suffix to a character string.
       elemental subroutine suffix ( suff, spaces, string )
       use pepper_kinds, only: ip
 
@@ -11856,18 +11552,10 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: suff
-      integer(ip), intent(in) :: spaces
-      character(*), intent(inout) :: string
+      character(*), intent(in) :: suff  !! Suffix.
+      integer(ip), intent(in) :: spaces  !! Number of spaces separating prefix and suffix.
+      character(*), intent(inout) :: string  !! Prefix on input, string on output.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     SUFF       I   Suffix.
-!     SPACES     I   Number of spaces separating prefix and suffix.
-!     STRING    I-O  Prefix on input, string on output.
-!
 ! $ Detailed_Input
 !
 !     SUFF     is the suffix to be added to the string.
@@ -12002,6 +11690,7 @@ contains
 
 !$Procedure UCASE ( Convert to uppercase )
 
+      !> Convert the characters in a string to uppercase.
       elemental subroutine ucase ( in, out )
       use pepper_kinds, only: ip
 
@@ -12022,16 +11711,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: in
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(out) :: out  !! Output string, all uppercase.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     OUT        O   Output string, all uppercase.
-!
 ! $ Detailed_Input
 !
 !     IN       is the input string.
@@ -12158,6 +11840,10 @@ contains
 
 !$Procedure WDCNT ( Word Count )
 
+      !> Return the number of words in a string.
+      !>
+      !> The function returns the number of words in the input string
+      !> STRING.
       elemental integer(ip) function wdcnt ( string )
       use pepper_kinds, only: ip
 
@@ -12178,17 +11864,8 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
+      character(*), intent(in) :: string  !! Input character string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   Input character string.
-!
-!     The function returns the number of words in the input string
-!     STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is the input string to be parsed. It contains some number
@@ -12379,6 +12056,10 @@ contains
 
 !$Procedure WDINDX ( Index of a Word Within a String )
 
+      !> Find the index of a word within a string. If the word does not
+      !> exist as a word within the string, the value zero is returned.
+      !>
+      !> The function returns the location of WORD within STRING.
       elemental integer(ip) function wdindx ( string, word )
       use pepper_kinds, only: ip
 
@@ -12401,18 +12082,9 @@ contains
 
       implicit none
 
-      character(*), intent(in) :: string
-      character(*), intent(in) :: word
+      character(*), intent(in) :: string  !! String of characters, potentially containing words
+      character(*), intent(in) :: word  !! A string of consecutive printable letters.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     STRING     I   String of characters, potentially containing words
-!     WORD       I   A string of consecutive printable letters.
-!
-!     The function returns the location of WORD within STRING.
-!
 ! $ Detailed_Input
 !
 !     STRING   is a string of characters, potentially containing the
@@ -12634,6 +12306,9 @@ contains
 
 !$Procedure      ZZINSSUB ( Insert a substring )
 
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       elemental subroutine zzinssub ( in, sub, loc, out )
       use pepper_kinds, only: ip
 
@@ -12658,20 +12333,11 @@ contains
 !
 ! $ Declarations
 
-      character(*), intent(in) :: in
-      character(*), intent(in) :: sub
-      integer(ip), intent(in) :: loc
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: sub  !! Substring to be inserted.
+      integer(ip), intent(in) :: loc  !! Position at which substring is to be inserted.
+      character(*), intent(out) :: out  !! Output string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     SUB        I   Substring to be inserted.
-!     LOC        I   Position at which substring is to be inserted.
-!     OUT        O   Output string.
-!
 ! $ Detailed_Input
 !
 !     IN          is an input character string, into which a substring
@@ -12929,6 +12595,9 @@ contains
 
 !$Procedure      ZZREPSUB ( Replace one substring with another )
 
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       elemental subroutine zzrepsub ( in, left, right, string, out )
       use pepper_kinds, only: ip
       use pepper_arrays, only: sumai
@@ -12954,22 +12623,12 @@ contains
 ! $ Declarations
 
       implicit none
-      character(*), intent(in) :: in
-      integer(ip), intent(in) :: left
-      integer(ip), intent(in) :: right
-      character(*), intent(in) :: string
-      character(*), intent(out) :: out
+      character(*), intent(in) :: in  !! Input string.
+      integer(ip), intent(in) :: left  !! Ends of substring to be replaced.
+      integer(ip), intent(in) :: right  !! Ends of substring to be replaced.
+      character(*), intent(in) :: string  !! Replacement string.
+      character(*), intent(out) :: out  !! Resulting string.
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     IN         I   Input string.
-!     LEFT,
-!     RIGHT      I   Ends of substring to be replaced.
-!     STRING     I   Replacement string.
-!     OUT        O   Resulting string.
-!
 ! $ Detailed_Input
 !
 !     IN         is an arbitrary character string.

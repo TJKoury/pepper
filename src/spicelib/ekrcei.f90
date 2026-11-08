@@ -220,9 +220,7 @@
       call zzeksdsc ( handle, segno,  segdsc          )
       call zzekcdsc ( handle, segdsc, column, coldsc  )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This column had better be of integer type.
@@ -231,7 +229,6 @@
 
       if ( dtype /= int ) then
 
-         call chkin  ( 'EKRCEI'                                        )
          call setmsg ( 'Column # is of type #; EKRCEI only works '    // &
                        'with integer columns.  RECNO = #; SEGNO = '   // &
                        '#; EK = #.'                                    )
@@ -241,7 +238,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
-         call chkout ( 'EKRCEI'                                        )
          return
 
       end if
@@ -288,7 +284,6 @@
 !
          segno  =  segdsc ( snoidx )
 
-         call chkin  ( 'EKRCEI'                                        )
          call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported integer class.  COLUMN = #; '     // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
@@ -298,7 +293,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'EKRCEI'                                        )
          return
 
       end if

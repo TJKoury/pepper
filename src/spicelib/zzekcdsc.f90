@@ -174,14 +174,12 @@
 
       if ( .not. found ) then
 
-         call chkin  ( 'ZZEKCDSC'                                 )
          call setmsg ( 'Descriptor for column # was not found. ' // &
                        'Segment base = #; file = #.'              )
          call errch  ( '#',  column                               )
          call errint ( '#',  mbase                                )
          call errhan ( '#',  handle                               )
          call sigerr ( 'SPICE(BUG)'                               )
-         call chkout ( 'ZZEKCDSC'                                 )
          return
 
       end if

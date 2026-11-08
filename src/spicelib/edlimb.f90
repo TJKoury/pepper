@@ -447,11 +447,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EDLIMB' )
-      end if
+      if ( return () ) return
 
 !
 !     The semi-axes must have positive length.
@@ -465,7 +461,6 @@
          call errdp  ( '#', b                                      )
          call errdp  ( '#', c                                      )
          call sigerr ( 'SPICE(INVALIDAXISLENGTH)'                  )
-         call chkout ( 'EDLIMB'                                    )
          return
 
       end if
@@ -495,7 +490,6 @@
          call errdp  ( '#', b                                        )
          call errdp  ( '#', c                                        )
          call sigerr ( 'SPICE(DEGENERATECASE)'                       )
-         call chkout ( 'EDLIMB'                                      )
          return
 
       end if
@@ -515,7 +509,6 @@
 
          call setmsg ( 'Viewing point is inside the ellipsoid.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )
-         call chkout ( 'EDLIMB'                                 )
          return
 
       end if
@@ -598,7 +591,6 @@
          call setmsg ( 'Ellipsoid shape and viewing geometry are too '// &
                        'extreme; the limb was not found. '             )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
-         call chkout ( 'EDLIMB'                                        )
          return
 
       end if
@@ -609,6 +601,5 @@
       call vsclg ( scale, limb, ubel, tmpel )
       call moved ( tmpel, ubel,       limb  )
 
-      call chkout ( 'EDLIMB' )
       return
       end

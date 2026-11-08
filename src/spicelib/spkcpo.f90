@@ -1353,11 +1353,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKCPO' )
 
 !
 !     Create a state vector for the observer. The velocity
@@ -1378,6 +1375,5 @@
       call spkcvo ( target, et,     outref, refloc, abcorr, &
                     obssta, obsepc, obsctr, obsref, state,  lt )
 
-      call chkout ( 'SPKCPO' )
       return
       end

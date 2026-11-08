@@ -364,11 +364,8 @@
       logical               fnd
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZPRSMET' )
 
 
 !
@@ -402,10 +399,7 @@
 !
       call zzlexmet ( locmth(2:), nmax, n, begs(2), ends(2) )
 
-      if ( failed() ) then
-         call chkout ( 'ZZPRSMET' )
-         return
-      end if
+      if ( failed() ) return
 
       n = n + 1
 
@@ -455,7 +449,6 @@
          call errint ( '#', nshape                                  )
          call errch  ( '#', method                                  )
          call sigerr ( 'SPICE(BADMETHODSYNTAX)'                     )
-         call chkout ( 'ZZPRSMET'                                   )
          return
 
       end if
@@ -495,7 +488,6 @@
                      //            'in the method string <#>.'       )
                      call errch  ( '#', method                       )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
-                     call chkout ( 'ZZPRSMET'                        )
                      return
 
                   end if
@@ -507,7 +499,6 @@
                      //            'The method string is <#>.'       )
                      call errch  ( '#', method                       )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
-                     call chkout ( 'ZZPRSMET'                        )
                      return
 
                   end if
@@ -524,7 +515,6 @@
                      //            'The method string is <#>.'      )
                      call errch  ( '#', method                      )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'         )
-                     call chkout ( 'ZZPRSMET'                       )
                      return
 
                   end if
@@ -565,7 +555,6 @@
                            //            'The method string is <#>.'   )
                            call errch  ( '#', method                   )
                            call sigerr ( 'SPICE(BADMETHODSYNTAX)'      )
-                           call chkout ( 'ZZPRSMET'                    )
                            return
 
                         end if
@@ -578,10 +567,7 @@
                      call srfscc ( locmth(begs(i):ends(i)), &
                                    bodyid,   code,   fnd   )
 
-                     if ( failed() ) then
-                        call chkout ( 'ZZPRSMET' )
-                        return
-                     end if
+                     if ( failed() ) return
 
                      if ( .not. fnd ) then
 
@@ -591,7 +577,6 @@
                         call errch  ( '#', locmth(begs(i):ends(i))    )
                         call errch  ( '#', method                     )
                         call sigerr ( 'SPICE(IDCODENOTFOUND)'         )
-                        call chkout ( 'ZZPRSMET'                      )
                         return
 
                      end if
@@ -613,7 +598,6 @@
                         call errint ( '#', mxnsrf                     )
                         call errch  ( '#', method                     )
                         call sigerr ( 'SPICE(TOOMANYSURFACES)'        )
-                        call chkout ( 'ZZPRSMET'                      )
                         return
 
                      end if
@@ -672,7 +656,6 @@
                               //            'method string is <#>.'   )
                               call errch  ( '#', method               )
                               call sigerr ( 'SPICE(BADMETHODSYNTAX)'  )
-                              call chkout ( 'ZZPRSMET'                )
                               return
 
                            end if
@@ -689,7 +672,6 @@
                            call errch  ( '#', locmth(begs(i):ends(i))  )
                            call errch  ( '#', method                   )
                            call sigerr ( 'SPICE(BADMETHODSYNTAX)'      )
-                           call chkout ( 'ZZPRSMET'                    )
                            return
 
                         end if
@@ -713,7 +695,6 @@
                      //            'found in the method string <#>.' )
                      call errch  ( '#', method                       )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
-                     call chkout ( 'ZZPRSMET'                        )
                      return
 
                   end if
@@ -740,7 +721,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -766,7 +746,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -793,7 +772,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -813,7 +791,6 @@
                   call errint ( '#', begs(i)-1                         )
                   call errch  ( '#', method                            )
                   call sigerr ( 'SPICE(BADMETHODSYNTAX)'               )
-                  call chkout ( 'ZZPRSMET'                             )
                   return
 
 
@@ -827,7 +804,6 @@
                   call errch  ( '#', locmth( begs(i):ends(i) )    )
                   call errch  ( '#', method                       )
                   call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
-                  call chkout ( 'ZZPRSMET'                        )
                   return
 
                end if
@@ -852,7 +828,6 @@
             //            'are not currently supported.'      )
             call errch  ( '#', method                         )
             call sigerr ( 'SPICE(BADPRIORITYSPEC)'            )
-            call chkout ( 'ZZPRSMET'                          )
             return
 
          end if
@@ -866,7 +841,6 @@
 !
 !           There are no other outputs to set.
 !
-            call chkout ( 'ZZPRSMET' )
             return
 
          else if (      eqstr(method, 'NEARPOINT:ELLIPSOID') &
@@ -876,7 +850,6 @@
 
             subtyp = 'NEAR POINT'
 
-            call chkout ( 'ZZPRSMET' )
             return
 
          else if (      eqstr(method, 'INTERCEPT:ELLIPSOID') &
@@ -886,7 +859,6 @@
 
             subtyp = 'INTERCEPT'
 
-            call chkout ( 'ZZPRSMET' )
             return
 
          end if
@@ -916,7 +888,6 @@
                   call errch  ( '#', locmth( begs(i):ends(i) )         )
                   call errch  ( '#', method                            )
                   call sigerr ( 'SPICE(BADMETHODSYNTAX)'               )
-                  call chkout ( 'ZZPRSMET'                             )
                   return
 
                end if
@@ -949,7 +920,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -1001,7 +971,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -1026,7 +995,6 @@
                      call errch  ( '#', locmth( begs(i):ends(i) )      )
                      call errch  ( '#', method                         )
                      call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
-                     call chkout ( 'ZZPRSMET'                          )
                      return
 
                   end if
@@ -1041,7 +1009,6 @@
                   //           'specifying an ellipsoid shape.'        )
                   call errch ( '#', method                             )
                   call sigerr( 'SPICE(BADMETHODSYNTAX)'                )
-                  call chkout( 'ZZPRSMET'                              )
                   return
 
                end if
@@ -1052,7 +1019,6 @@
                //           'specifying an ellipsoid shape.'        )
                call errch ( '#', method                             )
                call sigerr( 'SPICE(BADMETHODSYNTAX)'                )
-               call chkout( 'ZZPRSMET'                              )
                return
 
             end if
@@ -1072,11 +1038,9 @@
          //            'to user input.'                      )
          call errch  ( '#', shape                            )
          call sigerr ( 'SPICE(BUG)'                          )
-         call chkout ( 'ZZPRSMET'                            )
          return
 
       end if
 
-      call chkout ( 'ZZPRSMET' )
       return
       end

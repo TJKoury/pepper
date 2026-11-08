@@ -266,11 +266,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DELTET' )
-      end if
+      if ( return () ) return
 
 !
 !     Convert the epoch type to uppercase, to simplify comparisons.
@@ -302,7 +298,6 @@
          call errint ( '#',  nleap/2                                 )
          call errint ( '#',  nmax                                    )
          call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
-         call chkout ( 'DELTET'                                      )
          return
 
       end if
@@ -331,7 +326,6 @@
          call errch  ( ', #', '.' )
          call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
 
-         call chkout ( 'DELTET' )
          return
 
       end if
@@ -401,7 +395,6 @@
          call errch  ( '#', type )
          call sigerr ( 'SPICE(INVALIDEPOCH)' )
 
-         call chkout ( 'DELTET' )
          return
 
       end if
@@ -424,6 +417,5 @@
 
       delta = dta + leaps + ettai
 
-      call chkout ( 'DELTET' )
       return
       end

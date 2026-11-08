@@ -408,11 +408,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DGEODR' )
-      end if
+      if ( return () ) return
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -425,7 +421,6 @@
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-          call chkout ( 'DGEODR'                         )
           return
 
       end if
@@ -435,7 +430,6 @@
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )
           call sigerr ( 'SPICE(BADRADIUS)'                   )
-          call chkout ( 'DGEODR'                             )
           return
 
       end if
@@ -449,7 +443,6 @@
                        'rectangular to geodetic coordinates '         // &
                        'is not defined for points on the z-axis.'      )
          call sigerr ( 'SPICE(POINTONZAXIS)'                           )
-         call chkout ( 'DGEODR'                                        )
          return
 
       end if
@@ -479,6 +472,5 @@
 !
       call invort ( injacb, jacobi )
 
-      call chkout ( 'DGEODR' )
       return
       end

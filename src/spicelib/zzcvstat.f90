@@ -142,9 +142,7 @@
 !
 !     This routine should never be called.
 !
-      call chkin  ( 'ZZCVSTAT'          )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZCVSTAT'          )
       return
 
 
@@ -303,11 +301,8 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZCVXSTA' )
 
 !
 !     Extrapolate the saved state to the input time.
@@ -324,10 +319,7 @@
 !
       call sxform ( svref, ref, et, xf )
 
-      if ( failed() ) then
-         call chkout ( 'ZZCVXSTA' )
-         return
-      end if
+      if ( failed() ) return
 
       call mxvg ( xf, xstate, 6, 6,  state )
 
@@ -336,7 +328,6 @@
 !
       center = svctr
 
-      call chkout ( 'ZZCVXSTA' )
       return
 
 
@@ -449,9 +440,7 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No SPICE errors are detected here, so we don't check in.

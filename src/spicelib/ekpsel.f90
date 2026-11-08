@@ -609,11 +609,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKPSEL' )
-      end if
+      if ( return () ) return
 
 !
 !     Initialize the encoded query each time, for safety.
@@ -627,10 +623,7 @@
                        eqryi,  eqryc,   eqryd, &
                        error,  errmsg,  errptr  )
 
-      if ( error ) then
-         call chkout ( 'EKPSEL' )
-         return
-      end if
+      if ( error ) return
 
 !
 !     Look up the number of SELECT columns.  For each column, look up
@@ -662,6 +655,5 @@
 
       end do
 
-      call chkout ( 'EKPSEL' )
       return
       end

@@ -160,11 +160,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKQINI' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -177,7 +173,6 @@
          call errint ( '#',   isize                                   )
          call errint ( '#',   mnisiz                                  )
          call sigerr ( 'SPICE(CELLTOOSMALL)'                          )
-         call chkout ('ZZEKQINI'                                      )
          return
 
       end if
@@ -190,7 +185,6 @@
          call errint ( '#',   dsize                                   )
          call errint ( '#',   maxqnm                                  )
          call sigerr ( 'SPICE(CELLTOOSMALL)'                          )
-         call chkout ('ZZEKQINI'                                      )
          return
 
       end if
@@ -204,7 +198,6 @@
          call errint ( '#',   len(eqryc)                              )
          call errint ( '#',   maxcln                                  )
          call sigerr ( 'SPICE(STRINGTOOSHORT)'                        )
-         call chkout ('ZZEKQINI'                                      )
          return
 
       end if
@@ -259,6 +252,5 @@
 !
       eqryi(eqinit)    =  itrue
 
-      call chkout ( 'ZZEKQINI' )
       return
       end

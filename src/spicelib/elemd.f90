@@ -227,8 +227,6 @@
       if ( return() ) then
          elemd = .false.
          return
-      else
-         call chkin ( 'ELEMD' )
       end if
 
 !
@@ -236,6 +234,5 @@
 !
       elemd = ( bsrchd ( item, cardd ( a ), a(1) ) /= 0 )
 
-      call chkout ( 'ELEMD' )
       return
       end

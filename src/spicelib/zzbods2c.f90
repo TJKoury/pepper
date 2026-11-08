@@ -256,9 +256,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Check/update ZZBODTRN state counter.
@@ -286,7 +284,6 @@
 !
 !        Check in because BODS2C may fail.
 !
-         call chkin  ( 'ZZBODS2C' )
 
 !
 !        Body-name mapping state changed, or the saved name was never
@@ -303,7 +300,6 @@
 !
 !        Check out.
 !
-         call chkout ( 'ZZBODS2C' )
 
       end if
 

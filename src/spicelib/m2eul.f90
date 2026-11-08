@@ -705,11 +705,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'M2EUL' )
-      end if
+      if ( return () ) return
 
 !
 !     The first order of business is to screen out the goofy cases.
@@ -726,7 +722,6 @@
          call errint ( '#',  axis2                    )
          call errint ( '#',  axis1                    )
          call sigerr ( 'SPICE(BADAXISNUMBERS)'        )
-         call chkout ( 'M2EUL'                        )
          return
 
 !
@@ -739,7 +734,6 @@
          call errint ( '#',  axis2                            )
          call errint ( '#',  axis1                            )
          call sigerr ( 'SPICE(BADAXISNUMBERS)'                )
-         call chkout ( 'M2EUL'                                )
          return
 
 !
@@ -749,7 +743,6 @@
 
          call setmsg ( 'Input matrix is not a rotation.' )
          call sigerr ( 'SPICE(NOTAROTATION)'             )
-         call chkout ( 'M2EUL'                           )
          return
 
       end if
@@ -1078,6 +1071,5 @@
 
       end if
 
-      call chkout ( 'M2EUL' )
       return
       end

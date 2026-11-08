@@ -168,11 +168,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'WNINTD' )
-      end if
+      if ( return () ) return
 
 !
 !     Find the cardinality of the input windows, and the allowed size
@@ -277,7 +273,6 @@
 
 
 
-      call chkout ( 'WNINTD' )
 
       return
       end

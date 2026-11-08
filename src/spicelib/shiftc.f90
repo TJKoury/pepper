@@ -161,11 +161,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SHIFTC' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -196,6 +192,5 @@
          call sigerr ( 'SPICE(ILLEGSHIFTDIR)' )
       end if
 
-      call chkout ( 'SHIFTC' )
       return
       end

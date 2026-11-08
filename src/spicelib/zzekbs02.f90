@@ -186,11 +186,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKBS02' )
-      end if
+      if ( return () ) return
 
 !
 !     Before trying to actually write anything, do every error
@@ -201,10 +197,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         call chkout ( 'ZZEKBS02' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -432,10 +425,7 @@
 !
 !        If we encountered a DAS error, leave now.
 !
-         if ( failed() ) then
-            call chkout ( 'ZZEKBS02' )
-            return
-         end if
+         if ( failed() ) return
 
 
       end do
@@ -464,6 +454,5 @@
 !
       call zzektrap ( handle, sgtree, p1, segno )
 
-      call chkout ( 'ZZEKBS02' )
       return
       end

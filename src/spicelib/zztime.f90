@@ -422,9 +422,7 @@
 
       zztime = .false.
 
-      call chkin  ( 'ZZTIME'            )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZTIME'            )
       return
 
 

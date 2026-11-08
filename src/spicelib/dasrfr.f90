@@ -285,21 +285,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'DASRFR' )
 
 
       call zzdasrfr ( handle, idword, ifname, &
                       nresvr, nresvc, ncomr,  ncomc )
 
-      if ( failed () ) then
-         call chkout ( 'DASRFR' )
-         return
-      end if
+      if ( failed () ) return
 
-      call chkout ( 'DASRFR' )
       return
       end

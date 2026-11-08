@@ -198,9 +198,7 @@
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 
       re = corpar(1)
@@ -211,11 +209,9 @@
 !
       if ( re <= 0.0_wp ) then
 
-         call chkin  ( 'ZZPDTBOX'                                   )
          call setmsg ( 'Equatorial radius from CORPAR array was #.' )
          call errdp  ( '#', re                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         call chkout ( 'ZZPDTBOX'                                   )
          return
 
       end if
@@ -228,12 +224,10 @@
 !
       if ( f >= 1.0_wp ) then
 
-         call chkin  ( 'ZZPDTBOX'                            )
          call setmsg ( 'Flattening coefficient from CORPAR ' &
          //            'array was #.'                        )
          call errdp  ( '*', f                                )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
-         call chkout ( 'ZZPDTBOX'                            )
          return
 
       end if
@@ -250,14 +244,12 @@
 
       if ( maxlon <= minlon) then
 
-         call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Longitude bounds are #:#. Minimum ' &
          //            'longitude exceeds maximum by more than ' &
          //            '2 pi.'                                  )
          call errdp  ( '#', minlon                              )
          call errdp  ( '#', bounds(2,1)                         )
          call sigerr ( 'SPICE(BADLONGITUDERANGE)'               )
-         call chkout ( 'ZZPDTBOX'                               )
          return
 
       end if
@@ -270,34 +262,28 @@
 
       if ( minlat > maxlat ) then
 
-         call chkin  ( 'ZZPDTBOX'                              )
          call setmsg ( 'Latitude bounds #:# are out of order.' )
          call errdp  ( '#', minlat                             )
          call errdp  ( '#', maxlat                             )
          call sigerr ( 'SPICE(BADLATITUDEBOUNDS)'              )
-         call chkout ( 'ZZPDTBOX'                              )
          return
 
       end if
 
       if ( minlat < ( -halfpi() - angmrg )  ) then
 
-         call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Minimum latitude # is less than -pi/2.' )
          call errdp  ( '#', minlat                              )
          call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
-         call chkout ( 'ZZPDTBOX'                               )
          return
 
       end if
 
       if ( maxlat > ( halfpi() + angmrg )  ) then
 
-         call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Maximum latitude # is more than -pi/2.' )
          call errdp  ( '#', maxlat                              )
          call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
-         call chkout ( 'ZZPDTBOX'                               )
          return
 
       end if

@@ -255,20 +255,16 @@
 !
 !     Check in only if an error is detected.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     No data, no interpolation.
 !
       if ( n < 1 ) then
 
-         call chkin  ( 'LGRIND'                              )
          call setmsg ( 'Array size must be positive; was #.' )
          call errint ( '#',  n                               )
          call sigerr ( 'SPICE(INVALIDSIZE)'                  )
-         call chkout ( 'LGRIND'                              )
          return
 
       end if
@@ -386,13 +382,11 @@
 
             if ( denom == 0.0_wp ) then
 
-               call chkin  ( 'LGRIND'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )
                call errint ( '#',   i                  )
                call errint ( '#',   i + j              )
                call errdp  ( '#',   xvals(i)           )
                call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
-               call chkout ( 'LGRIND'                  )
                return
 
             end if

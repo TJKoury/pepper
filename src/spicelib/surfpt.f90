@@ -301,9 +301,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Check the input vector to see if its the zero vector. If it is
@@ -311,10 +309,8 @@
 !
       if  ( vzero(u) )  then
 
-         call chkin  ( 'SURFPT'                                       )
          call setmsg ( 'SURFPT: The input vector is the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                            )
-         call chkout ( 'SURFPT'                                       )
          return
 
       end if
@@ -337,7 +333,6 @@
 
       if ( bad > 0 ) then
 
-         call chkin  ( 'SURFPT'                           )
          call setmsg ( mssg (bad)                         // &
                        ' ? '                              )
          call errch  ( ' ? ', 'The A,B, and C axes were ' // &
@@ -348,7 +343,6 @@
          call errdp  ( '#', c )
 
          call sigerr ( 'SPICE(BADAXISLENGTH)' )
-         call chkout ( 'SURFPT' )
          return
 
       end if
@@ -406,18 +400,14 @@
 !
 !        If P is outside of the sphere, there can be no intersection.
 !
-         if ( pmag > 1.0_wp ) then
-            return
-         end if
+         if ( pmag > 1.0_wp ) return
 
 !
 !        If X points in the same direction as YPROJ, then the ray
 !        is pointing away from the sphere, and there is no
 !        intersection.
 !
-         if (  vdot(yproj, x) > 0.0_wp ) then
-            return
-         end if
+         if (  vdot(yproj, x) > 0.0_wp ) return
 
 !
 !        At this point we know there's an intersection.

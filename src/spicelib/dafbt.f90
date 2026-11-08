@@ -310,11 +310,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DAFBT' )
-      end if
+      if ( return () ) return
 !
 !     A brief description of the DAF transfer file format and its
 !     intended use follows. This description is intended to provide a
@@ -441,12 +437,7 @@
 !     If the open failed, check out and return, as an appropriate error
 !     message should have already been set.
 !
-      if ( failed () ) then
-
-         call chkout( 'DAFBT' )
-         return
-
-      end if
+      if ( failed () ) return
 !
 !     At this point, we know that we have a DAF file, because we were
 !     able to successfully open it, so we will attempt to proceed with
@@ -462,10 +453,7 @@
 !     If the translation failed, checkout and return, as an appropriate
 !     error message should have already been set.
 !
-      if ( failed () ) then
-         call chkout( 'DAFBT' )
-         return
-      end if
+      if ( failed () ) return
 !
 !     Read the ID word from the binary file. It should be the first 8
 !     characters on the first record in the file.
@@ -479,7 +467,6 @@
          call errfnm ( '#', binlun                                 )
          call errint ( '#', iostat                                 )
          call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-         call chkout ( 'DAFBT'                                     )
          return
 
       end if
@@ -491,12 +478,7 @@
 !
       call dafrfr ( binhdl, nd, ni, ifname, fward, bward, free )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFBT' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Write the information line containing the file type information
 !     for the DAF transfer file format to the current position in the
@@ -514,7 +496,6 @@
          call errfnm ( '#', xfrlun                           )
          call errint ( '#', iostat                           )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
-         call chkout ( 'DAFBT'                               )
          return
 
        end if
@@ -530,7 +511,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DAFBT'                                )
          return
 
       end if
@@ -542,12 +522,7 @@
 
       call wrenci( xfrlun, 2, isumry )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFBT' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Write out the internal file name.
 !
@@ -560,7 +535,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DAFBT'                                )
          return
 
       end if
@@ -574,12 +548,7 @@
 !
       call dafbfs ( binhdl )
 
-      if ( failed() ) then
-
-         call chkout ( 'DAFBT' )
-         return
-
-      end if
+      if ( failed() ) return
 !
 !     Initialize the number of arrays processed to zero.
 !
@@ -598,12 +567,7 @@
 !
          call daffna ( found  )
 
-         if ( failed() ) then
-
-            call chkout ( 'DAFBT' )
-            return
-
-         end if
+         if ( failed() ) return
 !
 !        If we found an array, then we need to process it. Start
 !        by incrementing the number of arrays processed. If not,
@@ -630,7 +594,6 @@
 !              message will have already been set by the routine which
 !              signaled the error.
 !
-               call chkout ( 'DAFBT' )
                return
 
             end if
@@ -656,7 +619,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DAFBT'                                )
                return
 
             end if
@@ -673,7 +635,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DAFBT'                                )
                return
 
             end if
@@ -696,7 +657,6 @@
 !              will have already been set by the routine which signaled
 !              the error.
 !
-               call chkout ( 'DAFBT' )
                return
 
             end if
@@ -729,7 +689,6 @@
 !                 an error is detected, so we don't continue doing
 !                 things for a long time.
 !
-                  call chkout ( 'DAFBT' )
                   return
 
                end if
@@ -748,7 +707,6 @@
                   call errfnm ( '#', xfrlun                         )
                   call errint ( '#', iostat                         )
                   call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
-                  call chkout ( 'DAFBT'                             )
                   return
 
                end if
@@ -765,7 +723,6 @@
 !                 an error is detected, so we don't continue doing
 !                 things for a long time.
 !
-                  call chkout ( 'DAFBT' )
                   return
 
                end if
@@ -787,7 +744,6 @@
                call errfnm ( '#', xfrlun                            )
                call errint ( '#', iostat                            )
                call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-               call chkout ( 'DAFBT'                                )
                return
 
             end if
@@ -812,7 +768,6 @@
          call errfnm ( '#', xfrlun                            )
          call errint ( '#', iostat                            )
          call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
-         call chkout ( 'DAFBT'                                )
          return
 
       end if
@@ -821,6 +776,5 @@
 !
       call dafcls ( binhdl )
 
-      call chkout ( 'DAFBT' )
       return
       end

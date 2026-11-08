@@ -471,7 +471,6 @@
 !
       if ( iostat /= 0 ) then
 
-         call chkin ( 'PROMPT' )
          call setmsg ( 'An error occurred while attempting to ' &
          //            'write a prompt to the standard output ' &
          //            'device, possibly because standard output ' &
@@ -482,7 +481,6 @@
          //            'sure that there are sufficient resources ' &
          //            'available for the operation being performed.' )
          call sigerr ( 'SPICE(WRITEFAILED)'                           )
-         call chkout ( 'PROMPT'                                       )
          return
 
       end if
@@ -495,7 +493,6 @@
 
       if ( iostat /= 0 ) then
 
-         call chkin ( 'PROMPT' )
          call setmsg ( 'An error occurred while attempting to ' &
          //            'retrieve a reply to the prompt "#".  A ' &
          //            'possible cause is that you have ' &
@@ -506,7 +503,6 @@
          call errch  ( '#', dspmsg                                  )
          call errint ( '#', min(len(buffer),131)                    )
          call sigerr ( 'SPICE(READFAILED)'                          )
-         call chkout ( 'PROMPT'                                     )
          return
 
       end if

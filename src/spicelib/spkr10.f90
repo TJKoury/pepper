@@ -205,11 +205,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR10' )
 
 !
 !     Fetch the constants and store them in the first part of
@@ -286,6 +283,5 @@
          call moved ( record(begel1), nelems + nangs, record(begel2) )
       end if
 
-      call chkout ( 'SPKR10' )
       return
       end

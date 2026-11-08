@@ -282,32 +282,26 @@
 !     makes sense.  Are all of the integers positive?
 !
       if (  bsize < 1 ) then
-         call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The block size is not positive. '             // &
                        'The block size is #.'                         )
          call errint ( '#', bsize                                     )
          call sigerr ( 'SPICE(BADBLOCKSIZE)'                          )
-         call chkout ( 'XPOSBL'                                       )
          return
       end if
 
       if (  nrow < 1 ) then
-         call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The number of rows in the matrix is not '     // &
                        'positive. The number of rows is #.'           )
          call errint ( '#', nrow                                      )
          call sigerr ( 'SPICE(BADROWCOUNT)'                           )
-         call chkout ( 'XPOSBL'                                       )
          return
       end if
 
       if (  ncol < 1 ) then
-         call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The number of columns in the matrix is not '  // &
                        'positive. The number of columns is #.'        )
          call errint ( '#', ncol                                      )
          call sigerr ( 'SPICE(BADCOLUMNCOUNT)'                        )
-         call chkout ( 'XPOSBL'                                       )
          return
       end if
 
@@ -319,7 +313,6 @@
       if (      ( mod( ncol, bsize ) /= 0 ) &
            .or. ( mod( nrow, bsize ) /= 0 ) ) then
 
-         call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The block size does not evenly divide both '  // &
                        'the number of rows and the number of '        // &
                        'columns. The '                                // &
@@ -330,7 +323,6 @@
          call errint ( '#', nrow                                      )
          call errint ( '#', ncol                                      )
          call sigerr ( 'SPICE(BLOCKSNOTEVEN)'                         )
-         call chkout ( 'XPOSBL'                                       )
          return
       end if
 

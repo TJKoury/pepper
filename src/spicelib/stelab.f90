@@ -347,11 +347,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'STELAB' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -390,7 +386,6 @@
          call errdp  ( '*', vobs (2)            )
          call errdp  ( '*', vobs (3)            )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
-         call chkout ( 'STELAB'                 )
          return
 
       end if
@@ -421,6 +416,5 @@
       end if
 
 
-      call chkout ( 'STELAB' )
       return
       end

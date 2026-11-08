@@ -181,14 +181,10 @@
       logical               return
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKOPN' )
 
       call dlaopn ( fname, 'DSK', ifname, ncomch, handle )
 
-      call chkout ( 'DSKOPN' )
       return
       end

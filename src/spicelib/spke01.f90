@@ -192,9 +192,7 @@
 !
 !     If the RETURN function is set, don't even bother with this.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Unpack the contents of the MDA array.

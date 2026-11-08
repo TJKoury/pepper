@@ -721,11 +721,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKAPO' )
-      end if
+      if ( return () ) return
 
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -748,7 +744,6 @@
             call setmsg ( 'Requested aberration correction was #.' )
             call errch  ( '#', abcorr                              )
             call sigerr ( 'SPICE(SPKINVALIDOPTION)'                )
-            call chkout ( 'SPKAPO'                                 )
             return
 
          end if
@@ -787,7 +782,6 @@
          //            'recognized inertial frame. '        )
          call errch  ( '#', ref                             )
          call sigerr ( 'SPICE(BADFRAME)'                    )
-         call chkout ( 'SPKAPO'                             )
          return
 
       end if
@@ -809,10 +803,7 @@
 !
       call spkgps ( targ,   et,   ref, ssb, ptarg, lt )
 
-      if ( failed() ) then
-         call chkout ( 'SPKAPO' )
-         return
-      end if
+      if ( failed() ) return
 
       call vsub   ( ptarg,  sobs,           tpos      )
       call vequ   ( tpos,   ptarg                     )
@@ -836,10 +827,7 @@
 
          call spkgps ( targ,   et + ltsign*lt, ref, ssb, ptarg, lt )
 
-         if ( failed() ) then
-            call chkout ( 'SPKAPO' )
-            return
-         end if
+         if ( failed() ) return
 
          call vsub   ( ptarg,  sobs,     tpos )
          call vequ   ( tpos,   ptarg )
@@ -880,6 +868,5 @@
 
       end if
 
-      call chkout ( 'SPKAPO' )
       return
       end

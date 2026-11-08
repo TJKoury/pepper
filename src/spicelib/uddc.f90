@@ -166,11 +166,8 @@
 !
       real(wp)              deriv
 
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'UDDC' )
 
       isdecr = .false.
 
@@ -179,14 +176,10 @@
 !
       call uddf ( udfunc, x, dx, deriv )
 
-      if (  failed() ) then
-         call chkout ( 'UDDC' )
-         return
-      end if
+      if (  failed() ) return
 
       isdecr = deriv < 0.0_wp
 
-      call chkout ( 'UDDC' )
       return
 
       end

@@ -189,11 +189,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SYPSHC' )
-      end if
+      if ( return () ) return
 
 !
 !     How many symbols to start with?
@@ -245,6 +241,5 @@
       end if
 
 
-      call chkout ( 'SYPSHC' )
       return
       end

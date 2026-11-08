@@ -141,11 +141,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKWPAL' )
-      end if
+      if ( return () ) return
 
 !
 !     Decide how many pages are required to hold the array, and
@@ -205,6 +201,5 @@
       end do
 
 
-      call chkout ( 'ZZEKWPAL' )
       return
       end

@@ -164,11 +164,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'RDNBL' )
-      end if
+      if ( return () ) return
 
 !
 !     Return as soon as a non-blank line is found. Otherwise, keep
@@ -180,7 +176,6 @@
       do while ( ( .not. eof )  .and.  ( .not. failed() ) )
 
          if ( line /= ' ' ) then
-            call chkout ( 'RDNBL' )
             return
 
          else
@@ -194,6 +189,5 @@
 !
       line = ' '
 
-      call chkout ( 'RDNBL' )
       return
       end

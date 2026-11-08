@@ -135,21 +135,14 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKUE06' )
-      end if
+      if ( return () ) return
 
 !
 !     Get rid of the old column entry first.
 !
       call zzekde06 ( handle, segdsc, coldsc, recptr )
 
-      if ( failed() ) then
-         call  chkout ( 'ZZEKUE06' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We've reduced the problem to a solved one:  that of adding
@@ -159,6 +152,5 @@
                        recptr,  nvals,   cvals,  isnull )
 
 
-      call chkout ( 'ZZEKUE06' )
       return
       end

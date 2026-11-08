@@ -206,20 +206,16 @@
 !
 !     Use discovery check-in for speed.
 !
-      if ( nrot == 0 ) then
-         return
-      end if
+      if ( nrot == 0 ) return
 
 
       root  =  tree
 
       if ( ( left == root ) .or. ( right == root )  ) then
 
-         call chkin  ( 'ZZEKTRRK'                                  )
          call setmsg ( 'Input node is root; only children are '   // &
                        'eligible for key rotation.'                )
          call sigerr ( 'SPICE(BUG)'                                )
-         call chkout ( 'ZZEKTRRK'                                  )
 
       end if
 
@@ -230,9 +226,7 @@
       call zzekpgri ( handle, right,  rpage )
       call zzekpgri ( handle, parent, ppage )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Set the base index of the parent keys.  This value depends on
@@ -258,7 +252,6 @@
 
       if (  ( lsib /= left ) .or. ( rsib /= right )  ) then
 
-         call chkin  ( 'ZZEKTRRK'                               )
          call setmsg ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
                        'inconsistent. LEFT = #; RIGHT = #; '   // &
                        'PARENT = #; PKIDX = #; LSIB derived '  // &
@@ -270,7 +263,6 @@
          call errint ( '#',   lsib                              )
          call errint ( '#',   rsib                              )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'ZZEKTRRK'                               )
          return
 
       end if
@@ -291,7 +283,6 @@
          if (      ( ( lnkeys - nrot ) < ( mnkeyc - 1 ) ) &
              .or.  ( ( rnkeys + nrot ) > ( mxkeyc + 1 ) ) ) then
 
-            call chkin  ( 'ZZEKTRRK'                                   )
             call setmsg ( 'Node # and right sibling # contain # and ' // &
                           '# keys respectively; rotation of # keys '  // &
                           'to the right will violate the key count '  // &
@@ -304,7 +295,6 @@
             call errint ( '#',  mnkeyc-1                               )
             call errint ( '#',  mxkeyc+1                               )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZEKTRRK'                                   )
             return
 
          end if
@@ -315,7 +305,6 @@
          if (      ( ( lnkeys - nrot ) > ( mxkeyc + 1 ) ) &
              .or.  ( ( rnkeys + nrot ) < ( mnkeyc - 1 ) ) ) then
 
-            call chkin  ( 'ZZEKTRRK'                                   )
             call setmsg ( 'Node # and right sibling # contain # and ' // &
                           '# keys respectively; rotation of # keys '  // &
                           'to the left will violate the key count '   // &
@@ -328,7 +317,6 @@
             call errint ( '#',  mnkeyc-1                               )
             call errint ( '#',  mxkeyc+1                               )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZEKTRRK'                                   )
             return
 
          end if

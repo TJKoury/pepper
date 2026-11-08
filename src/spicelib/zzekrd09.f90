@@ -204,7 +204,6 @@
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
-         call chkin  ( 'ZZEKRD09'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
          call errint ( '#',  colidx                            )
@@ -213,7 +212,6 @@
          call errint ( '#',  recno                             )
          call errhan ( '#',  handle                            )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKRD09'                              )
          return
 
       end if
@@ -232,7 +230,6 @@
 !
          call zzekcnam ( handle, coldsc, column )
 
-         call chkin  ( 'ZZEKRD09'                                  )
          call setmsg ( 'String value has length #; output string '// &
                        'can hold only # characters.  COLUMN = #; '// &
                        'SEGNO = #; RECNO = #; EK = #'              )
@@ -243,7 +240,6 @@
          call errint ( '#',  recno                                 )
          call errhan ( '#',  handle                                )
          call sigerr ( 'SPICE(STRINGTRUNCATED)'                    )
-         call chkout ( 'ZZEKRD09'                                  )
          return
 
       end if
@@ -279,9 +275,7 @@
 
          isnull  =  cflag == ctrue
 
-         if ( isnull ) then
-            return
-         end if
+         if ( isnull ) return
 
       end if
 

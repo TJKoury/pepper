@@ -791,9 +791,7 @@
       call zzeksdsc (  handle,  segno,  segdsc          )
       call zzekcdsc (  handle,  segdsc, column, coldsc  )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This column had better be of character type.
@@ -802,7 +800,6 @@
 
       if ( dtype /= chr ) then
 
-         call chkin  ( 'EKACEC'                                        )
          call setmsg ( 'Column # is of type #; EKACEC only works '    // &
                        'with character columns.  RECNO = #; SEGNO = ' // &
                        '#; EK = #.'                                    )
@@ -812,7 +809,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
-         call chkout ( 'EKACEC'                                        )
          return
 
       end if
@@ -847,7 +843,6 @@
 !
 !        This is an unsupported character column class.
 !
-         call chkin  ( 'EKACEC'                                        )
          call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported character class.  COLUMN = #; '   // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
@@ -857,7 +852,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'EKACEC'                                        )
          return
 
 

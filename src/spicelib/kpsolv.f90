@@ -169,7 +169,6 @@
 
       if ( ecc2 >= 1.0_wp ) then
 
-         call chkin  ( 'KPSOLV' )
          call setmsg ( 'The magnitude of the vector EVEC = ( #, ' &
          //            '# ) must be less than 1.  However, the ' &
          //            'magnitude of this vector is #.' )
@@ -179,7 +178,6 @@
          call errdp  ( '#', dsqrt(ecc2) )
 
          call sigerr ( 'SPICE(EVECOUTOFRANGE)'  )
-         call chkout ( 'KPSOLV' )
          return
 
       end if

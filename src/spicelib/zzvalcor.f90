@@ -166,11 +166,8 @@
       logical               return
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZVALCOR' )
 
 !
 !     Parse the aberration correction string and obtain
@@ -178,10 +175,7 @@
 !
       call zzprscor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZVALCOR' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Check the attribute block. We don't allow relativistic
@@ -194,7 +188,6 @@
          //            'not supported.'                               )
          call errch  ( '#',  abcorr                                   )
          call sigerr ( 'SPICE(INVALIDOPTION)'                         )
-         call chkout ( 'ZZVALCOR'                                     )
          return
 
       end if
@@ -211,11 +204,9 @@
          //            'is not supported.'                            )
          call errch  ( '#',  abcorr                                   )
          call sigerr ( 'SPICE(INVALIDOPTION)'                         )
-         call chkout ( 'ZZVALCOR'                                     )
          return
 
       end if
 
-      call chkout ( 'ZZVALCOR' )
       return
       end

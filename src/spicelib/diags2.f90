@@ -346,11 +346,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DIAGS2' )
-      end if
+      if ( return () ) return
 
 !
 !     We check for the case of a diagonal input matrix, since
@@ -367,7 +363,6 @@
 !
          diag(2,1) = 0.0_wp
 
-         call chkout ( 'DIAGS2' )
          return
 
       end if
@@ -562,6 +557,5 @@
       diag(1,1)  =  diag(1,1)  *  scale
       diag(2,2)  =  diag(2,2)  *  scale
 
-      call chkout ( 'DIAGS2' )
       return
       end

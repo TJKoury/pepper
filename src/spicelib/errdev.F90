@@ -368,7 +368,6 @@
 !     Executable Code:
 !
 
-      call chkin ( 'ERRDEV' )
 
 !
 !     We save the operation string as input, and get
@@ -407,7 +406,6 @@
 
             call sigerr ( 'SPICE(DEVICENAMETOOLONG)' )
 
-            call chkout ( 'ERRDEV' )
             return
 
          end if
@@ -447,6 +445,5 @@
 
       end if
 
-      call chkout ( 'ERRDEV' )
       return
       end

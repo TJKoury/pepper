@@ -308,11 +308,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'REPMCT' )
 
 !
 !     Bail out if RTCASE is not recognized.
@@ -327,7 +324,6 @@
          call setmsg ( 'Case (#) must be U, L, or C.' )
          call errch  ( '#', rtcase                    )
          call sigerr ( 'SPICE(INVALIDCASE)'           )
-         call chkout ( 'REPMCT'                       )
          return
 
       end if
@@ -339,7 +335,6 @@
 
          out = in
 
-         call chkout ( 'REPMCT')
          return
 
       end if
@@ -358,7 +353,6 @@
 
          out = in
 
-         call chkout ( 'REPMCT' )
          return
 
       end if
@@ -394,6 +388,5 @@
                     card ( : lastnb(card) ), &
                     out                                       )
 
-      call chkout ( 'REPMCT' )
       return
       end

@@ -321,11 +321,8 @@
       data                  pi2   / -1.0_wp  /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZINPDT0' )
 
       if ( first ) then
 
@@ -364,10 +361,7 @@
          call zzpdcmpl ( re, f, p, minlat, minrel )
          call zzpdcmpl ( re, f, p, maxlat, maxrel )
 
-         if ( failed() ) then
-            call chkout ( 'ZZINPDT0' )
-            return
-         end if
+         if ( failed() ) return
 
 
          if (      ( minrel == lt ) &
@@ -375,7 +369,6 @@
 !
 !           The point's latitude is outside of the segment's range.
 !
-            call chkout ( 'ZZINPDT0' )
             return
 
          end if
@@ -426,7 +419,6 @@
 !           The point's longitude, adjusted if necessary for
 !           comparison, is outside of the segment's range.
 !
-            call chkout ( 'ZZINPDT0' )
             return
 
          end if
@@ -478,7 +470,6 @@
 !
 !           The point is outside of the outer bounding ellipsoid.
 !
-            call chkout ( 'ZZINPDT0' )
             return
 
          end if
@@ -491,7 +482,6 @@
 !           The point is inside the inner bounding ellipsoid, which
 !           implies it is outside of the segment's boundaries.
 !
-            call chkout ( 'ZZINPDT0' )
             return
 
          end if
@@ -505,6 +495,5 @@
       inside = .true.
 
 
-      call chkout ( 'ZZINPDT0' )
       return
       end

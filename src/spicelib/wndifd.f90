@@ -187,11 +187,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'WNDIFD' )
 
 !
 !     Find the cardinality of the input windows, and the allowed size
@@ -212,10 +209,8 @@
 !
       if ( bcard == 0 ) then
          call copyd ( a, c )
-         call chkout ( 'WNDIFD' )
          return
       else if ( acard == 0 ) then
-         call chkout ( 'WNDIFD' )
          return
       end if
 
@@ -434,7 +429,6 @@
 
       end if
 
-      call chkout ( 'WNDIFD' )
 
       return
       end

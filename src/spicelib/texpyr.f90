@@ -247,9 +247,7 @@
       data                  centry  / 1900 /
       data                  lbound  / 1969 /
 
-      if ( year >= 100 .or. year < 0 ) then
-         return
-      end if
+      if ( year >= 100 .or. year < 0 ) return
 
       year = year + centry
 

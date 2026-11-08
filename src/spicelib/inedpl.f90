@@ -448,11 +448,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'INEDPL' )
-      end if
+      if ( return () ) return
 
 !
 !     We don't want to worry about flat ellipsoids:
@@ -468,7 +464,6 @@
          call errdp  ( '#', b                               )
          call errdp  ( '#', c                               )
          call sigerr ( 'SPICE(DEGENERATECASE)'              )
-         call chkout ( 'INEDPL'                             )
          return
 
       end if
@@ -483,7 +478,6 @@
          call setmsg ( 'Normal vector of the input ' // &
                        'PLANE is the zero vector.'   )
          call sigerr ( 'SPICE(INVALIDPLANE)'         )
-         call chkout ( 'INEDPL'                      )
          return
 
       end if
@@ -529,7 +523,6 @@
       if ( vnorm (point) > maxrad ) then
 
          found = .false.
-         call chkout ( 'INEDPL' )
          return
 
       end if
@@ -602,7 +595,6 @@
       if ( dist > 1.0_wp ) then
 
          found = .false.
-         call chkout ( 'INEDPL' )
          return
 
       end if
@@ -636,6 +628,5 @@
 
       found  = .true.
 
-      call chkout ( 'INEDPL' )
       return
       end

@@ -286,11 +286,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKE10' )
-      end if
+      if ( return () ) return
 
       if ( first ) then
          first  = .false.
@@ -344,40 +340,28 @@
 !
          call xxsgp4i ( record(1), record(model1), afspc )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Time from epoch of set 1 in minutes.
 !
          call xxsgp4e ( (et - t1)/60.0_wp, s1 )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Evaluate second TLE.
 !
          call xxsgp4i ( record(1), record(model2), afspc )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Time from epoch of set 2 in minutes.
 !
          call xxsgp4e ( (et - t2)/60.0_wp, s2 )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Compute the weighting function that we'll need later
@@ -406,20 +390,14 @@
 !
          call xxsgp4i ( record(1), record(model1), afspc )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Time from epoch of set 1 in minutes.
 !
          call xxsgp4e ( (et - t1)/60.0_wp, state )
 
-         if ( failed() ) then
-            call chkout ( 'SPKE10' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -439,7 +417,6 @@
       call mxvg   ( tm2j, state, 6, 6, tmpsta )
       call moved  ( tmpsta,  6,      state     )
 
-      call chkout ( 'SPKE10' )
       return
 
       end

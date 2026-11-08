@@ -234,11 +234,8 @@
 !
       zzwind2d = 0
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZWIND2D' )
 
 !
 !     Check the number of sides of the polygon.
@@ -248,7 +245,6 @@
          call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
          call errint ( '#',  n                                      )
          call sigerr ( 'SPICE(DEGENERATECASE)'                      )
-         call chkout ( 'ZZWIND2D'                                     )
          return
 
       end if
@@ -310,6 +306,5 @@
 !
       zzwind2d = nint ( atotal / twopi() )
 
-      call chkout ( 'ZZWIND2D' )
       return
       end

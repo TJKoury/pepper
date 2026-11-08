@@ -264,9 +264,7 @@
 !
 !     If PREV is non-positive, return now.
 !
-      if ( prev <= 0 ) then
-         return
-      end if
+      if ( prev <= 0 ) return
 
 !
 !     At this point, PREV and LIST must be a valid node numbers, and
@@ -276,21 +274,18 @@
            .or. ( list < 1                   ) &
            .or. ( list > pool(sizrow,sizcol) )  )  then
 
-         call chkin  ( 'LNKILA'                                        )
          call setmsg ( 'PREV was #.  LIST was #. '                    // &
                        'Valid range is 1 to #.'                        )
          call errint ( '#', prev                                       )
          call errint ( '#', list                                       )
          call errint ( '#', pool(sizrow, sizcol)                       )
          call sigerr ( 'SPICE(INVALIDNODE)'                            )
-         call chkout ( 'LNKILA'                                        )
          return
 
 
       else if (       ( pool(bckwrd,prev)  ==  free ) &
                 .or.  ( pool(bckwrd,list)  ==  free )  ) then
 
-         call chkin  ( 'LNKILA'                                        )
          call setmsg ( 'Node PREV: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
@@ -306,7 +301,6 @@
          call errint ( '#', pool(forwrd,list)                          )
          call errint ( '#', free                                       )
          call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
-         call chkout ( 'LNKILA'                                        )
          return
 
       end if

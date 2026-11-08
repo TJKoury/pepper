@@ -182,7 +182,6 @@
 !     Set up the error processing.
 !
       if ( return () ) return
-      call chkin ( 'INTERI' )
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -272,7 +271,6 @@
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-      call chkout ( 'INTERI' )
 
       return
       end

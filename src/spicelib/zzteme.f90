@@ -114,11 +114,8 @@
       real(wp)              z      ( 6 )
       real(wp)              zj2000 ( 6 )
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZTEME' )
 
 !
 !     Extract the MEME +X vector and its derivative, both
@@ -150,6 +147,5 @@
       call zztwovxf ( zj2000, 3, xj2000, 1, tm2j )
       call invstm   ( tm2j,  j2tm )
 
-      call chkout ( 'ZZTEME' )
       return
       end

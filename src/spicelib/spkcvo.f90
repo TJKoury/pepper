@@ -1523,11 +1523,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKCVO' )
 
 !
 !     Counter initialization is done separately.
@@ -1558,10 +1555,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( 'SPKCVO')
-            return
-         end if
+         if ( failed() ) return
 
          uselt  = attblk( ltidx  )
          xmit   = attblk( xmtidx )
@@ -1583,7 +1577,6 @@
          call setmsg ( 'Could not map body name # to an ID code.' )
          call errch  ( '#',  obsctr                               )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKCVO'                                   )
          return
 
       end if
@@ -1599,7 +1592,6 @@
          call setmsg ( 'Could not map body name # to an ID code.' )
          call errch  ( '#',  target                               )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'SPKCVO'                                   )
          return
 
       end if
@@ -1620,7 +1612,6 @@
          //            'loaded.'                                       )
          call errch  ( '#', outref                                     )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'                           )
-         call chkout ( 'SPKCVO'                                        )
          return
 
       end if
@@ -1639,7 +1630,6 @@
          //            '''OBSERVER'', ''TARGET'', and ''CENTER''.' )
          call errch  ( '#',  refloc                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
-         call chkout ( 'SPKCVO'                                    )
          return
 
       end if
@@ -1667,7 +1657,6 @@
          call zzspkfzo ( trgcde, et,       outref, &
                          abcorr, zzcvxsta, state,  lt )
 
-         call chkout ( 'SPKCVO' )
          return
 
       end if
@@ -1707,10 +1696,7 @@
 
             call frmchg ( j2code, orfcde, et, xtrans )
 
-            if ( failed() ) then
-               call chkout ( 'SPKCVO')
-               return
-            end if
+            if ( failed() ) return
 
             call mxvg ( xtrans,  j2stat,  6,  6, state )
 
@@ -1751,10 +1737,7 @@
          call zzspkfao ( trgcde, et,       'J2000', &
                          abcorr, zzcvxsta, j2stat,  lt, dlt )
 
-         if ( failed() ) then
-            call chkout ( 'SPKCVO')
-            return
-         end if
+         if ( failed() ) return
 
 
          if ( orfcde == j2code ) then
@@ -1771,10 +1754,7 @@
 !
             call frmchg ( j2code,  orfcde,  et + s*lt,  xtrans )
 
-            if ( failed() ) then
-               call chkout ( 'SPKCVO')
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           We're using light time corrections here.
@@ -1802,12 +1782,10 @@
          //            '# was not recognized. [Coding error].'   )
          call errch  ( '#',  refloc                              )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'SPKCVO'                                  )
          return
 
       end if
 
 
-      call chkout ( 'SPKCVO' )
       return
       end

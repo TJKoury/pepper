@@ -192,11 +192,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZGPNM' )
 
       nameat = 0
 
@@ -268,12 +265,10 @@
          call setmsg ( 'The kernel pool does not have room ' &
          //            'for any more variables.' )
          call sigerr ( 'SPICE(KERNELPOOLFULL)' )
-         call chkout ( 'ZZGPNM' )
          return
 
       end if
 
-      call chkout ( 'ZZGPNM' )
       return
 
       end

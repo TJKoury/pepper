@@ -238,11 +238,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CKNR04' )
-      end if
+      if ( return () ) return
 
 !
 !     Check whether our segment is of the type 4 by unpacking
@@ -255,7 +251,6 @@
                        'Passed descriptor shows type = #.'           )
          call errint ( '#', icd ( 3 )                                )
          call sigerr ( 'SPICE(CKWRONGDATATYPE)'                      )
-         call chkout ( 'CKNR04'                                      )
          return
       end if
 
@@ -269,7 +264,6 @@
 !
 !     All done.
 !
-      call chkout ( 'CKNR04' )
 
       return
 

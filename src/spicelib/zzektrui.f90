@@ -215,13 +215,11 @@
 
       if (  ( key < 1 ) .or. ( key > totkey+1 )  ) then
 
-         call chkin  ( 'ZZEKTRUI'                                )
          call setmsg ( 'Key = #. Valid range is 1:#.  File = #.' )
          call errint ( '#',     key                              )
          call errint ( '#',     totkey+1                         )
          call errhan ( '#',     handle                           )
          call sigerr ( 'SPICE(INVALIDINDEX)'                     )
-         call chkout ( 'ZZEKTRUI'                                )
          return
 
       end if
@@ -305,9 +303,7 @@
          call zzektrlk ( handle,  tree,    key-1,  idx, &
                          target,  toffst,  level,  datptr  )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
          call zzekpgri ( handle, target, tpage )
 
@@ -374,9 +370,7 @@
             call zzektrpi ( handle, tree,  key,  parent, pkey,  poffst, &
                             lpidx,  lpkey, lsib, rpidx,  rpkey, rsib   )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Read the target page.  Get the key count for this node.
@@ -391,7 +385,6 @@
 !
             if ( tnkeys > mxkeyc ) then
 
-               call chkin  ( 'ZZEKTRUI'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
                              'count = #; max allowed, including ' // &
                              'overflow, is #.'                     )
@@ -401,7 +394,6 @@
                call errint ( '#',   tnkeys                         )
                call errint ( '#',   mxkeyc + 1                     )
                call sigerr ( 'SPICE(NODETOOFULL)'                  )
-               call chkout ( 'ZZEKTRUI'                            )
                return
 
             end if
@@ -441,9 +433,7 @@
             call zzektrlk ( handle,  tree,    key-1,  prev, &
                             target,  toffst,  level,  datptr  )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Since we'll have to update the ancestors of TARGET,
@@ -456,9 +446,7 @@
             call zzektrpi ( handle, tree,  key-1, parent, pkey,  poffst, &
                             lpidx,  lpkey, lsib,  rpidx,  rpkey, rsib  )
 
-            if ( failed() ) then
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           The predecessor of KEY will be the last key present in the
@@ -471,7 +459,6 @@
 
             if ( tnkeys > mxkeyc + 1 ) then
 
-               call chkin  ( 'ZZEKTRUI'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
                              'count = #; max allowed, including ' // &
                              'overflow, is #.'                     )
@@ -481,7 +468,6 @@
                call errint ( '#',   tnkeys                         )
                call errint ( '#',   mxkeyc + 1                     )
                call sigerr ( 'SPICE(NODETOOFULL)'                  )
-               call chkout ( 'ZZEKTRUI'                            )
                return
 
             end if

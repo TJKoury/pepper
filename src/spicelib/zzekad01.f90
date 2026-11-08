@@ -174,12 +174,10 @@
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
-         call chkin  ( 'ZZEKAD01'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
          call errint ( '#',  colidx                            )
          call errint ( '#',  ncols                             )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKAD01'                              )
          return
 
       end if
@@ -192,14 +190,12 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKAD01'                                  )
          call setmsg ( 'Column having index # in segment # does '  // &
                        'not allow nulls, but a null value was '    // &
                        'supplied for the element in record #.'     )
          call errint ( '#',  colidx                                )
          call errint ( '#',  recno                                 )
          call sigerr ( 'SPICE(BADATTRIBUTE)'                       )
-         call chkout ( 'ZZEKAD01'                                  )
          return
 
       end if
@@ -217,14 +213,12 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKAD01'                                  )
          call setmsg ( 'Column having index # in segment # has '   // &
                        'non-empty element in record #.'            )
          call errint ( '#',  colidx                                )
          call errint ( '#',  segdsc(snoidx)                        )
          call errint ( '#',  recno                                 )
          call sigerr ( 'SPICE(NONEMPTYENTRY)'                      )
-         call chkout ( 'ZZEKAD01'                                  )
          return
 
       end if
@@ -330,14 +324,12 @@
 
          else
 
-            call chkin  ( 'ZZEKAD01'                                  )
             call setmsg ( 'Column having index # in segment # has '   // &
                           'index type #.'                             )
             call errint ( '#',  colidx                                )
             call errint ( '#',  segdsc(snoidx)                        )
             call errint ( '#',  itype                                 )
             call sigerr ( 'SPICE(INVALIDTYPE)'                        )
-            call chkout ( 'ZZEKAD01'                                  )
             return
 
          end if

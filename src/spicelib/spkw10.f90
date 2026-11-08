@@ -577,11 +577,8 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SPKW10' )
 !
 !     First we need to create a descriptor for the segment
 !     we are about to write.
@@ -589,10 +586,7 @@
       call spkpds ( body,  center, frame, spktyp, first, last, &
                     descr  )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW10' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     We've got a valid descriptor, write the data to a DAF
@@ -632,7 +626,6 @@
 
       call sgwes  ( handle )
 
-      call chkout ( 'SPKW10' )
 
       return
 

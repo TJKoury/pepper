@@ -195,7 +195,6 @@
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
          segno  =  segdsc ( snoidx )
 
-         call chkin  ( 'ZZEKESIZ'                                      )
          call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported integer class.  COLUMN = #; '     // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
@@ -205,7 +204,6 @@
          call errint ( '#',  segno                                     )
          call errhan ( '#',  handle                                    )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKESIZ'                                      )
          return
 
       end if

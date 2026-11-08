@@ -154,11 +154,8 @@
       data                 first  / .true. /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZDASGRD' )
 
 
       if ( first ) then
@@ -167,10 +164,7 @@
 !
          call zzddhnfc ( natbff )
 
-         if ( failed() ) then
-            call chkout( 'ZZDASGRD' )
-            return
-         end if
+         if ( failed() ) return
 
          first = .false.
 
@@ -186,10 +180,7 @@
 !
       call zzddhnfo ( handle, fname, intarc, intbff, intamh, found )
 
-      if ( failed() ) then
-         call chkout( 'ZZDASGRD' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. found ) then
 
@@ -199,7 +190,6 @@
          //            'has been closed.'                           )
          call errint ( '#', handle                                  )
          call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
-         call chkout ( 'ZZDASGRD'                                   )
          return
 
       end if
@@ -221,7 +211,6 @@
             call errint ( '#', recno                                )
             call errint ( '#', iostat                               )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                )
-            call chkout ( 'ZZDASGRD'                                )
             return
 
          end if
@@ -245,7 +234,6 @@
             call errint ( '#', recno                                   )
             call errint ( '#', iostat                                  )
             call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
-            call chkout ( 'ZZDASGRD'                                   )
             return
 
          end if
@@ -261,6 +249,5 @@
 !
       end if
 
-      call chkout ( 'ZZDASGRD' )
       return
       end

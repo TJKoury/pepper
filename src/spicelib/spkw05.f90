@@ -381,11 +381,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKW05' )
-      end if
+      if ( return () ) return
 
 
       if ( gm <= 0.0_wp ) then
@@ -393,7 +389,6 @@
          call setmsg ( 'GM = #; Non-positive gravitational parameter' )
          call errdp  ( '#',  gm                   )
          call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
-         call chkout ( 'SPKW05'                   )
          return
 
       end if
@@ -409,7 +404,6 @@
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
-         call chkout ( 'SPKW05'                                    )
          return
 
       end if
@@ -423,7 +417,6 @@
                        'positive. N = #'                           )
          call errint ( '#', n                                      )
          call sigerr ( 'SPICE(NUMSTATESNOTPOS)'                    )
-         call chkout ( 'SPKW05'                                    )
          return
 
       end if
@@ -438,7 +431,6 @@
             call setmsg ( 'Epoch # is out of order. ' )
             call errdp  ( '#',  epochs(i)             )
             call sigerr ( 'SPICE(UNORDEREDTIMES)'     )
-            call chkout ( 'SPKW05'                    )
             return
 
          end if
@@ -455,7 +447,6 @@
          call errdp  ( '#', first                                  )
          call errdp  ( '#', last                                   )
          call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
-         call chkout ( 'SPKW05'                                    )
          return
 
       end if
@@ -472,7 +463,6 @@
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
             call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
-            call chkout ( 'SPKW05'                                )
             return
 
          end if
@@ -487,7 +477,6 @@
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
          call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
-         call chkout ( 'SPKW05'                                  )
          return
 
       end if
@@ -517,10 +506,7 @@
 !
       call dafbna ( handle, descr, segid )
 
-      if ( failed() ) then
-         call chkout ( 'SPKW05' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     This could hardly be simpler. Stuff the states into the segment,
@@ -553,6 +539,5 @@
          call dafena
       end if
 
-      call chkout ( 'SPKW05' )
       return
       end

@@ -312,11 +312,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin( 'ZZSPIN' )
 
 !
 !     FRAMES argument not currently used.
@@ -335,7 +332,6 @@
             //         'version of the SPICE Toolkit.'        )
          call errch ( '#', targ1                              )
          call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
-         call chkout( 'ZZSPIN'                                   )
          return
 
       end if
@@ -352,7 +348,6 @@
             //         'version of the SPICE Toolkit.'        )
          call errch ( '#', targ2                              )
          call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
-         call chkout( 'ZZSPIN'                                )
          return
 
       end if
@@ -369,7 +364,6 @@
             //            'version of the SPICE Toolkit.'          )
          call errch  ( '#', obsrvr                                 )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                     )
-         call chkout ( 'ZZSPIN'                                    )
          return
 
       end if
@@ -391,7 +385,6 @@
          call errint( '#', bods(2)                                )
          call errint( '#', obs                                    )
          call sigerr( 'SPICE(BODIESNOTDISTINCT)'                  )
-         call chkout( 'ZZSPIN'                                    )
          return
 
       end if
@@ -402,10 +395,7 @@
 !
       call zzvalcor ( abcorr, attblk )
 
-      if ( failed() ) then
-         call chkout ( 'ZZSPIN' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !
@@ -425,7 +415,6 @@
             //         'POINT, SPHERE.'                      )
          call errch  ( '#', shap1                            )
          call sigerr ( 'SPICE(NOTRECOGNIZED)'                )
-         call chkout ( 'ZZSPIN'                              )
          return
 
       else if ( shp1 == point ) then
@@ -436,10 +425,7 @@
 
          call zzgftreb( bods(1), axes1 )
 
-         if (  failed() ) then
-            call chkout( 'ZZSPIN' )
-            return
-         end if
+         if (  failed() ) return
 
          mxrad(1) = max( axes1(1), axes1(2), axes1(3) )
 
@@ -454,7 +440,6 @@
                       'This indicates a bug. Please contact NAIF.')
          call errch  ('#', shap1                                  )
          call sigerr ('SPICE(BUG)'                                )
-         call chkout ( 'ZZSPIN'                                   )
          return
 
       end if
@@ -476,7 +461,6 @@
                        'POINT, SPHERE.'                             )
          call errch ( '#', shap2                                    )
          call sigerr( 'SPICE(NOTRECOGNIZED)'                        )
-         call chkout( 'ZZSPIN'                                      )
          return
 
       else if ( shp2 == point ) then
@@ -487,10 +471,7 @@
 
          call zzgftreb( bods(2), axes2 )
 
-         if (  failed() ) then
-            call chkout( 'ZZSPIN' )
-            return
-         end if
+         if (  failed() ) return
 
          mxrad(2) = max( axes2(1), axes2(2), axes2(3) )
 
@@ -505,7 +486,6 @@
                       'This indicates a bug. Please contact NAIF.')
          call errch  ('#', shap2                                  )
          call sigerr ('SPICE(BUG)'                                )
-         call chkout ( 'ZZSPIN'                                   )
          return
 
       end if
@@ -532,7 +512,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', frame1                               )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZSPIN'                                  )
             return
 
          end if
@@ -546,7 +525,6 @@
             call errch  ( '#1', frame1                     )
             call errch  ( '#2', targ1                      )
             call sigerr ( 'SPICE(INVALIDFRAME)'            )
-            call chkout ( 'ZZSPIN'                         )
             return
 
          end if
@@ -565,7 +543,6 @@
             call setmsg ( 'Frame system did not recognize frame #.' )
             call errch  ( '#', frame2                               )
             call sigerr ( 'SPICE(NOFRAME)'                          )
-            call chkout ( 'ZZSPIN'                                  )
             return
 
          end if
@@ -579,7 +556,6 @@
             call errch  ( '#1', frame2                     )
             call errch  ( '#2', targ2                      )
             call sigerr ( 'SPICE(INVALIDFRAME)'            )
-            call chkout ( 'ZZSPIN'                         )
             return
 
          end if
@@ -590,6 +566,5 @@
 !     Done. Check out. Return.
 !
 
-      call chkout ('ZZSPIN')
       return
       end

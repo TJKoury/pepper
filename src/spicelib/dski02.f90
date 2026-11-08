@@ -570,11 +570,9 @@
 
       if ( room <= 0 ) then
 
-         call chkin  ( 'DSKI02' )
          call setmsg ( 'ROOM was #; must be positive.' )
          call errint ( '#',  room                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
-         call chkout ( 'DSKI02'                        )
          return
 
       end if
@@ -604,22 +602,18 @@
 !
          call dasrdi ( handle, ibase+1, ibase+ibfsiz, ibuff )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Check the coarse voxel scale.
 !
          if ( ibuff(ixcgsc) < 1 ) then
 
-            call chkin  ( 'DSKI02'                         )
             call setmsg ( 'Coarse voxel grid scale is #; ' // &
                           'this scale should be an '       // &
                           'integer > 1'                    )
             call errint ( '#',  cgscal                     )
             call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-            call chkout ( 'DSKI02'                         )
             return
 
          end if
@@ -666,9 +660,7 @@
 !        let control pass to the error handling block near
 !        the end of this routine.
 !
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
       else if ( item == kwnp ) then
 !
@@ -677,9 +669,7 @@
          n         = 1
          values(1) = np
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwnvxt ) then
@@ -689,9 +679,7 @@
          n         = 1
          values(1) = nvxtot
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwvgrx ) then
@@ -709,9 +697,7 @@
          n         = 1
          values(1) = cgscal
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwvxps ) then
@@ -721,9 +707,7 @@
          n         = 1
          values(1) = voxnpt
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwvxls ) then
@@ -733,9 +717,7 @@
          n         = 1
          values(1) = voxnpl
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwvtls ) then
@@ -745,9 +727,7 @@
          n         = 1
          values(1) = vtxnpl
 
-         if ( start == 1 ) then
-            return
-         end if
+         if ( start == 1 ) return
 
 
       else if ( item == kwplat ) then
@@ -820,11 +800,9 @@
 
       else
 
-         call chkin  ( 'DSKI02'                                  )
          call setmsg ( 'Keyword parameter # was not recognized.' )
          call errint ( '#',  item                                )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'DSKI02'                                  )
          return
 
       end if
@@ -834,7 +812,6 @@
 !
       if (  ( start < 1 ) .or. ( start > size )  ) then
 
-         call chkin  ( 'DSKI02'                              )
          call setmsg ( 'START must be in the range defined ' // &
                        'by the size of the data associated ' // &
                        'with the keyword parameter #, '      // &
@@ -844,7 +821,6 @@
          call errint ( '#',  size                            )
          call errint ( '#',  start                           )
          call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
-         call chkout ( 'DSKI02'                              )
          return
 
       end if

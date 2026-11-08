@@ -282,9 +282,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     The algorithm below efficiently determines the set of voxels
@@ -376,10 +374,8 @@
 !
       if ( vzero( raydir ) ) then
 
-         call chkin  ( 'XDDA'                     )
          call setmsg ( 'Ray is the zero vector.'  )
          call sigerr ( 'SPICE(ZEROVECTOR)'        )
-         call chkout ( 'XDDA'                     )
          return
 
       end if
@@ -389,14 +385,12 @@
 !
       if ( min( grdext(1), grdext(2), grdext(3) ) < 1 ) then
 
-         call chkin  ( 'XDDA'                                    )
          call setmsg ( 'Voxel grid dimensions must be strictly ' &
          //            'positive but are # # #.'                 )
          call errint ( '#', grdext(1)                            )
          call errint ( '#', grdext(2)                            )
          call errint ( '#', grdext(3)                            )
          call sigerr ( 'SPICE(BADDIMENSIONS)'                    )
-         call chkout ( 'XDDA'                                    )
          return
 
       end if
@@ -409,7 +403,6 @@
          if (     ( vertex(i) <     -grdtol  * grdext(i) ) &
              .or. ( vertex(i) > (1 + grdtol) * grdext(i) )  ) then
 
-            call chkin  ( 'XDDA'                                  )
             call setmsg ( 'Vertex # # # is outside of voxel grid ' &
             //            'defined by extents # # #.'             )
             call errdp  ( '#', vertex(1)                          )
@@ -419,7 +412,6 @@
             call errint ( '#', grdext(2)                          )
             call errint ( '#', grdext(3)                          )
             call sigerr ( 'SPICE(VERTEXNOTINGRID)'                )
-            call chkout ( 'XDDA'                                  )
             return
 
          end if
@@ -431,12 +423,10 @@
 !
       if ( maxnvx < 1 ) then
 
-         call chkin  ( 'XDDA'                     )
          call setmsg ( 'Maximum voxel list size must be positive ' &
          //            'but was #.'                               )
          call errint ( '#', maxnvx                                )
          call sigerr ( 'SPICE(INVALIDSIZE)'                       )
-         call chkout ( 'XDDA'                                     )
          return
 
       end if
@@ -757,14 +747,12 @@
 !
          if( nvx > maxnvx ) then
 
-            call chkin  ( 'XDDA' )
             call setmsg ( 'Index larger than array. ' &
             //            'Index = #1. Array size = #2.' )
             call errint ( '#1', nvx                      )
             call errint ( '#2', maxnvx                   )
             call sigerr ( 'SPICE(ARRAYTOOSMALL)'         )
 
-            call chkout ( 'XDDA' )
             return
 
          end if

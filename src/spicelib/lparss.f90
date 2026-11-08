@@ -297,11 +297,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LPARSS' )
-      end if
+      if ( return () ) return
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -488,10 +484,7 @@
                   call insrtc ( blank,            set )
                end if
 
-               if ( failed() ) then
-                  call chkout ( 'LPARSS' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -529,6 +522,5 @@
       end if
 
 
-      call chkout ( 'LPARSS' )
       return
       end

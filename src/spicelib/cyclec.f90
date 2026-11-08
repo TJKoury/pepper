@@ -171,11 +171,7 @@
       integer(ip)      n
       integer(ip)      limit
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'CYCLEC' )
-      end if
+      if ( return() ) return
 !
 !     Get the length of the input string.
 !
@@ -206,7 +202,6 @@
 
          call errch  ( '#', dir )
          call sigerr ( 'SPICE(INVALIDDIRECTION)' )
-         call chkout ( 'CYCLEC' )
          return
 
       end if
@@ -214,7 +209,6 @@
       if      ( k < 0 ) then
          k = k + n
       else if ( k == 0 ) then
-         call chkout ( 'CYCLEC' )
          return
       end if
 
@@ -332,6 +326,5 @@
 
       end do
 
-      call chkout ( 'CYCLEC' )
       return
       end

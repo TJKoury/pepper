@@ -176,11 +176,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS10' )
-      end if
+      if ( return () ) return
 !
 !     First, unpack the destination segment descriptor and set some
 !     local variables.
@@ -197,10 +193,7 @@
       call sgbwfs ( dsthan, dstdsc,    dstsid, &
                     nconst, consts,    pktsiz, expcls )
 
-      if ( failed() ) then
-         call chkout ( 'SPKS10' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the beginning and ending indices for the packets we need for
@@ -220,7 +213,6 @@
          //            'does not appear to be such a packet. ' )
          call errch  ( '#', time )
          call sigerr ( 'SPICE(CANNOTGETPACKET)'  )
-         call chkout ( 'SPKS10' )
          return
 
       end if
@@ -242,7 +234,6 @@
          //            'does not appear to be such a packet. ' )
          call errch  ( '#', time )
          call sigerr ( 'SPICE(CANNOTGETPACKET)'  )
-         call chkout ( 'SPKS10' )
          return
 
       end if
@@ -273,7 +264,6 @@
 !
       call sgwes  ( dsthan   )
 
-      call chkout ( 'SPKS10' )
       return
 
       end

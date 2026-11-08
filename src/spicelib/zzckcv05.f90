@@ -221,11 +221,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZCKCV05' )
-      end if
+      if ( return() ) return
 
 !
 !     Check tolerance value.
@@ -236,7 +232,6 @@
                        'was #.'                                       )
          call errdp  ( '#',  tol                                      )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         call chkout ( 'ZZCKCV05'                                     )
          return
 
       end if
@@ -257,7 +252,6 @@
                           'values are SCLK and TDB.'                )
             call errch  ( '#',  timsys                              )
             call sigerr ( 'SPICE(INVALIDOPTION)'                    )
-            call chkout ( 'ZZCKCV05'                                )
             return
 
          end if
@@ -296,7 +290,6 @@
          call setmsg ( 'CK type 5 subtype <#> is not supported.' )
          call errint ( '#', buffer(1)                            )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-         call chkout ( 'ZZCKCV05'                                )
          return
       end if
 
@@ -360,10 +353,7 @@
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      if ( tick < start ) then
-         call chkout ( 'ZZCKCV05' )
-         return
-      end if
+      if ( tick < start ) return
 
 
       bail = .false.
@@ -472,6 +462,5 @@
       end do
 
 
-      call chkout ( 'ZZCKCV05' )
       return
       end

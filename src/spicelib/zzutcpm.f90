@@ -156,9 +156,7 @@
       signat = start + 5
       unsat  = need
 
-      if ( length < need ) then
-         return
-      end if
+      if ( length < need ) return
 
       if       ( ichar(string(signat:signat)) == ichar('+') ) then
          sign =  1.0_wp
@@ -176,9 +174,7 @@
       if ( nchar > 0 .and. nchar < 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x >= 13.0_wp ) then
-            return
-         end if
+         if ( x >= 13.0_wp ) return
 
          last = unsto
          hoff = sign * x
@@ -204,9 +200,7 @@
       if ( nchar > 0 .and. nchar < 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x > 59.0_wp ) then
-            return
-         end if
+         if ( x > 59.0_wp ) return
 
          last = unsto
          moff = sign*x

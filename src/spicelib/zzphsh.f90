@@ -419,13 +419,11 @@
 !
       if ( m <= 0 .or. m > maxdiv ) then
 
-         call chkin  ( 'ZZSHSH'                                      )
          call setmsg ( 'The input hash function divisor was not '    // &
                        'in the allowed range from 1 to #. It was #.' )
          call errint ( '#', maxdiv                                   )
          call errint ( '#', m                                        )
          call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
-         call chkout ( 'ZZSHSH'                                      )
          return
 
       end if
@@ -546,12 +544,10 @@
 
          zzhash = 0
 
-         call chkin  ( 'ZZHASH'                                     )
          call setmsg ( 'The ZZHASH function was called before the ' // &
                        'POOL hash parameters were initialized by '  // &
                        'a call to ZZSHSH.'                          )
          call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         call chkout ( 'ZZHASH'                                     )
          return
 
       end if
@@ -573,13 +569,11 @@
 !
             if( zzhash < 0 ) then
 
-               call chkin  ( 'ZZHASH'                             )
                call setmsg ( 'The ZZHASH function calculated a '  // &
                              'negative value for string $1. '     // &
                              'Contact NAIF.'                      )
                call errch  ( '$1', word                           )
                call sigerr ( 'SPICE(NEGATIVEHASHVALUE1)'          )
-               call chkout ( 'ZZHASH'                             )
 
             end if
 
@@ -599,13 +593,11 @@
 !
       if( zzhash < 0 ) then
 
-         call chkin  ( 'ZZHASH'                              )
          call setmsg ( 'The ZZHASH function calculated a '  // &
                        'negative value for string $1. '     // &
                        'Contact NAIF.'                       )
          call errch  ( '$1', word                            )
          call sigerr ( 'SPICE(NEGATIVEHASHVALUE2)'           )
-         call chkout ( 'ZZHASH'                              )
 
       end if
 
@@ -852,13 +844,11 @@
 
          zzhash2 = 0
 
-         call chkin  ( 'ZZHASH2'                                     )
          call setmsg ( 'The input hash function divisor was not '    // &
                        'in the allowed range from 1 to #. It was #.' )
          call errint ( '#', maxdiv                                   )
          call errint ( '#', m2                                       )
          call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
-         call chkout ( 'ZZHASH2'                                     )
          return
 
       end if
@@ -880,13 +870,11 @@
 !
             if( zzhash2 < 0 ) then
 
-               call chkin  ( 'ZZHASH2'                            )
                call setmsg ( 'The ZZHASH2 function calculated a ' // &
                              'negative value for string $1. '     // &
                              'Contact NAIF.'                      )
                call errch  ( '$1', word                           )
                call sigerr ( 'SPICE(NEGATIVEHASHVALUE1)'          )
-               call chkout ( 'ZZHASH2'                            )
 
             end if
 
@@ -906,13 +894,11 @@
 !
       if( zzhash2 < 0 ) then
 
-         call chkin  ( 'ZZHASH2'                             )
          call setmsg ( 'The ZZHASH2 function calculated a ' // &
                        'negative value for string $1. '     // &
                        'Contact NAIF.'                       )
          call errch  ( '$1', word                            )
          call sigerr ( 'SPICE(NEGATIVEHASHVALUE2)'           )
-         call chkout ( 'ZZHASH2'                             )
 
       end if
 

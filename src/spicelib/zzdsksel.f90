@@ -339,9 +339,7 @@
       i = touchi ( dladsc )
       i = touchi ( framid )
 
-      call chkin  ( 'ZZDSKSEL' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
-      call chkout ( 'ZZDSKSEL' )
       return
 
 
@@ -831,14 +829,12 @@
 
       if ( nsurf > maxsrf ) then
 
-         call chkin ( 'ZZDSKSIT' )
 
          call setmsg ( 'Maximum allowed surface ID count is #; ' &
          //            'input count was #.'                     )
          call errint ( '#', maxsrf                              )
          call errint ( '#', nsurf                               )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         call chkout ( 'ZZDSKSIT' )
          return
 
       end if
@@ -1682,30 +1678,22 @@
 !
 !     Check the target ID.
 !
-      if ( savtrg  /= nint( dskdsc(ctridx) )  ) then
-         return
-      end if
+      if ( savtrg  /= nint( dskdsc(ctridx) )  ) return
 
 !
 !     Check the surface ID.
 !
-      if ( savbid  /= nint( dskdsc(srfidx) )  ) then
-         return
-      end if
+      if ( savbid  /= nint( dskdsc(srfidx) )  ) return
 
 !
 !     Check the frame ID.
 !
-      if ( savfid  /= nint( dskdsc(frmidx) )  ) then
-         return
-      end if
+      if ( savfid  /= nint( dskdsc(frmidx) )  ) return
 
 !
 !     Check the coordinate system.
 !
-      if ( savsys  /= nint( dskdsc(sysidx) )  ) then
-         return
-      end if
+      if ( savsys  /= nint( dskdsc(sysidx) )  ) return
 
 !
 !     If the system is planetodetic, check the reference
@@ -1714,13 +1702,9 @@
       if ( savsys == pdtsys ) then
 
 
-         if (  abs( savpar(1) - dskdsc(paridx)   ) > margin ) then
-            return
-         end if
+         if (  abs( savpar(1) - dskdsc(paridx)   ) > margin ) return
 
-         if (  abs( savpar(2) - dskdsc(paridx+1) ) > margin ) then
-            return
-         end if
+         if (  abs( savpar(2) - dskdsc(paridx+1) ) > margin ) return
 
       end if
 
@@ -2110,32 +2094,23 @@
 
 !     Check the surface ID.
 !
-      if ( savbid  /= nint( dskdsc(srfidx) )  ) then
-         return
-      end if
+      if ( savbid  /= nint( dskdsc(srfidx) )  ) return
 
 !
 !     Reject any segment whose target (center) ID doesn't match
 !     the request ID.
 !
-      if ( savtrg  /= nint( dskdsc(ctridx) )  ) then
-         return
-      end if
+      if ( savtrg  /= nint( dskdsc(ctridx) )  ) return
 
 !
 !     Check the time coverage.
 !
-      if (      ( savet < dskdsc(btmidx) ) &
-           .or. ( savet > dskdsc(etmidx) )  ) then
-         return
-      end if
+      if (      ( savet < dskdsc(btmidx) ) .or. ( savet > dskdsc(etmidx) )  ) return
 
 !
 !     Check the data class.
 !
-      if ( savcls  /= nint( dskdsc(clsidx) )  ) then
-         return
-      end if
+      if ( savcls  /= nint( dskdsc(clsidx) )  ) return
 
 
 !
@@ -2189,11 +2164,9 @@
 
          else
 
-            call chkin  ( 'ZZDSKMRC'                      )
             call setmsg ( 'Backstop error (0): this code ' &
             //            'should be unreachable.'        )
             call sigerr ( 'SPICE(BUG)'                    )
-            call chkout ( 'ZZDSKMRC'                      )
             return
 
          end if
@@ -2220,14 +2193,12 @@
 
       else
 
-         call chkin  ( 'ZZDSKMRC'                        )
          call setmsg ( 'Only planetocentric and planeto' &
          //            'detic coordinates are supported ' &
          //            'by this entry point. Segment ' &
          //            'coordinate system was #.'        )
          call errint ( '#',  segsys                      )
          call sigerr ( 'SPICE(NOTSUPPORTED)'             )
-         call chkout ( 'ZZDSKMRC'                        )
          return
 
       end if

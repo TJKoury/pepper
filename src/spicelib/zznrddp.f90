@@ -568,11 +568,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZNRDDP' )
-      end if
+      if ( return () ) return
 
 !
 !     This routine should never be called. If this routine is called,
@@ -585,7 +581,6 @@
 
       call sigerr ( 'SPICE(EVILBOGUSENTRY)' )
 
-      call chkout ( 'ZZNRDDP' )
 
       return
 
@@ -1108,13 +1103,7 @@
 
       else
 
-         if ( xnq <(8.26e-3_wp) .or. &
-              xnq >(9.24e-3_wp) .or. &
-              eq  < 0.5_wp        ) then
-
-            return
-
-         end if
+         if ( xnq <(8.26e-3_wp) .or. xnq >(9.24e-3_wp) .or. eq  < 0.5_wp        ) return
 
 
          iresfl = 1
@@ -1441,9 +1430,7 @@
 !
 !     Check for the state of the resonance flag.
 !
-      if( iresfl == 0) then
-         return
-      end if
+      if ( iresfl == 0) return
 
 
 !

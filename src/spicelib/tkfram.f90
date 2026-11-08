@@ -486,11 +486,8 @@
 !     a bit unconventional, but nothing will be hurt by doing
 !     the stuff above first.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'TKFRAM' )
 
 !
 !     So far, we've not FOUND the rotation to the specified frame.
@@ -509,7 +506,6 @@
          //            'specified a frame with ID value ' &
          //            'zero. '                            )
          call sigerr ( 'SPICE(ZEROFRAMEID)'                )
-         call chkout ( 'TKFRAM'                            )
          return
 
       end if
@@ -592,7 +588,6 @@
          //            '# does not have a recognized name. '      )
          call errint ( '#', frcode                                )
          call sigerr ( 'SPICE(INCOMPLETEFRAME)'                   )
-         call chkout ( 'TKFRAM'                                   )
          return
 
       end if
@@ -681,7 +676,6 @@
                call errch  ( '#', alt(i) )
                call errch  ( '#', frname )
                call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-               call chkout ( 'TKFRAM' )
                return
             end if
 
@@ -701,7 +695,6 @@
             call lnkini ( bufsiz, pool )
             frame =  0
             call ident  (  rot     )
-            call chkout ( 'TKFRAM' )
             return
 
          end if
@@ -730,7 +723,6 @@
             call errint ( '#', frcode                       )
             call errch  ( '#', name                         )
             call sigerr ( 'SPICE(BADFRAMESPEC)'             )
-            call chkout ( 'TKFRAM'                          )
             return
 
          end if
@@ -752,7 +744,6 @@
             call errch  ( '#', name                                )
             call errint ( '#', frcode                              )
             call sigerr ( 'SPICE(BADFRAMESPEC2)'                   )
-            call chkout ( 'TKFRAM'                                 )
             return
 
          end if
@@ -799,7 +790,6 @@
                call errch  ( '#', alt(3) )
                call errch  ( '#', frname )
                call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-               call chkout ( 'TKFRAM' )
                return
             end if
 
@@ -812,7 +802,6 @@
                call lnkini ( bufsiz, pool )
                frame =  0
                call ident  ( rot      )
-               call chkout ( 'TKFRAM' )
                return
 
             end if
@@ -887,7 +876,6 @@
                   call errch  ( '#', alt(i) )
                   call errch  ( '#', frname )
                   call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-                  call chkout ( 'TKFRAM' )
                   return
                end if
 
@@ -905,7 +893,6 @@
                call lnkini ( bufsiz, pool )
                frame =  0
                call ident  ( rot      )
-               call chkout ( 'TKFRAM' )
                return
 
             end if
@@ -936,7 +923,6 @@
                call lnkini ( bufsiz, pool )
                frame =  0
                call ident  ( rot      )
-               call chkout ( 'TKFRAM' )
                return
             end if
 
@@ -974,7 +960,6 @@
                call errch  ( '#', alt(3) )
                call errch  ( '#', frname )
                call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
-               call chkout ( 'TKFRAM' )
                return
             end if
 
@@ -987,7 +972,6 @@
                call lnkini ( bufsiz, pool )
                frame =  0
                call ident  ( rot      )
-               call chkout ( 'TKFRAM' )
                return
             end if
 !
@@ -1019,7 +1003,6 @@
             call errch  ( '#', item(1) )
             call errch  ( '#', spec    )
             call sigerr ( 'SPICE(UNKNOWNFRAMESPEC)' )
-            call chkout ( 'TKFRAM' )
             return
 
          end if
@@ -1077,7 +1060,6 @@
          call lnkini ( bufsiz, pool )
          frame =  0
          call ident  ( rot      )
-         call chkout ( 'TKFRAM' )
          return
       end if
 
@@ -1091,7 +1073,6 @@
 !
 !     That's it
 !
-      call chkout ( 'TKFRAM' )
       return
 
       end

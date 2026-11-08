@@ -201,11 +201,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'NPELPT' )
-      end if
+      if ( return () ) return
 
 !
 !     Here's an overview of our solution:
@@ -267,7 +263,6 @@
          call errdp  ( '#', majlen                )
          call errdp  ( '#', minlen                )
          call sigerr ( 'SPICE(DEGENERATECASE)'    )
-         call chkout ( 'NPELPT'                   )
          return
 
       end if
@@ -343,6 +338,5 @@
       dist = vdist ( pnear, point )
 
 
-      call chkout  ( 'NPELPT' )
       return
       end

@@ -270,21 +270,15 @@
       logical               found
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKOBJ' )
 
 !
 !     See whether GETFAT thinks we've got a DSK file.
 !
       call getfat ( dskfnm, arch, kertyp )
 
-      if ( failed() ) then
-         call chkout ( 'DSKOBJ' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( arch == 'XFR' ) then
 
@@ -296,7 +290,6 @@
          call errch  ( '#',  dskfnm                                )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
-         call chkout ( 'DSKOBJ'                                    )
          return
 
       else if ( arch /= 'DAS' ) then
@@ -313,7 +306,6 @@
          call errch  ( '#',  dskfnm                                )
          call errch  ( '#',  arch                                  )
          call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
-         call chkout ( 'DSKOBJ'                                    )
          return
 
       else if ( kertyp /= 'DSK' ) then
@@ -329,7 +321,6 @@
          call errch  ( '#',  dskfnm                                )
          call errch  ( '#',  kertyp                                )
          call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
-         call chkout ( 'DSKOBJ'                                    )
          return
 
       end if
@@ -340,10 +331,7 @@
       call dasopr ( dskfnm, handle )
       call dlabfs ( handle, nxtdsc, found )
 
-      if ( failed() ) then
-         call chkout ( 'DSKOBJ' )
-         return
-      end if
+      if ( failed() ) return
 
       do while (  found  .and.  ( .not. failed() )  )
 !
@@ -381,7 +369,6 @@
             call errch  ( '#', dskfnm                       )
             call errint ( '#', sizei( bodids )              )
             call sigerr ( 'SPICE(CELLTOOSMALL)'             )
-            call chkout ( 'DSKOBJ'                          )
             return
 
          end if
@@ -398,6 +385,5 @@
 
       call dascls ( handle )
 
-      call chkout ( 'DSKOBJ' )
       return
       end

@@ -1309,11 +1309,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'GFILUM' )
 
 !
 !     Check the result window's size.
@@ -1324,7 +1321,6 @@
          //            'but was #.'                            )
          call errint ( '#',  sized(result)                     )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'               )
-         call chkout ( 'GFILUM'                                )
          return
 
       end if
@@ -1338,7 +1334,6 @@
          //            'at least 2.'                               )
          call errint ( '#',  mw                                    )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
-         call chkout ( 'GFILUM'                                    )
          return
 
       end if
@@ -1350,7 +1345,6 @@
          call errint ( '#',  nw                                      )
          call errint ( '#',  nwilum                                  )
          call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
-         call chkout ( 'GFILUM'                                      )
          return
 
       end if
@@ -1401,7 +1395,6 @@
          call setmsg ( 'Step size was #; step size must be positive.' )
          call errdp  ( '#',  step                                     )
          call sigerr ( 'SPICE(INVALIDSTEP)'                           )
-         call chkout ( 'GFILUM'                                       )
          return
 
       end if
@@ -1440,6 +1433,5 @@
                     gfrepu,  gfrepf,  mw,                    nwilum, &
                     work,    nobail,  gfbail,                result )
 
-      call chkout ( 'GFILUM' )
       return
       end

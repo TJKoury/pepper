@@ -431,11 +431,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'LOCLN' )
-      end if
+      if ( return () ) return
 
 !
 !     We'll use temporary variables BLTEMP and ELTEMP for BLINE and
@@ -473,7 +469,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FILENAME', unit                            )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'LOCLN'                                     )
             return
 
          else if ( iostat < 0 ) then
@@ -534,7 +529,6 @@
             call errint ( '#', iostat                                 )
             call errfnm ( 'FILENAME', unit                            )
             call sigerr ( 'SPICE(FILEREADFAILED)'                     )
-            call chkout ( 'LOCLN'                                     )
             return
 
          else if ( iostat < 0 ) then
@@ -582,6 +576,5 @@
       end if
 
 
-      call chkout ( 'LOCLN' )
       return
       end

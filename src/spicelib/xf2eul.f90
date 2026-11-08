@@ -800,11 +800,8 @@
 !
 !     Standard SPICE exception handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'XF2EUL' )
 
 !
 !     Get the rotation and derivative of the rotation separately.
@@ -828,10 +825,7 @@
       call m2eul ( r, axisa,         axisb,        axisc, &
                       eulang(alpha), eulang(beta), eulang(gamma) )
 
-      if ( failed() ) then
-         call chkout ( 'XF2EUL' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Construct local copies of the axes, determine L and D from the
@@ -929,7 +923,6 @@
          end if
 
 
-         call chkout ( 'XF2EUL' )
          return
 
       end if
@@ -959,7 +952,6 @@
 
       call mxv ( solutn, omega, eulang(4) )
 
-      call chkout ( 'XF2EUL' )
       return
 
 
@@ -1326,11 +1318,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'EUL2XF' )
 
 !
 !     We're going to work with a local copy LOCANG of the euler angle
@@ -1408,10 +1397,7 @@
       call eul2m ( locang(alpha), locang(beta), locang(gamma), &
                    locaxa,        locaxb,       locaxc,         r )
 
-      if ( failed() ) then
-         call chkout ( 'EUL2XF' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Construct local copies of the axes, determine L and D from the
@@ -1502,7 +1488,6 @@
          end do
       end do
 
-      call chkout ( 'EUL2XF' )
       return
 
       end

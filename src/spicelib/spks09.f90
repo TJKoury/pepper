@@ -188,19 +188,12 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS09' )
-      end if
+      if ( return () ) return
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  >  end  ) then
-         call chkout ( 'SPKS09' )
-         return
-      end if
+      if (  begin  >  end  ) return
 
 !
 !     Get the number of records in the segment.  Get the polynomial
@@ -309,6 +302,5 @@
       call dafada ( real( degree, wp ),                  1 )
       call dafada ( real( rec(2) - rec(1) + 1, wp ),     1 )
 
-      call chkout ( 'SPKS09' )
       return
       end

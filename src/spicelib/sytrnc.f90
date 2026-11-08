@@ -204,10 +204,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
-      call chkin ( 'SYTRNC' )
+      if ( return () ) return
 
 !
 !     How many symbols?
@@ -260,6 +257,5 @@
       end if
 
 
-      call chkout ( 'SYTRNC' )
       return
       end

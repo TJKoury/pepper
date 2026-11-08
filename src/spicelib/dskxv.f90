@@ -870,11 +870,8 @@
       data                  prvtcd / 0      /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKXV' )
 
 
       if ( first ) then
@@ -884,10 +881,7 @@
          call zzctruin( trgctr )
          call zzctruin( frmctr )
 
-         if ( failed() ) then
-            call chkout ( 'DSKXV' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -900,7 +894,6 @@
          //            'set to .FALSE., indicating that an ' &
          //            'unprioritized search is to be performed.' )
          call sigerr ( 'SPICE(BADPRIORITYSPEC)'                   )
-         call chkout ( 'DSKXV'                                    )
          return
 
       end if
@@ -914,7 +907,6 @@
          //            'was #.'                                     )
          call errint ( '#',  nrays                                  )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-         call chkout ( 'DSKXV'                                      )
          return
 
       end if
@@ -928,7 +920,6 @@
          //            'but was #.'                                   )
          call errint ( '#',  nsurf                                    )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
-         call chkout ( 'DSKXV'                                        )
          return
 
       end if
@@ -939,10 +930,7 @@
       call zzbods2c ( trgctr, svtnam, svtcde, svtfnd, &
                       target, trgcde, trgfnd         )
 
-      if ( failed() ) then
-         call chkout ( 'DSKXV' )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. trgfnd ) then
 
@@ -955,7 +943,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( 'DSKXV'                                   )
          return
 
       end if
@@ -974,10 +961,7 @@
 
          call namfrm ( fixref, fixfid )
 
-         if ( failed() ) then
-            call chkout ( 'DSKXV' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( fixfid == 0 ) then
 
@@ -987,7 +971,6 @@
             //            'not been loaded.'                        )
             call errch  ( '#',  fixref                              )
             call sigerr ( 'SPICE(IDCODENOTFOUND)'                   )
-            call chkout ( 'DSKXV'                                   )
             return
 
          end if
@@ -997,10 +980,7 @@
 !
          call frinfo ( fixfid, fxcent, fxclss, fxtpid, frmfnd )
 
-         if ( failed() ) then
-            call chkout ( 'DSKXV' )
-            return
-         end if
+         if ( failed() ) return
 
          if ( .not. frmfnd ) then
 
@@ -1011,7 +991,6 @@
             //            'not been loaded.'                        )
             call errch  ( '#',  fixref                              )
             call sigerr ( 'SPICE(NOFRAMEINFO)'                      )
-            call chkout ( 'DSKXV'                                   )
             return
 
          end if
@@ -1027,7 +1006,6 @@
             call errch  ( '#',  target                               )
             call errint ( '#',  fxcent                               )
             call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-            call chkout ( 'DSKXV'                                    )
             return
 
          end if
@@ -1057,13 +1035,9 @@
                         et,          fixfid,      vtxarr(1,i), &
                         dirarr(1,i), xptarr(1,i), fndarr(i)   )
 
-         if ( failed() ) then
-            call chkout( 'DSKXV' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
-      call chkout ( 'DSKXV' )
       return
       end

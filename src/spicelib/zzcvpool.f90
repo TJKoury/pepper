@@ -212,9 +212,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
 !
 !     Check/update counter.
@@ -226,11 +224,9 @@
 !
       if ( update ) then
 
-         call chkin  ( 'ZZCVPOOL' )
 
          call cvpool ( agent, update )
 
-         call chkout ( 'ZZCVPOOL' )
 
       end if
 

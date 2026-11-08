@@ -447,11 +447,8 @@
       data                  stops  / maxbas * 0.0_wp    /
       data                  usetim / maxfrm * .false. /
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZSWFXFM' )
 
 !
 !     No frame found yet.
@@ -492,7 +489,6 @@
          //            'be 3 or 6 but was #.'           )
          call errint ( '#', ndim                        )
          call sigerr ( 'SPICE(BADDIMENSION)'            )
-         call chkout ( 'ZZSWFXFM'                       )
          return
 
       end if
@@ -560,7 +556,6 @@
             call zzswfini ( hdfram, frpool, fidlst, basbeg, &
                             free,   prvat,  prvfrm, samfrm  )
 
-            call chkout ( 'ZZSWFXFM' )
             return
 
          end if
@@ -682,7 +677,6 @@
                   call zzswfini ( hdfram, frpool, fidlst, basbeg, &
                                   free,   prvat,  prvfrm, samfrm  )
 
-                  call chkout ( 'ZZSWFXFM' )
                   return
 
                end if
@@ -702,7 +696,6 @@
                      prvfrm = 0
                      prvat  = 0
 
-                     call chkout ( 'ZZSWFXFM' )
                      return
 
                   end if
@@ -728,7 +721,6 @@
                   call zzswfini ( hdfram, frpool, fidlst, basbeg, &
                                   free,   prvat,  prvfrm, samfrm  )
 
-                  call chkout ( 'ZZSWFXFM' )
                   return
 
                end if
@@ -769,7 +761,6 @@
                   call zzswfini ( hdfram, frpool, fidlst, basbeg, &
                                   free,   prvat,  prvfrm, samfrm  )
 
-                  call chkout ( 'ZZSWFXFM' )
                   return
 
                end if
@@ -789,7 +780,6 @@
                   call zzswfini ( hdfram, frpool, fidlst, basbeg, &
                                   free,   prvat,  prvfrm, samfrm )
 
-                  call chkout ( 'ZZSWFXFM' )
                   return
 
                end if
@@ -863,6 +853,5 @@
 
       end if
 
-      call chkout ( 'ZZSWFXFM' )
       return
       end

@@ -180,8 +180,6 @@
       if ( return () ) then
          fetchc = 0
          return
-      else
-         call chkin ( 'FETCHC' )
       end if
 
 !
@@ -202,6 +200,5 @@
       end if
 
 
-      call chkout ( 'FETCHC' )
       return
       end

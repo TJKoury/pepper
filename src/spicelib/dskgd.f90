@@ -594,11 +594,8 @@
       integer(ip)           dpbase
       integer(ip)           dpsize
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'DSKGD' )
 
 !
 !     Fetch the base address and size of the DP component of the
@@ -619,7 +616,6 @@
          //             'of a corrupted file.'                      )
          call errint ( '#', dpsize                                  )
          call sigerr ( 'SPICE(INVALIDFORMAT)'                       )
-         call chkout ( 'DSKGD'                                      )
          return
 
       end if
@@ -629,6 +625,5 @@
 !
       call dasrdd ( handle, dpbase+1, dpbase+dskdsz, dskdsc )
 
-      call chkout ( 'DSKGD' )
       return
       end

@@ -197,11 +197,9 @@
 !
       if ( delta == 0.0_wp ) then
 
-         call chkin  ( 'QDERIV'                                    )
          call setmsg ( 'Delta abscissa value is zero; a non-zero ' // &
                        'value is required.'                        )
          call sigerr ( 'SPICE(DIVIDEBYZERO)'                       )
-         call chkout ( 'QDERIV'                                    )
          return
 
       end if

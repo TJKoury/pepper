@@ -378,9 +378,7 @@
       if ( return() ) then
          return
       else
-         call chkin  ( 'ZZBODBLT'          )
          call sigerr ( 'SPICE(BOGUSENTRY)' )
-         call chkout ( 'ZZBODBLT'          )
       end if
 
       return
@@ -498,11 +496,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODGET' )
-      end if
+      if ( return() ) return
 
 
 !
@@ -542,7 +536,6 @@
          call errint ( '#', nperm                               )
          call errint ( '#', room                                )
          call sigerr ( 'SPICE(BUG)'                             )
-         call chkout ( 'ZZBODGET'                               )
          return
 
       end if
@@ -553,7 +546,6 @@
 
       nvals = nperm
 
-      call chkout ( 'ZZBODGET' )
       return
 
 
@@ -710,11 +702,7 @@
 !
 !-&
 
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'ZZBODLST' )
-      end if
+      if ( return() ) return
 
 !
 !     Upper case the ZZRQST value.
@@ -775,7 +763,6 @@
 
       end if
 
-      call chkout ( 'ZZBODLST' )
       return
 
       end

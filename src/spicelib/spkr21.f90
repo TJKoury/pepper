@@ -205,11 +205,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKR21' )
 
 !
 !     Unpack the segment descriptor.
@@ -253,7 +250,6 @@
          call errint ( '#',  maxdim                            )
          call errint ( '#',  maxtrm                            )
          call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
-         call chkout ( 'SPKR21'                                )
          return
 
       end if
@@ -286,7 +282,6 @@
          offr = (begin - 1) + (recno - 1) * dflsiz
          call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
-         call chkout ( 'SPKR21' )
          return
 
       end if
@@ -313,7 +308,6 @@
             offr = (begin - 1) + (recno - 1) * dflsiz
             call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
-            call chkout ( 'SPKR21' )
             return
 
          end if
@@ -335,6 +329,5 @@
       call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
 
-      call chkout ( 'SPKR21' )
       return
       end

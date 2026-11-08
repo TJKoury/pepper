@@ -320,21 +320,15 @@
       logical               return
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SRFC2S' )
 
 !
 !     Try to translate the input codes to a known surface name.
 !
       call zzsrfc2n ( code, bodyid, srfstr, isname )
 
-      if ( failed() ) then
-         call chkout ( 'SRFC2S' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     If there is no matching name, convert the surface ID code to a
@@ -346,6 +340,5 @@
 
       end if
 
-      call chkout ( 'SRFC2S' )
       return
       end

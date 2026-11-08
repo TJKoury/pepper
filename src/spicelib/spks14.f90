@@ -173,11 +173,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'SPKS14' )
-      end if
+      if ( return () ) return
 !
 !     First, unpack the destination segment descriptor and set some
 !     local variables.
@@ -194,19 +190,13 @@
 !
 !     If we can't find the code, it can't be an SPK file.
 !
-      if ( failed() ) then
-         call chkout ( 'SPKS14' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Get the constants for this segment. There is only one.
 !
       call sgfcon ( srchan, srcdsc, 1, 1, dtemp )
 
-      if ( failed() ) then
-         call chkout ( 'SPKS14' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     The first element of DTEMP now contains the number of coefficients
 !     used for the Chebyshev polynomials. We need the degree of the
@@ -229,7 +219,6 @@
          call errint ( '#', recsiz                                )
          call errint ( '#', maxrec                                )
          call sigerr ( 'SPICE(SPKRECTOOLARGE)'                    )
-         call chkout ( 'SPKS14'                                   )
          return
       end if
 
@@ -245,10 +234,7 @@
       call spk14b ( dsthan, dstsid, body, center, myfram, &
                             begtim, endtim, chbdeg        )
 
-      if ( failed() ) then
-         call chkout ( 'SPKS14' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Now we get the data one record at a time from the source segment
 !     and write it out to the destination segment.
@@ -259,10 +245,7 @@
          call sgfref ( srchan, srcdsc, i, i, myref         )
          call spk14a ( dsthan, 1, record, myref            )
 
-         if ( failed() ) then
-            call chkout ( 'SPKS14' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 !
@@ -270,7 +253,6 @@
 !
       call spk14e ( dsthan )
 
-      call chkout ( 'SPKS14' )
       return
 
       end

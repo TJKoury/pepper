@@ -130,14 +130,11 @@
 !
 !     This routine checks in on the first pass only.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 
       if ( first ) then
 
-         call chkin ( 'ZZDDHNFC' )
 
 !
 !        Populate STRBFF, the buffer that contains the labels
@@ -163,7 +160,6 @@
             //            'This is a serious problem, contact NAIF.'   )
             call errch  ( '#', tmpstr                                  )
             call sigerr ( 'SPICE(BUG)'                                 )
-            call chkout ( 'ZZDDHNFC'                                   )
             return
 
          end if
@@ -173,7 +169,6 @@
 !
          first = .false.
 
-         call chkout ( 'ZZDDHNFC' )
 
       end if
 

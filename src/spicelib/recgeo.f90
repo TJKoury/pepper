@@ -416,11 +416,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'RECGEO' )
-      end if
+      if ( return () ) return
 
 
 !
@@ -431,7 +427,6 @@
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
-          call chkout ( 'RECGEO'                   )
           return
       end if
 
@@ -445,7 +440,6 @@
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
-          call chkout ( 'RECGEO'                         )
           return
       end if
 
@@ -479,6 +473,5 @@
          lon = datan2 ( rectan(2), rectan(1) )
       end if
 
-      call chkout ( 'RECGEO' )
       return
       end

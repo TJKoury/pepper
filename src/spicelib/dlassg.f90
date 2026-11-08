@@ -196,18 +196,14 @@
 !
 !     If the handles don't match, we're done.
 !
-      if ( han1 /= han2 ) then
-         return
-      end if
+      if ( han1 /= han2 ) return
 !
 !     Compare the DLA descriptors. All elements, including pointers,
 !     must match in order to have a matching result.
 !
       do i = 1, dladsz
 
-         if ( dsc1(i) /= dsc2(i) ) then
-            return
-         end if
+         if ( dsc1(i) /= dsc2(i) ) return
 
       end do
 !

@@ -315,11 +315,7 @@
 !
 !     Standard SPICELIB error handling.
 !
-      if ( return() ) then
-         return
-      else
-         call chkin ( 'SPK14E' )
-      end if
+      if ( return() ) return
 
 !
 !     This is simple, just call the routine which ends a generic
@@ -331,7 +327,6 @@
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 
-      call chkout ( 'SPK14E' )
       return
 
       end

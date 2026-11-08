@@ -354,11 +354,8 @@
 !
 !     Standard SPICE exception handling code.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'EQNCPV' )
 
 !
 !     The first time through this routine we fetch the various
@@ -382,7 +379,6 @@
 
          call errdp  ( '#', eqel(1) )
          call sigerr ( 'SPICE(BADSEMIAXIS)'  )
-         call chkout ( 'EQNCPV' )
          return
 
       end if
@@ -403,7 +399,6 @@
          call errdp  ( '#', eqel(2) )
          call errdp  ( '#', eqel(3) )
          call sigerr ( 'SPICE(ECCOUTOFRANGE)'  )
-         call chkout ( 'EQNCPV' )
          return
 
       end if
@@ -612,6 +607,5 @@
       call mxv ( trans, xhold(1), state(1) )
       call mxv ( trans, xhold(4), state(4) )
 
-      call chkout ( 'EQNCPV' )
       return
       end

@@ -239,16 +239,12 @@
 !
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
       if ( iparse == ifalse ) then
 
-         call chkin  ( 'ZZEKCCHK'                            )
          call setmsg ( 'Encoded query has not been parsed.'  )
          call sigerr ( 'SPICE(QUERYNOTPARSED)'               )
-         call chkout ( 'ZZEKCCHK'                            )
          return
 
       end if
@@ -267,14 +263,12 @@
 
       if (  ( cb <= 0 )  .or.  ( ce <= 0 )  ) then
 
-         call chkin  ( 'ZZEKCCHK'                                )
          call setmsg ( 'Invalid string bounds #:# for column.  ' // &
                        'Column name descriptor base is #.'       )
          call errint ( '#',  cb                                  )
          call errint ( '#',  ce                                  )
          call errint ( '#',  base                                )
          call sigerr ( 'SPICE(BUG)'                              )
-         call chkout ( 'ZZEKCCHK'                                )
          return
 
       end if

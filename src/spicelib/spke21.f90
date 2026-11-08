@@ -208,9 +208,7 @@
 !
 !     If the RETURN function is set, don't even bother with this.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 !
 !     The first element of the input record is the dimension
 !     of the difference table MAXDIM.
@@ -219,7 +217,6 @@
 
       if ( maxdim > maxtrm ) then
 
-         call chkin  ( 'SPKE21'                                )
          call setmsg ( 'The input record has a maximum table ' &
          //            'dimension of #, while the maximum ' &
          //            'supported by this routine is #. It is ' &
@@ -228,7 +225,6 @@
          call errint ( '#',  maxdim                            )
          call errint ( '#',  maxtrm                            )
          call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
-         call chkout ( 'SPKE21'                                )
          return
 
       end if
@@ -305,12 +301,10 @@
 !
          if ( g(j) == 0.0_wp ) then
 
-            call chkin  ( 'SPKE21'                             )
             call setmsg ( 'A  value of zero was found at ' &
             //            'index # of the step size vector.'   )
             call errint ( '#',  j                              )
             call sigerr ( 'SPICE(ZEROSTEP)'                    )
-            call chkout ( 'SPKE21'                             )
             return
 
          end if

@@ -149,14 +149,12 @@
 !
       if (  ( n < 0 ) .or. ( n > size )  )  then
 
-         call chkin  ( 'ZZEKTRKI'                                  )
          call setmsg ( 'Key index = #; valid range in node # is ' // &
                        '1:#'                                       )
          call errint ( '#',  n                                     )
          call errint ( '#',  node                                  )
          call errint ( '#',  size                                  )
          call sigerr ( 'SPICE(INVALIDINDEX)'                       )
-         call chkout ( 'ZZEKTRKI'                                  )
          return
 
       end if

@@ -2163,11 +2163,8 @@
       data                  usestl / .false. /
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( rname )
 
 !
 !     Counter initialization is done separately.
@@ -2193,10 +2190,7 @@
 !
          call zzvalcor ( abcorr, attblk )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        In this routine, we don't allow transmission corrections.
@@ -2209,7 +2203,6 @@
             //            'finding.'                              )
             call errch  ( '#',  abcorr                            )
             call sigerr ( 'SPICE(INVALIDOPTION)'                  )
-            call chkout ( rname                                   )
             return
 
          end if
@@ -2257,7 +2250,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', target                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2277,7 +2269,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', obsrvr                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2299,7 +2290,6 @@
          //            'name-ID mapping for this body.'           )
          call errch  ( '#', ilusrc                                )
          call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2316,7 +2306,6 @@
          //            'same. Both are #.'                          )
          call errch  ( '#',  obsrvr                                 )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         call chkout ( rname                                        )
          return
 
       end if
@@ -2328,7 +2317,6 @@
          //            'are the same. Both are #.'               )
          call errch  ( '#',  obsrvr                              )
          call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -2340,10 +2328,7 @@
 
       call frinfo ( fxfcde, fxcent, fxclss, fxtyid, fnd )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( .not. fnd ) then
 
@@ -2353,7 +2338,6 @@
                        'not been loaded.'                        )
          call errch  ( '#',  fixref                              )
          call sigerr ( 'SPICE(NOFRAME)'                          )
-         call chkout ( rname                                     )
          return
 
       end if
@@ -2370,7 +2354,6 @@
          call errch  ( '#',  target                               )
          call errint ( '#',  fxcent                               )
          call sigerr ( 'SPICE(INVALIDFRAME)'                      )
-         call chkout ( rname                                      )
          return
 
       end if
@@ -2405,10 +2388,7 @@
          call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
@@ -2426,16 +2406,12 @@
             //            'string was <#>.'                      )
             call errch  ( '#', shpstr                            )
             call sigerr ( 'SPICE(BUG)'                           )
-            call chkout ( rname                                  )
             return
 
          end if
 
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 
          if (  eqstr( pntdef, 'TANGENT' )  ) then
@@ -2453,7 +2429,6 @@
             //            'must be TANGENT or GUIDED.'      )
             call errch  ( '#', pntdef                       )
             call sigerr ( 'SPICE(INVALIDTERMTYPE)'          )
-            call chkout ( rname                             )
             return
 
          end if
@@ -2476,7 +2451,6 @@
             //            'UMBRAL or PENUMBRAL.'            )
             call errch  ( '#', trmstr                       )
             call sigerr ( 'SPICE(INVALIDSHADOW)'            )
-            call chkout ( rname                             )
             return
 
          end if
@@ -2495,7 +2469,6 @@
             call errch  ( '#', subtyp                                 )
             call errch  ( '#', method                                 )
             call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
-            call chkout ( rname                                       )
             return
 
          end if
@@ -2529,7 +2502,6 @@
             //            'was not recognized.'              )
             call errch  ( '#', corloc                        )
             call sigerr ( 'SPICE(INVALIDLOCUS)'              )
-            call chkout ( rname                              )
             return
 
          end if
@@ -2550,7 +2522,6 @@
 
          call setmsg ( 'The reference vector was the zero vector.' )
          call sigerr ( 'SPICE(ZEROVECTOR)'                         )
-         call chkout ( rname                                       )
          return
 
       end if
@@ -2569,7 +2540,6 @@
          //            'to be at least 1.'           )
          call errint ( '#',  maxn                    )
          call sigerr ( 'SPICE(INVALIDSIZE)'          )
-         call chkout ( rname                         )
          return
 
       end if
@@ -2586,7 +2556,6 @@
          call errint ( '#',  ncuts                             )
          call errint ( '#',  maxn                              )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                   )
-         call chkout ( rname                                   )
          return
 
       end if
@@ -2604,7 +2573,6 @@
             //            'is used.'                              )
             call errint ( '#',  ncuts                             )
             call sigerr ( 'SPICE(INVALIDROLLSTEP)'                )
-            call chkout ( rname                                   )
             return
 
          end if
@@ -2637,15 +2605,11 @@
          //            'TERMPT for details.'                      )
          call errch  ( '#',  method                               )
          call sigerr ( 'SPICE(INVALIDMETHOD)'                     )
-         call chkout ( rname                                      )
          return
 
       end if
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get illumination source radii.
@@ -2669,7 +2633,6 @@
 !
          prvilu = 0
 
-         call chkout ( rname )
          return
 
       end if
@@ -2680,7 +2643,6 @@
          //            'must be 3 but was #.'                )
          call errint ( '#',  nrad                            )
          call sigerr ( 'SPICE(BADRADIUSCOUNT)'               )
-         call chkout ( rname                                 )
          return
 
       end if
@@ -2711,10 +2673,7 @@
 !
          call zzbodvcd ( trgcde, 'RADII', 3, svctr6, nrad, svtrad )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          if ( nrad /= 3 ) then
 
@@ -2722,7 +2681,6 @@
             //            'but was #.'                       )
             call errint ( '#',  nrad                         )
             call sigerr ( 'SPICE(BADRADIUSCOUNT)'            )
-            call chkout ( rname                              )
             return
 
          end if
@@ -2747,10 +2705,7 @@
 !
       call spkpos ( target, et, fixref, abcorr, obsrvr, trgpos, lt )
 
-      if ( failed() ) then
-         call chkout ( rname )
-         return
-      end if
+      if ( failed() ) return
 
       if ( vzero(trgpos) ) then
 
@@ -2758,7 +2713,6 @@
          //            'target at ET # is zero.'               )
          call errdp  ( '#',  et                                )
          call sigerr ( 'SPICE(NOSEPARATION)'                   )
-         call chkout ( rname                                   )
          return
 
       end if
@@ -2783,10 +2737,7 @@
          call spkpos ( ilusrc, trgepc, fixref, abcorr, &
                        target, axis,   ilumlt          )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        The target-source vector is the central axis.
@@ -2802,7 +2753,6 @@
             //            'source-target vector are linearly ' &
             //            ' dependent.'                             )
             call sigerr ( 'SPICE(DEGENERATECASE)'                   )
-            call chkout ( rname                                     )
             return
 
          end if
@@ -2856,10 +2806,7 @@
                                   plnvec, axis,   schstp, soltol, &
                                   result, pntbuf                 )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   npts(i) = cardd( result )
 
@@ -2883,10 +2830,7 @@
                                   svtrad(3), ilurad,    axis, &
                                   plnvec,    pntbuf               )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   npts(i) = 1
 
@@ -2906,10 +2850,7 @@
                   call zzraysfx ( rayvtx,      raydir, trgepc, &
                                   pntbuf(1,1), fnd             )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   if ( fnd ) then
 
@@ -2926,7 +2867,6 @@
                   call setmsg ( 'Invalid terminator type code: #' )
                   call errint ( '#', trmtyp                       )
                   call sigerr ( 'SPICE(BUG)'                      )
-                  call chkout ( rname                             )
                   return
 
                end if
@@ -2943,10 +2883,7 @@
                                svtrad(3), ilurad,    axis, &
                                plnvec,    pntbuf               )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                call scardd ( 0, result )
 
@@ -2961,7 +2898,6 @@
                call setmsg ( 'Invalid shape code: #' )
                call errint ( '#', shape             )
                call sigerr ( 'SPICE(BUG)'            )
-               call chkout ( rname                   )
                return
 
             end if
@@ -2980,7 +2916,6 @@
                call errint ( '#', total                               )
                call errint ( '#', room                                )
                call sigerr ( 'SPICE(OUTOFROOM)'                       )
-               call chkout ( rname                                    )
                return
 
             end if
@@ -3025,7 +2960,6 @@
             call errch  ( '#',  pntdef                            )
             call errch  ( '#',  corloc                            )
             call sigerr ( 'SPICE(BADTERMLOCUSMIX)'                )
-            call chkout ( rname                                   )
             return
 
          end if
@@ -3037,10 +2971,7 @@
 !
          call spkssb ( obscde, et, iref, stobs )
 
-         if ( failed() ) then
-            call chkout ( rname )
-            return
-         end if
+         if ( failed() ) return
 
          to    = 1
          room  = maxn
@@ -3081,10 +3012,7 @@
                   call spkgps ( trgcde, epoch,  iref, &
                                 ssb,    ssbtrg, ssblt )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 !
 !                 Compute the position of the target center relative to
 !                 the observer in the inertial frame.
@@ -3098,10 +3026,7 @@
                   call spkezp ( ilucde, epoch, fixref, abcorr, &
                                 trgcde, axis,  ilumlt          )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 !
 !                 The illumination source position vector gives us
 !                 the axis for the terminator computation.
@@ -3120,10 +3045,7 @@
                                   svtrad(3), ilurad,    axis, &
                                   plnvec,    pntbuf               )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   npts(i) = 1
 !
@@ -3133,10 +3055,7 @@
 !
                   call pxform ( iref, fixref, epoch, xform )
 
-                  if ( failed() ) then
-                     call chkout ( rname )
-                     return
-                  end if
+                  if ( failed() ) return
 
                   call mxv  ( xform, ptarg, trgpos )
                   call vadd ( pntbuf(1,1),  trgpos, srfvec )
@@ -3173,10 +3092,7 @@
 !
                call spkgps ( trgcde, epoch, iref, ssb, ssbtrg, ssblt )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 !
 !              Compute the position of the target center relative to
 !              the observer in the inertial frame.
@@ -3188,10 +3104,7 @@
 !
                call pxform ( iref, fixref, epoch, xform )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
 !
 !              If we're using stellar aberration corrections, find the
@@ -3223,10 +3136,7 @@
                call spkezp ( ilucde, epoch, fixref, abcorr, &
                              trgcde, axis,  ilumlt          )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
             else
 !
@@ -3238,10 +3148,7 @@
                call spkezp ( ilucde, et,   fixref, abcorr, &
                              trgcde, axis, ilumlt          )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 !
 !              The target epoch matches the observer epoch.
 !
@@ -3277,10 +3184,7 @@
                                srflst, fxfcde, epoch,  plnvec, axis, &
                                schstp, soltol, result, pntbuf        )
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                npts(i) = cardd( result )
 
@@ -3302,10 +3206,7 @@
                                   plnvec,    pntbuf               )
                end if
 
-               if ( failed() ) then
-                  call chkout ( rname )
-                  return
-               end if
+               if ( failed() ) return
 
                npts(i) = 1
 
@@ -3324,7 +3225,6 @@
                call errint ( '#', total                               )
                call errint ( '#', room                                )
                call sigerr ( 'SPICE(OUTOFROOM)'                       )
-               call chkout ( rname                                    )
                return
 
             end if
@@ -3370,11 +3270,9 @@
          //            'recognized.'                          )
          call errch  ( '#',  corloc                           )
          call sigerr ( 'SPICE(INVALIDLOCUS)'                  )
-         call chkout ( rname                                  )
          return
 
       end if
 
-      call chkout ( rname )
       return
       end

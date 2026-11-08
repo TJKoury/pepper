@@ -224,11 +224,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'ZZEKAC02' )
-      end if
+      if ( return () ) return
 
 !
 !     Grab the column's attributes.
@@ -253,7 +249,6 @@
          call errint ( '#', class                                      )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(NOCLASS)'                                )
-         call chkout ( 'ZZEKAC02'                                      )
          return
 
       end if
@@ -271,7 +266,6 @@
          call errint ( '#', idxtyp                                     )
          call errch  ( '#', column                                     )
          call sigerr ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
-         call chkout ( 'ZZEKAC02'                                      )
          return
 
       end if
@@ -446,6 +440,5 @@
       end if
 
 
-      call chkout ( 'ZZEKAC02' )
       return
       end

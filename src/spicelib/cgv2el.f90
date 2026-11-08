@@ -328,11 +328,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'CGV2EL' )
-      end if
+      if ( return () ) return
 
 !
 !     The center of the ellipse is held in the first three elements.
@@ -344,6 +340,5 @@
 !
       call saelgv ( vec1, vec2, ellips(majpos), ellips(minpos) )
 
-      call chkout ( 'CGV2EL' )
       return
       end

@@ -267,11 +267,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      end if
+      if ( return () ) return
 
-      call chkin ( 'SPKS19' )
 
 !
 !     Terminology
@@ -447,10 +444,7 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  >  end  ) then
-         call chkout ( 'SPKS19' )
-         return
-      end if
+      if (  begin  >  end  ) return
 !
 !     We don't check BEGIN and END against the time bounds of the
 !     descriptor of the input file because, according to the
@@ -478,10 +472,7 @@
 !
       call dafgda ( handle, eaddr-1, eaddr, data )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the interval selection order flag and the
@@ -538,10 +529,7 @@
 !
       call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 
       remain = nintvl - nread
@@ -562,10 +550,7 @@
 !
          call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
          remain = remain - nread
 
@@ -595,10 +580,7 @@
 !
       call dafgda ( handle, ptrbas+begidx, ptrbas+begidx+1, data )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Convert the segment-base-relative mini-segment begin and end
@@ -614,10 +596,7 @@
 
       call dafgda ( handle, bufbas+1, bufbas+ctrlsz, contrl )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Fetch the control area parameters for the mini-segment.
@@ -636,7 +615,6 @@
          call errint ( '#',  subtyp                                 )
          call errint ( '#',  begidx                                 )
          call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
-         call chkout ( 'SPKS19'                                     )
          return
 
       end if
@@ -664,10 +642,7 @@
 
       call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
       remain = npkt - nread
 
@@ -691,10 +666,7 @@
 !
          call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
          remain = remain - nread
 
@@ -741,10 +713,7 @@
 
       call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Let EEPIDX be the index of the last epoch we select from
@@ -797,7 +766,6 @@
             call errint ( '#', begidx                               )
             call errdp  ( '#', ivlend                               )
             call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
-            call chkout ( 'SPKS19'                                  )
             return
 
          end if
@@ -809,10 +777,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
          remain = remain - nread
 
@@ -830,10 +795,7 @@
 !
             call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
             remain = remain - nread
 
@@ -876,7 +838,6 @@
             call errint ( '#', begidx                               )
             call errdp  ( '#', ivlend                               )
             call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
-            call chkout ( 'SPKS19'                                  )
             return
 
          end if
@@ -919,10 +880,7 @@
 !
       call dafgda ( handle, ivlbas+begidx, ivlbas+begidx, ivlbeg )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 
 !     We're ready to start transferring data to the output segment. The
@@ -937,10 +895,7 @@
 
          call dafada ( data, pktsiz )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -960,10 +915,7 @@
 
          call dafada ( data, 1 )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        Let IV1BEG be the start time of the first output
@@ -1017,10 +969,7 @@
 
          call dafada ( data, 1 )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1031,10 +980,7 @@
       call dafada (  real( wndsiz, wp ),  1  )
       call dafada (  real( minnpk, wp ),  1  )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Compute the size of the first output mini-segment; we'll need
@@ -1099,10 +1045,7 @@
 
          call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        CURIVL is the index of the interval we're about to process,
@@ -1119,10 +1062,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+2, data )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
             minib = ( baddr - 1 ) + nint ( data(1) )
             minie = ( baddr - 1 ) + nint ( data(2) ) - 1
@@ -1143,10 +1083,7 @@
 
                call dafada ( data, nread )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
                remain = remain - nread
 
@@ -1176,10 +1113,7 @@
 
                call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -1233,10 +1167,7 @@
 !
             call dafgda ( handle, ptrbas+endidx, ptrbas+endidx+1, data )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
             minib = ( baddr - 1 ) + nint( data(1) )
             minie = ( baddr - 1 ) + nint( data(2) ) - 1
@@ -1248,10 +1179,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+ctrlsz, contrl )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Fetch the control area parameters for the mini-segment.
@@ -1271,7 +1199,6 @@
                call errint ( '#',  subtyp                              )
                call errint ( '#',  curivl                              )
                call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
-               call chkout ( 'SPKS19'                                  )
                return
 
             end if
@@ -1299,10 +1226,7 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
             remain = npkt - nread
 
@@ -1319,10 +1243,7 @@
 
                call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
                remain = remain - nread
 
@@ -1367,7 +1288,6 @@
                call errint ( '#', endidx                               )
                call errdp  ( '#', end                                  )
                call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
-               call chkout ( 'SPKS19'                                  )
                return
 
             end if
@@ -1435,7 +1355,6 @@
                call errint ( '#', endidx                               )
                call errdp  ( '#', end                                  )
                call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
-               call chkout ( 'SPKS19'                                  )
                return
 
             end if
@@ -1451,10 +1370,7 @@
 
                call dafada ( data, pktsiz )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
             end do
 
@@ -1470,10 +1386,7 @@
 
                call dafada ( data, 1 )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
                if ( i == eepidx ) then
 !
@@ -1505,10 +1418,7 @@
 
                call dafada ( data, 1 )
 
-               if ( failed() ) then
-                  call chkout( 'SPKS19' )
-                  return
-               end if
+               if ( failed() ) return
 
             end do
 
@@ -1520,10 +1430,7 @@
             call dafada (  real( wndsiz, wp ),  1  )
             call dafada (  real( minnpk, wp ),  1  )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
 !
 !           Compute the size in DAF addresses of the last mini-segment.
@@ -1562,10 +1469,7 @@
 !
       call dafada ( iv1beg, 1 )
 
-      if ( failed() ) then
-         call chkout( 'SPKS19' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Write the remaining interval boundaries.
@@ -1577,10 +1481,7 @@
 !
          call dafada ( iv1end, 1 )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
       else
 !
@@ -1619,10 +1520,7 @@
 
             call dafada ( data(1), 1 )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -1642,10 +1540,7 @@
             call dafada ( ivfbeg, 1 )
             call dafada ( ivfend, 1 )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
          end if
 
@@ -1687,10 +1582,7 @@
 !
          call dafada ( data, 1 )
 
-         if ( failed() ) then
-            call chkout( 'SPKS19' )
-            return
-         end if
+         if ( failed() ) return
 
       end do
 
@@ -1779,10 +1671,7 @@
 
             call dafada ( real( start, wp ), 1 )
 
-            if ( failed() ) then
-               call chkout( 'SPKS19' )
-               return
-            end if
+            if ( failed() ) return
 
          end do
 
@@ -1813,6 +1702,5 @@
       call dafada ( real( isel, wp  ), 1 )
       call dafada ( real( noivl, wp ), 1 )
 
-      call chkout ( 'SPKS19' )
       return
       end

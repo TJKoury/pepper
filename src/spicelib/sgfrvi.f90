@@ -234,11 +234,8 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'SGFRVI' )
 !
 !     Set the value for the maximum index as a double precision number,
 !     but only do it the first time into the subroutine.
@@ -258,10 +255,7 @@
       call sgmeta ( handle, descr, rdrtyp, myrdrt )
       call sgmeta ( handle, descr, refbas, myrefb )
 
-      if ( failed() ) then
-         call chkout ( 'SGFRVI' )
-         return
-      end if
+      if ( failed() ) return
 !
 !     Check to be sure that we know how to deal with the type of index
 !     in the segment. The index type should be between the minimum
@@ -282,7 +276,6 @@
          call errint ( '#', mnidxt                                    )
          call errint ( '#', mxidxt                                    )
          call sigerr ( 'SPICE(UNKNOWNREFDIR)'                         )
-         call chkout ( 'SGFRVI'                                       )
          return
 
       end if
@@ -336,10 +329,7 @@
          call sgmeta ( handle, descr, nrdr,   mynrdr )
          call sgmeta ( handle, descr, rdrbas, myrdrb )
 
-         if ( failed() ) then
-            call chkout ( 'SGFRVI' )
-            return
-         end if
+         if ( failed() ) return
 !
 !        We need to scan the reference directory (if there is one) to
 !        determine the appropriate block of reference values to read
@@ -376,10 +366,7 @@
 
             call dafgda ( handle, begin, end, buffer )
 
-            if ( failed() ) then
-               call chkout ( 'SGFRVI' )
-               return
-            end if
+            if ( failed() ) return
 !
 !           See if X is in the current buffer.
 !
@@ -474,10 +461,7 @@
 
                call dafgda ( handle, begin, end, buffer )
 
-               if ( failed() ) then
-                  call chkout ( 'SGFRVI' )
-                  return
-               end if
+               if ( failed() ) return
 
                bfindx = lstled ( x, nfetch, buffer )
                myindx = dirsiz * rdridx + bfindx - 1
@@ -496,10 +480,7 @@
 
                call dafgda ( handle, begin, end, buffer )
 
-               if ( failed() ) then
-                  call chkout ( 'SGFRVI' )
-                  return
-               end if
+               if ( failed() ) return
 
                bfindx = lstled ( x, nfetch, buffer )
                myindx = bfindx
@@ -526,10 +507,7 @@
 
                call dafgda ( handle, begin, end, buffer )
 
-               if ( failed() ) then
-                  call chkout ( 'SGFRVI' )
-                  return
-               end if
+               if ( failed() ) return
 
                bfindx = lstled ( x, nfetch, buffer )
                myindx = dirsiz * rdridx + bfindx - 1
@@ -638,10 +616,7 @@
 
                call dafgda ( handle, begin, end, myvalu )
 
-               if ( failed() ) then
-                  call chkout ( 'SGFRVI' )
-                  return
-               end if
+               if ( failed() ) return
 
             end if
 
@@ -769,10 +744,7 @@
 
          call dafgda ( handle, begin, end, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SGFRVI' )
-            return
-         end if
+         if ( failed() ) return
 
          endref = buffer(1) + real(mynpkt-1, wp) * buffer(2)
 !
@@ -820,7 +792,6 @@
                   //            ' found for the step was: #'        )
                   call errdp ( '#', buffer(2)                       )
                   call sigerr ( 'SPICE(INDEXTOOLARGE)'              )
-                  call chkout ( 'SGFRVI'                            )
                   return
 
                end if
@@ -852,10 +823,7 @@
 
          call dafgda ( handle, begin, end, buffer )
 
-         if ( failed() ) then
-            call chkout ( 'SGFRVI' )
-            return
-         end if
+         if ( failed() ) return
 
          endref = buffer(1) + real(mynpkt-1, wp) * buffer(2)
 !
@@ -907,7 +875,6 @@
                   //            ' found for the step was: #'        )
                   call errdp ( '#', buffer(2)                       )
                   call sigerr ( 'SPICE(INDEXTOOLARGE)'              )
-                  call chkout ( 'SGFRVI'                            )
                   return
 
                end if
@@ -944,7 +911,6 @@
 
       found = myfnd
 
-      call chkout ( 'SGFRVI' )
       return
 
       end

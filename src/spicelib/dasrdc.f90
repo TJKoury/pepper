@@ -444,27 +444,23 @@
            .or. ( bpos > len( data(1) ) ) &
            .or. ( epos > len( data(1) ) )  )  then
 
-         call chkin  ( 'DASRDC'                                        )
          call setmsg ( 'Substring bounds must be in range [1,#]. '    // &
                        'Actual range [BPOS,EPOS] was [#,#].'           )
          call errint ( '#',  len(data(1))                              )
          call errint ( '#',  bpos                                      )
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         call chkout ( 'DASRDC'                                        )
          return
 
 
       else if ( epos < bpos ) then
 
-         call chkin  ( 'DASRDC'                                        )
          call setmsg ( 'Substring upper bound must not be less than ' // &
                        'lower bound.  Actual range [BPOS,EPOS] was '  // &
                        '[#,#].'                                        )
          call errint ( '#',  bpos                                      )
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         call chkout ( 'DASRDC'                                        )
          return
 
       end if
@@ -475,9 +471,7 @@
 !
       call dasa2l ( handle, char, first, clbase, clsize, recno, wordno )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Get the length of the elements of DATA.  Count the total number
@@ -500,9 +494,7 @@
 
       do while ( nmoved < numchr )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
          if ( chr > epos ) then
             elt = elt + 1
@@ -535,9 +527,7 @@
 
       do while ( nread < n )
 
-         if ( failed() ) then
-            return
-         end if
+         if ( failed() ) return
 
 !
 !        At this point, RECNO is the correct number of the

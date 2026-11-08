@@ -147,9 +147,7 @@
 !
       call zzekpgch ( handle, 'WRITE' )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Make sure the column exists.
@@ -161,7 +159,6 @@
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         call chkin  ( 'ZZEKSCDP'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
          call errint ( '#',  colidx                            )
@@ -170,7 +167,6 @@
          call errint ( '#',  recno                             )
          call errhan ( '#',  handle                            )
          call sigerr ( 'SPICE(INVALIDINDEX)'                   )
-         call chkout ( 'ZZEKSCDP'                              )
          return
 
       end if

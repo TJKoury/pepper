@@ -356,11 +356,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'DSPHDR' )
-      end if
+      if ( return () ) return
 
 !
 !     There is a singularity of the jacobian for points on the z-axis.
@@ -371,7 +367,6 @@
                        'rectangular to spherical coordinates '        // &
                        'is not defined for points on the z-axis.'      )
          call sigerr ( 'SPICE(POINTONZAXIS)'                           )
-         call chkout ( 'DSPHDR'                                        )
          return
 
       end if
@@ -401,6 +396,5 @@
 !
       call invort ( injacb, jacobi )
 
-      call chkout ( 'DSPHDR' )
       return
       end

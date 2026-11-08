@@ -342,11 +342,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return () ) then
-         return
-      else
-         call chkin ( 'EKOPN' )
-      end if
+      if ( return () ) return
 
 !
 !     Check the comment character count.
@@ -357,7 +353,6 @@
                        'must be non-negative but was #.'            )
          call errint ( '#',  ncomch                                 )
          call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
-         call chkout ( 'EKOPN'                                      )
          return
 
       end if
@@ -371,10 +366,7 @@
 
       call dasonw ( fname, 'EK', ifname, ncr, handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Initialize the file for paged access.  The EK architecture
@@ -382,10 +374,7 @@
 !
       call zzekpgin ( handle )
 
-      if ( failed() ) then
-         call chkout ( 'EKOPN' )
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Allocate the first integer page for the file's metadata.  We
@@ -407,6 +396,5 @@
 !
 !     That's it.  We're ready to add data to the file.
 !
-      call chkout ( 'EKOPN' )
       return
       end

@@ -170,9 +170,7 @@
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
 !
 !     Get local copies of the bounds of the volume element.
@@ -186,14 +184,12 @@
 
       if ( maxlon <= minlon) then
 
-         call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Longitude bounds are #:#. Minimum ' &
          //            'longitude exceeds maximum by more than ' &
          //            '2 pi.'                                  )
          call errdp  ( '#', minlon                              )
          call errdp  ( '#', bounds(2,1)                         )
          call sigerr ( 'SPICE(BADLONGITUDERANGE)'               )
-         call chkout ( 'ZZLATBOX'                               )
          return
 
       end if
@@ -206,34 +202,28 @@
 
       if ( minlat > maxlat ) then
 
-         call chkin  ( 'ZZLATBOX'                              )
          call setmsg ( 'Latitude bounds #:# are out of order.' )
          call errdp  ( '#', minlat                             )
          call errdp  ( '#', maxlat                             )
          call sigerr ( 'SPICE(BADLATITUDEBOUNDS)'              )
-         call chkout ( 'ZZLATBOX'                              )
          return
 
       end if
 
       if ( minlat < ( -halfpi() - margin )  ) then
 
-         call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Minimum latitude # is less than -pi/2.' )
          call errdp  ( '#', minlat                              )
          call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
-         call chkout ( 'ZZLATBOX'                               )
          return
 
       end if
 
       if ( maxlat > ( halfpi() + margin )  ) then
 
-         call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Maximum latitude # is more than -pi/2.' )
          call errdp  ( '#', maxlat                              )
          call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
-         call chkout ( 'ZZLATBOX'                               )
          return
 
       end if

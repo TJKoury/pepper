@@ -243,11 +243,8 @@
       logical               ok
 
 
-      if ( return() ) then
-         return
-      end if
+      if ( return() ) return
 
-      call chkin ( 'ZZFOVAXI' )
 
 !
 !     We must have at least 3 boundary vectors.
@@ -260,7 +257,6 @@
          call errch  ( '#', inst                           )
          call errint ( '#', n                              )
          call sigerr ( 'SPICE(INVALIDCOUNT)'               )
-         call chkout ( 'ZZFOVAXI'                          )
          return
 
       end if
@@ -303,7 +299,6 @@
             call errint ( '#', next                           )
             call errch  ( '#', inst                           )
             call sigerr ( 'SPICE(DEGENERATECASE)'             )
-            call chkout ( 'ZZFOVAXI'                          )
             return
 
          end if
@@ -358,10 +353,7 @@
 !
          call zzhullax ( inst, n, bounds, axis )
 
-         if ( failed() ) then
-            call chkout ( 'ZZFOVAXI' )
-            return
-         end if
+         if ( failed() ) return
 
       end if
 
@@ -370,6 +362,5 @@
 !
       call vhatip ( axis )
 
-      call chkout ( 'ZZFOVAXI' )
       return
       end

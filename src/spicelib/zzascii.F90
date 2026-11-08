@@ -297,7 +297,6 @@
 !
 !     Check-in to the error system.
 !
-      call chkin( 'ZZASCII' )
 
 !
 !     Retrieve the native line terminator.
@@ -311,7 +310,6 @@
 
          termin = '?'
 
-         call chkout ( 'ZZASCII' )
          return
 
       end if
@@ -333,7 +331,6 @@
          call setmsg ( 'Work string lacks sufficient length' &
                     // ' to perform operation.')
          call sigerr ( 'SPICE(STRINGTOOSHORT)' )
-         call chkout ( 'ZZASCII' )
          return
 
       end if
@@ -375,7 +372,6 @@
          call errch  ( '$1', file            )
          call errint ( '$2', iostat          )
          call sigerr ( 'SPICE(FILEOPENFAIL)' )
-         call chkout ( 'ZZASCII' )
          return
 
       end if
@@ -402,7 +398,6 @@
 !
          close( number )
 
-         call chkout ( 'ZZASCII' )
          return
 
       end if
@@ -542,14 +537,12 @@
             call errch  ( '$2', termin )
             call errch  ( '$3', native )
             call sigerr ( 'SPICE(INCOMPATIBLEEOL)' )
-            call chkout ( 'ZZASCII' )
             return
 
          end if
 
       end if
 
-      call chkout( 'ZZASCII' )
 
       return
       end

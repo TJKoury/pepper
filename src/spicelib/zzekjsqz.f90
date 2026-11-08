@@ -190,9 +190,7 @@
       call zzeksrd ( ntloc,  ntloc,  ntab   )
       call zzeksrd ( nsvloc, nsvloc, nsv    )
 
-      if ( failed() ) then
-         return
-      end if
+      if ( failed() ) return
 
 !
 !     Set the sizes of segment and row vectors.
