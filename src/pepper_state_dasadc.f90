@@ -17,7 +17,8 @@ module pepper_state_dasadc
 
    !> The saved variables of DASADC.
    type, public :: dasadc_state
-      character(nwc) :: record  !! saved between calls by DASADC
+      character(nwc) :: record  !! work buffer of one character record (saved in SPICELIB to keep it
+                                !! off the stack)
    end type dasadc_state
 
 contains

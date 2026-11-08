@@ -150,6 +150,26 @@ CONTEXT_MODULES = {
         dasrdi dasudc dasudd dasudi dascls dasrfr daswfr dasac dasacu
         dasdc dasec dasecu dasbt dastb daslla
         """.split(),
+    "pepper_dsk_files": """
+        zzsizeok
+        zzckspk
+        getfat
+        surfnm
+        nearpt
+        recgeo
+        zzvrtplt
+        zzvoxcvo
+        zzvox2id
+        zztrvlnk
+        zzuntngl
+        zzinilnk
+        zzgetvox
+        zzaddlnk
+        zzmkspin
+        dlaopn dlabns dlaens dlabfs dlabbs dlafns dlafps dlassg dskopn dskcls
+        dsktol dskgd dskb02 dskd02 dski02 dskn02 dskp02 dskv02 dskz02 dskmi2
+        dskrb2 dskobj dsksrf
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -240,11 +260,20 @@ UMBRELLAS = {
                        "pool": "linked-list pool of the file table",
                        "fthead": "head of the list of the file table's entries",
                        "fhlist": "set of the handles of the open DASs",
-                       "pass1": "the file table has not been initialized yet"}},
-    "dasrwr": {"state": "all", "component": "dasrwr", "where": "context"},
-    "dasa2l": {"state": "all", "component": "dasa2l_state", "where": "context"},
+                       "pass1": "the file table has not been initialized yet"},
+              "entries": ['dasopr', 'dasopw', 'dasonw', 'dasopn', 'dasops', 'dasllc', 'dashfs', 'dasufs', 'dashlu', 'dasluh', 'dashfn', 'dasfnh', 'dashof', 'dassih', 'dasham']},
+    "dasrwr": {"state": ['rcbufc', 'rcbufd', 'rcbufi', 'rnbufc', 'rnbufd', 'rnbufi', 'hnbufc', 'hnbufd', 'hnbufi', 'upbufc', 'upbufd', 'upbufi', 'poolc', 'poold', 'pooli', 'headc', 'headd', 'headi', 'usedc', 'usedd', 'usedi', 'pass1'], "component": "dasrwr", "where": "context", "entries": ['dasrrd', 'dasrri', 'dasrrc', 'daswrd', 'daswri', 'daswrc', 'dasurd', 'dasuri', 'dasurc', 'daswbr']},
+    "dasa2l": {"state": ['fidx', 'next', 'nfiles', 'nw', 'prev', 'prvhan', 'rngloc', 'tbbase', 'tbfwrd', 'tbhan', 'tbmxad', 'tbsize', 'fast', 'prvok', 'tbfast', 'tbrdon'], "component": "dasa2l_state", "where": "context", "entries": ['dasa2l']},
     **{n: {"state": "saved", "component": n + "_state", "where": "context", "entries": [n]} for n in
        "dasadc dasadd dasadi dascls dasec zzdasgrd zzdasgri zzdasnfr zzdasrfr wrencc".split()},
+    # DSK tolerances and margins (set by DSKSTL): settings of the instance.
+    "dsktol": {"state": ["dppars"], "component": "dsktol",
+               "docs": {"dppars": "the values of the DSK tolerance and margin parameters"}, "entries": ['dskgtl', 'dskstl']},
+    # Caches of the last segment's data base address: per context.
+    "dskd02": {"state": "saved", "component": "dskd02_state", "where": "context",
+               "entries": ["dskd02"]},
+    "dski02": {"state": "saved", "component": "dski02_state", "where": "context",
+               "entries": ["dski02"]},
     "zzhsc": {"state": [], "component": None, "entries": ['zzhscini', 'zzhscadd', 'zzhscchk', 'zzhscavl', 'zzhscinf']},
     "zzhsi": {"state": [], "component": None, "entries": ['zzhsiini', 'zzhsiadd', 'zzhsichk', 'zzhsiavl', 'zzhsiinf']},
     # Built-in body names and codes (tables built on the first call).
@@ -273,6 +302,116 @@ ALLOWED_LEGACY = {
 # Descriptions of the state components (the !! comments of the generated
 # state types), for the umbrellas without "docs" in UMBRELLAS.
 STATE_DOCS = {
+    'dasa2l': {
+        'fidx': 'index (in the tables) of the file looked up last',
+        'next': 'the next data type (character, double precision, integer, cyclic)',
+        'prev': 'the previous data type (cyclic)',
+        'nfiles': 'number of files in the tables',
+        'nw': 'words per record of each data type',
+        'prvhan': 'handle of the file looked up last',
+        'rngloc': "location of each data type's address range in a directory record",
+        'tbbase': 'first record of the single cluster of each data type, for each file',
+        'tbfwrd': 'forward pointer of the first directory record of each file',
+        'tbhan': 'handles of the files in the tables',
+        'tbmxad': 'largest address of each data type, for each file',
+        'tbsize': 'number of records of the single cluster of each data type, for each file',
+        'fast': 'the file looked up last has one cluster per data type (fast lookup)',
+        'prvok': 'the last lookup was valid',
+        'tbfast': 'each file has one cluster per data type (fast lookup)',
+        'tbrdon': 'each file is open for reading only (so its tables do not change)',
+    },
+    'dasrwr': {
+        'rcbufc': 'the buffered character records',
+        'rcbufd': 'the buffered double precision records',
+        'rcbufi': 'the buffered integer records',
+        'rnbufc': 'record number of each buffered character record',
+        'rnbufd': 'record number of each buffered double precision record',
+        'rnbufi': 'record number of each buffered integer record',
+        'hnbufc': 'file handle of each buffered character record',
+        'hnbufd': 'file handle of each buffered double precision record',
+        'hnbufi': 'file handle of each buffered integer record',
+        'upbufc': 'each buffered character record was updated and is not written to the file yet',
+        'upbufd': 'each buffered double precision record was updated and is not written to the file yet',
+        'upbufi': 'each buffered integer record was updated and is not written to the file yet',
+        'poolc': 'linked-list pool of the character buffer (most recently used first)',
+        'poold': 'linked-list pool of the double precision buffer (most recently used first)',
+        'pooli': 'linked-list pool of the integer buffer (most recently used first)',
+        'headc': "head of the list of the character buffer's entries",
+        'headd': "head of the list of the double precision buffer's entries",
+        'headi': "head of the list of the integer buffer's entries",
+        'usedc': 'number of entries of the character buffer in use',
+        'usedd': 'number of entries of the double precision buffer in use',
+        'usedi': 'number of entries of the integer buffer in use',
+        'pass1': 'the buffers have not been initialized yet',
+    },
+    'dasec': {
+        'crecrd': 'the comment record read last',
+        'filchr': 'number of comment characters read from each file',
+        'filhan': 'handles of the files whose comments are being read',
+        'lsthan': 'the handle read last',
+        'lstpos': 'position in the last comment record of each file',
+        'lstrec': 'the comment record read last of each file',
+        'nfiles': 'number of files whose comments are being read',
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+    },
+    'dasadc': {
+        'record': 'work buffer of one character record (saved in SPICELIB to keep it off the stack)',
+    },
+    'dasadd': {
+        'record': 'work buffer of one double precision record (saved in SPICELIB to keep it off the stack)',
+    },
+    'dasadi': {
+        'record': 'work buffer of one integer record (saved in SPICELIB to keep it off the stack)',
+    },
+    'dascls': {
+        'fhset': 'set of the handles of the open DAS files (sized once)',
+        'pass1': 'the handle set has not been sized yet',
+    },
+    'wrencc': {
+        'intesc': 'character code of the escape character',
+        'intfpc': 'character code of the first printable character',
+        'intlpc': 'character code of the last printable character',
+        'intquo': 'character code of the quote character',
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+    },
+    'zzdasgrd': {
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+        'intbff': 'code of the binary file format of the file read last',
+        'natbff': 'code of the native binary file format',
+    },
+    'zzdasgri': {
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+        'intbff': 'code of the binary file format of the file read last',
+        'natbff': 'code of the native binary file format',
+    },
+    'zzdasnfr': {
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+        'ftpstr': 'the FTP validation string',
+        'prenul': 'the bytes before the FTP validation string (nulls)',
+        'pstnul': 'the bytes after the FTP validation string (nulls)',
+    },
+    'zzdasrfr': {
+        'first': 'the tables have not been set up yet (they are set up on the first call)',
+        'natbff': 'code of the native binary file format',
+    },
+    'dskd02': {
+        'first': 'no segment has been read yet',
+        'prvhan': 'handle of the DSK file of the segment read last',
+        'prvbas': 'DLA base address of the segment read last',
+        'nv': 'number of vertices of the segment read last',
+    },
+    'dski02': {
+        'first': 'no segment has been read yet',
+        'prvhan': 'handle of the DSK file of the segment read last',
+        'prvbas': 'DLA base address of the segment read last',
+        'cgscal': 'coarse voxel scale of the segment read last',
+        'np': 'number of plates of the segment read last',
+        'nv': 'number of vertices of the segment read last',
+        'nvxtot': 'number of voxels of the segment read last',
+        'voxnpl': 'size of the voxel-plate pointer array of the segment read last',
+        'voxnpt': 'size of the voxel-plate correspondence list of the segment read last',
+        'vtxnpl': 'size of the vertex-plate correspondence list of the segment read last',
+    },
     'bodvrd': {
         'svbdnm': 'the body name translated last',
         'svbdid': 'its NAIF ID code',

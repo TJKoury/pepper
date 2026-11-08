@@ -17,7 +17,8 @@ module pepper_state_dasadi
 
    !> The saved variables of DASADI.
    type, public :: dasadi_state
-      integer(ip) :: record ( nwi )  !! saved between calls by DASADI
+      integer(ip) :: record ( nwi )  !! work buffer of one integer record (saved in SPICELIB to keep
+                                     !! it off the stack)
    end type dasadi_state
 
 contains

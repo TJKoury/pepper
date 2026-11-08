@@ -15,11 +15,11 @@ module pepper_state_wrencc
 
    !> The saved variables of WRENCC.
    type, public :: wrencc_state
-      integer(ip) :: intesc  !! saved between calls by WRENCC
-      integer(ip) :: intfpc  !! saved between calls by WRENCC
-      integer(ip) :: intlpc  !! saved between calls by WRENCC
-      integer(ip) :: intquo  !! saved between calls by WRENCC
-      logical :: first  !! saved between calls by WRENCC
+      integer(ip) :: intesc  !! character code of the escape character
+      integer(ip) :: intfpc  !! character code of the first printable character
+      integer(ip) :: intlpc  !! character code of the last printable character
+      integer(ip) :: intquo  !! character code of the quote character
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type wrencc_state
 
 contains

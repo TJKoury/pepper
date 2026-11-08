@@ -6799,7 +6799,6 @@ contains
 !        Now if the file was not found in the file table, and it is
 !        attached to a unit, this presents a problem.
 !
-!
 !        PEPPER: a unit of another context may still be connected to a
 !        file that was closed (it closes it when it next uses its unit
 !        table); that is not an error.

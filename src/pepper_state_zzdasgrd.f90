@@ -19,9 +19,9 @@ module pepper_state_zzdasgrd
 
    !> The saved variables of ZZDASGRD.
    type, public :: zzdasgrd_state
-      logical :: first  !! saved between calls by ZZDASGRD
-      integer(ip) :: intbff  !! saved between calls by ZZDASGRD
-      integer(ip) :: natbff  !! saved between calls by ZZDASGRD
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: intbff  !! code of the binary file format of the file read last
+      integer(ip) :: natbff  !! code of the native binary file format
    end type zzdasgrd_state
 
 contains

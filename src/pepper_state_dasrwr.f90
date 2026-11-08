@@ -24,28 +24,35 @@ module pepper_state_dasrwr
 
    !> The saved variables of DASRWR.
    type, public :: dasrwr_state
-      character(nwc) :: rcbufc (      bufszc )  !! saved between calls by DASRWR
-      real(wp) :: rcbufd ( nwd, bufszd )  !! saved between calls by DASRWR
-      integer(ip) :: rcbufi ( nwi, bufszi )  !! saved between calls by DASRWR
-      integer(ip) :: rnbufc (      bufszc )  !! saved between calls by DASRWR
-      integer(ip) :: rnbufd (      bufszd )  !! saved between calls by DASRWR
-      integer(ip) :: rnbufi (      bufszi )  !! saved between calls by DASRWR
-      integer(ip) :: hnbufc (      bufszc )  !! saved between calls by DASRWR
-      integer(ip) :: hnbufd (      bufszd )  !! saved between calls by DASRWR
-      integer(ip) :: hnbufi (      bufszi )  !! saved between calls by DASRWR
-      logical :: upbufc (      bufszc )  !! saved between calls by DASRWR
-      logical :: upbufd (      bufszd )  !! saved between calls by DASRWR
-      logical :: upbufi (      bufszi )  !! saved between calls by DASRWR
-      integer(ip) :: poolc  ( 2, lbpool : bufszc )  !! saved between calls by DASRWR
-      integer(ip) :: poold  ( 2, lbpool : bufszd )  !! saved between calls by DASRWR
-      integer(ip) :: pooli  ( 2, lbpool : bufszi )  !! saved between calls by DASRWR
-      integer(ip) :: headc  !! saved between calls by DASRWR
-      integer(ip) :: headd  !! saved between calls by DASRWR
-      integer(ip) :: headi  !! saved between calls by DASRWR
-      integer(ip) :: usedc  !! saved between calls by DASRWR
-      integer(ip) :: usedd  !! saved between calls by DASRWR
-      integer(ip) :: usedi  !! saved between calls by DASRWR
-      logical :: pass1  !! saved between calls by DASRWR
+      character(nwc) :: rcbufc (      bufszc )  !! the buffered character records
+      real(wp) :: rcbufd ( nwd, bufszd )  !! the buffered double precision records
+      integer(ip) :: rcbufi ( nwi, bufszi )  !! the buffered integer records
+      integer(ip) :: rnbufc (      bufszc )  !! record number of each buffered character record
+      integer(ip) :: rnbufd (      bufszd )  !! record number of each buffered double precision
+                                             !! record
+      integer(ip) :: rnbufi (      bufszi )  !! record number of each buffered integer record
+      integer(ip) :: hnbufc (      bufszc )  !! file handle of each buffered character record
+      integer(ip) :: hnbufd (      bufszd )  !! file handle of each buffered double precision record
+      integer(ip) :: hnbufi (      bufszi )  !! file handle of each buffered integer record
+      logical :: upbufc (      bufszc )  !! each buffered character record was updated and is not
+                                         !! written to the file yet
+      logical :: upbufd (      bufszd )  !! each buffered double precision record was updated and is
+                                         !! not written to the file yet
+      logical :: upbufi (      bufszi )  !! each buffered integer record was updated and is not
+                                         !! written to the file yet
+      integer(ip) :: poolc  ( 2, lbpool : bufszc )  !! linked-list pool of the character buffer
+                                                    !! (most recently used first)
+      integer(ip) :: poold  ( 2, lbpool : bufszd )  !! linked-list pool of the double precision
+                                                    !! buffer (most recently used first)
+      integer(ip) :: pooli  ( 2, lbpool : bufszi )  !! linked-list pool of the integer buffer (most
+                                                    !! recently used first)
+      integer(ip) :: headc  !! head of the list of the character buffer's entries
+      integer(ip) :: headd  !! head of the list of the double precision buffer's entries
+      integer(ip) :: headi  !! head of the list of the integer buffer's entries
+      integer(ip) :: usedc  !! number of entries of the character buffer in use
+      integer(ip) :: usedd  !! number of entries of the double precision buffer in use
+      integer(ip) :: usedi  !! number of entries of the integer buffer in use
+      logical :: pass1  !! the buffers have not been initialized yet
    end type dasrwr_state
 
 contains

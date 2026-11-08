@@ -18,8 +18,9 @@ module pepper_state_dascls
 
    !> The saved variables of DASCLS.
    type, public :: dascls_state
-      integer(ip) :: fhset ( lbcell : ftsize )  !! saved between calls by DASCLS
-      logical :: pass1  !! saved between calls by DASCLS
+      integer(ip) :: fhset ( lbcell : ftsize )  !! set of the handles of the open DAS files (sized
+                                                !! once)
+      logical :: pass1  !! the handle set has not been sized yet
    end type dascls_state
 
 contains

@@ -18,16 +18,16 @@ module pepper_state_dasec
 
    !> The saved variables of DASEC.
    type, public :: dasec_state
-      character(mxcrec) :: crecrd  !! saved between calls by DASEC
+      character(mxcrec) :: crecrd  !! the comment record read last
       integer(ip) :: filcnt(ftsize)  !! the file table declarations for keeping track of which files
                                      !! are currently in the process of having comments extracted.
-      integer(ip) :: filchr(ftsize)  !! saved between calls by DASEC
-      integer(ip) :: filhan(ftsize)  !! saved between calls by DASEC
-      integer(ip) :: lsthan  !! saved between calls by DASEC
-      integer(ip) :: lstpos(ftsize)  !! saved between calls by DASEC
-      integer(ip) :: lstrec(ftsize)  !! saved between calls by DASEC
-      integer(ip) :: nfiles  !! saved between calls by DASEC
-      logical :: first  !! saved between calls by DASEC
+      integer(ip) :: filchr(ftsize)  !! number of comment characters read from each file
+      integer(ip) :: filhan(ftsize)  !! handles of the files whose comments are being read
+      integer(ip) :: lsthan  !! the handle read last
+      integer(ip) :: lstpos(ftsize)  !! position in the last comment record of each file
+      integer(ip) :: lstrec(ftsize)  !! the comment record read last of each file
+      integer(ip) :: nfiles  !! number of files whose comments are being read
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type dasec_state
 
 contains

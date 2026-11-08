@@ -17,8 +17,8 @@ module pepper_state_zzdasrfr
 
    !> The saved variables of ZZDASRFR.
    type, public :: zzdasrfr_state
-      logical :: first  !! saved between calls by ZZDASRFR
-      integer(ip) :: natbff  !! saved between calls by ZZDASRFR
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff  !! code of the native binary file format
    end type zzdasrfr_state
 
 contains

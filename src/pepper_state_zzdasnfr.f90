@@ -19,10 +19,10 @@ module pepper_state_zzdasnfr
 
    !> The saved variables of ZZDASNFR.
    type, public :: zzdasnfr_state
-      logical :: first  !! saved between calls by ZZDASNFR
-      character(sizftp) :: ftpstr  !! saved between calls by ZZDASNFR
-      character(preftp) :: prenul  !! saved between calls by ZZDASNFR
-      character(pstftp) :: pstnul  !! saved between calls by ZZDASNFR
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizftp) :: ftpstr  !! the FTP validation string
+      character(preftp) :: prenul  !! the bytes before the FTP validation string (nulls)
+      character(pstftp) :: pstnul  !! the bytes after the FTP validation string (nulls)
    end type zzdasnfr_state
 
 contains

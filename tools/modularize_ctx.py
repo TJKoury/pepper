@@ -91,6 +91,9 @@ DOCS = {
                   "summary, reading, writing and updating character, double precision "
                   "and integer data through record buffers, comments, and the transfer "
                   "format.",
+    "pepper_dsk_files": "DLA (DAS linked array) files and DSK files: segment lists, opening "
+                        "and closing, reading and writing type 2 segments (plates, vertices, "
+                        "voxels), their descriptors, and the DSK tolerances.",
 }
 
 

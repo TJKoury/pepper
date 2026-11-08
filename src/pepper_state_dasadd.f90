@@ -17,7 +17,8 @@ module pepper_state_dasadd
 
    !> The saved variables of DASADD.
    type, public :: dasadd_state
-      real(wp) :: record ( nwd )  !! saved between calls by DASADD
+      real(wp) :: record ( nwd )  !! work buffer of one double precision record (saved in SPICELIB
+                                  !! to keep it off the stack)
    end type dasadd_state
 
 contains

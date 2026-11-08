@@ -85,6 +85,11 @@ module pepper_instance
    use pepper_state_dascls, only: dascls_state, init_dascls_state
    use pepper_state_dasec, only: dasec_state, init_dasec_state
    ! --- end pepper_das
+   ! --- pepper_dsk_files
+   use pepper_state_dsktol, only: dsktol_state, init_dsktol_state
+   use pepper_state_dskd02, only: dskd02_state, init_dskd02_state
+   use pepper_state_dski02, only: dski02_state, init_dski02_state
+   ! --- end pepper_dsk_files
    ! <<< generated state modules
 
    implicit none
@@ -141,6 +146,9 @@ module pepper_instance
       ! --- pepper_das
       type(dasfm_state), allocatable :: dasfm  !! state of DASFM
       ! --- end pepper_das
+      ! --- pepper_dsk_files
+      type(dsktol_state), allocatable :: dsktol  !! state of DSKTOL
+      ! --- end pepper_dsk_files
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -206,6 +214,10 @@ module pepper_instance
       type(dascls_state), allocatable :: dascls_state  !! state of DASCLS
       type(dasec_state), allocatable :: dasec_state  !! state of DASEC
       ! --- end pepper_das
+      ! --- pepper_dsk_files
+      type(dskd02_state), allocatable :: dskd02_state  !! state of DSKD02
+      type(dski02_state), allocatable :: dski02_state  !! state of DSKI02
+      ! --- end pepper_dsk_files
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -562,6 +574,36 @@ module pepper_instance
       procedure, non_overridable :: dastb
       procedure, non_overridable :: daslla
       ! --- end pepper_das
+      ! --- pepper_dsk_files
+      procedure, non_overridable :: getfat
+      procedure, non_overridable :: surfnm
+      procedure, non_overridable :: nearpt
+      procedure, non_overridable :: recgeo
+      procedure, non_overridable :: dlaopn
+      procedure, non_overridable :: dlabns
+      procedure, non_overridable :: dlaens
+      procedure, non_overridable :: dlabfs
+      procedure, non_overridable :: dlabbs
+      procedure, non_overridable :: dlafns
+      procedure, non_overridable :: dlafps
+      procedure, non_overridable :: dlassg
+      procedure, non_overridable :: dskopn
+      procedure, non_overridable :: dskcls
+      procedure, non_overridable :: dskgtl
+      procedure, non_overridable :: dskstl
+      procedure, non_overridable :: dskgd
+      procedure, non_overridable :: dskb02
+      procedure, non_overridable :: dskd02
+      procedure, non_overridable :: dski02
+      procedure, non_overridable :: dskn02
+      procedure, non_overridable :: dskp02
+      procedure, non_overridable :: dskv02
+      procedure, non_overridable :: dskz02
+      procedure, non_overridable :: dskmi2
+      procedure, non_overridable :: dskrb2
+      procedure, non_overridable :: dskobj
+      procedure, non_overridable :: dsksrf
+      ! --- end pepper_dsk_files
       ! <<< generated bindings
    end type pepper_context
 
@@ -2709,7 +2751,8 @@ module pepper_instance
          integer(ip), intent(out) :: datlst (              maxvar )  !! Heads of data values lists
          integer(ip), intent(in) :: maxagt  !! Maximum number of agents that can be supported
          integer(ip), intent(in) :: mxnote  !! Maximum number of agents that can be notified
-         character(*), intent(inout) :: wtvars ( lbcell : maxvar )  !! Name array (watched variables)
+         character(*), intent(inout) :: wtvars ( lbcell : maxvar )  !! Name array (watched
+                                                                    !! variables)
                                                                   !! of the watcher symbol table
          integer(ip), intent(out) :: wtptrs ( maxvar )  !! Pointer array of the watcher symbol table
          integer(ip), intent(out) :: wtpool ( 2, lbpool:mxnote )  !! Linked list pool of the watcher
@@ -4109,7 +4152,8 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          include              'zzddhman.inc'
          integer(ip), parameter :: lbcell = -5
-         integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of currently
+         integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of
+                                                             !! currently
                                                            !! open DAFS.
       end subroutine dafhof
 
@@ -4771,7 +4815,8 @@ module pepper_instance
          include 'das.inc'
          include 'errhnd.inc'
          integer(ip), parameter :: lbcell = -5
-         integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of currently
+         integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of
+                                                              !! currently
                                                             !! open DAS files.
       end subroutine dashof
 
@@ -5202,6 +5247,524 @@ module pepper_instance
 
    end interface
    ! --- end pepper_das
+   ! --- pepper_dsk_files
+   public :: zzsizeok, zzckspk, zzvrtplt, zzvoxcvo, zzvox2id, zztrvlnk, zzuntngl,&
+      zzinilnk, zzgetvox, zzaddlnk, zzmkspin
+
+   interface
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzsizeok ( ctx, size, psize, dsize, offset, ok, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: size  !! Left hand side of the equation in the abstract
+         integer(ip), intent(in) :: psize  !! Coefficient of N (packet size).
+         integer(ip), intent(in) :: dsize  !! Divisor of N-OFFSET (directory size).
+         integer(ip), intent(in) :: offset  !! Offset used in computation of number of directories
+         logical, intent(out) :: ok  !! TRUE if a solution for N exists.
+         integer(ip), intent(out) :: n  !! Value of N if there is a solution, 0 otherwise.
+      end subroutine zzsizeok
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckspk ( ctx, handle, ckspk )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of a DAF file open for read access.
+         character(*), intent(out) :: ckspk  !! the type of the DAF file (SPK,CK or ?)
+      end subroutine zzckspk
+
+      !> Determine the architecture and type of SPICE kernels.
+      module subroutine getfat ( ctx, file, arch, kertyp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: file  !! The name of a file to be examined.
+         character(*), intent(out) :: arch  !! The architecture of the kernel file.
+         character(*), intent(out) :: kertyp  !! The type of the kernel file.
+      end subroutine getfat
+
+      !> Compute the outward-pointing, unit normal vector at a point on
+      !> the surface of an ellipsoid.
+      module subroutine surfnm ( ctx, a, b, c, point, normal )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Length of the ellipsoid semi-axis along the X-axis.
+         real(wp), intent(in) :: b  !! Length of the ellipsoid semi-axis along the Y-axis.
+         real(wp), intent(in) :: c  !! Length of the ellipsoid semi-axis along the Z-axis.
+         real(wp), intent(in) :: point  ( 3 )  !! Body-fixed coordinates of a point on the
+                                               !! ellipsoid.
+         real(wp), intent(out) :: normal ( 3 )  !! Outward pointing unit normal to ellipsoid at
+                                                !! POINT.
+      end subroutine surfnm
+
+      !> Locate the point on the surface of an ellipsoid that is nearest
+      !> to a specified position. Also return the altitude of the position
+      !> above the ellipsoid.
+      module subroutine nearpt ( ctx, positn, a, b, c, npoint, alt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: positn ( 3 )  !! Position of a point in body-fixed frame.
+         real(wp), intent(in) :: a  !! Length of semi-axis parallel to x-axis.
+         real(wp), intent(in) :: b  !! Length of semi-axis parallel to y-axis.
+         real(wp), intent(in) :: c  !! Length on semi-axis parallel to z-axis.
+         real(wp), intent(out) :: npoint ( 3 )  !! Point on the ellipsoid closest to POSITN.
+         real(wp), intent(out) :: alt  !! Altitude of POSITN above the ellipsoid.
+      end subroutine nearpt
+
+      !> Convert from rectangular coordinates to geodetic coordinates.
+      module subroutine recgeo ( ctx, rectan, re, f, lon, lat, alt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: lon  !! Geodetic longitude of the point (radians).
+         real(wp), intent(out) :: lat  !! Geodetic latitude  of the point (radians).
+         real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
+      end subroutine recgeo
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzvrtplt ( ctx, nv, np, plates, cellsz, maxlst, cells, vrtptr, nlist, pltlst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'dsk02.inc'
+         integer(ip), intent(in) :: nv  !! Number of vertices.
+         integer(ip), intent(in) :: np  !! Number of plates.
+         integer(ip), intent(in) :: plates ( 3, * )  !! Plate array.
+         integer(ip), intent(in) :: cellsz  !! Cell array size.
+         integer(ip), intent(in) :: maxlst  !! Maximum size of output plate list.
+         integer(ip), intent(inout) :: cells  ( 2, cellsz )  !! Workspace array for vertex list
+                                                             !! construction.
+         integer(ip), intent(out) :: vrtptr ( * )  !! Array of pointers, by vertex, into plate data
+                                                   !! list.
+         integer(ip), intent(out) :: nlist  !! Length of the plate data list.
+         integer(ip), intent(out) :: pltlst ( * )  !! Plate data list; first element is the number
+                                                   !! of plate IDs to follow.
+      end subroutine zzvrtplt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzvoxcvo ( ctx, vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: vixyz  ( 3 )  !! Fine voxel integer coordinates.
+         integer(ip), intent(in) :: nvox   ( 3 )  !! Fine voxel grid dimensions.
+         integer(ip), intent(in) :: cgrscl  !! Coarse voxel scale.
+         integer(ip), intent(out) :: cgxyz  ( 3 )  !! Coarse voxel coordinates.
+         integer(ip), intent(out) :: cgoff  ( 3 )  !! 3-D voxel offset relative to coarse voxel.
+         integer(ip), intent(out) :: cgof1d  !! 1-D voxel offset relative to coarse voxel.
+      end subroutine zzvoxcvo
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns the voxel index.
+      module integer(ip) function zzvox2id ( ctx, vixyz, nvox )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nvox   ( 3 )  !! Number of voxels in each coordinate direction.
+         integer(ip), intent(in) :: vixyz  ( 3 )  !! Voxel's grid coordinates stored in a three-
+                                                  !! dimensional vector.
+      end function zzvox2id
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zztrvlnk ( ctx, aval, maxa, pntrs, cellsz, cells, maxb, nb, blist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: aval  !! A-value index associated with pool entry.
+         integer(ip), intent(in) :: maxa  !! Size of PNTRS array.
+         integer(ip), intent(in) :: pntrs  ( * )  !! A-value pointer array.
+         integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+         integer(ip), intent(in) :: cells  ( 2, * )  !! Cell array.
+         integer(ip), intent(in) :: maxb  !! Size of BLIST array.
+         integer(ip), intent(out) :: nb  !! Number of B values found.
+         integer(ip), intent(out) :: blist  ( * )  !! List of B values.
+      end subroutine zztrvlnk
+
+      !> Untangle an unsorted AB linked-cell list into an A-index and
+      !> associated B-list.
+      module subroutine zzuntngl ( ctx, nptr, maxcel, cells, maxb, pntrs, nout, outlst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nptr  !! Length of A-list.
+         integer(ip), intent(in) :: maxcel  !! Size of cell list.
+         integer(ip), intent(in) :: cells  ( 2, * )  !! AB cell linked list.
+         integer(ip), intent(in) :: maxb  !! Maximum allowed dimension of B list.
+         integer(ip), intent(inout) :: pntrs  ( * )  !! Pointer array.
+         integer(ip), intent(out) :: nout  !! Length of B-list.
+         integer(ip), intent(out) :: outlst ( * )  !! B-list.
+      end subroutine zzuntngl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzinilnk ( ctx, maxp, maxc, ncell, pntrs, cells )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: maxp  !! Length of A-value array.
+         integer(ip), intent(in) :: maxc  !! Number of cells.
+         integer(ip), intent(out) :: ncell  !! Number of cells in use; initialized to zero.
+         integer(ip), intent(out) :: pntrs  ( * )  !! Initialized pointer array.
+         integer(ip), intent(out) :: cells  ( 2, * )  !! Initialized cell array.
+      end subroutine zzinilnk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgetvox ( ctx, voxsiz, voxori, nvox, xyz, inbox, voxcor )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: voxsiz  !! Voxel size in model units.
+         real(wp), intent(in) :: voxori    ( 3 )  !! 3-Vector location of the voxel grid origin in
+                                                  !! model units.
+         integer(ip), intent(in) :: nvox      ( 3 )  !! Number of voxel in each dimension.
+         real(wp), intent(in) :: xyz       ( 3 )  !! Model grid coordinates of point.
+         logical, intent(out) :: inbox  !! Logical value is true if point is inside voxel grid,
+                                        !! false if not.
+         integer(ip), intent(out) :: voxcor     ( 3 )  !! 3-Index of voxel location with the voxel
+                                                       !! grid.
+      end subroutine zzgetvox
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzaddlnk ( ctx, aval, bval, maxa, cellsz, pntrs, ncell, cells )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: aval  !! A-value index associated with new pool entry.
+         integer(ip), intent(in) :: bval  !! B-value associated with input A value.
+         integer(ip), intent(in) :: maxa  !! Size of pointer array.
+         integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+         integer(ip), intent(inout) :: pntrs  ( * )  !! A-value pointer array to update.
+         integer(ip), intent(inout) :: ncell  !! Number of cells in AB cell linked-list.
+         integer(ip), intent(inout) :: cells  ( 2, * )  !! Cell array.
+      end subroutine zzaddlnk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk02.inc'
+         integer(ip), intent(in) :: np  !! Number of plates.
+         integer(ip), intent(in) :: plates ( 3, * )  !! Array of plates.
+         real(wp), intent(in) :: vrtces ( 3, * )  !! Array of vertices.
+         real(wp), intent(in) :: voxscl  !! Voxel scaling factor.
+         integer(ip), intent(in) :: cgscal  !! Coarse voxel grid scaling factor.
+         integer(ip), intent(in) :: maxptr  !! Maximum voxel pointer list size.
+         integer(ip), intent(in) :: mxcell  !! Cell array column dimension.
+         integer(ip), intent(in) :: maxvxl  !! Maximum voxel-plate list size.
+         integer(ip), intent(inout) :: cells   ( 2, mxcell )  !! Workspace array for vertex list
+                                                              !! construction.
+         integer(ip), intent(out) :: nvox   ( 3 )  !! Dimensions of voxel grid.
+         real(wp), intent(out) :: voxsiz  !! Size of a voxel in model units.
+         real(wp), intent(out) :: voxori ( 3 )  !! Origin of voxel grid in model units.
+         integer(ip), intent(out) :: nvxtot  !! Total number of voxels in grid.
+         integer(ip), intent(out) :: nvxptr  !! Number of pointers in VXPTR array.
+         integer(ip), intent(out) :: vxptr  ( * )  !! Pointer index to the voxel to plates list.
+         integer(ip), intent(out) :: nvxlst  !! Length of voxel to plates list.
+         integer(ip), intent(out) :: vxlist ( * )  !! Voxel to plates list.
+         real(wp), intent(out) :: extent ( 6 )  !! Vertex coordinate extents in km.
+         integer(ip), intent(out) :: cgrptr ( * )  !! Coarse voxel grid pointer array.
+      end subroutine zzmkspin
+
+      !> Open a new DLA file and set the file type.
+      module subroutine dlaopn ( ctx, fname, ftype, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         character(*), intent(in) :: fname  !! Name of a DLA file to be opened.
+         character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DLA file.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DLA file.
+      end subroutine dlaopn
+
+      !> Begin a new segment in a DLA file.
+      module subroutine dlabns ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      end subroutine dlabns
+
+      !> End a new segment in a DLA file.
+      module subroutine dlaens ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      end subroutine dlaens
+
+      !> Begin a forward segment search in a DLA file.
+      module subroutine dlabfs ( ctx, handle, dladsc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+         integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of first segment in DLA file.
+         logical, intent(out) :: found  !! Flag indicating whether a segment was found.
+      end subroutine dlabfs
+
+      !> Begin a backward segment search in a DLA file.
+      module subroutine dlabbs ( ctx, handle, dladsc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+         integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of last segment in DLA file.
+         logical, intent(out) :: found  !! Flag indicating whether a segment was found.
+      end subroutine dlabbs
+
+      !> Find the segment following a specified segment in a DLA file.
+      module subroutine dlafns ( ctx, handle, dladsc, nxtdsc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+         integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+         integer(ip), intent(out) :: nxtdsc ( * )  !! Descriptor of next segment in DLA file.
+         logical, intent(out) :: found  !! Flag indicating whether a segment was found.
+      end subroutine dlafns
+
+      !> Find the segment preceding a specified segment in a DLA file.
+      module subroutine dlafps ( ctx, handle, dladsc, prvdsc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+         integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+         integer(ip), intent(out) :: prvdsc ( * )  !! Descriptor of previous segment in DLA file.
+         logical, intent(out) :: found  !! Flag indicating whether a segment was found.
+      end subroutine dlafps
+
+      !> Return a logical value indicating whether a two DLA
+      !> segments, each identified by DAS handle and DLA descriptor,
+      !> are in fact the same segment.
+      !>
+      !> The function returns .TRUE. if and only if the DLA segments
+      !> match.
+      module logical function dlassg ( ctx, han1, han2, dsc1, dsc2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: han1  !! Handle of an open DLA file.
+         integer(ip), intent(in) :: han2  !! Handle of a second open DLA file.
+         integer(ip), intent(in) :: dsc1 ( dladsz )  !! DLA descriptor of a segment in the first
+                                                     !! file.
+         integer(ip), intent(in) :: dsc2 ( dladsz )  !! DLA descriptor of a segment in the second
+                                                     !! file.
+      end function dlassg
+
+      !> Open a new DSK file for subsequent write operations.
+      module subroutine dskopn ( ctx, fname, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         character(*), intent(in) :: fname  !! Name of a DSK file to be opened.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DSK file.
+      end subroutine dskopn
+
+      !> Close a DSK file.
+      module subroutine dskcls ( ctx, handle, optmiz )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+         logical, intent(in) :: optmiz  !! Flag indicating whether to segregate the DSK.
+      end subroutine dskcls
+
+      !> Retrieve the value of a specified DSK tolerance or margin
+      !> parameter.
+      module subroutine dskgtl ( ctx, keywrd, dpval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         integer(ip), intent(in) :: keywrd  !! Code specifying parameter to retrieve.
+         real(wp), intent(out) :: dpval  !! Value of parameter.
+      end subroutine dskgtl
+
+      !> Set the value of a specified DSK tolerance or margin parameter.
+      module subroutine dskstl ( ctx, keywrd, dpval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         integer(ip), intent(in) :: keywrd  !! Code specifying parameter to modify.
+         real(wp), intent(in) :: dpval  !! New value of parameter.
+      end subroutine dskstl
+
+      !> Return the DSK descriptor from a DSK segment identified
+      !> by a DAS handle and DLA descriptor.
+      module subroutine dskgd ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a DSK file.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA segment descriptor.
+         real(wp), intent(out) :: dskdsc ( * )  !! DSK segment descriptor.
+      end subroutine dskgd
+
+      !> Return bookkeeping data from a DSK type 2 segment.
+      module subroutine dskb02 ( ctx, handle, dladsc, nv, np, nvxtot, vtxbds, voxsiz, voxori, vgrext, cgscal, vtxnpl, voxnpt, voxnpl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(out) :: nv  !! Number of vertices in model.
+         integer(ip), intent(out) :: np  !! Number of plates in model.
+         integer(ip), intent(out) :: nvxtot  !! Number of voxels in fine grid.
+         real(wp), intent(out) :: vtxbds ( 2, 3 )  !! Vertex bounds.
+         real(wp), intent(out) :: voxsiz  !! Fine voxel edge length.
+         real(wp), intent(out) :: voxori ( 3 )  !! Fine voxel grid origin.
+         integer(ip), intent(out) :: vgrext ( 3 )  !! Fine voxel grid extent.
+         integer(ip), intent(out) :: cgscal  !! Coarse voxel grid scale.
+         integer(ip), intent(out) :: vtxnpl  !! Size of vertex-plate correspondence list.
+         integer(ip), intent(out) :: voxnpt  !! Size of voxel-plate pointer list.
+         integer(ip), intent(out) :: voxnpl  !! Size of voxel-plate correspondence list.
+      end subroutine dskb02
+
+      !> Fetch double precision data from a type 2 DSK segment.
+      module subroutine dskd02 ( ctx, handle, dladsc, item, start, room, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+         integer(ip), intent(in) :: start  !! Start index.
+         integer(ip), intent(in) :: room  !! Amount of room in output array.
+         integer(ip), intent(out) :: n  !! Number of values returned.
+         real(wp), intent(out) :: values ( * )  !! Array containing requested item.
+      end subroutine dskd02
+
+      !> Fetch integer data from a type 2 DSK segment.
+      module subroutine dski02 ( ctx, handle, dladsc, item, start, room, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+         integer(ip), intent(in) :: start  !! Start index.
+         integer(ip), intent(in) :: room  !! Amount of room in output array.
+         integer(ip), intent(out) :: n  !! Number of values returned.
+         integer(ip), intent(out) :: values ( * )  !! Array containing requested item.
+      end subroutine dski02
+
+      !> Compute the unit normal vector for a specified plate from a type
+      !> 2 DSK segment.
+      module subroutine dskn02 ( ctx, handle, dladsc, plid, normal )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(in) :: plid  !! Plate ID.
+         real(wp), intent(out) :: normal ( 3 )  !! Plate's unit normal vector.
+      end subroutine dskn02
+
+      !> Fetch triangular plates from a type 2 DSK segment.
+      module subroutine dskp02 ( ctx, handle, dladsc, start, room, n, plates )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(in) :: start  !! Start index.
+         integer(ip), intent(in) :: room  !! Amount of room in output array.
+         integer(ip), intent(out) :: n  !! Number of plates returned.
+         integer(ip), intent(out) :: plates ( 3, * )  !! Array containing plates.
+      end subroutine dskp02
+
+      !> Fetch vertices from a type 2 DSK segment.
+      module subroutine dskv02 ( ctx, handle, dladsc, start, room, n, vrtces )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(in) :: start  !! Start index.
+         integer(ip), intent(in) :: room  !! Amount of room in output array.
+         integer(ip), intent(out) :: n  !! Number of vertices returned.
+         real(wp), intent(out) :: vrtces ( 3, * )  !! Array containing vertices.
+      end subroutine dskv02
+
+      !> Return plate model size parameters---plate count and
+      !> vertex count---for a type 2 DSK segment.
+      module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+         integer(ip), intent(out) :: nv  !! Number of vertices.
+         integer(ip), intent(out) :: np  !! Number of plates.
+      end subroutine dskz02
+
+      !> Make spatial index for a DSK type 2 segment. The index is
+      !> returned as a pair of arrays, one of type INTEGER and one of type
+      !> DOUBLE PRECISION. These arrays are suitable for use with the DSK
+      !> type 2 writer DSKW02.
+      !>
+      !> IXDFIX     P   Size of fixed-size portion of d.p. index component.
+      !> IXIFIX     P   Size of fixed-size portion of integer index
+      !> component.
+      module subroutine dskmi2 ( ctx, nv, vrtces, np, plates, finscl, corscl, worksz, voxpsz, voxlsz, makvtl, spxisz, work, spaixd, spaixi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: nv  !! Number of vertices.
+         real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+         integer(ip), intent(in) :: np  !! Number of plates.
+         integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+         real(wp), intent(in) :: finscl  !! Fine voxel scale.
+         integer(ip), intent(in) :: corscl  !! Coarse voxel scale.
+         integer(ip), intent(in) :: worksz  !! Workspace size.
+         integer(ip), intent(in) :: voxpsz  !! Voxel-plate pointer array size.
+         integer(ip), intent(in) :: voxlsz  !! Voxel-plate list array size.
+         logical, intent(in) :: makvtl  !! Vertex-plate list flag.
+         integer(ip), intent(in) :: spxisz  !! Spatial index integer component size.
+         integer(ip), intent(inout) :: work   ( 2, worksz )  !! Workspace.
+         real(wp), intent(out) :: spaixd ( ixdfix )  !! Double precision component of spatial index.
+         integer(ip), intent(out) :: spaixi ( spxisz )  !! Integer component of spatial index.
+      end subroutine dskmi2
+
+      !> Determine range bounds for a set of triangular plates to
+      !> be stored in a type 2 DSK segment.
+      module subroutine dskrb2 ( ctx, nv, vrtces, np, plates, corsys, corpar, mncor3, mxcor3 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: nv  !! Number of vertices.
+         real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+         integer(ip), intent(in) :: np  !! Number of plates.
+         integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+         integer(ip), intent(in) :: corsys  !! DSK coordinate system code.
+         real(wp), intent(in) :: corpar ( * )  !! DSK coordinate system parameters.
+         real(wp), intent(out) :: mncor3  !! Lower bound on range of third coordinate.
+         real(wp), intent(out) :: mxcor3  !! Upper bound on range of third coordinate.
+      end subroutine dskrb2
+
+      !> Find the set of body ID codes of all objects for which
+      !> topographic data are provided in a specified DSK file.
+      module subroutine dskobj ( ctx, dskfnm, bodids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: dskfnm  !! Name of DSK file.
+         integer(ip), intent(inout) :: bodids ( lbcell : * )  !! Set of ID codes of objects in DSK
+                                                              !! file.
+      end subroutine dskobj
+
+      !> Find the set of surface ID codes for all surfaces associated with
+      !> a given body in a specified DSK file.
+      module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: dskfnm  !! Name of DSK file.
+         integer(ip), intent(in) :: bodyid  !! Integer body ID code.
+         integer(ip), intent(inout) :: srfids ( lbcell : * )  !! Set of ID codes of surfaces in DSK
+                                                              !! file.
+      end subroutine dsksrf
+
+   end interface
+   ! --- end pepper_dsk_files
    ! <<< generated interfaces
 
 contains

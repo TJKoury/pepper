@@ -24,22 +24,28 @@ module pepper_state_dasa2l
 
    !> The saved variables of DASA2L.
    type, public :: dasa2l_state
-      integer(ip) :: fidx  !! saved between calls by DASA2L
-      integer(ip) :: next   ( 3 )  !! saved between calls by DASA2L
-      integer(ip) :: nfiles  !! saved between calls by DASA2L
-      integer(ip) :: nw     ( 3 )  !! saved between calls by DASA2L
-      integer(ip) :: prev   ( 3 )  !! saved between calls by DASA2L
-      integer(ip) :: prvhan  !! saved between calls by DASA2L
-      integer(ip) :: rngloc ( 3 )  !! saved between calls by DASA2L
-      integer(ip) :: tbbase ( 3, maxfil )  !! saved between calls by DASA2L
-      integer(ip) :: tbfwrd (    maxfil )  !! saved between calls by DASA2L
-      integer(ip) :: tbhan  (    maxfil )  !! saved between calls by DASA2L
-      integer(ip) :: tbmxad ( 3, maxfil )  !! saved between calls by DASA2L
-      integer(ip) :: tbsize ( 3, maxfil )  !! saved between calls by DASA2L
-      logical :: fast  !! saved between calls by DASA2L
-      logical :: prvok  !! saved between calls by DASA2L
-      logical :: tbfast ( maxfil )  !! saved between calls by DASA2L
-      logical :: tbrdon ( maxfil )  !! saved between calls by DASA2L
+      integer(ip) :: fidx  !! index (in the tables) of the file looked up last
+      integer(ip) :: next   ( 3 )  !! the next data type (character, double precision, integer,
+                                   !! cyclic)
+      integer(ip) :: nfiles  !! number of files in the tables
+      integer(ip) :: nw     ( 3 )  !! words per record of each data type
+      integer(ip) :: prev   ( 3 )  !! the previous data type (cyclic)
+      integer(ip) :: prvhan  !! handle of the file looked up last
+      integer(ip) :: rngloc ( 3 )  !! location of each data type's address range in a directory
+                                   !! record
+      integer(ip) :: tbbase ( 3, maxfil )  !! first record of the single cluster of each data type,
+                                           !! for each file
+      integer(ip) :: tbfwrd (    maxfil )  !! forward pointer of the first directory record of each
+                                           !! file
+      integer(ip) :: tbhan  (    maxfil )  !! handles of the files in the tables
+      integer(ip) :: tbmxad ( 3, maxfil )  !! largest address of each data type, for each file
+      integer(ip) :: tbsize ( 3, maxfil )  !! number of records of the single cluster of each data
+                                           !! type, for each file
+      logical :: fast  !! the file looked up last has one cluster per data type (fast lookup)
+      logical :: prvok  !! the last lookup was valid
+      logical :: tbfast ( maxfil )  !! each file has one cluster per data type (fast lookup)
+      logical :: tbrdon ( maxfil )  !! each file is open for reading only (so its tables do not
+                                    !! change)
    end type dasa2l_state
 
 contains
