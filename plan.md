@@ -29,7 +29,8 @@ tspice: https://naif.jpl.nasa.gov/pub/naif/misc/tspice/N0067/
 
 - Modern Fortran (2018): every procedure in a module (submodules for large implementations), explicit interfaces, `intent`, `implicit none`, no `entry`, no `save`d mutable state, no implicit `save` (initialized declarations, `data`).
 - **Thread safety:** many threads can compute states (SPK), orientations (PCK/CK/frames) and time conversions (UTC/ET/SCLK) at the same time.
-- **Multiple instances:** independent sets of loaded kernels can exist in one program (e.g. different ephemeris versions side by side).
+- **One instance, no global state:** all SPICE state lives in one object (`type(pepper_spice)`) and the per-thread contexts made from it. Multiple instances in one program are not a goal for now, but nothing in the design prevents them.
+- **Fortran only:** no C code and no C interoperability for system calls (no `pread`, pthreads, ...). Only standard Fortran, its intrinsic modules and the compiler's runtime library.
 - tspice keeps passing at every step (`pixi run tspice`), and every step is committable on its own.
 
 ### Where the state is today (N0067 survey)
@@ -63,55 +64,86 @@ The `save`d state falls into a few kinds:
    | search and query subsystems | GF search state passed to callbacks (`zzgf*`), EK query manager (`ekqmgr`, `zzekpage`) |
    | Fortran unit bookkeeping | `fndlun`, `reslun` |
 
-### Concurrency model (proposal)
+### Concurrency model
 
-Split the state in two:
+All SPICE state belongs to one object, **`type(pepper_spice)`** (the instance). Nothing is global. Each thread that uses the instance gets its own **`type(pepper_context)`** from it. The state splits in two:
 
-- **`type(pepper_kernels)` (shared, read-mostly):** everything that loading kernels creates.
-  - The kernel registry (`keeper`), the kernel pool, open-file table and DAF/DAS file summaries, segment directories, and body/frame/SCLK definitions from kernels.
+- **In the instance (shared, read-mostly):** everything that loading kernels creates.
+  - The kernel registry (`keeper`), the kernel pool, the open-file table and DAF/DAS file summaries, segment directories, and body/frame/SCLK definitions from kernels.
   - It changes only through load/unload/pool-write calls, and every change bumps a **generation counter**.
-- **`type(pepper_context)` (one per thread, cheap):** a pointer to a `pepper_kernels` plus all per-call mutable state.
-  - Error status, message and traceback; all memo caches, which are valid while their stored generation matches the kernel set's; segment-selection buffers; DAF/DAS record caches; scratch space; GF search state.
+- **In the context (one per thread, cheap):** a pointer to its instance plus all per-call mutable state.
+  - Error status, message and traceback; all memo caches, which are valid while their stored generation matches the instance's; segment-selection buffers; DAF/DAS record caches; scratch space; GF search state.
 
-How it's used: load kernels into a `pepper_kernels`, then create one `pepper_context` per thread (e.g. inside an OpenMP parallel region) attached to it. A context is never shared between threads. Several `pepper_kernels` objects can coexist.
+How it's used:
 
-**Contract (phase 1 of this design):** queries from any number of contexts may run concurrently, but loading, unloading or pool writes on a kernel set must not run while that set is being queried. This needs no locks, so the library itself needs neither OpenMP nor pthreads. A locked or copy-on-write kernel set can be added later if concurrent loading is ever needed.
+```fortran
+type(pepper_spice), target :: spice
+type(pepper_context) :: ctx
+
+call spice%furnsh('kernels.tm')        ! load (one thread)
+!$omp parallel private(ctx)
+ctx = spice%new_context()              ! one context per thread
+!$omp do
+do i = 1, n
+   call ctx%spkezr('MOON', et(i), 'J2000', 'LT+S', 'EARTH', state(:,i), lt(i))
+end do
+!$omp end parallel
+```
+
+A context is never shared between threads. Setup calls on the instance itself (`spice%furnsh`, `spice%unload`, pool writes) report errors through a context that the instance owns for this purpose; they are made from one thread, before or between parallel queries.
+
+**Contract:** queries from any number of contexts may run concurrently, but loading, unloading or pool writes must not run while the instance is being queried. This needs no locks, so the library needs no OpenMP. A locked or copy-on-write kernel set can be added later if concurrent loading is ever needed.
+
+**Rules that follow from "no global state":**
+
+- All mutable state lives in the instance or in a context. What remains at module level must be immutable: `parameter`s, and built-in tables such as the built-in body names and frames, which become `parameter` arrays instead of tables filled on first call.
+- The legacy layer's default instance (see below) is the only exception, and the module API never uses it.
+- Because nothing is global, several instances could in principle coexist in one program (e.g. different ephemeris versions side by side). This is **not a goal for now** and is not tested; the design just doesn't rule it out.
+- An instance must outlive its contexts. A `final` procedure closes its files.
 
 The pool's watcher mechanism (`swpool`/`cvpool`) and the `zzctr` counters are replaced by the generation counter. Each cache stores the generation it was built at.
 
-**File I/O:** SPK/CK/PCK/DSK data is read from DAF files at query time, so concurrent queries read the same files. All file access goes through one internal module (`pepper_daf_io`), so the strategy can change without touching callers:
+**File I/O:** SPK/CK/PCK/DSK data is read from DAF files at query time, so concurrent queries read the same files. Files are opened with `newunit=` (`fndlun`/`reslun` go away); opening one file on several units is assumed to work. All file access goes through one internal module (`pepper_daf_io`), so the strategy can change without touching callers:
 
-- (a) **Shared units:** direct-access `read(unit, rec=)` on shared units, relying on the runtime's per-unit locking (gfortran does this; ifx needs `-reentrancy threaded`). Simplest, but the per-unit lock serializes all reads of a file.
-- (b) **Positional reads:** `pread` through `iso_c_binding`. Truly concurrent, no Fortran I/O.
+- (a) **Shared units:** one unit per file in the instance; direct-access `read(unit, rec=)` relying on the runtime's per-unit locking (gfortran does this; ifx needs `-reentrancy threaded`). Simplest, but the per-unit lock serializes all reads of a file.
+- (b) **Units per context:** each context opens its own unit for a file on first read (and closes it when the context is destroyed). Reads are truly concurrent; it uses one unit per file per thread.
 - (c) **In memory:** whole segments or files read into memory at load time (memory cost; DE440 is about 115 MB).
 
-Start with (a); measure; move to (b) or (c) if contention shows. Units come from `newunit=` (`fndlun`/`reslun` go away).
+Start with (a); measure; move to (b) or (c) if contention shows. All three are plain Fortran I/O.
 
 ### Error handling
 
 SPICELIB's error system is global and touched everywhere: `sigerr`/`failed`/`return`/`chkin`/`chkout`, actions `ABORT`/`RETURN`/`REPORT`, and an output device. It moves into the context:
 
-- Each routine that can signal an error takes the context as its first argument. The rewrite is mechanical: `if (return()) return` → `if (ctx%failed()) return`, `call chkin('X')` → `call ctx%chkin('X')`, and so on.
+- Each routine that can signal an error is a type-bound procedure of the context (public API) or takes the context as its first argument (internal routines). The rewrite is mechanical: `if (return()) return` → `if (ctx%failed()) return`, `call chkin('X')` → `call ctx%chkin('X')`, and so on.
 - The traceback stays per context, so error messages keep the call chain. It could later be made optional for speed.
-- The default action for the new API should be `RETURN` (the caller checks `ctx%failed()` and gets the message), not `ABORT`. A library must not stop a multi-threaded program. The legacy layer keeps SPICELIB's defaults.
+- The default action for the new API is `RETURN`: the caller checks `ctx%failed()` and gets the message from the context (and resets it), not `ABORT`. A library must not stop a multi-threaded program. Routines get **no** extra `stat`/`errmsg` arguments; the context is the error channel. The legacy layer keeps SPICELIB's defaults.
 - Purely numerical routines that never signal errors (most vector/matrix math) do not get a context and become `pure`/`elemental` where possible.
 
 ### Module structure
 
 One module per subsystem, plus a `pepper` module that re-exports the public API. Large implementations go in submodules (interface in the module, code in submodules) to keep recompilation cascades small. Proposed modules:
 
-- **Basics:** `pepper_kinds`, `pepper_constants`, `pepper_math` (vectors/matrices/quaternions/conics; pure), `pepper_strings`, `pepper_search_sort`, `pepper_cells` (cells/sets/windows).
-- **Infrastructure:** `pepper_errors`, `pepper_context` (`pepper_kernels`, `pepper_context`), `pepper_pool`, `pepper_kernel_mgr`, `pepper_daf_io`, `pepper_daf`, `pepper_das`, `pepper_dla`.
+- **Basics:** `pepper_kinds` (`ip`, `wp`), `pepper_constants`, `pepper_math` (vectors/matrices/quaternions/conics; pure), `pepper_strings`, `pepper_search_sort`, `pepper_cells` (cells/sets/windows).
+- **Infrastructure:** `pepper_errors`, `pepper_context` (`pepper_spice`, `pepper_context`), `pepper_pool`, `pepper_kernel_mgr`, `pepper_daf_io`, `pepper_daf`, `pepper_das`, `pepper_dla`.
 - **Ephemeris, orientation and time:** `pepper_spk`, `pepper_pck`, `pepper_ck`, `pepper_frames`, `pepper_bodies`, `pepper_time`, `pepper_sclk`.
 - **Geometry and search:** `pepper_geometry` (illumination, occultation, limbs, ...), `pepper_dsk`, `pepper_gf`, `pepper_ek`.
 
 Each umbrella routine becomes a module (or part of one):
 
-- its `save`d variables become components of a state type held in `pepper_kernels` or `pepper_context`;
+- its `save`d variables become components of a state type held in `pepper_spice` or `pepper_context`;
 - each `entry` becomes a module procedure;
 - the `data` initializations become component default values or `parameter`s.
 
-**API shape (proposal):** plain module procedures with the context as the first argument, `call spkezr(ctx, targ, et, ref, abcorr, obs, state, lt)`, keeping SPICELIB's names and argument order. Making all ~600 public routines type-bound would bloat the type. A few top-level convenience type-bound procedures (`ctx%furnsh`, `ctx%spkezr`, `ctx%str2et`, `ctx%pxform`, ...) can be added on top. Descriptive aliases can come later.
+**API shape:** type-bound procedures throughout, with SPICELIB's names and argument order (minus the context):
+
+- Queries are bound to the context: `call ctx%spkezr(targ, et, ref, abcorr, obs, state, lt)`, `call ctx%str2et(utc, et)`, `call ctx%pxform(from, to, et, rot)`.
+- Loading and setup are bound to the instance: `call spice%furnsh(file)`, `call spice%unload(file)`, `call spice%kclear()`, pool writes.
+- The bindings are declared in the type's module (`pepper_context`) as separate module procedure interfaces; the implementations live in submodules per subsystem (`pepper_spk`, `pepper_time`, ...). So the type definition grows, but changing an implementation recompiles only its submodule.
+- Bindings are `non_overridable` (dispatch can then be resolved statically).
+- Internal routines (`zz*` and helpers) are not bound: they are private module procedures taking `class(pepper_context)` as their first argument.
+- Pure numerical routines (vectors, matrices, quaternions, ...) are not bound either: they are plain `pure`/`elemental` module procedures (`vcrss`, `mxv`, ...) since they need no state.
+- Descriptive aliases can come later.
 
 **Callbacks (GF, user-defined functions):** today their state passes through `save`d umbrellas, because the callback signatures are fixed. In the new design, abstract interfaces take the context plus a user-data argument (`class(*)`, or a type the user extends), so state flows through arguments.
 
@@ -119,7 +151,7 @@ Each umbrella routine becomes a module (or part of one):
 
 tspice calls 1160 library procedures directly, 291 of them internal (`zz*`) routines and entry points. Rewriting all those tests up front is not practical. So:
 
-- `src/legacy/` holds external procedures with SPICELIB's original names and F77 signatures. They forward to the module procedures using a global **default context and kernel set**.
+- `src/legacy/` holds external procedures with SPICELIB's original names and F77 signatures. They forward to the module procedures using a global **default instance and context**.
 - They are generated by a script from the module interfaces wherever the mapping is mechanical.
 - The layer is explicitly **not** thread-safe, like the original SPICELIB.
 - This lets the migration go subsystem by subsystem: once a subsystem moves into modules, its legacy wrappers replace the old externals and tspice keeps testing it unchanged.
@@ -131,6 +163,10 @@ tspice calls 1160 library procedures directly, 291 of them internal (`zz*`) rout
 - All procedures must be reentrant. gfortran places local arrays larger than `-fmax-stack-var-size` in static memory unless `-frecursive` (or `-fopenmp`) is given; ifx needs `-recursive` / `-reentrancy threaded`. Add these to the `platform` feature in `fpm.toml` now, and mark procedures `recursive` as they are modularized. (gfortran does not yet make procedures recursive by default as Fortran 2018 specifies.)
 - Thread stacks are small (`OMP_STACKSIZE`), and SPICELIB has large local work arrays (e.g. buffers sized for 5000 segments). Make large locals `allocatable` or move them into the context.
 - Remove all implicit `save`: initialized local declarations and `data`. A script check in CI should reject new ones.
+
+### Kinds
+
+`pepper_kinds` defines `ip = int32` and `wp = real64` (from `iso_fortran_env`). All code uses `integer(ip)`, `real(wp)` and literals like `1.0_wp`, replacing default `integer` and `double precision` / `1.0d0`. With gfortran these are the same kinds as before, so the change is scripted and verified by identical object files (like the earlier lowercase conversion). `logical` and `character` stay default kind.
 
 ### Arguments that will break with explicit interfaces
 
@@ -148,12 +184,11 @@ Plan: keep assumed-size dummies where needed at first (`(lbcell:*)` works with e
 - **tspice** (through the legacy layer) after every change: `pixi run tspice`.
 - **Unit tests** for the module API (fpm tests) as each subsystem is converted.
 - **Concurrency tests** (test-only OpenMP):
-  - N threads, each with its own context on a shared kernel set, compute `spkezr`, `pxform`/`sxform`, `str2et`/`et2utc` and `sce2c`/`scs2e` over many epochs. Results must be **bitwise identical** to a serial run.
-  - Also: several kernel sets used concurrently.
+  - N threads, each with its own context on one instance, compute `spkezr`, `pxform`/`sxform`, `str2et`/`et2utc` and `sce2c`/`scs2e` over many epochs. Results must be **bitwise identical** to a serial run.
   - Kernels come from tspice's generators (`tstspk`, `tstpck`, `tstlsk`, ...), so no downloads are needed; a real DE kernel is optional, for benchmarks.
-- **ThreadSanitizer** (`-fsanitize=thread`, gfortran on Linux) over the concurrency tests to catch remaining shared state.
+- **ThreadSanitizer** (`-fsanitize=thread`) over the concurrency tests to catch remaining shared state. GCC supports it on Linux but not macOS, so it waits until a Linux environment is used.
 - **State inventory check:** a script lists every `save`/`data`/initialized-declaration/`entry` in `src/`. The count must reach zero outside `parameter`s, and CI keeps it there.
-- **CI:** gfortran and ifx on Linux x64, macOS arm64 and Windows x64.
+- **Compilers:** for now only gfortran in the pixi environment (macOS arm64). The code stays portable (the platform preprocessor branches remain), and ifx, Linux and Windows (and CI) come later.
 
 ### Phases
 
@@ -161,16 +196,15 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
 
 0. **Preparation:**
    - the state-inventory script (per routine: `save`/`data`/`entry`, classification, call graph) to drive and track the work;
-   - reentrancy flags in `fpm.toml`;
-   - the CI matrix;
-   - answers to the open questions below.
+   - reentrancy flags (`-frecursive`) in `fpm.toml`;
+   - `pepper_kinds` and the scripted switch to `integer(ip)` / `real(wp)` (verified by identical objects).
 1. **Stateless core into modules:** constants (first-call `save`s become `parameter`s), vector/matrix math, strings, search/sort, cells/sets/windows logic. Mark `pure`/`elemental`; generate the first legacy wrappers. Low risk, and it builds the module, wrapper and test machinery.
-2. **Context and errors:** `pepper_context`, the error/traceback system in the context, the default context for the legacy layer. Establish the mechanical rewrite pattern (`ctx` argument, `ctx%failed()`, ...) used in all later phases.
-3. **Kernel set:** `pepper_kernels`, kernel pool, kernel management (`furnsh`/`unload`/`kclear`), body and frame name tables, the generation counter in place of watchers and `zzctr`.
-4. **File layer:** the DAF/DAS/DLA handle manager and record caches (per context), `pepper_daf_io` with strategy (a), `newunit`.
+2. **Instance, context and errors:** `pepper_spice` (initially only an owner of contexts), `pepper_context`, the error/traceback system in the context, the default instance and context for the legacy layer. Establish the mechanical rewrite pattern (type-bound procedure or `ctx` argument, `ctx%failed()`, ...) used in all later phases.
+3. **Kernels:** kernel pool, kernel management (`furnsh`/`unload`/`kclear`), body and frame name tables (built-in tables as `parameter`s) into `pepper_spice`; the generation counter in place of watchers and `zzctr`.
+4. **File layer:** the DAF/DAS/DLA handle manager (in the instance) and record caches (per context), `pepper_daf_io` with strategy (a), `newunit`.
 5. **Ephemeris, orientation, time (the main use case):** SPK, PCK, CK, frames (including dynamic frames), time (`str2et`/`et2utc`/`deltet`/`unitim`/`timout`), SCLK.
-   - **Milestone:** parallel ephemeris and time tests pass, including under ThreadSanitizer.
-6. **Geometry, DSK, GF, EK:** derived geometry, DSK, GF (callback redesign), EK. EK is large (189 files) and probably the least used, so it could come last or be deprioritized.
+   - **Milestone:** parallel ephemeris and time tests pass (ThreadSanitizer once on Linux).
+6. **Geometry, DSK, GF, EK** (after the ephemeris/time milestone): derived geometry, DSK, GF (callback redesign), EK. EK is large (189 files) and probably the least used, so it comes last.
 7. **Cleanup:**
    - remove `-fallow-argument-mismatch`;
    - drop internals only the legacy layer needs;
@@ -183,15 +217,16 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
 - **Size:** about 1400 routines, so the transformations must be scripted and verified (object-file comparison where the change is purely mechanical; tspice otherwise), and reviewable in subsystem-sized commits.
 - **Numerical fidelity:** moving code into modules can change inlining and therefore round-off. The concurrency tests compare bitwise against serial runs of the *same* build; tspice uses tolerances.
 - **Performance:** per-context caches start cold in every thread; I/O contention on shared files (see the File I/O options above).
-- **Compiler differences:** Fortran I/O thread safety and reentrancy flags differ between gfortran and ifx, so both must be tested.
+- **Compiler differences:** Fortran I/O thread safety and reentrancy flags differ between gfortran and ifx. Only gfortran is tested for now, so ifx problems will surface late.
+- **Large type:** with ~600 type-bound procedures, the context type's module is big; submodules keep rebuilds local, but compile time of that module should be watched.
 
-### Open questions for review
+### Decisions (from review)
 
-1. **API style:** `call spkezr(ctx, ...)` with module procedures (recommended), or type-bound `ctx%spkezr(...)` throughout?
-2. **Names:** keep SPICELIB names in the new API (recommended for now), or introduce descriptive names?
-3. **Errors in the new API:** context status checked with `ctx%failed()` and default action `RETURN` (recommended)? Also optional `stat`/`errmsg` arguments on public routines?
-4. **Concurrency contract:** is "load first, then query concurrently" enough, or must loading/unloading run concurrently with queries?
-5. **Dependencies:** library free of OpenMP, using it only in tests (recommended)?
-6. **Scope and priority:** are EK and GF needed early, or can they come after the ephemeris/time milestone?
-7. **Minimum compiler versions:** e.g. gfortran ≥ 13, ifx 2024+.
-8. **Kinds:** keep default `integer` (32-bit) and `double precision` as `real64`, or move to explicit kinds everywhere (`int32`/`real64`)?
+1. **API style:** type-bound procedures (`call ctx%spkezr(...)`, `call spice%furnsh(...)`).
+2. **Names:** keep SPICELIB names and argument order.
+3. **Errors:** the context is the error channel, checked with `ctx%failed()`, default action `RETURN`; no `stat`/`errmsg` arguments on routines.
+4. **Concurrency contract:** load first, then query concurrently. No concurrent loading.
+5. **Dependencies:** the library is free of OpenMP (OpenMP only in tests) and Fortran only.
+6. **Priority:** ephemeris and time first; geometry, DSK, GF and EK afterwards.
+7. **Compilers:** only gfortran in the pixi environment for now.
+8. **Kinds:** `ip` (`int32`) and `wp` (`real64`) everywhere.
