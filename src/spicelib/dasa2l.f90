@@ -31,11 +31,9 @@
       integer(ip)           recno
       integer(ip)           wordno
 
-      integer(ip)           char
-      parameter           ( char   =  1  )
+      integer(ip), parameter :: char = 1
 
-      integer(ip)           int
-      parameter           ( int    =  3  )
+      integer(ip), parameter :: int = 3
 
 ! $ Brief_I/O
 !
@@ -374,59 +372,47 @@
 !
 !     Words per data record, for each data type:
 !
-      integer(ip)           nwc
-      parameter           ( nwc = 1024 )
+      integer(ip), parameter :: nwc = 1024
 
-      integer(ip)           nwd
-      parameter           ( nwd =  128 )
+      integer(ip), parameter :: nwd = 128
 
-      integer(ip)           nwi
-      parameter           ( nwi =  256 )
+      integer(ip), parameter :: nwi = 256
 
 !
 !     Directory forward pointer location
 !
-      integer(ip)           fwdloc
-      parameter           ( fwdloc = 2 )
+      integer(ip), parameter :: fwdloc = 2
 
 !
 !     Directory address range locations
 !
-      integer(ip)           chrrng
-      parameter           ( chrrng =          3 )
+      integer(ip), parameter :: chrrng = 3
 
-      integer(ip)           dprng
-      parameter           ( dprng  = chrrng + 2 )
+      integer(ip), parameter :: dprng = chrrng + 2
 
-      integer(ip)           intrng
-      parameter           ( intrng = dprng  + 2 )
+      integer(ip), parameter :: intrng = dprng  + 2
 
 !
 !     Index of highest address in a `range array':
 !
-      integer(ip)           high
-      parameter           ( high = 2 )
+      integer(ip), parameter :: high = 2
 
 !
 !     Location of first type descriptor
 !
-      integer(ip)           begdsc
-      parameter           ( begdsc = 9 )
+      integer(ip), parameter :: begdsc = 9
 
 !
 !     Access word length
 !
-      integer(ip)           acclen
-      parameter           ( acclen = 10 )
+      integer(ip), parameter :: acclen = 10
 
 !
 !     File table size
 !
-      integer(ip)           maxfil
-      parameter           ( maxfil = 20 )
+      integer(ip), parameter :: maxfil = 20
 
-      integer(ip)           maxvec
-      parameter           ( maxvec = 3 * maxfil )
+      integer(ip), parameter :: maxvec = 3 * maxfil
 
 
 !

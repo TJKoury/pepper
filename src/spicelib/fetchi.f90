@@ -20,8 +20,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           nth
       integer(ip)           set      ( lbcell:* )

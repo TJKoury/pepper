@@ -189,20 +189,16 @@
 !
 !     Local parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 100 )
+      integer(ip), parameter :: bufsiz = 100
 
 !
 !     Mini-segment control area size:
 !
-      integer(ip)           ctrlsz
-      parameter           ( ctrlsz = 3 )
+      integer(ip), parameter :: ctrlsz = 3
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           filsiz
-      parameter           ( filsiz = 255 )
+      integer(ip), parameter :: filsiz = 255
 
 !
 !     Local variables

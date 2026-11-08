@@ -266,23 +266,18 @@
 !     Length of the double precision and integer buffers that
 !     are equivalenced.
 !
-      integer(ip)           dpblen
-      parameter           ( dpblen = 128 )
+      integer(ip), parameter :: dpblen = 128
 
-      integer(ip)           inblen
-      parameter           ( inblen = 2 * dpblen )
+      integer(ip), parameter :: inblen = 2 * dpblen
 
 !
 !     These parameters are used for arithmetic shifting.
 !
-      integer(ip)           shft8
-      parameter           ( shft8  = 2**8  )
+      integer(ip), parameter :: shft8 = 2**8
 
-      integer(ip)           shft16
-      parameter           ( shft16 = 2**16 )
+      integer(ip), parameter :: shft16 = 2**16
 
-      integer(ip)           shft24
-      parameter           ( shft24 = 2**24 )
+      integer(ip), parameter :: shft24 = 2**24
 
 !
 !     Local Variables

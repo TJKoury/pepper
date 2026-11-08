@@ -192,8 +192,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           statsz
-      parameter           ( statsz = 6 )
+      integer(ip), parameter :: statsz = 6
 
 !
 !     Indices of input record elements:
@@ -201,11 +200,9 @@
 !        -- size
 !        -- start of state information
 !
-      integer(ip)           sizidx
-      parameter           ( sizidx = 1 )
+      integer(ip), parameter :: sizidx = 1
 
-      integer(ip)           staidx
-      parameter           ( staidx = 2 )
+      integer(ip), parameter :: staidx = 2
 
 !
 !     Local variables

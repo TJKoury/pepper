@@ -2118,17 +2118,14 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'LIMBPT' )
+      character(*), parameter :: rname = 'LIMBPT'
 
-      character(*)          iref
-      parameter           ( iref   = 'J2000' )
+      character(*), parameter :: iref = 'J2000'
 
 !
 !     Convergence limit:
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-18_wp )
+      real(wp), parameter :: cnvlim = 1.0e-18_wp
 !
 !     This limit was chosen to achieve convergence on
 !     platforms providing extended precision arithmetic.
@@ -2138,38 +2135,30 @@
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      integer(ip)           maxitr
-      parameter           ( maxitr = 5 )
+      integer(ip), parameter :: maxitr = 5
 
-      integer(ip)           ssb
-      parameter           ( ssb   = 0 )
+      integer(ip), parameter :: ssb = 0
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl   = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           maxivl
-      parameter           ( maxivl = 1000 )
+      integer(ip), parameter :: maxivl = 1000
 
-      integer(ip)           maxwin
-      parameter           ( maxwin = 2 * maxivl )
+      integer(ip), parameter :: maxwin = 2 * maxivl
 
 !
 !     SPICELIB ellipse upper bound:
 !
-      integer(ip)           ubel
-      parameter           ( ubel   = 9 )
+      integer(ip), parameter :: ubel = 9
 
 !
 !     Local variables

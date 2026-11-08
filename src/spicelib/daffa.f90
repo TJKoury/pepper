@@ -21,8 +21,7 @@
 
       include              'zzddhman.inc'
 
-      integer(ip)           tbsize
-      parameter           ( tbsize = ftsize )
+      integer(ip), parameter :: tbsize = ftsize
 
       integer(ip)           handle
       real(wp)              sum    ( * )
@@ -1101,26 +1100,19 @@
 !
 !     Local parameters
 !
-      integer(ip)           crlen
-      parameter           ( crlen  = 1000 )
+      integer(ip), parameter :: crlen = 1000
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen =   60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           lbcell
-      parameter           ( lbcell =   -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           maxndc
-      parameter           ( maxndc =  124 )
+      integer(ip), parameter :: maxndc = 124
 
-      integer(ip)           dprsiz
-      parameter           ( dprsiz =  128 )
+      integer(ip), parameter :: dprsiz = 128
 
-      integer(ip)           maxnic
-      parameter           ( maxnic =  250 )
+      integer(ip), parameter :: maxnic = 250
 
-      integer(ip)           nil
-      parameter           ( nil    =   -1 )
+      integer(ip), parameter :: nil = -1
 
 
 !

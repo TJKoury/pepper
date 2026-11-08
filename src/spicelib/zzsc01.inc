@@ -26,8 +26,7 @@
 !
 !     Supported SCLK string field delimiters:
 !
-      character(ndelim)     delims
-      parameter           ( delims = '.:-, ' )
+      character(ndelim), parameter :: delims = '.:-, '
 
 !
 !     Time system codes

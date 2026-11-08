@@ -245,38 +245,27 @@
 !
 !     Local parameters
 !
-      character(*)          quote
-      parameter           ( quote  = ''''           )
+      character(*), parameter :: quote = ''''
 
-      character(*)          begarr
-      parameter           ( begarr = 'BEGIN_ARRAY'  )
+      character(*), parameter :: begarr = 'BEGIN_ARRAY'
 
-      character(*)          endarr
-      parameter           ( endarr = 'END_ARRAY'    )
+      character(*), parameter :: endarr = 'END_ARRAY'
 
-      character(*)          totarr
-      parameter           ( totarr = 'TOTAL_ARRAYS' )
+      character(*), parameter :: totarr = 'TOTAL_ARRAYS'
 
-      character(*)          ftypid
-      parameter           ( ftypid = 'DAFETF'       )
+      character(*), parameter :: ftypid = 'DAFETF'
 
-      character(*)          infoln
-      parameter           ( infoln = 'NAIF DAF ENCODED TRANSFER FILE' )
+      character(*), parameter :: infoln = 'NAIF DAF ENCODED TRANSFER FILE'
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 1024 )
+      integer(ip), parameter :: bufsiz = 1024
 
-      integer(ip)           crecl
-      parameter           ( crecl  = 1000 )
+      integer(ip), parameter :: crecl = 1000
 
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8    )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60   )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           linlen
-      parameter           ( linlen = 80   )
+      integer(ip), parameter :: linlen = 80
 !
 !     Local variables
 !

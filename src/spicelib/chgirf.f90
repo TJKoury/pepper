@@ -222,8 +222,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxf
-      parameter           ( maxf = ninert )
+      integer(ip), parameter :: maxf = ninert
 
 !
 !     Local variables

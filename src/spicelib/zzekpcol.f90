@@ -34,8 +34,7 @@
       include 'ektnamsz.inc'
       include 'ektokn.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          qcol
       integer(ip)           eqryi ( lbcell : * )
@@ -201,8 +200,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           long
-      parameter           ( long   = 160 )
+      integer(ip), parameter :: long = 160
 
 !
 !     Local variables

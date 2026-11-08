@@ -297,8 +297,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           smwdsz
-      parameter           ( smwdsz = 8 )
+      integer(ip), parameter :: smwdsz = 8
 
 !
 !     Local variables

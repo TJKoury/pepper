@@ -261,8 +261,7 @@
 !
 !     Length of a DAF file internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Local variables
 !

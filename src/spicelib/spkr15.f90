@@ -179,18 +179,15 @@
 !
 !     Local Variables
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     The difference between the first and last address of a type 15
 !     segment should be 15.
 !
-      integer(ip)           diff
-      parameter           ( diff = 15 )
+      integer(ip), parameter :: diff = 15
 
       real(wp)              dc  ( nd )
       integer(ip)           ic  ( ni )

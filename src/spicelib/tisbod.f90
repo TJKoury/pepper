@@ -844,26 +844,20 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxang
-      parameter           ( maxang = 200 )
+      integer(ip), parameter :: maxang = 200
 
 !
 !     Maximum number of coefficients per phase angle polynomial.
 !
-      integer(ip)           mxphas
-      parameter           ( mxphas = 4 )
+      integer(ip), parameter :: mxphas = 4
 
-      integer(ip)           mxpoly
-      parameter           ( mxpoly = 3 )
+      integer(ip), parameter :: mxpoly = 3
 
-      integer(ip)           namlen
-      parameter           ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           timlen
-      parameter           ( timlen = 35 )
+      integer(ip), parameter :: timlen = 35
 
 !
 !     Local variables
@@ -949,11 +943,9 @@
 !     provide the index in the body PCK data arrays at which the data
 !     of the body with a given ID are stored.
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           maxbod
-      parameter           ( maxbod = 157 )
+      integer(ip), parameter :: maxbod = 157
 
       integer(ip)           bidlst (             maxbod )
       integer(ip)           bidpol ( lbpool :    maxbod )

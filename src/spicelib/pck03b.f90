@@ -359,31 +359,25 @@
 !
 !     DAF ND and NI values for PCK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 5 )
+      integer(ip), parameter :: ni = 5
 !
 !     Length of an PCK descriptor.
 !
-      integer(ip)           ndescr
-      parameter           ( ndescr =  nd + (ni+1)/2 )
+      integer(ip), parameter :: ndescr = nd + (ni+1)/2
 !
 !     Number of Euler angles.
 !
-      integer(ip)           neangs
-      parameter           ( neangs = 6 )
+      integer(ip), parameter :: neangs = 6
 !
 !     The type of this segment.
 !
-      integer(ip)           type
-      parameter           ( type = 03 )
+      integer(ip), parameter :: type = 03
 !
 !     The number of constants.
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 1 )
+      integer(ip), parameter :: nconst = 1
 !
 !     Local variables
 !

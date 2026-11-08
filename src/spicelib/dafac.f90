@@ -364,33 +364,27 @@
 !
 !     Length of a DAF file internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      integer(ip)           inteoc
-      parameter           ( inteoc = 4 )
+      integer(ip), parameter :: inteoc = 4
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      integer(ip)           inteol
-      parameter           ( inteol = 0 )
+      integer(ip), parameter :: inteol = 0
 !
 !     Length of a DAF character record, in characters.
 !
-      integer(ip)           mxcrec
-      parameter           ( mxcrec = 1000 )
+      integer(ip), parameter :: mxcrec = 1000
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer(ip)           maxpch
-      parameter           ( maxpch = 126 )
+      integer(ip), parameter :: maxpch = 126
 
-      integer(ip)           minpch
-      parameter           ( minpch = 32 )
+      integer(ip), parameter :: minpch = 32
 !
 !     Local variables
 !

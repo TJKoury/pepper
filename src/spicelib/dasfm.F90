@@ -38,8 +38,7 @@
       include 'das.inc'
       include 'errhnd.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell  =   -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          fname
       character(*)          ftype
@@ -99,8 +98,7 @@
 !                  Absoft Fortran Version 3.2
 !     Source:      NAIF Program
 
-      integer(ip)           recl
-      parameter           ( recl   = 1024 )
+      integer(ip), parameter :: recl = 1024
       integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter           ( filen  =  128 )
@@ -798,34 +796,25 @@
 !
 !     Local parameters
 !
-      integer(ip)           acclen
-      parameter           ( acclen =   10 )
+      integer(ip), parameter :: acclen = 10
 
-      integer(ip)           idwlen
-      parameter           ( idwlen =    8 )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen =   60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           lbpool
-      parameter           ( lbpool =   -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           maxpc
-      parameter           ( maxpc  =  126 )
+      integer(ip), parameter :: maxpc = 126
 
-      integer(ip)           minpc
-      parameter           ( minpc  =   32 )
+      integer(ip), parameter :: minpc = 32
 
-      integer(ip)           typlen
-      parameter           ( typlen =    4 )
+      integer(ip), parameter :: typlen = 4
 !
 !     Access method parameters:
 !
-      integer(ip)           read
-      parameter           ( read   =          1 )
+      integer(ip), parameter :: read = 1
 
-      integer(ip)           write
-      parameter           ( write  =  read  + 1 )
+      integer(ip), parameter :: write = read  + 1
 
 !
 !     File summary parameters:
@@ -863,20 +852,15 @@
 !           +----------------------------------------+
 !
 
-      integer(ip)           rrcidx
-      parameter           ( rrcidx  =           1 )
+      integer(ip), parameter :: rrcidx = 1
 
-      integer(ip)           rchidx
-      parameter           ( rchidx  =  rrcidx + 1 )
+      integer(ip), parameter :: rchidx = rrcidx + 1
 
-      integer(ip)           crcidx
-      parameter           ( crcidx  =  rchidx + 1 )
+      integer(ip), parameter :: crcidx = rchidx + 1
 
-      integer(ip)           cchidx
-      parameter           ( cchidx  =  crcidx + 1 )
+      integer(ip), parameter :: cchidx = crcidx + 1
 
-      integer(ip)           freidx
-      parameter           ( freidx =   cchidx + 1 )
+      integer(ip), parameter :: freidx = cchidx + 1
 
 !
 !     Base indices for:
@@ -889,41 +873,33 @@
 !     is obtained by adding the appropriate data type parameter
 !     (DP, INT, or CHAR) to the base index for the item.
 !
-      integer(ip)           llabas
-      parameter           ( llabas =   freidx     )
+      integer(ip), parameter :: llabas = freidx
 
-      integer(ip)           lrcbas
-      parameter           ( lrcbas =   llabas + 3 )
+      integer(ip), parameter :: lrcbas = llabas + 3
 
-      integer(ip)           lwdbas
-      parameter           ( lwdbas =   lrcbas + 3 )
+      integer(ip), parameter :: lwdbas = lrcbas + 3
 
-      integer(ip)           sumsiz
-      parameter           ( sumsiz =   lwdbas + 3 )
+      integer(ip), parameter :: sumsiz = lwdbas + 3
 
 !
 !     Descriptor record pointer locations (within descriptor records):
 !
-      integer(ip)           fwdloc
-      parameter           ( fwdloc =  2 )
+      integer(ip), parameter :: fwdloc = 2
 
 !
 !     Directory address range location parameters:
 !
-      integer(ip)           rngbas
-      parameter           ( rngbas =   2 )
+      integer(ip), parameter :: rngbas = 2
 
 !
 !     First descriptor position in descriptor record:
 !
-      integer(ip)           begdsc
-      parameter           ( begdsc =   9 )
+      integer(ip), parameter :: begdsc = 9
 
 !
 !     Length of the Binary File Format string:
 !
-      integer(ip)           fmtlen
-      parameter           ( fmtlen = 8 )
+      integer(ip), parameter :: fmtlen = 8
 
 !
 !     The parameter TAILEN determines the tail length of a DAS file
@@ -956,8 +932,7 @@
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer(ip)           tailen
-      parameter           ( tailen = 932 )
+      integer(ip), parameter :: tailen = 932
 
 !
 !     Local variables

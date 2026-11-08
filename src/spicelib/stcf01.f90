@@ -234,11 +234,9 @@
 !
 !     Local parameters.
 !
-      integer(ip)           errlen
-      parameter           ( errlen = 512 )
+      integer(ip), parameter :: errlen = 512
 
-      integer(ip)           qrylen
-      parameter           ( qrylen = 512 )
+      integer(ip), parameter :: qrylen = 512
 
 !
 !     Local variables

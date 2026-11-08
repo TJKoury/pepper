@@ -171,23 +171,17 @@
 !     NT    component number of data type in integer portion
 !           of descriptor
 !
-      integer(ip)           nd
-      parameter           ( nd      =   2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     =    5 )
+      integer(ip), parameter :: ni = 5
 
-      integer(ip)           nr
-      parameter           ( nr      =   2 )
+      integer(ip), parameter :: nr = 2
 
-      integer(ip)           ns
-      parameter           ( ns      =   5 )
+      integer(ip), parameter :: ns = 5
 
-      integer(ip)           nt
-      parameter           ( nt      =   3 )
+      integer(ip), parameter :: nt = 3
 
-      integer(ip)           filen
-      parameter           ( filen   = 128 )
+      integer(ip), parameter :: filen = 128
 
 !
 !  Local Variables

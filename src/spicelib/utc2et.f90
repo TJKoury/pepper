@@ -341,37 +341,29 @@
 !
 !     Parameters
 !
-      integer(ip)           era
-      parameter           ( era    =  1 )
+      integer(ip), parameter :: era = 1
 
-      integer(ip)           wday
-      parameter           ( wday   = era    + 1 )
+      integer(ip), parameter :: wday = era    + 1
 
-      integer(ip)           zone
-      parameter           ( zone   = wday   + 1 )
+      integer(ip), parameter :: zone = wday   + 1
 
-      integer(ip)           ampm
-      parameter           ( ampm   = zone   + 1 )
+      integer(ip), parameter :: ampm = zone   + 1
 
-      integer(ip)           system
-      parameter           ( system = ampm   + 1 )
+      integer(ip), parameter :: system = ampm   + 1
 
 !
 !     Local variables
 !
 
-      integer(ip)           longln
-      parameter           ( longln = 480 )
+      integer(ip), parameter :: longln = 480
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
 
       character(lnsize)     pictur
       character(longln)     error
 
-      integer(ip)           smwdsz
-      parameter           ( smwdsz = 8 )
+      integer(ip), parameter :: smwdsz = 8
 
       character(smwdsz)     type
       character(smwdsz)     modify ( 5 )

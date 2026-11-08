@@ -267,11 +267,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           ndc
-      parameter           ( ndc    = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic    = 6 )
+      integer(ip), parameter :: nic = 6
 
 !
 !     Length (in DPs) of non-coefficient front part of RECORD when
@@ -280,8 +278,7 @@
 !     CKR04 and CKE04 because it doesn't contain time at which
 !     pointing has to be evaluated.
 !
-      integer(ip)             shftad
-      parameter             ( shftad = ck4sft - 1 )
+      integer(ip), parameter :: shftad = ck4sft - 1
 
 !
 !     Local variables

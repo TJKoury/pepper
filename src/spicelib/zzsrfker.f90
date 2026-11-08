@@ -218,20 +218,15 @@
 !
 !     Local parameters
 !
-      character(*)          kvsfbd
-      parameter           ( kvsfbd = 'NAIF_SURFACE_BODY' )
+      character(*), parameter :: kvsfbd = 'NAIF_SURFACE_BODY'
 
-      character(*)          kvsfcd
-      parameter           ( kvsfcd = 'NAIF_SURFACE_CODE' )
+      character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
 
-      character(*)          kvsfnm
-      parameter           ( kvsfnm = 'NAIF_SURFACE_NAME' )
+      character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln = 32 )
+      integer(ip), parameter :: kvnmln = 32
 
-      integer(ip)           nnames
-      parameter           ( nnames = 3 )
+      integer(ip), parameter :: nnames = 3
 
 !
 !     Local variables

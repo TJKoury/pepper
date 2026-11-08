@@ -280,34 +280,28 @@
 !
 !     ID code of the J2000 frame:
 !
-      integer(ip)           j2code
-      parameter           ( j2code = 1 )
+      integer(ip), parameter :: j2code = 1
 
 !
 !     Size of linked list pool:
 !
 !     The add-only hash pool for frame IDs is singly linked.
 !
-      integer(ip)           fplsiz
-      parameter           ( fplsiz = maxfrm - lbsngl + 1 )
+      integer(ip), parameter :: fplsiz = maxfrm - lbsngl + 1
 
 !
 !     Dimensions
 !
-      integer(ip)           d3
-      parameter           ( d3 = 3 )
+      integer(ip), parameter :: d3 = 3
 
-      integer(ip)           d6
-      parameter           ( d6 = 6 )
+      integer(ip), parameter :: d6 = 6
 
 !
 !     Matrix sizes.
 !
-      integer(ip)           size33
-      parameter           ( size33 =  9 )
+      integer(ip), parameter :: size33 = 9
 
-      integer(ip)           size66
-      parameter           ( size66 = 36 )
+      integer(ip), parameter :: size66 = 36
 
 !
 !     Local variables

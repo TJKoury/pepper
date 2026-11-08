@@ -25,14 +25,11 @@
 
       include 'errhnd.inc'
 
-      integer(ip)           ubel
-      parameter           ( ubel = 9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl = 4 )
+      integer(ip), parameter :: ubpl = 4
 
-      integer(ip)           maxfov
-      parameter           ( maxfov = 10000 )
+      integer(ip), parameter :: maxfov = 10000
 
       real(wp)              ellips ( ubel )
       real(wp)              vertex ( 3 )

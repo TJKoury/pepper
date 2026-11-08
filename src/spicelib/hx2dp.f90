@@ -22,8 +22,7 @@
 
       implicit none
 
-      integer(ip)           maxman
-      parameter           ( maxman = 31 )
+      integer(ip), parameter :: maxman = 31
 
 
       character(*)          string
@@ -404,17 +403,13 @@
 !
 !     Local Parameters
 !
-      character(1)          expchr
-      parameter           ( expchr = '^' )
+      character(1), parameter :: expchr = '^'
 
-      real(wp)              base
-      parameter           ( base = 16.0_wp )
+      real(wp), parameter :: base = 16.0_wp
 
-      real(wp)              invbas
-      parameter           ( invbas = 1.0_wp/base )
+      real(wp), parameter :: invbas = 1.0_wp/base
 
-      integer(ip)           maxdig
-      parameter           ( maxdig = 16 )
+      integer(ip), parameter :: maxdig = 16
 
 
 !

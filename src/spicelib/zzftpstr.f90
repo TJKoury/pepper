@@ -228,29 +228,22 @@
 !     Maximum size of an individual test cluster component
 !     including the ':'.
 !
-      integer(ip)           siztsq
-      parameter           ( siztsq = 5 )
+      integer(ip), parameter :: siztsq = 5
 
 !
 !     Integer codes of characters appearing in test clusters.
 !
-      integer(ip)           int000
-      parameter           ( int000 = 0 )
+      integer(ip), parameter :: int000 = 0
 
-      integer(ip)           int010
-      parameter           ( int010 = 10 )
+      integer(ip), parameter :: int010 = 10
 
-      integer(ip)           int013
-      parameter           ( int013 = 13 )
+      integer(ip), parameter :: int013 = 13
 
-      integer(ip)           int016
-      parameter           ( int016 = 16 )
+      integer(ip), parameter :: int016 = 16
 
-      integer(ip)           int129
-      parameter           ( int129 = 129 )
+      integer(ip), parameter :: int129 = 129
 
-      integer(ip)           int206
-      parameter           ( int206 = 206 )
+      integer(ip), parameter :: int206 = 206
 
 !
 !

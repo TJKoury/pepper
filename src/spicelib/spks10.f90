@@ -122,33 +122,26 @@
 !
 !     Local Parameters
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 40 )
+      integer(ip), parameter :: wdsize = 40
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     The number of geophysical constants:
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 8 )
+      integer(ip), parameter :: nconst = 8
 !
 !     The number of elements per two-line set:
 !
-      integer(ip)           nelems
-      parameter           ( nelems = 10 )
+      integer(ip), parameter :: nelems = 10
 
-      integer(ip)           nangs
-      parameter           ( nangs  =  4 )
+      integer(ip), parameter :: nangs = 4
 
-      integer(ip)           pktsiz
-      parameter           ( pktsiz = nelems + nangs )
+      integer(ip), parameter :: pktsiz = nelems + nangs
 
 !
 !     Local Variables

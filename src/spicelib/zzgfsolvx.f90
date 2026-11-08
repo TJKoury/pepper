@@ -33,8 +33,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       external              udfuns
       external              udfunb
@@ -388,8 +387,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           msglen
-      parameter           ( msglen = 256 )
+      integer(ip), parameter :: msglen = 256
 
 !
 !     Local variables
@@ -426,8 +424,7 @@
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      integer(ip)           mxloop
-      parameter           ( mxloop = 1000 )
+      integer(ip), parameter :: mxloop = 1000
 
 !
 !     Standard SPICE error handling.

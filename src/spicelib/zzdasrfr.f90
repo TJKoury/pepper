@@ -179,14 +179,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen =  8 )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           nwc
-      parameter           ( nwc    = 1024 )
+      integer(ip), parameter :: nwc = 1024
 
 !
 !     Parameters for positions of file record elements:
@@ -195,58 +192,46 @@
 !
 !     ID word begin and end:
 !
-      integer(ip)           begidw
-      parameter           ( begidw = 1 )
+      integer(ip), parameter :: begidw = 1
 
-      integer(ip)           endidw
-      parameter           ( endidw = 8 )
+      integer(ip), parameter :: endidw = 8
 
 
 !
 !     Internal file name begin and end:
 !
-      integer(ip)           begifn
-      parameter           ( begifn = 9 )
+      integer(ip), parameter :: begifn = 9
 
-      integer(ip)           endifn
-      parameter           ( endifn = 68 )
+      integer(ip), parameter :: endifn = 68
 
 !
 !     Reserved record count begin and end:
 !
-      integer(ip)           begnrr
-      parameter           ( begnrr = 69 )
+      integer(ip), parameter :: begnrr = 69
 
-      integer(ip)           endnrr
-      parameter           ( endnrr = 72 )
+      integer(ip), parameter :: endnrr = 72
 
 !
 !     Reserved record character count begin and end:
 !
-      integer(ip)           begnrc
-      parameter           ( begnrc = 73 )
+      integer(ip), parameter :: begnrc = 73
 
-      integer(ip)           endnrc
-      parameter           ( endnrc = 76 )
+      integer(ip), parameter :: endnrc = 76
 
 
 !
 !     Comment area record count begin and end:
 !
-      integer(ip)           begncr
-      parameter           ( begncr = 77 )
+      integer(ip), parameter :: begncr = 77
 
-      integer(ip)           endncr
-      parameter           ( endncr = 80 )
+      integer(ip), parameter :: endncr = 80
 
 !
 !     Comment area character count begin and end:
 !
-      integer(ip)           begncc
-      parameter           ( begncc = 81 )
+      integer(ip), parameter :: begncc = 81
 
-      integer(ip)           endncc
-      parameter           ( endncc = 84 )
+      integer(ip), parameter :: endncc = 84
 
 !
 !     Local variables

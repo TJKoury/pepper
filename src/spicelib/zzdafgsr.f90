@@ -142,11 +142,9 @@
 !
 !     Length in bytes of double precision numbers and integers.
 !
-      integer(ip)           dplen
-      parameter           ( dplen = 8       )
+      integer(ip), parameter :: dplen = 8
 
-      integer(ip)           inlen
-      parameter           ( inlen = dplen/2 )
+      integer(ip), parameter :: inlen = dplen/2
 
 !
 !     Local Variables

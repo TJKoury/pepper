@@ -802,8 +802,7 @@
 !
 !     Local parameters
 !
-      character(*)          refloc
-      parameter           ( refloc = 'OBSERVER' )
+      character(*), parameter :: refloc = 'OBSERVER'
 
 !
 !     Local variables

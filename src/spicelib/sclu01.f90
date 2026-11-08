@@ -209,61 +209,50 @@
 !
 !     Local parameters
 !
-      integer(ip)           msglen
-      parameter           ( msglen =        320 )
+      integer(ip), parameter :: msglen = 320
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln =         32 )
+      integer(ip), parameter :: kvnmln = 32
 
 !
 !     MXCOFA is the maximum size of the coefficient array.
 !
-      integer(ip)           mxcofa
-      parameter           ( mxcofa = 3 * mxcoef )
+      integer(ip), parameter :: mxcofa = 3 * mxcoef
 
-      integer(ip)           namlen
-      parameter           ( namlen =         80 )
+      integer(ip), parameter :: namlen = 80
 
-      integer(ip)           nkitem
-      parameter           ( nkitem =          9 )
+      integer(ip), parameter :: nkitem = 9
 
 !
 !     COFIDX is the index of the coefficient name in NAMLST.
 !
-      integer(ip)           cofidx
-      parameter           ( cofidx =  1 )
+      integer(ip), parameter :: cofidx = 1
 
 !
 !     NFLIDX is the index of the SCLK field count in NAMLST.
 !
-      integer(ip)           nflidx
-      parameter           ( nflidx =  4 )
+      integer(ip), parameter :: nflidx = 4
 
 !
 !     OFFIDX is the index of the SCLK offsets in NAMLST.
 !
-      integer(ip)           offidx
-      parameter           ( offidx =  5 )
+      integer(ip), parameter :: offidx = 5
 
 !
 !     MODIDX is the index of the SCLK moduli in NAMLST.
 !
-      integer(ip)           modidx
-      parameter           ( modidx =  6 )
+      integer(ip), parameter :: modidx = 6
 
 !
 !     DELIDX is the index of the delimiter code name in NAMLST.  If
 !     the declaration of NAMLST or assignment of values to NAMLST
 !     changes, this parameter value may have to change.
 !
-      integer(ip)           delidx
-      parameter           ( delidx =  7 )
+      integer(ip), parameter :: delidx = 7
 
 !
 !     SYSIDX is the index of the time system in NAMLST.
 !
-      integer(ip)           sysidx
-      parameter           ( sysidx =  9 )
+      integer(ip), parameter :: sysidx = 9
 
 
 !

@@ -467,8 +467,7 @@
 !
 !     Local parameters
 !
-      real(wp)              margin
-      parameter           ( margin = 10.0_wp )
+      real(wp), parameter :: margin = 10.0_wp
 
 !
 !     Local variables

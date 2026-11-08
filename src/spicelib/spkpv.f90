@@ -212,8 +212,7 @@
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Some local space is needed in which to return records, and

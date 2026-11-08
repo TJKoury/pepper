@@ -29,8 +29,7 @@
       include 'ninert.inc'
       include 'nninrt.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           frmcls
       integer(ip)           idset  ( lbcell : * )
@@ -314,11 +313,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           nframe
-      parameter           ( nframe = ninert + nninrt )
+      integer(ip), parameter :: nframe = ninert + nninrt
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables
@@ -340,11 +337,9 @@
 !
 !     Built-in frame hashes returned by ZZFDAT.
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           maxbfr
-      parameter           ( maxbfr = nframe+1 )
+      integer(ip), parameter :: maxbfr = nframe+1
 
       integer(ip)           bnmlst  (          maxbfr )
       integer(ip)           bnmpol  ( lbpool : maxbfr )

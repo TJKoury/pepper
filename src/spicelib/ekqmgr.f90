@@ -37,20 +37,15 @@
       include  'ektnamsz.inc'
       include  'ektype.inc'
 
-      integer(ip)           ftsize
-      parameter           ( ftsize =   20 )
+      integer(ip), parameter :: ftsize = 20
 
-      integer(ip)           stsize
-      parameter           ( stsize =  200 )
+      integer(ip), parameter :: stsize = 200
 
-      integer(ip)           mxtbld
-      parameter           ( mxtbld =  100 )
+      integer(ip), parameter :: mxtbld = 100
 
-      integer(ip)           mxclld
-      parameter           ( mxclld =  500 )
+      integer(ip), parameter :: mxclld = 500
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
 
       integer(ip)           cindex
@@ -656,42 +651,34 @@
 !
 !     Maximum number of constraints allowed in a single query:
 !
-      integer(ip)           maxseg
-      parameter           ( maxseg = stsize )
+      integer(ip), parameter :: maxseg = stsize
 
-      integer(ip)           ctsize
-      parameter           ( ctsize = mxclld )
+      integer(ip), parameter :: ctsize = mxclld
 
-      integer(ip)           dtsize
-      parameter           ( dtsize = maxseg * mxclld / 10 )
+      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
 
 
 !
 !     Miscellaneous parameters
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           nil
-      parameter           ( nil    =  0 )
+      integer(ip), parameter :: nil = 0
 
 !
 !     Number of data types
 !
-      integer(ip)           ntypes
-      parameter           ( ntypes = 4 )
+      integer(ip), parameter :: ntypes = 4
 
 !
 !     Length of strings used for data type names.
 !
-      integer(ip)           typlen
-      parameter           ( typlen = 4 )
+      integer(ip), parameter :: typlen = 4
 
 !
 !     Length of status strings.
 !
-      integer(ip)           short
-      parameter           ( short = 80 )
+      integer(ip), parameter :: short = 80
 
 
 !

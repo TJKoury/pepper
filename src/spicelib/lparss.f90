@@ -23,8 +23,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          list
       character(*)          delims
@@ -274,11 +273,9 @@
 !
 !     Local parameters
 !
-      character(1)          blank
-      parameter           ( blank = ' ' )
+      character(1), parameter :: blank = ' '
 
-      integer(ip)           ispace
-      parameter           ( ispace = 32 )
+      integer(ip), parameter :: ispace = 32
 
 !
 !     Local variables

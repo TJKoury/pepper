@@ -280,17 +280,13 @@
 !
 !     Local parameters
 !
-      character(1)          escchr
-      parameter           ( escchr = '@')
+      character(1), parameter :: escchr = '@'
 
-      integer(ip)           mxescd
-      parameter           ( mxescd = 2 )
+      integer(ip), parameter :: mxescd = 2
 
-      integer(ip)           maxenc
-      parameter           ( maxenc = 64 )
+      integer(ip), parameter :: maxenc = 64
 
-      integer(ip)           errlen
-      parameter           ( errlen = 80 )
+      integer(ip), parameter :: errlen = 80
 !
 !     Local variables
 !

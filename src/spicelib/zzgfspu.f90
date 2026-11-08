@@ -335,8 +335,7 @@
 !
 !     Below we initialize the list of shape names.
 !
-      integer(ip)           spshpn
-      parameter           ( spshpn = 2 )
+      integer(ip), parameter :: spshpn = 2
 
       character(32)         svshap ( spshpn )
 
@@ -344,11 +343,9 @@
 !     Define integer ID parameters for the shape names in
 !     SVSHAP.
 !
-      integer(ip)           point
-      parameter           ( point = 1 )
+      integer(ip), parameter :: point = 1
 
-      integer(ip)           sphere
-      parameter           ( sphere = 2 )
+      integer(ip), parameter :: sphere = 2
 
       save                  svshap
 

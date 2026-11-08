@@ -228,11 +228,9 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           maxcpr
-      parameter           ( maxcpr = 1000   )
+      integer(ip), parameter :: maxcpr = 1000
 
 !
 !     Local variables

@@ -1014,14 +1014,12 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  =  'ZZSPKEZ0' )
+      character(*), parameter :: rname = 'ZZSPKEZ0'
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

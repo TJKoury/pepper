@@ -486,19 +486,13 @@
 !
 !     Parameters
 !
-      integer(ip)           alpha
-      integer(ip)           beta
-      integer(ip)           gamma
-      integer(ip)           dalpha
-      integer(ip)           dbeta
-      integer(ip)           dgamma
 
-      parameter           ( alpha  = 1 )
-      parameter           ( beta   = 2 )
-      parameter           ( gamma  = 3 )
-      parameter           ( dalpha = 4 )
-      parameter           ( dbeta  = 5 )
-      parameter           ( dgamma = 6 )
+      integer(ip), parameter :: alpha = 1
+      integer(ip), parameter :: beta = 2
+      integer(ip), parameter :: gamma = 3
+      integer(ip), parameter :: dalpha = 4
+      integer(ip), parameter :: dbeta = 5
+      integer(ip), parameter :: dgamma = 6
 
 !
 !     Local variables

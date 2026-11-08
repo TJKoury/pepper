@@ -31,8 +31,7 @@
       real(wp)              elems  ( * )
       real(wp)              state  ( * )
 
-      integer(ip)           nmodl
-      parameter           ( nmodl = 6 )
+      integer(ip), parameter :: nmodl = 6
 
 ! $ Brief_I/O
 !
@@ -452,26 +451,17 @@
 !     KAE  --- distance units/earth radius
 !
 !
-      integer(ip)           kj2
-      integer(ip)           kj3
-      integer(ip)           kj4
-      integer(ip)           kke
-      integer(ip)           kqo
-      integer(ip)           kso
-      integer(ip)           ker
-      integer(ip)           kae
 
-      parameter           ( kj2 = 1 )
-      parameter           ( kj3 = 2 )
-      parameter           ( kj4 = 3 )
-      parameter           ( kke = 4 )
-      parameter           ( kqo = 5 )
-      parameter           ( kso = 6 )
-      parameter           ( ker = 7 )
-      parameter           ( kae = 8 )
+      integer(ip), parameter :: kj2 = 1
+      integer(ip), parameter :: kj3 = 2
+      integer(ip), parameter :: kj4 = 3
+      integer(ip), parameter :: kke = 4
+      integer(ip), parameter :: kqo = 5
+      integer(ip), parameter :: kso = 6
+      integer(ip), parameter :: ker = 7
+      integer(ip), parameter :: kae = 8
 
-      integer(ip)           ngeocn
-      parameter           ( ngeocn = kae )
+      integer(ip), parameter :: ngeocn = kae
 !
 !     An enumeration of the various components of the
 !     elements array---ELEMS
@@ -487,29 +477,18 @@
 !     KNO
 !
 
-      integer(ip)           kndt20
-      integer(ip)           kndd60
-      integer(ip)           kbstar
-      integer(ip)           kincl
-      integer(ip)           knode0
-      integer(ip)           kecc
-      integer(ip)           komega
-      integer(ip)           kmo
-      integer(ip)           kno
-      integer(ip)           kepoch
-      integer(ip)           nelems
 
-      parameter           ( kndt20 =      1 )
-      parameter           ( kndd60 =      2 )
-      parameter           ( kbstar =      3 )
-      parameter           ( kincl  =      4 )
-      parameter           ( knode0 =      5 )
-      parameter           ( kecc   =      6 )
-      parameter           ( komega =      7 )
-      parameter           ( kmo    =      8 )
-      parameter           ( kno    =      9 )
-      parameter           ( kepoch =     10 )
-      parameter           ( nelems = kepoch )
+      integer(ip), parameter :: kndt20 = 1
+      integer(ip), parameter :: kndd60 = 2
+      integer(ip), parameter :: kbstar = 3
+      integer(ip), parameter :: kincl = 4
+      integer(ip), parameter :: knode0 = 5
+      integer(ip), parameter :: kecc = 6
+      integer(ip), parameter :: komega = 7
+      integer(ip), parameter :: kmo = 8
+      integer(ip), parameter :: kno = 9
+      integer(ip), parameter :: kepoch = 10
+      integer(ip), parameter :: nelems = kepoch
 
 !
 !     The parameters NEXT and PREV are used in our linked list
@@ -520,14 +499,11 @@
 !     PREV
 !
 
-      integer(ip)           next
-      parameter           ( next   = 1 )
+      integer(ip), parameter :: next = 1
 
-      integer(ip)           prev
-      parameter           ( prev   = 2 )
+      integer(ip), parameter :: prev = 2
 
-      integer(ip)           nil
-      parameter           ( nil    = 0 )
+      integer(ip), parameter :: nil = 0
 
 !
 !     There are a number of preliminary quantities that are needed
@@ -537,31 +513,23 @@
 !     quantities  will not be recomputed.  PRSIZE is the parameter
 !     used to declare the needed room.
 !
-      integer(ip)           prsize
-      parameter           ( prsize = 29 )
+      integer(ip), parameter :: prsize = 29
 !
 !     When we perform bisection in the solution of Kepler's equation
 !     we don't want to bisect too many times.
 !
-      integer(ip)           mxloop
-      parameter           ( mxloop = 20 )
+      integer(ip), parameter :: mxloop = 20
 
 !
 !     Numerical Constants
 !
-      real(wp)              half
-      real(wp)              one
-      real(wp)              f3ov8
-      real(wp)              f3ov2
-      real(wp)              tothrd
-      real(wp)              onethd
 
-      parameter           ( half    =    0.5_wp         )
-      parameter           ( one     =    1.0_wp         )
-      parameter           ( f3ov8   =    3.0_wp/8.0_wp   )
-      parameter           ( f3ov2   =    1.50_wp        )
-      parameter           ( tothrd  =    2.0_wp/3.0_wp   )
-      parameter           ( onethd  =    1.0_wp/3.0_wp   )
+      real(wp), parameter :: half = 0.5_wp
+      real(wp), parameter :: one = 1.0_wp
+      real(wp), parameter :: f3ov8 = 3.0_wp/8.0_wp
+      real(wp), parameter :: f3ov2 = 1.50_wp
+      real(wp), parameter :: tothrd = 2.0_wp/3.0_wp
+      real(wp), parameter :: onethd = 1.0_wp/3.0_wp
 
 !
 !     Local variables

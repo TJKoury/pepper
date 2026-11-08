@@ -236,27 +236,21 @@
 !     follow the elements.  So we've got four angles/angle rates
 !     following the elements
 !
-      integer(ip)           nangs
-      parameter           ( nangs = 4 )
+      integer(ip), parameter :: nangs = 4
 
 !
 !     The locations of the epochs and the starts of the element
 !     sets are given below.
 !
-      integer(ip)           time1
-      parameter           ( time1  = ngeo + kepoch )
+      integer(ip), parameter :: time1 = ngeo + kepoch
 
-      integer(ip)           time2
-      parameter           ( time2  = nelems + nangs + time1  )
+      integer(ip), parameter :: time2 = nelems + nangs + time1
 
-      integer(ip)           model1
-      parameter           ( model1 = ngeo + 1      )
+      integer(ip), parameter :: model1 = ngeo + 1
 
-      integer(ip)           angs1
-      parameter           ( angs1 = model1 + nelems )
+      integer(ip), parameter :: angs1 = model1 + nelems
 
-      integer(ip)           model2
-      parameter           ( model2 = angs1 + nangs )
+      integer(ip), parameter :: model2 = angs1 + nangs
 
 
 !

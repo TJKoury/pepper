@@ -22,8 +22,7 @@
 
       implicit none
 
-      integer(ip)           nwd
-      parameter           ( nwd = 128 )
+      integer(ip), parameter :: nwd = 128
 
       character(*)          action
       integer(ip)           unit

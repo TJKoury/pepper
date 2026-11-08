@@ -14,14 +14,12 @@
 !
 !     Wild string symbol:  this character matches any string.
 !
-      character(1)          wstr
-      parameter           ( wstr = '*' )
+      character(1), parameter :: wstr = '*'
 
 !
 !     Wild character symbol:  this character matches any character.
 !
-      character(1)          wchr
-      parameter           ( wchr = '%' )
+      character(1), parameter :: wchr = '%'
 
 !
 !     End Include Section:  EK Template Matching Wild Characters

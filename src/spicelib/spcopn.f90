@@ -176,14 +176,11 @@
 !                 file.
 !
 !
-      integer(ip)           nd
-      parameter           ( nd   = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni   = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           resv
-      parameter           ( resv = 0 )
+      integer(ip), parameter :: resv = 0
 
 
 !

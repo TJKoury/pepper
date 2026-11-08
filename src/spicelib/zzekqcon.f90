@@ -36,8 +36,7 @@
       include 'ekopcd.inc'
       include 'ektype.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           eqryi ( lbcell : * )
       character(*)          eqryc

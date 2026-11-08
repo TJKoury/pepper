@@ -714,35 +714,26 @@
 !
 !     Local parameters
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen =  40 )
+      integer(ip), parameter :: sidlen = 40
 
-      integer(ip)           fprint
-      parameter           ( fprint =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint = 126 )
+      integer(ip), parameter :: lprint = 126
 
-      integer(ip)           nd
-      parameter           ( nd     =   2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     =   6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dscsiz
-      parameter           ( dscsiz =   5 )
+      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip)           dtype
-      parameter           ( dtype  =  6 )
+      integer(ip), parameter :: dtype = 6
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
 !
 !     Packet structure parameters
 !
-      integer(ip)           qidx
-      parameter           ( qidx   = 1 )
+      integer(ip), parameter :: qidx = 1
 
 !
 !     Local variables

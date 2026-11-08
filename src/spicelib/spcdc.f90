@@ -171,8 +171,7 @@
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60     )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     Local variables

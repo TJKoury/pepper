@@ -250,8 +250,7 @@
 !     word of the scratch DAS file corresponds to scratch area address
 !     MEMSIZ + 1.
 !
-      integer(ip)           memsiz
-      parameter           ( memsiz = 2500000 )
+      integer(ip), parameter :: memsiz = 2500000
 
 
 

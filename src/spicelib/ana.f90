@@ -154,14 +154,11 @@
 
       integer(ip)           isrchc
 
-      integer(ip)           anwrds
-      parameter           ( anwrds = 22 )
+      integer(ip), parameter :: anwrds = 22
 
-      integer(ip)           awrds
-      parameter           ( awrds  = 33 )
+      integer(ip), parameter :: awrds = 33
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
       character(8)          anword ( anwrds )
       character(8)          aword  ( awrds  )

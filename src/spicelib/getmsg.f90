@@ -200,8 +200,7 @@
 !     Length of short error message:
 !
 
-      integer(ip)           shrtln
-      parameter           ( shrtln = 25 )
+      integer(ip), parameter :: shrtln = 25
 
       character(shrtln)     shrtms
 
@@ -209,8 +208,7 @@
 !     Upper case version of the option:
 !
 
-      integer(ip)           optlen
-      parameter           ( optlen = 10 )
+      integer(ip), parameter :: optlen = 10
 
       character(optlen)     upopt
       character(optlen)     locopt

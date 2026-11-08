@@ -501,8 +501,7 @@
 !     IBFSIZ is the size of an integer buffer used to
 !     read parameters from the segment.
 !
-      integer(ip)           ibfsiz
-      parameter           ( ibfsiz = 10 )
+      integer(ip), parameter :: ibfsiz = 10
 
 !
 !     Local variables

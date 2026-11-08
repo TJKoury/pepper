@@ -253,11 +253,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxllt
-      parameter           ( maxllt = 5 )
+      integer(ip), parameter :: maxllt = 5
 
-      integer(ip)           ncase
-      parameter           ( ncase  = 3 )
+      integer(ip), parameter :: ncase = 3
 
 !
 !     Local variables

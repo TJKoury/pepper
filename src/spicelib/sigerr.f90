@@ -326,25 +326,19 @@
 !     Define mnemonics for the integer action codes used by the error
 !     handling. See ERRACT for the character string equivalents used.
 !
-      integer(ip)           iabrt
-      parameter           ( iabrt =          1 )
+      integer(ip), parameter :: iabrt = 1
 
-      integer(ip)           ireprt
-      parameter           ( ireprt = iabrt + 1 )
+      integer(ip), parameter :: ireprt = iabrt + 1
 
-      integer(ip)           iretrn
-      parameter           ( iretrn = ireprt + 1 )
+      integer(ip), parameter :: iretrn = ireprt + 1
 
-      integer(ip)           iignor
-      parameter           ( iignor = iretrn + 1 )
+      integer(ip), parameter :: iignor = iretrn + 1
 
-      integer(ip)           ideflt
-      parameter           ( ideflt = iignor + 1 )
+      integer(ip), parameter :: ideflt = iignor + 1
 !
 !     Length for output messages default settings.
 !
-      integer(ip)           deflen
-      parameter           ( deflen = 40)
+      integer(ip), parameter :: deflen = 40
 !
 !     Local Variables:
 !

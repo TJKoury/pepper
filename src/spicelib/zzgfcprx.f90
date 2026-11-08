@@ -287,14 +287,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           upidx
-      parameter           ( upidx  = 1 )
+      integer(ip), parameter :: upidx = 1
 
-      integer(ip)           estidx
-      parameter           ( estidx = 2 )
+      integer(ip), parameter :: estidx = 2
 
-      integer(ip)           noridx
-      parameter           ( noridx = 3 )
+      integer(ip), parameter :: noridx = 3
 
 
 !

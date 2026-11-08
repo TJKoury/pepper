@@ -21,8 +21,7 @@
 
       implicit none
 
-      integer(ip)           strlen
-      parameter           ( strlen = 255 )
+      integer(ip), parameter :: strlen = 255
 
 
       real(wp)              number
@@ -315,38 +314,27 @@
 !
 !     Local Parameters
 !
-      character(1)          expchr
-      parameter           ( expchr = '^')
+      character(1), parameter :: expchr = '^'
 
-      real(wp)              base
-      parameter           ( base = 16.0_wp )
+      real(wp), parameter :: base = 16.0_wp
 
-      real(wp)              invbas
-      parameter           ( invbas = 1.0_wp/base )
+      real(wp), parameter :: invbas = 1.0_wp/base
 
-      integer(ip)           expinb
-      parameter           ( expinb = 1 )
+      integer(ip), parameter :: expinb = 1
 
-      real(wp)              factr1
-      parameter           ( factr1 = 4294967296.0_wp )
+      real(wp), parameter :: factr1 = 4294967296.0_wp
 
-      real(wp)              invfc1
-      parameter           ( invfc1 = 1.0_wp/factr1 )
+      real(wp), parameter :: invfc1 = 1.0_wp/factr1
 
-      integer(ip)           expin1
-      parameter           ( expin1 = 8 )
+      integer(ip), parameter :: expin1 = 8
 
-      real(wp)              factr2
-      parameter           ( factr2 = 65536.0_wp )
+      real(wp), parameter :: factr2 = 65536.0_wp
 
-      real(wp)              invfc2
-      parameter           ( invfc2 = 1.0_wp/factr2 )
+      real(wp), parameter :: invfc2 = 1.0_wp/factr2
 
-      integer(ip)           expin2
-      parameter           ( expin2 = 4 )
+      integer(ip), parameter :: expin2 = 4
 
-      integer(ip)           maxdig
-      parameter           ( maxdig = 16 )
+      integer(ip), parameter :: maxdig = 16
 
 !
 !     Local variables

@@ -397,29 +397,24 @@
 !
 !     Index of evaluation epoch in record:
 !
-      integer(ip)           epcidx
-      parameter           ( epcidx = 1 )
+      integer(ip), parameter :: epcidx = 1
 
 !
 !     Index of subtype code in record:
 !
-      integer(ip)           sbtidx
-      parameter           ( sbtidx = 2 )
+      integer(ip), parameter :: sbtidx = 2
 
 !
 !     Index of packet count in record:
 !
-      integer(ip)           cntidx
-      parameter           ( cntidx = 3 )
+      integer(ip), parameter :: cntidx = 3
 
 !
 !     Index at which packets start; packet base:
 !
-      integer(ip)           pktidx
-      parameter           ( pktidx = 5 )
+      integer(ip), parameter :: pktidx = 5
 
-      integer(ip)           pktbas
-      parameter           ( pktbas = pktidx - 1 )
+      integer(ip), parameter :: pktbas = pktidx - 1
 
 !
 !     Local variables

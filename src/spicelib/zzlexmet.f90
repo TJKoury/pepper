@@ -187,11 +187,9 @@
 !     Note the leading blank in DELIM below; this
 !     indicates that the blank character is a delimiter.
 !
-      character(*)          delim
-      parameter           ( delim  = ' /,=:' )
+      character(*), parameter :: delim = ' /,=:'
 
-      character(*)          dquote
-      parameter           ( dquote  = '"' )
+      character(*), parameter :: dquote = '"'
 
 !
 !     Local variables

@@ -36,17 +36,13 @@
       character(*)          ident
       logical               found
 
-      integer(ip)           ftsize
-      parameter           ( ftsize =   5000 )
+      integer(ip), parameter :: ftsize = 5000
 
-      integer(ip)           btsize
-      parameter           ( btsize =     20 )
+      integer(ip), parameter :: btsize = 20
 
-      integer(ip)           lbpool
-      parameter           ( lbpool =     -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           stsize
-      parameter           ( stsize =   5000 )
+      integer(ip), parameter :: stsize = 5000
 
 ! $ Brief_I/O
 !
@@ -732,30 +728,23 @@
 !
 !     Local parameters
 !
-      integer(ip)           dscsiz
-      parameter           ( dscsiz = 5 )
+      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip)           sidlen
-      parameter           ( sidlen = 40 )
+      integer(ip), parameter :: sidlen = 40
 
-      integer(ip)           slen
-      parameter           ( slen   = 15 )
+      integer(ip), parameter :: slen = 15
 
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 5 )
+      integer(ip), parameter :: ni = 5
 
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer(ip)           forwrd
-      parameter           ( forwrd  = 1 )
+      integer(ip), parameter :: forwrd = 1
 
-      integer(ip)           bckwrd
-      parameter           ( bckwrd  = 2 )
+      integer(ip), parameter :: bckwrd = 2
 
 !
 !     Local variables

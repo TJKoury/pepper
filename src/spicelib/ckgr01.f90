@@ -294,17 +294,13 @@
 !                   pointing record.
 !
 
-      integer(ip)           ndc
-      parameter           ( ndc    = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic    = 6 )
+      integer(ip), parameter :: nic = 6
 
-      integer(ip)           qsiz
-      parameter           ( qsiz   = 4 )
+      integer(ip), parameter :: qsiz = 4
 
-      integer(ip)           qavsiz
-      parameter           ( qavsiz = 7 )
+      integer(ip), parameter :: qavsiz = 7
 
 !
 !     Local variables

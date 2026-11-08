@@ -140,13 +140,11 @@
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS file internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Local variables
 !

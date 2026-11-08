@@ -97,10 +97,12 @@ def verify(files: dict, work: Path, extra_flags=(), old_texts=None) -> list:
     old_texts: {path: text} to compile instead of the file on disk as the
     old copy (e.g. with blank lines so that line numbers match)."""
     dirs = sorted({p.parent for p in files})
+    # Copy only the outermost directories (e.g. src, not also src/legacy).
+    tops = [d for d in dirs if not any(o != d and o in d.parents for o in dirs)]
     for tag in ("old", "new"):
-        for d in dirs:
+        for d in tops:
             shutil.copytree(d, work / tag / d.relative_to(ROOT),
-                            ignore=shutil.ignore_patterns("*.mod", "*.o"))
+                            ignore=shutil.ignore_patterns("*.mod", "*.o", "*.smod"))
     for p, text in files.items():
         (work / "new" / p.relative_to(ROOT)).write_text(text, encoding="ascii")
     for p, text in (old_texts or {}).items():

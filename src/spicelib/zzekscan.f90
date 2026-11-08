@@ -301,56 +301,41 @@
 !
 !     Local parameters
 !
-      character(*)          dquote
-      parameter           ( dquote  = '"' )
+      character(*), parameter :: dquote = '"'
 
-      character(*)          squote
-      parameter           ( squote  = '''' )
+      character(*), parameter :: squote = ''''
 
-      integer(ip)           lnsize
-      parameter           ( lnsize =   80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           nxttok
-      parameter           ( nxttok = 1 )
+      integer(ip), parameter :: nxttok = 1
 
-      integer(ip)           newtok
-      parameter           ( newtok = nxttok + 1 )
+      integer(ip), parameter :: newtok = nxttok + 1
 
-      integer(ip)           term
-      parameter           ( term   = newtok + 1 )
+      integer(ip), parameter :: term = newtok + 1
 
-      integer(ip)           qstr
-      parameter           ( qstr   = term   + 1 )
+      integer(ip), parameter :: qstr = term   + 1
 
-      integer(ip)           dot
-      parameter           ( dot    = qstr   + 1 )
+      integer(ip), parameter :: dot = qstr   + 1
 
-      integer(ip)           number
-      parameter           ( number = dot    + 1 )
+      integer(ip), parameter :: number = dot    + 1
 
-      integer(ip)           ident
-      parameter           ( ident  = number + 1 )
+      integer(ip), parameter :: ident = number + 1
 
-      integer(ip)           spcial
-      parameter           ( spcial = ident + 1 )
+      integer(ip), parameter :: spcial = ident + 1
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           mxspec
-      parameter           ( mxspec = 512 )
+      integer(ip), parameter :: mxspec = 512
 
 !
 !     Number of tokens made up of special characters:
 !
-      integer(ip)           nspec
-      parameter           ( nspec  = 13 )
+      integer(ip), parameter :: nspec = 13
 
 !
 !     Max length of any such token:
 !
-      integer(ip)           spclen
-      parameter           ( spclen = 2 )
+      integer(ip), parameter :: spclen = 2
 
 !
 !     Local variables

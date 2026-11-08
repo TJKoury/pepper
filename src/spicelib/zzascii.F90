@@ -269,8 +269,7 @@
 !
 !     Local parameters.
 !
-      integer(ip)           eoltsz
-      parameter           ( eoltsz = 5 )
+      integer(ip), parameter :: eoltsz = 5
 
 !
 !     Local variables.

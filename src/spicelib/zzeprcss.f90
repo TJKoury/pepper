@@ -148,32 +148,23 @@
 !
 !     Local parameters
 !
-      real(wp)              zeta1
-      parameter           ( zeta1  = 2306.2181_wp )
+      real(wp), parameter :: zeta1 = 2306.2181_wp
 
-      real(wp)              zeta2
-      parameter           ( zeta2  = 0.30188_wp   )
+      real(wp), parameter :: zeta2 = 0.30188_wp
 
-      real(wp)              zeta3
-      parameter           ( zeta3  = 0.017998_wp  )
+      real(wp), parameter :: zeta3 = 0.017998_wp
 
-      real(wp)              z1
-      parameter           ( z1     = 2306.2181_wp )
+      real(wp), parameter :: z1 = 2306.2181_wp
 
-      real(wp)              z2
-      parameter           ( z2     = 1.09468_wp   )
+      real(wp), parameter :: z2 = 1.09468_wp
 
-      real(wp)              z3
-      parameter           ( z3     = 0.018203_wp  )
+      real(wp), parameter :: z3 = 0.018203_wp
 
-      real(wp)              theta1
-      parameter           ( theta1 = 2004.3109_wp )
+      real(wp), parameter :: theta1 = 2004.3109_wp
 
-      real(wp)              theta2
-      parameter           ( theta2 = -0.42665_wp )
+      real(wp), parameter :: theta2 = -0.42665_wp
 
-      real(wp)              theta3
-      parameter           ( theta3 = -0.041833_wp )
+      real(wp), parameter :: theta3 = -0.041833_wp
 
 !
 !     Local variables

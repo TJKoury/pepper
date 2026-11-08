@@ -484,14 +484,11 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname = 'ZZSPKAC0' )
+      character(*), parameter :: rname = 'ZZSPKAC0'
 
-      real(wp)              delta
-      parameter           ( delta = 1.0_wp )
+      real(wp), parameter :: delta = 1.0_wp
 
-      integer(ip)           ssb
-      parameter           ( ssb    = 0 )
+      integer(ip), parameter :: ssb = 0
 
 !
 !     Local variables

@@ -179,8 +179,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxpad
-      parameter           ( maxpad = 100 )
+      integer(ip), parameter :: maxpad = 100
 
 !
 !     Local variables

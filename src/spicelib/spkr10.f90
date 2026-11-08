@@ -149,38 +149,31 @@
 !
 !     Local variables
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 8  )
+      integer(ip), parameter :: nconst = 8
 
-      integer(ip)           nelems
-      parameter           ( nelems = 10 )
+      integer(ip), parameter :: nelems = 10
 !
 !     We have 2 nutation/obliquity terms and their rates giving us
 !     four angle components for each packet.
 !
-      integer(ip)           nangs
-      parameter           ( nangs =   4 )
+      integer(ip), parameter :: nangs = 4
 !
 !     BEGEL1 is the location in the record where the first
 !     two-line element set will begin.
 !
-      integer(ip)           begel1
-      parameter           ( begel1 = nconst + 1      )
+      integer(ip), parameter :: begel1 = nconst + 1
 !
 !     BEGEL2 is the location in the record where the second
 !     two-line element set will begin.
 !
-      integer(ip)           begel2
-      parameter           ( begel2 = begel1 + nelems + nangs )
+      integer(ip), parameter :: begel2 = begel1 + nelems + nangs
 !
 !     ENSET1 and ENSET2 are the locations in the record where the
 !     last element of set 1 and set 2 will be located.
 !
-      integer(ip)           enset1
-      parameter           ( enset1 = begel1 + nelems - 1 )
+      integer(ip), parameter :: enset1 = begel1 + nelems - 1
 
-      integer(ip)           enset2
-      parameter           ( enset2 = begel2 + nelems - 1 )
+      integer(ip), parameter :: enset2 = begel2 + nelems - 1
 
 
       real(wp)              value

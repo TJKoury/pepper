@@ -582,14 +582,12 @@
 !     The J2000 frame has a NAIF ID of 1. Any inertial reference
 !     frame could have been used for this program instead of J2000.
 !
-      integer(ip)           jcode
-      parameter           ( jcode = 1 )
+      integer(ip), parameter :: jcode = 1
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

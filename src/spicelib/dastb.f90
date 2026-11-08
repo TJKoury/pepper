@@ -254,68 +254,47 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'  )
 !
-      character(*)          begcom
-      parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'    )
+      character(*), parameter :: begcom = 'BEGIN_COMMENT_BLOCK'
 
-      character(*)          endcom
-      parameter           ( endcom = 'END_COMMENT_BLOCK'      )
+      character(*), parameter :: endcom = 'END_COMMENT_BLOCK'
 
-      character(*)          bcblk
-      parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'  )
+      character(*), parameter :: bcblk = 'BEGIN_CHARACTER_BLOCK'
 
-      character(*)          ecblk
-      parameter           ( ecblk  = 'END_CHARACTER_BLOCK'    )
+      character(*), parameter :: ecblk = 'END_CHARACTER_BLOCK'
 
-      character(*)          bdblk
-      parameter           ( bdblk  = 'BEGIN_DP_BLOCK'         )
+      character(*), parameter :: bdblk = 'BEGIN_DP_BLOCK'
 
-      character(*)          edblk
-      parameter           ( edblk  = 'END_DP_BLOCK'           )
+      character(*), parameter :: edblk = 'END_DP_BLOCK'
 
-      character(*)          biblk
-      parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'    )
+      character(*), parameter :: biblk = 'BEGIN_INTEGER_BLOCK'
 
-      character(*)          eiblk
-      parameter           ( eiblk  = 'END_INTEGER_BLOCK'      )
+      character(*), parameter :: eiblk = 'END_INTEGER_BLOCK'
 
-      character(*)          tcmblk
-      parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'   )
+      character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'
 
-      character(*)          tcblks
-      parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS' )
+      character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'
 
-      character(*)          tdblks
-      parameter           ( tdblks = 'TOTAL_DP_BLOCKS'        )
+      character(*), parameter :: tdblks = 'TOTAL_DP_BLOCKS'
 
-      character(*)          tiblks
-      parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'   )
+      character(*), parameter :: tiblks = 'TOTAL_INTEGER_BLOCKS'
 
-      integer(ip)           cbflen
-      parameter           ( cbflen = 4                        )
+      integer(ip), parameter :: cbflen = 4
 
-      integer(ip)           crlen
-      parameter           ( crlen  = 1024                     )
+      integer(ip), parameter :: crlen = 1024
 
-      integer(ip)           linlen
-      parameter           ( linlen = 255                      )
+      integer(ip), parameter :: linlen = 255
 
-      integer(ip)           errlen
-      parameter           ( errlen = 320                      )
+      integer(ip), parameter :: errlen = 320
 
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8                        )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60                       )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 1024                     )
+      integer(ip), parameter :: bufsiz = 1024
 
-      integer(ip)           bcbpos
-      parameter           ( bcbpos = 1                        )
+      integer(ip), parameter :: bcbpos = 1
 
-      integer(ip)           ecbpos
-      parameter           ( ecbpos = cbflen                   )
+      integer(ip), parameter :: ecbpos = cbflen
 !
 !     Local variables
 !

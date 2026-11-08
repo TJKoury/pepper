@@ -279,37 +279,30 @@
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           ndescr
-      parameter           ( ndescr =  nd + ( ni + 1 ) / 2 )
+      integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2
 
 !
 !     The number of generic segment constants in a type 4 CK segment.
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 0 )
+      integer(ip), parameter :: nconst = 0
 
 !
 !     The integer codes of the first and last printable ASCII
 !     characters.
 !
-      integer(ip)           fprint
-      parameter           ( fprint = 32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint = 126 )
+      integer(ip), parameter :: lprint = 126
 
 !
 !     The maximum number of characters allowed in a CK segment
 !     identifier.
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen = 40 )
+      integer(ip), parameter :: sidlen = 40
 
 !
 !     Local variables

@@ -285,17 +285,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           non
-      parameter           ( non    = nninrt )
+      integer(ip), parameter :: non = nninrt
 
-      integer(ip)           ncount
-      parameter           ( ncount = ninert + non )
+      integer(ip), parameter :: ncount = ninert + non
 
-      integer(ip)           room
-      parameter           ( room   = 8 )
+      integer(ip), parameter :: room = 8
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
 !
 !     Body name length. The value BDNMLN used here must be the
@@ -305,26 +301,22 @@
 !
 !     Current value of MAXL = 36.
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
 !
 !     Frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Kernel variable name length.
 !
-      integer(ip)           kvnmln
-      parameter           ( kvnmln = 32 )
+      integer(ip), parameter :: kvnmln = 32
 
 !
 !     Kernel variable buffer size.
 !
-      integer(ip)           kvbsz
-      parameter           ( kvbsz  = 100 )
+      integer(ip), parameter :: kvbsz = 100
 
 !
 !     Local Variables
@@ -369,8 +361,7 @@
 !
 !     Lower bound of collision lists in hashes.
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
 !
 !     The size of ID-based hash for kernel POOL frames.
@@ -382,8 +373,7 @@
 !
 !     For the current POOL MAXVAR set to 26003, such number is 5209.
 !
-      integer(ip)           maxkfr
-      parameter           ( maxkfr = 5209 )
+      integer(ip), parameter :: maxkfr = 5209
 
 !
 !     Name-based hash for kernel pool frames. KNMLST, KNMPOL, and
@@ -425,8 +415,7 @@
 !     For the current N0067 NCOUNT equal to 145 (21 inertial + 124
 !     non-inertial), such number is 149.
 !
-      integer(ip)           maxbfr
-      parameter           ( maxbfr = 149 )
+      integer(ip), parameter :: maxbfr = 149
 
 !
 !     Name-based hash for built-in frames. BNMLST, BNMPOL, and BNMNMS

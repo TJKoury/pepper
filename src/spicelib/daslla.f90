@@ -208,14 +208,11 @@
 !
 !     Local parameters.
 !
-      integer(ip)           chr
-      parameter           ( chr    =  1  )
+      integer(ip), parameter :: chr = 1
 
-      integer(ip)           dp
-      parameter           ( dp     =  2  )
+      integer(ip), parameter :: dp = 2
 
-      integer(ip)           int
-      parameter           ( int    =  3  )
+      integer(ip), parameter :: int = 3
 
 !
 !     Local variables

@@ -158,8 +158,7 @@
 !
 !     Define the mnemonic for the default error action.
 !
-      integer(ip)           ideflt
-      parameter           ( ideflt = 5 )
+      integer(ip), parameter :: ideflt = 5
 !
 !     Local Variables:
 !

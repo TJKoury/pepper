@@ -359,8 +359,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: number  !! Number of excess elements.
          character(*), intent(in) :: struct  !! Name of the data structure.
-         integer(ip) longln
-         parameter           ( longln = 320 )
+         integer(ip), parameter :: longln = 320
       end subroutine excess
 
       !> Return the cardinality (number of elements) of a character cell.

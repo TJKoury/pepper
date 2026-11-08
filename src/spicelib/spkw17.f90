@@ -420,35 +420,29 @@
 !
 !     Segment descriptor size
 !
-      integer(ip)           ns
-      parameter           ( ns      =   5 )
+      integer(ip), parameter :: ns = 5
 
 !
 !     Segment identifier size
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen  =  40 )
+      integer(ip), parameter :: sidlen = 40
 
 !
 !     SPK data type
 !
-      integer(ip)           type
-      parameter           ( type    = 17 )
+      integer(ip), parameter :: type = 17
 
 !
 !     Range of printing characters
 !
-      integer(ip)           fprint
-      parameter           ( fprint  =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint  = 126 )
+      integer(ip), parameter :: lprint = 126
 
 !
 !     Number of items in a segment
 !
-      integer(ip)           datsiz
-      parameter           ( datsiz  = 12 )
+      integer(ip), parameter :: datsiz = 12
 
 
 

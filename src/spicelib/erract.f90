@@ -369,18 +369,15 @@
 !
 !     Define the length of an option.
 !
-      integer(ip)           oplen
-      parameter           ( oplen = 3 )
+      integer(ip), parameter :: oplen = 3
 !
 !     Define the maximum length of an action.
 !
-      integer(ip)           actlen
-      parameter           ( actlen = 7 )
+      integer(ip), parameter :: actlen = 7
 !
 !     Define the number of actions
 !
-      integer(ip)           numact
-      parameter           ( numact = 5 )
+      integer(ip), parameter :: numact = 5
 !
 !     Local Variables
 !

@@ -28,8 +28,7 @@
       character(*)          binary
       integer(ip)           resv
 
-      integer(ip)           bsize
-      parameter           ( bsize = 1024 )
+      integer(ip), parameter :: bsize = 1024
 
 ! $ Brief_I/O
 !
@@ -306,8 +305,7 @@
 !
 !     Local Parameters
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 
 !
 !     Local variables

@@ -1022,41 +1022,34 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-17_wp )
+      real(wp), parameter :: cnvlim = 1.0e-17_wp
 
 !
 !     Round-off error limit for arc sine input:
 !
-      real(wp)              rndtol
-      parameter           ( rndtol = 1.0e-14_wp )
+      real(wp), parameter :: rndtol = 1.0e-14_wp
 
 !
 !     Fraction of planetary angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      real(wp)              margin
-      parameter           ( margin = 1.001_wp )
+      real(wp), parameter :: margin = 1.001_wp
 
 
-      integer(ip)           abclen
-      parameter           ( abclen =  15 )
+      integer(ip), parameter :: abclen = 15
 
-      integer(ip)           maxitr
-      parameter           ( maxitr =  10 )
+      integer(ip), parameter :: maxitr = 10
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 
 !

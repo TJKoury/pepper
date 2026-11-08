@@ -601,33 +601,28 @@
 !
 !     Length of a DAF internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      integer(ip)           inteoc
-      parameter           ( inteoc = 4 )
+      integer(ip), parameter :: inteoc = 4
 
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      integer(ip)           inteol
-      parameter           ( inteol = 0 )
+      integer(ip), parameter :: inteol = 0
 
 !
 !     The maximum number of DAFs that may be open simultaneously.
 !
-      integer(ip)           ftsize
-      parameter           ( ftsize = 5000 )
+      integer(ip), parameter :: ftsize = 5000
 
 !
 !     Length of a DAF character record, in characters.
 !
-      integer(ip)           mxcrec
-      parameter           ( mxcrec = 1000 )
+      integer(ip), parameter :: mxcrec = 1000
 !
 !     Local variables
 !

@@ -772,200 +772,139 @@
 !     of the various kinds of components we will be looking at in the
 !     input time string.
 !
-      integer(ip)           currnt
-      parameter           ( currnt = 1 )
+      integer(ip), parameter :: currnt = 1
 
-      integer(ip)           begin
-      parameter           ( begin  = currnt )
+      integer(ip), parameter :: begin = currnt
 
-      integer(ip)           noname
-      parameter           ( noname = currnt  + 1 )
+      integer(ip), parameter :: noname = currnt  + 1
 
-      integer(ip)           year
-      parameter           ( year   = noname + 1 )
+      integer(ip), parameter :: year = noname + 1
 
-      integer(ip)           yr
-      parameter           ( yr     = year   + 1 )
+      integer(ip), parameter :: yr = year   + 1
 
-      integer(ip)           umon
-      parameter           ( umon   = yr     + 1 )
+      integer(ip), parameter :: umon = yr     + 1
 
-      integer(ip)           mmon
-      parameter           ( mmon   = umon   + 1 )
+      integer(ip), parameter :: mmon = umon   + 1
 
-      integer(ip)           lmon
-      parameter           ( lmon   = mmon   + 1 )
+      integer(ip), parameter :: lmon = mmon   + 1
 
-      integer(ip)           umnth
-      parameter           ( umnth  = lmon   + 1 )
+      integer(ip), parameter :: umnth = lmon   + 1
 
-      integer(ip)           mmnth
-      parameter           ( mmnth  = umnth  + 1 )
+      integer(ip), parameter :: mmnth = umnth  + 1
 
-      integer(ip)           lmnth
-      parameter           ( lmnth  = mmnth  + 1 )
+      integer(ip), parameter :: lmnth = mmnth  + 1
 
-      integer(ip)           month
-      parameter           ( month  = lmnth  + 1 )
+      integer(ip), parameter :: month = lmnth  + 1
 
-      integer(ip)           doy
-      parameter           ( doy    = month  + 1 )
+      integer(ip), parameter :: doy = month  + 1
 
-      integer(ip)           uwkd
-      parameter           ( uwkd   = doy    + 1 )
+      integer(ip), parameter :: uwkd = doy    + 1
 
-      integer(ip)           mwkd
-      parameter           ( mwkd   = uwkd   + 1 )
+      integer(ip), parameter :: mwkd = uwkd   + 1
 
-      integer(ip)           lwkd
-      parameter           ( lwkd   = mwkd   + 1 )
+      integer(ip), parameter :: lwkd = mwkd   + 1
 
-      integer(ip)           uweekd
-      parameter           ( uweekd = lwkd   + 1 )
+      integer(ip), parameter :: uweekd = lwkd   + 1
 
-      integer(ip)           mweekd
-      parameter           ( mweekd = uweekd + 1 )
+      integer(ip), parameter :: mweekd = uweekd + 1
 
-      integer(ip)           lweekd
-      parameter           ( lweekd = mweekd + 1 )
+      integer(ip), parameter :: lweekd = mweekd + 1
 
-      integer(ip)           day
-      parameter           ( day    = lweekd + 1 )
+      integer(ip), parameter :: day = lweekd + 1
 
-      integer(ip)           minute
-      parameter           ( minute = day    + 1 )
+      integer(ip), parameter :: minute = day    + 1
 
-      integer(ip)           hour
-      parameter           ( hour   = minute + 1 )
+      integer(ip), parameter :: hour = minute + 1
 
-      integer(ip)           sec
-      parameter           ( sec    = hour   + 1 )
+      integer(ip), parameter :: sec = hour   + 1
 
-      integer(ip)           point
-      parameter           ( point  = sec    + 1 )
+      integer(ip), parameter :: point = sec    + 1
 
-      integer(ip)           place
-      parameter           ( place  = point  + 1 )
+      integer(ip), parameter :: place = point  + 1
 
-      integer(ip)           julian
-      parameter           ( julian = place  + 1 )
+      integer(ip), parameter :: julian = place  + 1
 
-      integer(ip)           utc
-      parameter           ( utc    = julian + 1 )
+      integer(ip), parameter :: utc = julian + 1
 
-      integer(ip)           tdb
-      parameter           ( tdb    = utc    + 1 )
+      integer(ip), parameter :: tdb = utc    + 1
 
-      integer(ip)           tdt
-      parameter           ( tdt    = tdb    + 1 )
+      integer(ip), parameter :: tdt = tdb    + 1
 
-      integer(ip)           tt
-      parameter           ( tt     = tdt    + 1 )
+      integer(ip), parameter :: tt = tdt    + 1
 
-      integer(ip)           sp2000
-      parameter           ( sp2000 = tt     + 1 )
+      integer(ip), parameter :: sp2000 = tt     + 1
 
-      integer(ip)           sp1950
-      parameter           ( sp1950 = sp2000 + 1 )
+      integer(ip), parameter :: sp1950 = sp2000 + 1
 
-      integer(ip)           round
-      parameter           ( round  = sp1950 + 1 )
+      integer(ip), parameter :: round = sp1950 + 1
 
-      integer(ip)           trunc
-      parameter           ( trunc  = round  + 1 )
+      integer(ip), parameter :: trunc = round  + 1
 
-      integer(ip)           uera
-      parameter           ( uera   = trunc  + 1 )
+      integer(ip), parameter :: uera = trunc  + 1
 
-      integer(ip)           lera
-      parameter           ( lera   = uera   + 1 )
+      integer(ip), parameter :: lera = uera   + 1
 
-      integer(ip)           uerax
-      parameter           ( uerax  = lera + 1 )
+      integer(ip), parameter :: uerax = lera + 1
 
-      integer(ip)           lerax
-      parameter           ( lerax  = uerax + 1 )
+      integer(ip), parameter :: lerax = uerax + 1
 
-      integer(ip)           uampm
-      parameter           ( uampm  = lerax   + 1 )
+      integer(ip), parameter :: uampm = lerax   + 1
 
-      integer(ip)           lampm
-      parameter           ( lampm  = uampm  + 1 )
+      integer(ip), parameter :: lampm = uampm  + 1
 
-      integer(ip)           utcp
-      parameter           ( utcp   = lampm  + 1 )
+      integer(ip), parameter :: utcp = lampm  + 1
 
-      integer(ip)           utcm
-      parameter           ( utcm   = utcp   + 1 )
+      integer(ip), parameter :: utcm = utcp   + 1
 
-      integer(ip)           jcal
-      parameter           ( jcal   = utcm   + 1 )
+      integer(ip), parameter :: jcal = utcm   + 1
 
-      integer(ip)           gcal
-      parameter           ( gcal   = jcal   + 1 )
+      integer(ip), parameter :: gcal = jcal   + 1
 
-      integer(ip)           mcal
-      parameter           ( mcal   = gcal   + 1 )
+      integer(ip), parameter :: mcal = gcal   + 1
 
-      integer(ip)           timsys
-      parameter           ( timsys = mcal   + 1 )
+      integer(ip), parameter :: timsys = mcal   + 1
 
-      integer(ip)           calndr
-      parameter           ( calndr = timsys + 1 )
+      integer(ip), parameter :: calndr = timsys + 1
 
-      integer(ip)           ampm
-      parameter           ( ampm   = calndr + 1 )
+      integer(ip), parameter :: ampm = calndr + 1
 
-      integer(ip)           mon
-      parameter           ( mon    = ampm   + 1 )
+      integer(ip), parameter :: mon = ampm   + 1
 
-      integer(ip)           wkday
-      parameter           ( wkday  = mon    + 1 )
+      integer(ip), parameter :: wkday = mon    + 1
 
-      integer(ip)           era
-      parameter           ( era    = wkday  + 1 )
+      integer(ip), parameter :: era = wkday  + 1
 
-      integer(ip)           noon
-      parameter           ( noon   = era    + 1 )
+      integer(ip), parameter :: noon = era    + 1
 
-      integer(ip)           rlyear
-      parameter           ( rlyear = noon   + 1 )
+      integer(ip), parameter :: rlyear = noon   + 1
 
-      integer(ip)           finish
-      parameter           ( finish = rlyear      )
+      integer(ip), parameter :: finish = rlyear
 
 !
 !     The following parameters serve as an enumeration of the various
 !     time formats that are recognized.
 !
-      integer(ip)           ymd
-      parameter           ( ymd    = 1 )
+      integer(ip), parameter :: ymd = 1
 
-      integer(ip)           contin
-      parameter           ( contin = ymd + 1 )
+      integer(ip), parameter :: contin = ymd + 1
 
 !
 !     The parameters below are used to declare the space needed for
 !     scanning the input format string.
 !
-      integer(ip)           maxmrk
-      parameter           ( maxmrk = 43  )
+      integer(ip), parameter :: maxmrk = 43
 
-      integer(ip)           room
-      parameter           ( room   = 100 )
+      integer(ip), parameter :: room = 100
 
 !
 !     The length of the local string that we will use for copying
 !     the format string.
 !
-      integer(ip)           maxlen
-      parameter           ( maxlen = 256 )
+      integer(ip), parameter :: maxlen = 256
 
-      integer(ip)           mrksiz
-      parameter           ( mrksiz = 8 )
+      integer(ip), parameter :: mrksiz = 8
 
-      integer(ip)           loclen
-      parameter           ( loclen = 32 )
+      integer(ip), parameter :: loclen = 32
 
 !
 !     Local variables

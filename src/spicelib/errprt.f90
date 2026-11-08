@@ -280,11 +280,9 @@
 !     Local Variables:
 !
 
-      integer(ip)           wrdlen
-      parameter           ( wrdlen = 9 )
+      integer(ip), parameter :: wrdlen = 9
 
-      integer(ip)           maxwrd
-      parameter           ( maxwrd = 10 )
+      integer(ip), parameter :: maxwrd = 10
 
       character(wrdlen)     words ( maxwrd )
       character(wrdlen)     upword
@@ -301,15 +299,13 @@
       logical               dfault
       logical               status
 
-      integer(ip)           oplen
-      parameter           ( oplen = 3 )
+      integer(ip), parameter :: oplen = 3
       character(oplen)      upop
       character(oplen)      locop
 
 
 
-      integer(ip)           lstlen
-      parameter           ( lstlen = 100 )
+      integer(ip), parameter :: lstlen = 100
 
 
 !

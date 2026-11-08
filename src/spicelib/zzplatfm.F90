@@ -260,62 +260,52 @@
 !
 !     SYSTEM Index.
 !
-      integer(ip)           idxsys
-      parameter           ( idxsys = 1 )
+      integer(ip), parameter :: idxsys = 1
 
 !
 !     O/S Index.
 !
-      integer(ip)           idxos
-      parameter           ( idxos  = idxsys + 1 )
+      integer(ip), parameter :: idxos = idxsys + 1
 
 !
 !     Compiler Index.
 !
-      integer(ip)           idxcmp
-      parameter           ( idxcmp = idxos  + 1 )
+      integer(ip), parameter :: idxcmp = idxos  + 1
 
 !
 !     Binary File Format Index.
 !
-      integer(ip)           idxfmt
-      parameter           ( idxfmt = idxcmp + 1 )
+      integer(ip), parameter :: idxfmt = idxcmp + 1
 
 !
 !     Text File Format Index
 !
-      integer(ip)           idxtfm
-      parameter           ( idxtfm = idxfmt + 1 )
+      integer(ip), parameter :: idxtfm = idxfmt + 1
 
 !
 !     Reads Binary File Format Index.
 !
-      integer(ip)           idxrbf
-      parameter           ( idxrbf = idxtfm + 1 )
+      integer(ip), parameter :: idxrbf = idxtfm + 1
 
 !
 !     Size of the buffer in which KEY is placed.
 !
-      integer(ip)           kysize
-      parameter           ( kysize = 64 )
+      integer(ip), parameter :: kysize = 64
 
 !
 !     Maximum Size of local string returned in VALUE
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 !
 !     Number of Platform Dependent values stored here.
 !
-      integer(ip)           nattr
-      parameter           ( nattr  =  6 )
+      integer(ip), parameter :: nattr = 6
 
 !
 !     Default Reply in the event of an invalid KEY.
 !
-      character(wdsize)      defrpy
-      parameter            ( defrpy = '<UNAVAILABLE>' )
+      character(wdsize), parameter :: defrpy = '<UNAVAILABLE>'
 
 !
 !     Local Variables

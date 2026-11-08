@@ -162,20 +162,15 @@
 !
 !     Local parameters
 !
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           msglen
-      parameter           ( msglen = 160 )
+      integer(ip), parameter :: msglen = 160
 
-      integer(ip)           ncomp
-      parameter           ( ncomp  = 10 )
+      integer(ip), parameter :: ncomp = 10
 
-      integer(ip)           maxmod
-      parameter           ( maxmod = 10 )
+      integer(ip), parameter :: maxmod = 10
 
-      integer(ip)           short
-      parameter           ( short  = 32 )
+      integer(ip), parameter :: short = 32
 
 !
 !     Local variables

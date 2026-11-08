@@ -22,14 +22,12 @@
 !
 !     Character code indicating `true':
 !
-      character(*)          ctrue
-      parameter           ( ctrue  = 'T' )
+      character(*), parameter :: ctrue = 'T'
 
 !
 !     Character code indicating `false':
 !
-      character(*)          cfalse
-      parameter           ( cfalse = 'F' )
+      character(*), parameter :: cfalse = 'F'
 
 !
 !     End Include Section:  EK Boolean Enumerated Type

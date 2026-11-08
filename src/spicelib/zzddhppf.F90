@@ -328,74 +328,62 @@
 !
 !     Number of characters to be read in from a record.
 !
-      integer(ip)           numchr
-      parameter           ( numchr = 1000 )
+      integer(ip), parameter :: numchr = 1000
 
 !
 !     Bounding indices for the window that brackets the FTP
 !     error detection string in the file record.
 !
-      integer(ip)           ftpstr
-      parameter           ( ftpstr = 500 )
+      integer(ip), parameter :: ftpstr = 500
 
-      integer(ip)           ftpend
-      parameter           ( ftpend = 1000 )
+      integer(ip), parameter :: ftpend = 1000
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAF binaries.
 !
-      integer(ip)           dafbff
-      parameter           ( dafbff = 89 )
+      integer(ip), parameter :: dafbff = 89
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAS binaries.
 !
-      integer(ip)           dasbff
-      parameter           ( dasbff = 85 )
+      integer(ip), parameter :: dasbff = 85
 
 !
 !     Size of the binary format identification string.
 !
-      integer(ip)           bffsiz
-      parameter           ( bffsiz = 8 )
+      integer(ip), parameter :: bffsiz = 8
 
 !
 !     Index of the first byte of NI in the DAF file record.
 !
-      integer(ip)           nipos
-      parameter           ( nipos = 13 )
+      integer(ip), parameter :: nipos = 13
 
 !
 !     Index of the first byte of NSUM in the DAF descriptor record.
 !
-      integer(ip)           nsmpos
-      parameter           ( nsmpos = 17 )
+      integer(ip), parameter :: nsmpos = 17
 
 !
 !     Index of the first byte of FDREC in the DAF file record.
 !
-      integer(ip)           fdrpos
-      parameter           ( fdrpos = 77 )
+      integer(ip), parameter :: fdrpos = 77
 
 !
 !     Integer code such that CHAR(INTNUL) produces the NULL character.
 !
-      integer(ip)           intnul
-      parameter           ( intnul = 0 )
+      integer(ip), parameter :: intnul = 0
 
 !
 !     IDW2AT Output Argument Lengths.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 4 )
+      integer(ip), parameter :: idwlen = 4
 
 !
 !     NULLID is the index of the extended STRBFF "NULL" string ID.
 !
-      integer(ip)           nullid
-      parameter           ( nullid = numbff+1 )
+      integer(ip), parameter :: nullid = numbff+1
 
 !
 !     Local Variables

@@ -354,8 +354,7 @@ contains
       implicit none
 
 
-      integer(ip)           maxldp
-      parameter           ( maxldp = 23 )
+      integer(ip), parameter :: maxldp = 23
 
 ! $ Detailed_Input
 !
@@ -696,8 +695,7 @@ contains
       implicit none
 
 
-      integer(ip)           maxli
-      parameter           ( maxli = 11 )
+      integer(ip), parameter :: maxli = 11
 
 ! $ Detailed_Input
 !
@@ -2858,8 +2856,7 @@ contains
 !
 !     Local Parameters
 !
-      integer(ip)           base
-      parameter           ( base = 16  )
+      integer(ip), parameter :: base = 16
 !
 !     Character codes and limits (SPICELIB computed them on the first
 !     call).
@@ -3158,8 +3155,7 @@ contains
 
       implicit none
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
 
 ! $ Detailed_Input
@@ -3423,8 +3419,7 @@ contains
       integer(ip)           next
       parameter           ( next = 1 )
 
-      integer(ip)           prev
-      parameter           ( prev = 2 )
+      integer(ip), parameter :: prev = 2
 
 !
 !     Local Variables.

@@ -160,8 +160,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           acclen
-      parameter           ( acclen = 15 )
+      integer(ip), parameter :: acclen = 15
 
 !
 !     Local variables

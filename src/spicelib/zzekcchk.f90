@@ -28,8 +28,7 @@
       include 'ekqlimit.inc'
       include 'ekquery.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          query
       integer(ip)           eqryi ( lbcell : * )

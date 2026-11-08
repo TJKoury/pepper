@@ -170,33 +170,28 @@
 !
 !     Record Number of the file record in a DAF.
 !
-      integer(ip)           frlocr
-      parameter           ( frlocr =  1 )
+      integer(ip), parameter :: frlocr = 1
 
 !
 !     Length of the IDWORD string.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen =  8 )
+      integer(ip), parameter :: idwlen = 8
 
 !
 !     Length of the internal filename string.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     Starting location in bytes of the internal filename in the
 !     file record.
 !
-      integer(ip)           ifnstr
-      parameter           ( ifnstr = 17 )
+      integer(ip), parameter :: ifnstr = 17
 
 !
 !     Size of an integer in bytes.
 !
-      integer(ip)           inlen
-      parameter           ( inlen  =  4 )
+      integer(ip), parameter :: inlen = 4
 
 !
 !     Local Variables

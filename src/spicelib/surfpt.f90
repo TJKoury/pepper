@@ -258,11 +258,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           msgdim
-      parameter           ( msgdim = 7 )
+      integer(ip), parameter :: msgdim = 7
 
-      integer(ip)           msglen
-      parameter           ( msglen = 32 )
+      integer(ip), parameter :: msglen = 32
 
 !
 !     Local variables

@@ -127,8 +127,7 @@
 !
 !     Local parameters
 !
-      real(wp)              tol
-      parameter           ( tol = 1.0e-13_wp )
+      real(wp), parameter :: tol = 1.0e-13_wp
 
 !
 !     Local variables

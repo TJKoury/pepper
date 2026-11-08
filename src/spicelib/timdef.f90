@@ -272,11 +272,9 @@
 !
 !     Local Variables.
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 16 )
+      integer(ip), parameter :: wdsize = 16
 
-      integer(ip)           nzones
-      parameter           ( nzones = 8 )
+      integer(ip), parameter :: nzones = 8
 
       character(wdsize)     defzon
       character(wdsize)     defsys

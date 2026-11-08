@@ -122,8 +122,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           filsiz
-      parameter           ( filsiz = 255 )
+      integer(ip), parameter :: filsiz = 255
 
 !
 !     Local variables

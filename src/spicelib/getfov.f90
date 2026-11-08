@@ -27,8 +27,7 @@
 
       implicit none
 
-      real(wp)              mincos
-      parameter           ( mincos = 1.0e-15_wp )
+      real(wp), parameter :: mincos = 1.0e-15_wp
 
       integer(ip)           instid
       integer(ip)           room
@@ -689,32 +688,27 @@
 !
 !     Keyword Name Length.
 !
-      integer(ip)           kwdnln
-      parameter           ( kwdnln = 32 )
+      integer(ip), parameter :: kwdnln = 32
 
 !
 !     Maximum Number of Normal Vectors.
 !
-      integer(ip)           maxnml
-      parameter           ( maxnml =  4 )
+      integer(ip), parameter :: maxnml = 4
 
 !
 !     Number of CORNER Shapes Supported.
 !
-      integer(ip)           nshaps
-      parameter           ( nshaps =  4 )
+      integer(ip), parameter :: nshaps = 4
 
 !
 !     Number of ANGLE Shapes Supported.
 !
-      integer(ip)           numasp
-      parameter           ( numasp =  3 )
+      integer(ip), parameter :: numasp = 3
 
 !
 !     Maximum Length of String Data from the kernel pool.
 !
-      integer(ip)           vallen
-      parameter           ( vallen = 80 )
+      integer(ip), parameter :: vallen = 80
 
 !
 !     Local variables

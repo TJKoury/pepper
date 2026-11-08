@@ -252,8 +252,7 @@
 !     Define the maximum length for the usable portion of a status
 !     string.
 !
-      integer(ip)           stlen
-      parameter           ( stlen = 7 )
+      integer(ip), parameter :: stlen = 7
 !
 !     Define the notion of 'SUCCESS' and 'FAILURE'.
 !

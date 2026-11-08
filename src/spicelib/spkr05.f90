@@ -181,23 +181,17 @@
 !
 !     Local parameters
 !
-      integer(ip)           size
-      parameter           ( size    = 100 )
+      integer(ip), parameter :: size = 100
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz  = size )
+      integer(ip), parameter :: dirsiz = size
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz  = size )
+      integer(ip), parameter :: bufsiz = size
 
-      integer(ip)           stasiz
-      parameter           ( stasiz =    6 )
+      integer(ip), parameter :: stasiz = 6
 
-      integer(ip)           nd
-      parameter           ( nd =        2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni =        6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     SPICELIB functions

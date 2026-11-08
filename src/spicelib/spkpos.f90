@@ -474,8 +474,7 @@
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Local variables

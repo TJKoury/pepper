@@ -37,8 +37,7 @@
 
       include 'zzdsk.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           curve
       real(wp)              srcrad
@@ -343,8 +342,7 @@
 !
 !     Local parameters
 !
-      real(wp)              margin
-      parameter           ( margin = 1.0e-12_wp )
+      real(wp), parameter :: margin = 1.0e-12_wp
 
 !
 !     Local variables

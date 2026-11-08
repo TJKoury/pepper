@@ -173,8 +173,7 @@
 !
 !     Local parameters.
 !
-      integer(ip)           cat1nc
-      parameter           ( cat1nc = 7 )
+      integer(ip), parameter :: cat1nc = 7
 
 !
 !     Local variables

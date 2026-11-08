@@ -62,8 +62,7 @@
 !
 !     Supported SCLK string field delimiters:
 !
-      character(ndelim)     delims
-      parameter           ( delims = '.:-, ' )
+      character(ndelim), parameter :: delims = '.:-, '
 
 !
 !     Maximum number of partitions:

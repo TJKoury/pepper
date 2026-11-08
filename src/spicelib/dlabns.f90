@@ -393,11 +393,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           fstidx
-      parameter           ( fstidx = 1 )
+      integer(ip), parameter :: fstidx = 1
 
-      integer(ip)           lstidx
-      parameter           ( lstidx = 2 )
+      integer(ip), parameter :: lstidx = 2
 
 !
 !     Local variables

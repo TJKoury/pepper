@@ -354,11 +354,9 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname = 'ZZSPKFAO' )
+      character(*), parameter :: rname = 'ZZSPKFAO'
 
-      real(wp)              delta
-      parameter           ( delta = 1.0_wp )
+      real(wp), parameter :: delta = 1.0_wp
 
 !
 !     Local variables

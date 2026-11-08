@@ -317,11 +317,9 @@
 !
 !     Local parameters
 !
-      real(wp)              radscl
-      parameter           ( radscl = 1.01_wp )
+      real(wp), parameter :: radscl = 1.01_wp
 
-      integer(ip)           maxhit
-      parameter           ( maxhit = 1000 )
+      integer(ip), parameter :: maxhit = 1000
 
 !
 !     Local variables

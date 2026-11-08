@@ -578,8 +578,7 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'ZZSPKAS0' )
+      character(*), parameter :: rname = 'ZZSPKAS0'
 
 !
 !     Local variables

@@ -21,8 +21,7 @@
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel    =   9 )
+      integer(ip), parameter :: ubel = 9
 
       real(wp)              center (    3 )
       real(wp)              vec1   (    3 )
@@ -315,14 +314,11 @@
 !        MINPOS through MINPOS + 1
 !
 !
-      integer(ip)           ctrpos
-      parameter           ( ctrpos = 1 )
+      integer(ip), parameter :: ctrpos = 1
 
-      integer(ip)           majpos
-      parameter           ( majpos = 4 )
+      integer(ip), parameter :: majpos = 4
 
-      integer(ip)           minpos
-      parameter           ( minpos = 7 )
+      integer(ip), parameter :: minpos = 7
 
 
 !

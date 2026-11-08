@@ -21,8 +21,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          name
       character(*)          values     (        * )

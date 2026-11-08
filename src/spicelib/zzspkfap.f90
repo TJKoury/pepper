@@ -383,8 +383,7 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'ZZSPKFAP' )
+      character(*), parameter :: rname = 'ZZSPKFAP'
 
 !
 !     Local variables

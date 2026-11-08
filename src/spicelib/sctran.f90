@@ -27,8 +27,7 @@
       integer(ip)           clkid
       logical               found
 
-      integer(ip)           maxlen
-      parameter           ( maxlen = 32 )
+      integer(ip), parameter :: maxlen = 32
 
 ! $ Brief_I/O
 !

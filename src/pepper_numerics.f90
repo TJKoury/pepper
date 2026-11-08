@@ -2859,17 +2859,13 @@ contains
       integer(ip)           dy
       parameter           ( dy     = 2 )
 
-      integer(ip)           dz
-      parameter           ( dz     = 3 )
+      integer(ip), parameter :: dz = 3
 
-      integer(ip)           dlon
-      parameter           ( dlon   = 1 )
+      integer(ip), parameter :: dlon = 1
 
-      integer(ip)           dlat
-      parameter           ( dlat   = 2 )
+      integer(ip), parameter :: dlat = 2
 
-      integer(ip)           dalt
-      parameter           ( dalt   = 3 )
+      integer(ip), parameter :: dalt = 3
 
 !
 !     Local variables
@@ -4895,8 +4891,7 @@ contains
 !
 !     Local parameters
 !
-      real(wp)              tol
-      parameter           ( tol = 1.0e-15_wp )
+      real(wp), parameter :: tol = 1.0e-15_wp
 
 !
 !     Local variables
@@ -7907,8 +7902,7 @@ contains
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel = 9 )
+      integer(ip), parameter :: ubel = 9
 
       integer(ip)           ubpl
       parameter           ( ubpl = 4 )
@@ -8143,8 +8137,7 @@ contains
 !
 !     Local parameters
 !
-      real(wp)              seplim
-      parameter           ( seplim = 1.0e-9_wp )
+      real(wp), parameter :: seplim = 1.0e-9_wp
 
 !
 !     Local variables
@@ -8962,8 +8955,7 @@ contains
 !
 !     Local parameters
 !
-      real(wp)              margin
-      parameter           ( margin = 3.0_wp )
+      real(wp), parameter :: margin = 3.0_wp
 
 !
 !     Local variables
@@ -9762,14 +9754,11 @@ contains
 !
 !     Local parameters
 !
-      integer(ip)           nrows
-      parameter           ( nrows = 6 )
+      integer(ip), parameter :: nrows = 6
 
-      integer(ip)           ncols
-      parameter           ( ncols = 6 )
+      integer(ip), parameter :: ncols = 6
 
-      integer(ip)           block
-      parameter           ( block = 3 )
+      integer(ip), parameter :: block = 3
 
 
 !
@@ -10385,8 +10374,7 @@ contains
 !     sufficient on computers have 64 bit double precision
 !     numbers.
 !
-      integer(ip)           mxnewt
-      parameter           ( mxnewt = 5 )
+      integer(ip), parameter :: mxnewt = 5
 
 
       real(wp)              cosx
@@ -10985,11 +10973,9 @@ contains
 !     columns are the unitized columns of R.
 !
 !
-      real(wp)              ntol
-      parameter           ( ntol = 0.1_wp )
+      real(wp), parameter :: ntol = 0.1_wp
 
-      real(wp)              dtol
-      parameter           ( dtol = 0.1_wp )
+      real(wp), parameter :: dtol = 0.1_wp
 
 !
 !     Local Variables
@@ -15543,8 +15529,7 @@ contains
 !
 !     BOUND is chosen somewhat arbitrarily....
 !
-      real(wp)              bound
-      parameter           ( bound = 10.0_wp )
+      real(wp), parameter :: bound = 10.0_wp
 
 !
 !     Tolerance for deviation from unit length of the normal

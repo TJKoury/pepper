@@ -670,11 +670,9 @@
 !     columns are the unitized columns of R.
 !
 !
-      real(wp)              ntol
-      parameter           ( ntol = 0.1_wp )
+      real(wp), parameter :: ntol = 0.1_wp
 
-      real(wp)              dtol
-      parameter           ( dtol = 0.1_wp )
+      real(wp), parameter :: dtol = 0.1_wp
 
 
 !

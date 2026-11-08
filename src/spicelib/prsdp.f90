@@ -208,8 +208,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           msglen
-      parameter           ( msglen = 320 )
+      integer(ip), parameter :: msglen = 320
 
 !
 !     Local variables

@@ -115,8 +115,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

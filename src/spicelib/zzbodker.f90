@@ -29,8 +29,7 @@
 
       include               'zzbodtrn.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       character(maxl)       names  (          nroom )
       character(maxl)       nornam (          nroom )
@@ -225,8 +224,7 @@
 !
 !     Local Parameters
 !
-      integer(ip)           keylen
-      parameter           ( keylen = 32 )
+      integer(ip), parameter :: keylen = 32
 
 !
 !     Local Variables

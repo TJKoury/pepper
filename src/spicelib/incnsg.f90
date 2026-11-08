@@ -275,14 +275,11 @@
 !
 !     Local parameters
 !
-      real(wp)              costol
-      parameter           ( costol = 1.0e-10_wp )
+      real(wp), parameter :: costol = 1.0e-10_wp
 
-      real(wp)              hsptol
-      parameter           ( hsptol = 1.0e-14_wp )
+      real(wp), parameter :: hsptol = 1.0e-14_wp
 
-      integer(ip)           ubpl
-      parameter           ( ubpl   = 4 )
+      integer(ip), parameter :: ubpl = 4
 
 !
 !     Local variables

@@ -455,23 +455,17 @@
 !
 !     Local parameters
 !
-      character(1)          quote
-      parameter           ( quote = '''' )
+      character(1), parameter :: quote = ''''
 
-      character(1)          escchr
-      parameter           ( escchr = '@')
+      character(1), parameter :: escchr = '@'
 
-      character(1)          chrfpc
-      parameter           ( chrfpc = ' ')
+      character(1), parameter :: chrfpc = ' '
 
-      character(1)          chrlpc
-      parameter           ( chrlpc = '~')
+      character(1), parameter :: chrlpc = '~'
 
-      integer(ip)           maxenc
-      parameter           ( maxenc = 64 )
+      integer(ip), parameter :: maxenc = 64
 
-      integer(ip)           hexbas
-      parameter           ( hexbas = 16 )
+      integer(ip), parameter :: hexbas = 16
 
 !
 !     Local variables

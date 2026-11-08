@@ -278,14 +278,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           timlen
-      parameter           ( timlen = 35 )
+      integer(ip), parameter :: timlen = 35
 
-      integer(ip)           phrsln
-      parameter           ( phrsln = 600 )
+      integer(ip), parameter :: phrsln = 600
 
 !
 !     Local variables

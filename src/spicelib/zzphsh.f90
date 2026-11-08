@@ -157,8 +157,7 @@
       integer(ip)           length
       integer(ip)           maxdiv
 
-      integer(ip)           bslash
-      parameter           ( bslash = 92 )
+      integer(ip), parameter :: bslash = 92
 
 
       logical               first

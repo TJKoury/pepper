@@ -231,14 +231,11 @@
 !
 !     Local parameters
 !
-      character(*)          bmark
-      parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*)          emark
-      parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
-      integer(ip)           maxcpr
-      parameter           ( maxcpr = 1000 )
+      integer(ip), parameter :: maxcpr = 1000
 !
 !     Local variables
 !

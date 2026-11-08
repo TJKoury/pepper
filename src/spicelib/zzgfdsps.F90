@@ -207,8 +207,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
 !
 !     Local Variables

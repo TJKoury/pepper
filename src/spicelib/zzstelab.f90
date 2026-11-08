@@ -194,16 +194,14 @@
 !     computed analytically. When sin(PHI) is less than SEPLIM, the
 !     velocity must be computed numerically.
 !
-      real(wp)              seplim
-      parameter           ( seplim = 1.0e-6_wp )
+      real(wp), parameter :: seplim = 1.0e-6_wp
 
 !
 !     Let TDELTA be the time interval, measured in seconds,
 !     used for numerical differentiation of the stellar
 !     aberration correction, when this is necessary.
 !
-      real(wp)              tdelta
-      parameter           ( tdelta = 1.0_wp )
+      real(wp), parameter :: tdelta = 1.0_wp
 
 !
 !     Local variables

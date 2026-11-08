@@ -214,11 +214,9 @@
 !
 !     Local Parameters
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen =  8 )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60)
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     Local variables

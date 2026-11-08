@@ -40,8 +40,7 @@
       include 'ekwild.inc'
       include 'ekqlimit.inc'
 
-      integer(ip)           maxcol
-      parameter           ( maxcol = 10 )
+      integer(ip), parameter :: maxcol = 10
 
       integer(ip)           ncnstr
       logical               active ( * )

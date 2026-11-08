@@ -19,8 +19,7 @@
 
       implicit none
 
-      integer(ip)           maxrec
-      parameter           ( maxrec  = 129 )
+      integer(ip), parameter :: maxrec = 129
 
       integer(ip)           handle
       real(wp)              descr    ( * )

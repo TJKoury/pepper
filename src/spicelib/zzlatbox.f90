@@ -30,8 +30,7 @@
       real(wp)              lz
       real(wp)              radius
 
-      real(wp)              margin
-      parameter           ( margin = 1.0e-12_wp )
+      real(wp), parameter :: margin = 1.0e-12_wp
 
 ! $ Brief_I/O
 !

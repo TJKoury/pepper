@@ -28,11 +28,9 @@
 
       integer(ip)           unit
 
-      integer(ip)           idlen
-      parameter           ( idlen  = 8 )
+      integer(ip), parameter :: idlen = 8
 
-      integer(ip)           nints
-      parameter           ( nints  = 20 )
+      integer(ip), parameter :: nints = 20
 
 ! $ Brief_I/O
 !
@@ -155,18 +153,15 @@
 !     Character buffer size consistent with the number of integers
 !     that will be read from the file.
 !
-      integer(ip)           nchars
-      parameter           ( nchars = nints * 4 )
+      integer(ip), parameter :: nchars = nints * 4
 
 !
 !     Minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      integer(ip)           minpch
-      parameter           ( minpch = 32 )
+      integer(ip), parameter :: minpch = 32
 
-      integer(ip)           maxpch
-      parameter           ( maxpch = 126 )
+      integer(ip), parameter :: maxpch = 126
 
 !
 !     Local variables.

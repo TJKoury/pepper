@@ -596,8 +596,7 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'SPKAPS' )
+      character(*), parameter :: rname = 'SPKAPS'
 
 !
 !     Local variables

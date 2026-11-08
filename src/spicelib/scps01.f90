@@ -327,37 +327,28 @@
 !
 !     Local parameters
 !
-      integer(ip)           errlen
-      parameter           ( errlen =    240 )
+      integer(ip), parameter :: errlen = 240
 
-      integer(ip)           namlen
-      parameter           ( namlen =     60 )
+      integer(ip), parameter :: namlen = 60
 
-      integer(ip)           msglen
-      parameter           ( msglen =    320 )
+      integer(ip), parameter :: msglen = 320
 
-      integer(ip)           initsc
-      parameter           ( initsc =      0 )
+      integer(ip), parameter :: initsc = 0
 
-      real(wp)              initid
-      parameter           ( initid = -1.0e20_wp )
+      real(wp), parameter :: initid = -1.0e20_wp
 
 !
 !     Following are parameters for the indices within the
 !     array NAMLST of the kernel variable names.
 !
 
-      integer(ip)           nflidx
-      parameter           ( nflidx = 1 )
+      integer(ip), parameter :: nflidx = 1
 
-      integer(ip)           offidx
-      parameter           ( offidx = nflidx + 1 )
+      integer(ip), parameter :: offidx = nflidx + 1
 
-      integer(ip)           modidx
-      parameter           ( modidx = offidx + 1 )
+      integer(ip), parameter :: modidx = offidx + 1
 
-      integer(ip)           nkitem
-      parameter           ( nkitem = modidx )
+      integer(ip), parameter :: nkitem = modidx
 
 !
 !     Local variables

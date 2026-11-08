@@ -205,18 +205,14 @@
 !     Sizes of source info arrays returned by
 !     ZZDSKBUX:
 !
-      integer(ip)           maxdc
-      parameter           ( maxdc  = 1 )
+      integer(ip), parameter :: maxdc = 1
 
-      integer(ip)           maxic
-      parameter           ( maxic  = 1 )
+      integer(ip), parameter :: maxic = 1
 
 
-      integer(ip)           stsize
-      parameter           ( stsize = 10000 )
+      integer(ip), parameter :: stsize = 10000
 
-      integer(ip)           btsize
-      parameter           ( btsize = 10 )
+      integer(ip), parameter :: btsize = 10
 
 !
 !     Body table variables

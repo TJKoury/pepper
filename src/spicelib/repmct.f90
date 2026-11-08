@@ -28,8 +28,7 @@
       character(1)          rtcase
       character(*)          out
 
-      integer(ip)           maxlcn
-      parameter           ( maxlcn = 145 )
+      integer(ip), parameter :: maxlcn = 145
 
 ! $ Brief_I/O
 !

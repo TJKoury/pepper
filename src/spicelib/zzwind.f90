@@ -25,8 +25,7 @@
 !
 ! $ Declarations
 
-      integer(ip)           ubpl
-      parameter           ( ubpl   = 4 )
+      integer(ip), parameter :: ubpl = 4
 
       real(wp)              plane  ( ubpl )
       integer(ip)           n

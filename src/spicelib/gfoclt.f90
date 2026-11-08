@@ -39,8 +39,7 @@
       include               'gf.inc'
       include               'zzholdd.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          occtyp
       character(*)          front
@@ -1765,14 +1764,12 @@
 !
 !     Geometric quantity  bail switch:
 !
-      logical               bail
-      parameter           ( bail = .false. )
+      logical, parameter :: bail = .false.
 
 !
 !     Progress report switch:
 !
-      logical               rpt
-      parameter           ( rpt  = .false. )
+      logical, parameter :: rpt = .false.
 
 
 !

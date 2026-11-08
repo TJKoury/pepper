@@ -185,11 +185,9 @@
 !
 !     IFNLEN is the length of a DAF internal file name.
 !
-      character(*)          bmark
-      parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*)          emark
-      parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
 !
 !     Local variables

@@ -319,8 +319,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           acclen
-      parameter           ( acclen= 5 )
+      integer(ip), parameter :: acclen = 5
 !
 !     Local Variables
 !

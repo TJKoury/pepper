@@ -662,15 +662,13 @@
 !
 !     Length of watched POOL keywords.
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 !
 !     Lower bound of the built-in/BODDEF and kernel-defined hash
 !     collision list arrays.
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
 
 !

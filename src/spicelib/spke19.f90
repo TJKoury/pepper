@@ -197,20 +197,17 @@
 !
 !     Index of subtype code in record:
 !
-      integer(ip)           sbtidx
-      parameter           ( sbtidx = 1 )
+      integer(ip), parameter :: sbtidx = 1
 
 !
 !     Index of packet count in record:
 !
-      integer(ip)           cntidx
-      parameter           ( cntidx = 2 )
+      integer(ip), parameter :: cntidx = 2
 
 !
 !     Index at which packets start:
 !
-      integer(ip)           pktidx
-      parameter           ( pktidx = 3 )
+      integer(ip), parameter :: pktidx = 3
 
 !
 !     Local variables

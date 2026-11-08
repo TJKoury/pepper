@@ -795,14 +795,11 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname = 'LATSRF' )
+      character(*), parameter :: rname = 'LATSRF'
 
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

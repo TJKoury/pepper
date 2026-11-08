@@ -229,17 +229,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           ubel
-      parameter           ( ubel   = 9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl   = 4 )
+      integer(ip), parameter :: ubpl = 4
 
-      integer(ip)           maxitr
-      parameter           ( maxitr = 10 )
+      integer(ip), parameter :: maxitr = 10
 
-      integer(ip)           typlen
-      parameter           ( typlen = 50 )
+      integer(ip), parameter :: typlen = 50
 
 !
 !     Local variables

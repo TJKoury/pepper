@@ -294,11 +294,9 @@
 !
 !     Local Parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 3 )
+      integer(ip), parameter :: bufsiz = 3
 
-      integer(ip)           maxbit
-      parameter           ( maxbit = 64 )
+      integer(ip), parameter :: maxbit = 64
 
 !
 !     Local variables

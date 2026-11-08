@@ -139,11 +139,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           ndspar
-      parameter           ( ndspar = 6 )
+      integer(ip), parameter :: ndspar = 6
 
-      integer(ip)           namlen
-      parameter           ( namlen = 6 )
+      integer(ip), parameter :: namlen = 6
 
 !
 !     Local variables

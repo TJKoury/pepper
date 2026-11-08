@@ -37,8 +37,7 @@
       parameter            ( ll     =  80 )
 #endif
 
-      integer(ip)            namlen
-      parameter            ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
 ! $ Brief_I/O
 !
@@ -492,32 +491,23 @@
 !
 !     These parameters are system-independent.
 !
-      character(*)          borchr
-      parameter           ( borchr = '=' )
+      character(*), parameter :: borchr = '='
 
-      integer(ip)           deflen
-      parameter           ( deflen =   4 )
+      integer(ip), parameter :: deflen = 4
 
-      integer(ip)           endlen
-      parameter           ( endlen =   1 )
+      integer(ip), parameter :: endlen = 1
 
-      integer(ip)           maxwrd
-      parameter           ( maxwrd =   5 )
+      integer(ip), parameter :: maxwrd = 5
 
-      integer(ip)           wordln
-      parameter           ( wordln =   9 )
+      integer(ip), parameter :: wordln = 9
 
-      integer(ip)           strlen
-      parameter           ( strlen =   3 )
+      integer(ip), parameter :: strlen = 3
 
-      integer(ip)           verlen
-      parameter           ( verlen =  80 )
+      integer(ip), parameter :: verlen = 80
 
-      integer(ip)           xlen
-      parameter           ( xlen   =  80 )
+      integer(ip), parameter :: xlen = 80
 
-      integer(ip)           tmplen
-      parameter           ( tmplen = smsgln + xlen )
+      integer(ip), parameter :: tmplen = smsgln + xlen
 !
 !     Local variables
 !

@@ -350,17 +350,13 @@
 !                   a name and a summary have the same length in bytes.)
 !
 
-      integer(ip)           ndc
-      parameter           ( ndc = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic = 6 )
+      integer(ip), parameter :: nic = 6
 
-      integer(ip)           nc
-      parameter           ( nc = ndc + ( nic + 1 )/2 )
+      integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
 
-      integer(ip)           idlen
-      parameter           ( idlen = nc * 8 )
+      integer(ip), parameter :: idlen = nc * 8
 
 !
 !     Local variables

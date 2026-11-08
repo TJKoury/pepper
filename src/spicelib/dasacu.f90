@@ -387,32 +387,26 @@
 !
 !     Set the value for the maximum length of a text line.
 !
-      integer(ip)           linlen
-      parameter           ( linlen = 255 )
+      integer(ip), parameter :: linlen = 255
 !
 !     Set the length of a DAS file ID word.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 !
 !     Set the length of a DAS file internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Set the size of the comment buffer.
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 22 )
+      integer(ip), parameter :: bufsiz = 22
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer(ip)           maxpch
-      parameter           ( maxpch = 126 )
+      integer(ip), parameter :: maxpch = 126
 
-      integer(ip)           minpch
-      parameter           ( minpch = 32 )
+      integer(ip), parameter :: minpch = 32
 !
 !     Local variables
 !

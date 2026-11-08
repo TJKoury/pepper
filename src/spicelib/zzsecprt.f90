@@ -157,29 +157,21 @@
       real(wp)              xndot
       real(wp)              xomi
 
-      real(wp)              g22
-      parameter           ( g22    = 5.7686396_wp  )
+      real(wp), parameter :: g22 = 5.7686396_wp
 
-      real(wp)              g32
-      parameter           ( g32    = 0.95240898_wp )
+      real(wp), parameter :: g32 = 0.95240898_wp
 
-      real(wp)              g44
-      parameter           ( g44    = 1.8014998_wp  )
+      real(wp), parameter :: g44 = 1.8014998_wp
 
-      real(wp)              g52
-      parameter           ( g52    = 1.0508330_wp  )
+      real(wp), parameter :: g52 = 1.0508330_wp
 
-      real(wp)              g54
-      parameter           ( g54    = 4.4108898_wp  )
+      real(wp), parameter :: g54 = 4.4108898_wp
 
-      real(wp)              fasx2
-      parameter           ( fasx2  = 0.13130908_wp )
+      real(wp), parameter :: fasx2 = 0.13130908_wp
 
-      real(wp)              fasx4
-      parameter           ( fasx4  = 2.8843198_wp  )
+      real(wp), parameter :: fasx4 = 2.8843198_wp
 
-      real(wp)              fasx6
-      parameter           ( fasx6  = 0.37448087_wp )
+      real(wp), parameter :: fasx6 = 0.37448087_wp
 
 
 

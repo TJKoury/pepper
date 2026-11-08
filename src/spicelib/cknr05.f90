@@ -221,14 +221,11 @@
 !                   operates on.
 !
 
-      integer(ip)           ndc
-      parameter           ( ndc = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic = 6 )
+      integer(ip), parameter :: nic = 6
 
-      integer(ip)           dtype
-      parameter           ( dtype = 5 )
+      integer(ip), parameter :: dtype = 5
 
 !
 !     Local variables

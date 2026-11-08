@@ -254,8 +254,7 @@
 !
 !     Local variables
 !
-      integer(ip)           bsize
-      parameter           ( bsize = 128 )
+      integer(ip), parameter :: bsize = 128
 
       integer(ip)           begr
       integer(ip)           begw

@@ -240,8 +240,7 @@
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      real(wp)              atol
-      parameter           ( atol  = 1.0e-12_wp )
+      real(wp), parameter :: atol = 1.0e-12_wp
 
 !
 !     Set an initial value to return in case of error.

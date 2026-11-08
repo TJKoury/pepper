@@ -39,17 +39,13 @@
       character(*)          segid
       logical               found
 
-      integer(ip)           ftsize
-      parameter           ( ftsize =  5000 )
+      integer(ip), parameter :: ftsize = 5000
 
-      integer(ip)           itsize
-      parameter           ( itsize =  5000 )
+      integer(ip), parameter :: itsize = 5000
 
-      integer(ip)           lbpool
-      parameter           ( lbpool =   -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           stsize
-      parameter           ( stsize = 100000 )
+      integer(ip), parameter :: stsize = 100000
 
 ! $ Brief_I/O
 !
@@ -840,32 +836,24 @@
 !                   components.
 !
 
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dscsiz
-      parameter           ( dscsiz = nd + (ni + 1)/2 )
+      integer(ip), parameter :: dscsiz = nd + (ni + 1)/2
 
-      integer(ip)           sidlen
-      parameter           ( sidlen = 40 )
+      integer(ip), parameter :: sidlen = 40
 
-      integer(ip)           slen
-      parameter           ( slen   = 40 )
+      integer(ip), parameter :: slen = 40
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer(ip)           forwrd
-      parameter           ( forwrd  = 1 )
+      integer(ip), parameter :: forwrd = 1
 
-      integer(ip)           bckwrd
-      parameter           ( bckwrd  = 2 )
+      integer(ip), parameter :: bckwrd = 2
 
-      integer(ip)           free
-      parameter           ( free    = 0 )
+      integer(ip), parameter :: free = 0
 
 
 !

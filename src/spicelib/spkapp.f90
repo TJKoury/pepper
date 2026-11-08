@@ -728,41 +728,30 @@
 !
 !     Local parameters
 !
-      integer(ip)           corlen
-      parameter           ( corlen = 5 )
+      integer(ip), parameter :: corlen = 5
 
-      integer(ip)           nflags
-      parameter           ( nflags = 9 )
+      integer(ip), parameter :: nflags = 9
 
 !
 !     Indices of flags in the FLAGS array:
 !
-      integer(ip)           ixnone
-      parameter           ( ixnone = 1 )
+      integer(ip), parameter :: ixnone = 1
 
-      integer(ip)           ixlt
-      parameter           ( ixlt   = ixnone + 1 )
+      integer(ip), parameter :: ixlt = ixnone + 1
 
-      integer(ip)           ixlts
-      parameter           ( ixlts  = ixlt   + 1 )
+      integer(ip), parameter :: ixlts = ixlt   + 1
 
-      integer(ip)           ixcn
-      parameter           ( ixcn   = ixlts  + 1 )
+      integer(ip), parameter :: ixcn = ixlts  + 1
 
-      integer(ip)           ixcns
-      parameter           ( ixcns  = ixcn   + 1 )
+      integer(ip), parameter :: ixcns = ixcn   + 1
 
-      integer(ip)           ixxlt
-      parameter           ( ixxlt  = ixcns  + 1 )
+      integer(ip), parameter :: ixxlt = ixcns  + 1
 
-      integer(ip)           ixxlts
-      parameter           ( ixxlts = ixxlt  + 1 )
+      integer(ip), parameter :: ixxlts = ixxlt  + 1
 
-      integer(ip)           ixxcn
-      parameter           ( ixxcn  = ixxlts + 1 )
+      integer(ip), parameter :: ixxcn = ixxlts + 1
 
-      integer(ip)           ixxcns
-      parameter           ( ixxcns = ixxcn  + 1 )
+      integer(ip), parameter :: ixxcns = ixxcn  + 1
 
 !
 !     Local variables

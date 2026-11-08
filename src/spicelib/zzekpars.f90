@@ -32,8 +32,7 @@
       include 'ekquery.inc'
       include 'ekqlimit.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          query
       integer(ip)           ntoken
@@ -282,68 +281,48 @@
 !
 !     State parameters
 !
-      integer(ip)           from
-      parameter           ( from    =            0 )
+      integer(ip), parameter :: from = 0
 
-      integer(ip)           frmtab
-      parameter           ( frmtab  =   from   + 1 )
+      integer(ip), parameter :: frmtab = from   + 1
 
-      integer(ip)           frmcnt
-      parameter           ( frmcnt  =   frmtab + 1 )
+      integer(ip), parameter :: frmcnt = frmtab + 1
 
-      integer(ip)           frmals
-      parameter           ( frmals  =   frmcnt + 1 )
+      integer(ip), parameter :: frmals = frmcnt + 1
 
-      integer(ip)           where
-      parameter           ( where   =   frmals + 1 )
+      integer(ip), parameter :: where = frmals + 1
 
-      integer(ip)           order
-      parameter           ( order   =   where  + 1 )
+      integer(ip), parameter :: order = where  + 1
 
-      integer(ip)           ordrby
-      parameter           ( ordrby  =   order  + 1 )
+      integer(ip), parameter :: ordrby = order  + 1
 
-      integer(ip)           ordtab
-      parameter           ( ordtab  =   ordrby + 1 )
+      integer(ip), parameter :: ordtab = ordrby + 1
 
-      integer(ip)           ordnam
-      parameter           ( ordnam  =   ordtab + 1 )
+      integer(ip), parameter :: ordnam = ordtab + 1
 
-      integer(ip)           ordcol
-      parameter           ( ordcol  =   ordnam + 1 )
+      integer(ip), parameter :: ordcol = ordnam + 1
 
-      integer(ip)           ordsns
-      parameter           ( ordsns  =   ordcol + 1 )
+      integer(ip), parameter :: ordsns = ordcol + 1
 
-      integer(ip)           selkey
-      parameter           ( selkey  =   ordsns + 1 )
+      integer(ip), parameter :: selkey = ordsns + 1
 
-      integer(ip)           select
-      parameter           ( select  =   selkey + 1 )
+      integer(ip), parameter :: select = selkey + 1
 
-      integer(ip)           seltab
-      parameter           ( seltab  =   select + 1 )
+      integer(ip), parameter :: seltab = select + 1
 
-      integer(ip)           selnam
-      parameter           ( selnam  =   seltab + 1 )
+      integer(ip), parameter :: selnam = seltab + 1
 
-      integer(ip)           selcol
-      parameter           ( selcol  =   selnam + 1 )
+      integer(ip), parameter :: selcol = selnam + 1
 
-      integer(ip)           term
-      parameter           ( term    =   selcol + 1 )
+      integer(ip), parameter :: term = selcol + 1
 
 !
 !     Other local parameters
 !
-      integer(ip)           maxrel
-      parameter           ( maxrel =  200 )
+      integer(ip), parameter :: maxrel = 200
 
-      integer(ip)           typlen
-      parameter           ( typlen =   32 )
+      integer(ip), parameter :: typlen = 32
 
-      integer(ip)           keylen
-      parameter           ( keylen =   32 )
+      integer(ip), parameter :: keylen = 32
 
 !
 !     Local variables

@@ -200,8 +200,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           msize
-      parameter           ( msize  = 3 )
+      integer(ip), parameter :: msize = 3
 
 !
 !     Local variables

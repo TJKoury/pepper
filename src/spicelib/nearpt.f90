@@ -415,16 +415,14 @@
 !     hasn't converged to length zero.  This situation can occur when
 !     the root is extremely close to zero.
 !
-      real(wp)              cnvtol
-      parameter           ( cnvtol = 1.0e-16_wp )
+      real(wp), parameter :: cnvtol = 1.0e-16_wp
 
 
 !
 !     Various potentially large numbers we'll compute must not
 !     exceed DPMAX()/MARGIN:
 !
-      real(wp)              margin
-      parameter           ( margin = 1.0e2_wp )
+      real(wp), parameter :: margin = 1.0e2_wp
 
 !
 !     The parameter MAXSOL determines the maximum number of
@@ -432,8 +430,7 @@
 !     near point.  This must be at least 3.  To get strong
 !     robustness in the routine, MAXSOL should be at least 4.
 !
-      integer(ip)           maxsol
-      parameter           ( maxsol  = 6 )
+      integer(ip), parameter :: maxsol = 6
 
 !
 !     MAXITR defines the maximum number of iterations allowed in
@@ -448,14 +445,12 @@
 !     The value selected is based on the range of exponents for IEEE
 !     double precision floating point numbers.
 !
-      integer(ip)           maxitr
-      parameter           ( maxitr  = 2048 )
+      integer(ip), parameter :: maxitr = 2048
 
 !
 !     Length of lines in message buffer.
 !
-      integer(ip)           msglen
-      parameter           ( msglen = 80 )
+      integer(ip), parameter :: msglen = 80
 
 !
 !     Local Variables

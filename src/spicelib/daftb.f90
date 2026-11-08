@@ -241,35 +241,25 @@
 !
 !     Local Parameters
 !
-      character(*)          begarr
-      parameter           ( begarr = 'BEGIN_ARRAY' )
+      character(*), parameter :: begarr = 'BEGIN_ARRAY'
 
-      character(*)          endarr
-      parameter           ( endarr = 'END_ARRAY' )
+      character(*), parameter :: endarr = 'END_ARRAY'
 
-      character(*)          totarr
-      parameter           ( totarr = 'TOTAL_ARRAYS' )
+      character(*), parameter :: totarr = 'TOTAL_ARRAYS'
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 1024 )
+      integer(ip), parameter :: bufsiz = 1024
 
-      integer(ip)           linlen
-      parameter           ( linlen = 255 )
+      integer(ip), parameter :: linlen = 255
 
-      integer(ip)           errlen
-      parameter           ( errlen = 320 )
+      integer(ip), parameter :: errlen = 320
 
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8    )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60   )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           crecl
-      parameter           ( crecl  = 1000 )
+      integer(ip), parameter :: crecl = 1000
 
-      integer(ip)           resrec
-      parameter           ( resrec = 0 )
+      integer(ip), parameter :: resrec = 0
 !
 !     Local variables
 !

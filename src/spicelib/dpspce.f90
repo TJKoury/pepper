@@ -511,23 +511,17 @@
 !     Define parameters for convergence tolerance and the value for 2/3,
 !     0 and 1.
 !
-      real(wp)              tol
-      parameter           ( tol     = 1.0e-6_wp     )
+      real(wp), parameter :: tol = 1.0e-6_wp
 
-      real(wp)              tothrd
-      parameter           ( tothrd  = 2.0_wp/3.0_wp )
+      real(wp), parameter :: tothrd = 2.0_wp/3.0_wp
 
-      real(wp)              zero
-      parameter           ( zero    =  0.0_wp    )
+      real(wp), parameter :: zero = 0.0_wp
 
-      real(wp)              one
-      parameter           ( one     =  1.0_wp    )
+      real(wp), parameter :: one = 1.0_wp
 
-      integer(ip)           numgeo
-      parameter           ( numgeo  =    8      )
+      integer(ip), parameter :: numgeo = 8
 
-      integer(ip)           numelm
-      parameter           ( numelm  =   10      )
+      integer(ip), parameter :: numelm = 10
 
 
 !

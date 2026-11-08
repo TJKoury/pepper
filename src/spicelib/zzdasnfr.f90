@@ -153,8 +153,7 @@
 !     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
 !     record.
 !
-      integer(ip)           preftp
-      parameter           ( preftp = 607 )
+      integer(ip), parameter :: preftp = 607
 
 !
 !     Amount of space measured in characters necessary to
@@ -162,20 +161,16 @@
 !     end of the file record. Note: This value assumes the
 !     length of the file record is 1024 bytes.
 !
-      integer(ip)           pstftp
-      parameter           ( pstftp = 297 )
+      integer(ip), parameter :: pstftp = 297
 
 !
 !     Lengths of internal file name, ID word, and format word.
 !
-      integer(ip)           fmtlen
-      parameter           ( fmtlen = 8 )
+      integer(ip), parameter :: fmtlen = 8
 
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     Local Variables

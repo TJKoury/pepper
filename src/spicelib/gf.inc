@@ -159,51 +159,38 @@
 !
 
 
-      character(*)          ftcirc
-      parameter           ( ftcirc = 'CIRCLE' )
+      character(*), parameter :: ftcirc = 'CIRCLE'
 
-      character(*)          ftelli
-      parameter           ( ftelli = 'ELLIPSE' )
+      character(*), parameter :: ftelli = 'ELLIPSE'
 
-      character(*)          ftpoly
-      parameter           ( ftpoly = 'POLYGON' )
+      character(*), parameter :: ftpoly = 'POLYGON'
 
-      character(*)          ftrect
-      parameter           ( ftrect = 'RECTANGLE' )
+      character(*), parameter :: ftrect = 'RECTANGLE'
 
 !
 !     Character strings that are allowed in the
 !     specification of occultation types:
 !
-      character(*)          annulr
-      parameter           ( annulr = 'ANNULAR' )
+      character(*), parameter :: annulr = 'ANNULAR'
 
-      character(*)          any
-      parameter           ( any    = 'ANY'     )
+      character(*), parameter :: any = 'ANY'
 
-      character(*)          partl
-      parameter           ( partl  = 'PARTIAL' )
+      character(*), parameter :: partl = 'PARTIAL'
 
-      character(*)          full
-      parameter           ( full   = 'FULL'    )
+      character(*), parameter :: full = 'FULL'
 
 !
 !     Occultation target shape specifications:
 !
-      character(*)          dsshap
-      parameter           ( dsshap = 'DSK' )
+      character(*), parameter :: dsshap = 'DSK'
 
-      character(*)          edshap
-      parameter           ( edshap = 'ELLIPSOID' )
+      character(*), parameter :: edshap = 'ELLIPSOID'
 
-      character(*)          ptshap
-      parameter           ( ptshap = 'POINT' )
+      character(*), parameter :: ptshap = 'POINT'
 
-      character(*)          ryshap
-      parameter           ( ryshap = 'RAY' )
+      character(*), parameter :: ryshap = 'RAY'
 
-      character(*)          spshap
-      parameter           ( spshap = 'SPHERE' )
+      character(*), parameter :: spshap = 'SPHERE'
 
 !
 !     Specify the number of supported occultation types and occultation
@@ -234,17 +221,13 @@
 !        polygon
 !        rectangle
 !
-      character(*)          cirfov
-      parameter           ( cirfov = 'CIRCLE' )
+      character(*), parameter :: cirfov = 'CIRCLE'
 
-      character(*)          ellfov
-      parameter           ( ellfov = 'ELLIPSE' )
+      character(*), parameter :: ellfov = 'ELLIPSE'
 
-      character(*)          polfov
-      parameter           ( polfov = 'POLYGON' )
+      character(*), parameter :: polfov = 'POLYGON'
 
-      character(*)          recfov
-      parameter           ( recfov = 'RECTANGLE' )
+      character(*), parameter :: recfov = 'RECTANGLE'
 
 
 !

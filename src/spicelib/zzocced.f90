@@ -24,11 +24,9 @@
 
       include 'zzocced.inc'
 
-      integer(ip)           ubel
-      parameter           ( ubel   = 9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl   = 4 )
+      integer(ip), parameter :: ubpl = 4
 
       real(wp)              viewpt ( 3 )
       real(wp)              centr1 ( 3 )
@@ -316,22 +314,19 @@
 !     Tolerance value for determinant of a rotation matrix.  The
 !     determinant must differ from 1 by no more than DTOL.
 !
-      real(wp)              dtol
-      parameter           ( dtol  = 1.0e-12_wp )
+      real(wp), parameter :: dtol = 1.0e-12_wp
 
 !
 !     Tolerance value for norms of columns of a rotation matrix.  The
 !     norms must differ from 1 by no more than NTOL.
 !
-      real(wp)              ntol
-      parameter           ( ntol  = 1.0e-14_wp )
+      real(wp), parameter :: ntol = 1.0e-14_wp
 
 !
 !     Tolerance value for argument of arcsine.  The argument should
 !     have absolute value no greater than 1 + ATOL.
 !
-      real(wp)              atol
-      parameter           ( atol  = 1.0e-12_wp )
+      real(wp), parameter :: atol = 1.0e-12_wp
 
 !
 !     Local variables

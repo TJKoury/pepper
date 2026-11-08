@@ -24,8 +24,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       real(wp)              wndw1 ( lbcell : * )
       real(wp)              wndw2 ( lbcell : * )
@@ -155,8 +154,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           inclen
-      parameter           ( inclen = 2 )
+      integer(ip), parameter :: inclen = 2
 
 !
 !     Local Variables

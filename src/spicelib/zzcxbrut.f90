@@ -169,11 +169,9 @@
 !
 !     Local parameters
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-15_wp )
+      real(wp), parameter :: cnvlim = 1.0e-15_wp
 
-      integer(ip)           maxitr
-      parameter           ( maxitr = 1000 )
+      integer(ip), parameter :: maxitr = 1000
 
 !
 !     Local variables

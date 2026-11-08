@@ -139,14 +139,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           mxspec
-      parameter           ( mxspec = 512 )
+      integer(ip), parameter :: mxspec = 512
 
-      integer(ip)           namlim
-      parameter           ( namlim = 32 )
+      integer(ip), parameter :: namlim = 32
 
 !
 !     Local variables

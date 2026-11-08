@@ -223,8 +223,7 @@
 !     The phase angle calculation is invariant with respect to
 !     reference frame. Use J2000 for convenience.
 !
-      character(*)          ref
-      parameter           ( ref    = 'J2000' )
+      character(*), parameter :: ref = 'J2000'
 
 
 !

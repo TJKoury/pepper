@@ -154,11 +154,9 @@
 !
 !     Local Parameters
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 5 )
+      integer(ip), parameter :: ni = 5
 
 !
 !     Local Variables

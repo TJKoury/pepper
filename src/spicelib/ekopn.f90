@@ -329,8 +329,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           nwc
-      parameter           ( nwc    = 1024 )
+      integer(ip), parameter :: nwc = 1024
 
 !
 !     Local variables

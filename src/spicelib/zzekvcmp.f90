@@ -30,8 +30,7 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool =  -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           op
       integer(ip)           ncols

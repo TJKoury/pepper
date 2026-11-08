@@ -1393,36 +1393,29 @@
 !
 !     Local parameters
 !
-      integer(ip)           nevflg
-      parameter           ( nevflg = 3 )
+      integer(ip), parameter :: nevflg = 3
 
-      integer(ip)           evlfln
-      parameter           ( evlfln = 25 )
+      integer(ip), parameter :: evlfln = 25
 
 !
 !     Codes for evaluation type flags. These codes are
 !     indices of the flags within the EVLFLG array.
 !
-      integer(ip)           evlobs
-      parameter           ( evlobs = 1 )
+      integer(ip), parameter :: evlobs = 1
 
-      integer(ip)           evltrg
-      parameter           ( evltrg = 2 )
+      integer(ip), parameter :: evltrg = 2
 
-      integer(ip)           evlctr
-      parameter           ( evlctr = 3 )
+      integer(ip), parameter :: evlctr = 3
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl   = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 
 

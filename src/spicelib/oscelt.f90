@@ -594,8 +594,7 @@
 !
 !     Local parameters
 !
-      real(wp)              close
-      parameter           ( close = 1.0e-10_wp )
+      real(wp), parameter :: close = 1.0e-10_wp
 
 !
 !     Local variables

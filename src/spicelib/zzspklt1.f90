@@ -506,31 +506,26 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'ZZSPKLT1' )
+      character(*), parameter :: rname = 'ZZSPKLT1'
 
 !
 !     TOL is the tolerance used for a division-by-zero test
 !     performed prior to computation of DLT.
 !
-      real(wp)              tol
-      parameter           ( tol    = 1.0e-10_wp )
+      real(wp), parameter :: tol = 1.0e-10_wp
 
 !
 !     Convergence limit:
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-17_wp )
+      real(wp), parameter :: cnvlim = 1.0e-17_wp
 
 !
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      integer(ip)           maxitr
-      parameter           ( maxitr = 5 )
+      integer(ip), parameter :: maxitr = 5
 
-      integer(ip)           ssb
-      parameter           ( ssb   = 0 )
+      integer(ip), parameter :: ssb = 0
 
 !
 !     Local variables

@@ -190,8 +190,7 @@
 !
 !     Local Parameters
 !
-      integer(ip)           nmnths
-      parameter           ( nmnths = 12 )
+      integer(ip), parameter :: nmnths = 12
 
 !
 !     In-line functions.

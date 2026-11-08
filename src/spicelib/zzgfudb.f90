@@ -31,8 +31,7 @@
 
       include 'gf.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       external              udfuns
       external              udfunb
@@ -526,15 +525,13 @@
 !     argument to ZZGFSOLVX. The routine UDSTEP, which is passed to
 !     ZZGFSOLVX, will be used by that routine to obtain the step size.
 !
-      real(wp)              step
-      parameter           ( step   = 1.0_wp )
+      real(wp), parameter :: step = 1.0_wp
 
 !
 !     CSTEP indicates whether a constant step size, provided
 !     via the input argument STEP, is to be used by ZZGFSOLVX.
 !
-      logical               cstep
-      parameter           ( cstep  = .false. )
+      logical, parameter :: cstep = .false.
 
 !
 !     Local variables

@@ -40,14 +40,11 @@
       integer(ip)           nxpts
       real(wp)              xpt    ( 3 )
 
-      integer(ip)           lonidx
-      parameter           ( lonidx = 1 )
+      integer(ip), parameter :: lonidx = 1
 
-      integer(ip)           latidx
-      parameter           ( latidx = 2 )
+      integer(ip), parameter :: latidx = 2
 
-      integer(ip)           radidx
-      parameter           ( radidx = 3 )
+      integer(ip), parameter :: radidx = 3
 
 ! $ Brief_I/O
 !
@@ -207,30 +204,23 @@
 !
 !     Radius expansion factor:
 !
-      real(wp)              radfac
-      parameter           ( radfac = 1.1_wp )
+      real(wp), parameter :: radfac = 1.1_wp
 
 
 !
 !     Element boundary indices:
 !
-      integer(ip)           west
-      parameter           ( west   = 1 )
+      integer(ip), parameter :: west = 1
 
-      integer(ip)           east
-      parameter           ( east   = 2 )
+      integer(ip), parameter :: east = 2
 
-      integer(ip)           south
-      parameter           ( south  = 1 )
+      integer(ip), parameter :: south = 1
 
-      integer(ip)           north
-      parameter           ( north  = 2 )
+      integer(ip), parameter :: north = 2
 
-      integer(ip)           inner
-      parameter           ( inner  = 1 )
+      integer(ip), parameter :: inner = 1
 
-      integer(ip)           outer
-      parameter           ( outer  = 2 )
+      integer(ip), parameter :: outer = 2
 
 
 !

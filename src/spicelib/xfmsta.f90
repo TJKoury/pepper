@@ -581,50 +581,40 @@
 !     Potentially large numbers produced by transforming the
 !     velocity using the Jacobian must not exceed DPMAX()/MARGIN:
 !
-      real(wp)              margin
-      parameter           ( margin = 1.0e2_wp )
+      real(wp), parameter :: margin = 1.0e2_wp
 
 !
 !     The size of each coordinate system name must not exceed
 !     CHSIZ characters.
 !
-      integer(ip)           chsiz
-      parameter           ( chsiz  = 40 )
+      integer(ip), parameter :: chsiz = 40
 
 !
 !     NCOSYS is the number of coordinate systems supported by
 !     this routine.
 !
-      integer(ip)           ncosys
-      parameter           ( ncosys = 6 )
+      integer(ip), parameter :: ncosys = 6
 
 !
 !     The following integer parameters represent the coordinate
 !     systems supported by this routine.
 !
-      integer(ip)           rectan
-      parameter           ( rectan = 1 )
+      integer(ip), parameter :: rectan = 1
 
-      integer(ip)           cyl
-      parameter           ( cyl    = 2 )
+      integer(ip), parameter :: cyl = 2
 
-      integer(ip)           latnl
-      parameter           ( latnl  = 3 )
+      integer(ip), parameter :: latnl = 3
 
-      integer(ip)           sphcl
-      parameter           ( sphcl  = 4 )
+      integer(ip), parameter :: sphcl = 4
 
-      integer(ip)           geodet
-      parameter           ( geodet = 5 )
+      integer(ip), parameter :: geodet = 5
 
-      integer(ip)           plntgr
-      parameter           ( plntgr = 6 )
+      integer(ip), parameter :: plntgr = 6
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl   = 36 )
+      integer(ip), parameter :: maxl = 36
 
 
 !

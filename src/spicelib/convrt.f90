@@ -227,47 +227,34 @@
       integer(ip)      j
       real(wp) temp
 
-      real(wp) secpjy
-      parameter      ( secpjy =  86400.0_wp * 365.25_wp      )
+      real(wp), parameter :: secpjy = 86400.0_wp * 365.25_wp
 
-      real(wp) secpty
-      parameter      ( secpty =  86400.0_wp * 365.2421988_wp )
+      real(wp), parameter :: secpty = 86400.0_wp * 365.2421988_wp
 
-      real(wp) ltyear
-      parameter      ( ltyear = 86400.0_wp * 365.25_wp * 299792458.0_wp)
+      real(wp), parameter :: ltyear = 86400.0_wp * 365.25_wp * 299792458.0_wp
 
-      real(wp) dpm
-      parameter      ( dpm  = 1.0_wp  /   60.0_wp      )
+      real(wp), parameter :: dpm = 1.0_wp  /   60.0_wp
 
-      real(wp) dps
-      parameter      ( dps  = 1.0_wp  / 3600.0_wp      )
+      real(wp), parameter :: dps = 1.0_wp  / 3600.0_wp
 
-      real(wp) dpsa
-      parameter      ( dpsa = 15.0_wp / 3600.0_wp      )
+      real(wp), parameter :: dpsa = 15.0_wp / 3600.0_wp
 
-      real(wp) au
-      parameter      ( au   = 1.4959787061368887e11_wp  )
+      real(wp), parameter :: au = 1.4959787061368887e11_wp
 !
 !     1.0d0 divided by the sin of 1 arc second
 !
-      real(wp) scale
-      parameter      ( scale = 2.0626480624790438e05_wp )
+      real(wp), parameter :: scale = 2.0626480624790438e05_wp
 
 
-      real(wp) parsec
-      parameter      ( parsec = au * scale )
+      real(wp), parameter :: parsec = au * scale
 
-      integer(ip)      ang
-      parameter      ( ang  = 0         )
+      integer(ip), parameter :: ang = 0
 
-      integer(ip)      dist
-      parameter      ( dist = ang  + 7  )
+      integer(ip), parameter :: dist = ang  + 7
 
-      integer(ip)      tme
-      parameter      ( tme  = dist + 17 )
+      integer(ip), parameter :: tme = dist + 17
 
-      integer(ip)      total
-      parameter      ( total = tme + 7  )
+      integer(ip), parameter :: total = tme + 7
 
       character(16)    units  (total)
       save             units

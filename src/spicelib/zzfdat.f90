@@ -32,8 +32,7 @@
       include              'ninert.inc'
       include              'nninrt.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           ncount
       integer(ip)           maxbfr
@@ -343,11 +342,9 @@
 !-&
 
 
-      integer(ip)           non
-      parameter           ( non    = nninrt )
+      integer(ip), parameter :: non = nninrt
 
-      integer(ip)           nnames
-      parameter           ( nnames = ninert + non )
+      integer(ip), parameter :: nnames = ninert + non
 
 !
 !     To add to the list of recognized frames,

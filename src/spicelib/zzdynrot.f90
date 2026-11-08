@@ -330,15 +330,12 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'ZZDYNROT' )
+      character(*), parameter :: rname = 'ZZDYNROT'
 
 
-      integer(ip)           timlen
-      parameter           ( timlen = 50 )
+      integer(ip), parameter :: timlen = 50
 
-      integer(ip)           vnamln
-      parameter           ( vnamln = 4 )
+      integer(ip), parameter :: vnamln = 4
 
 !
 !     Local variables

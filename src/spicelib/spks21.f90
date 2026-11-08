@@ -133,11 +133,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           maxdsz
-      parameter           ( maxdsz =  (4 * maxtrm) + 11 )
+      integer(ip), parameter :: maxdsz = (4 * maxtrm) + 11
 
 !
 !     Local variables

@@ -242,14 +242,11 @@
 !
 !     Local parameters
 !
-      character(1)          quote
-      parameter           ( quote = '''' )
+      character(1), parameter :: quote = ''''
 
-      integer(ip)           maxenc
-      parameter           ( maxenc = 64 )
+      integer(ip), parameter :: maxenc = 64
 
-      integer(ip)           wrksiz
-      parameter           ( wrksiz = 64 )
+      integer(ip), parameter :: wrksiz = 64
 !
 !     Local variables
 !

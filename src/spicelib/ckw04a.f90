@@ -480,8 +480,7 @@
 !     have to be shifted to the left after numbers of coefficients
 !     were packed into a single integer.
 !
-      integer(ip)           shftad
-      parameter           ( shftad = 6 )
+      integer(ip), parameter :: shftad = 6
 
 !
 !     Local Variables.

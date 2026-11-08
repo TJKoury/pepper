@@ -325,25 +325,21 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  =  'ZZSPKGP1' )
+      character(*), parameter :: rname = 'ZZSPKGP1'
 
 !
 !     CHLEN is the maximum length of a chain.  That is,
 !     it is the maximum number of bodies in the chain from
 !     the target or observer to the SSB.
 !
-      integer(ip)           chlen
-      parameter           ( chlen = 20 )
+      integer(ip), parameter :: chlen = 20
 
-      integer(ip)           ssb
-      parameter           ( ssb   =  0 )
+      integer(ip), parameter :: ssb = 0
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 
 !

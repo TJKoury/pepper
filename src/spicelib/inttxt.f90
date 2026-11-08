@@ -147,8 +147,7 @@
 !
 !     Local variables
 !
-      integer(ip)           lngest
-      parameter           ( lngest = 9 )
+      integer(ip), parameter :: lngest = 9
 
       character(lngest)     number (19)
       character(lngest)     suff

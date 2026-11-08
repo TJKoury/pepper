@@ -31,8 +31,7 @@
       include               'zzgf.inc'
       include               'zzholdd.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       external              udqdec
       external              udfuns
@@ -1047,11 +1046,9 @@
       logical               gfbail
       external              gfbail
 
-      logical               nobail
-      parameter           ( nobail = .false. )
+      logical, parameter :: nobail = .false.
 
-      logical               norpt
-      parameter           ( norpt  = .false. )
+      logical, parameter :: norpt = .false.
 
 !
 !     Dummy variables.

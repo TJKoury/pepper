@@ -24,8 +24,7 @@
 
       include 'ekquery.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           eqryi ( lbcell : * )
       character(*)          name
@@ -103,11 +102,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           namlen
-      parameter           ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
-      integer(ip)           maxnam
-      parameter           ( maxnam = 15 )
+      integer(ip), parameter :: maxnam = 15
 !
 !     Local variables
 !

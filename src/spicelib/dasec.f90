@@ -356,37 +356,30 @@
 !
 !     Length of a DAS character record, in characters.
 !
-      integer(ip)           mxcrec
-      parameter           ( mxcrec = 1024 )
+      integer(ip), parameter :: mxcrec = 1024
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer(ip)           maxpch
-      parameter           ( maxpch = 126 )
+      integer(ip), parameter :: maxpch = 126
 
-      integer(ip)           minpch
-      parameter           ( minpch = 32 )
+      integer(ip), parameter :: minpch = 32
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      integer(ip)           inteol
-      parameter           ( inteol = 0 )
+      integer(ip), parameter :: inteol = 0
 !
 !     Maximum length of a filename.
 !
-      integer(ip)           fnmlen
-      parameter           ( fnmlen = 128 )
+      integer(ip), parameter :: fnmlen = 128
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS file internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Local variables
 !

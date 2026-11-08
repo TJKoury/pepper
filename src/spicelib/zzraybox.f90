@@ -133,14 +133,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           left
-      parameter           ( left   = 1 )
+      integer(ip), parameter :: left = 1
 
-      integer(ip)           middle
-      parameter           ( middle = 2 )
+      integer(ip), parameter :: middle = 2
 
-      integer(ip)           right
-      parameter           ( right  = 3 )
+      integer(ip), parameter :: right = 3
 
 !
 !     Local variables

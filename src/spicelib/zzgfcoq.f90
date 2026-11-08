@@ -416,14 +416,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           crdlen
-      parameter           ( crdlen = 32 )
+      integer(ip), parameter :: crdlen = 32
 
-      integer(ip)           nsys
-      parameter           ( nsys   = 7 )
+      integer(ip), parameter :: nsys = 7
 
 !
 !     Local variables

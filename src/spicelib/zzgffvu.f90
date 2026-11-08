@@ -40,11 +40,9 @@
       include 'zzocced.inc'
       include 'gf.inc'
 
-      integer(ip)           ubel
-      parameter           ( ubel = 9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl = 4 )
+      integer(ip), parameter :: ubpl = 4
 
       character(*)          inst
       character(*)          tshape
@@ -247,17 +245,13 @@
 !     ATOL is a tolerance value for computing FOV angular radius.
 !     The angular radius must not exceed pi/2 - ATOL radians.
 !
-      real(wp)              atol
-      parameter           ( atol   = 1.0e-6_wp )
+      real(wp), parameter :: atol = 1.0e-6_wp
 
-      real(wp)              fvemax
-      parameter           ( fvemax = 1.0e-5_wp )
+      real(wp), parameter :: fvemax = 1.0e-5_wp
 
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

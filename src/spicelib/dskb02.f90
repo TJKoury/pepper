@@ -343,14 +343,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           dbfsiz
-      parameter           ( dbfsiz = 10 )
+      integer(ip), parameter :: dbfsiz = 10
 
-      integer(ip)           ibfsiz
-      parameter           ( ibfsiz = 10 )
+      integer(ip), parameter :: ibfsiz = 10
 
-      integer(ip)           vtbsiz
-      parameter           ( vtbsiz = 6 )
+      integer(ip), parameter :: vtbsiz = 6
 
 !
 !     Local variables

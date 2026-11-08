@@ -27,8 +27,7 @@
       include 'ektokn.inc'
       include 'ektype.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          query
       integer(ip)           ntoken
@@ -343,8 +342,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           nil
-      parameter           ( nil   =  0 )
+      integer(ip), parameter :: nil = 0
 
 !
 !     Data structure bounds:
@@ -354,30 +352,26 @@
 !     MAXREL is the maximum number of relations that can be handled
 !     by this routine.
 !
-      integer(ip)           maxrel
-      parameter           ( maxrel =   10*maxtok  )
+      integer(ip), parameter :: maxrel = 10*maxtok
 
 !
 !     MAXMET is the maximum number of meta-tokens making up any
 !     expression.
 !
-      integer(ip)           maxmet
-      parameter           ( maxmet =   10*maxtok )
+      integer(ip), parameter :: maxmet = 10*maxtok
 
 !
 !     LBPOOL is the lower bound of the second index of a linked list
 !     pool array.
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
 !
 !
 !     Stack parameters:
 !
 !
-      integer(ip)           maxstk
-      parameter           ( maxstk = 500 )
+      integer(ip), parameter :: maxstk = 500
 
 
 !
@@ -387,103 +381,78 @@
 !     NLOGOP is the number of recognized logical operators.  These
 !     are AND, OR, and NOT.
 !
-      integer(ip)           nlogop
-      parameter           ( nlogop =  3 )
+      integer(ip), parameter :: nlogop = 3
 
 !
 !     NRELOP is the number of arithmetic and character comparison
 !     operators.
 !
-      integer(ip)           nrelop
-      parameter           ( nrelop = 8 )
+      integer(ip), parameter :: nrelop = 8
 
 !
 !
 !     Meta-token codes, excluding codes for relational operators:
 !
-      integer(ip)           rgroup
-      parameter           ( rgroup = -1 )
+      integer(ip), parameter :: rgroup = -1
 
-      integer(ip)           lgroup
-      parameter           ( lgroup = rgroup - 1 )
+      integer(ip), parameter :: lgroup = rgroup - 1
 
-      integer(ip)           btween
-      parameter           ( btween = lgroup - 1 )
+      integer(ip), parameter :: btween = lgroup - 1
 
-      integer(ip)           notbtw
-      parameter           ( notbtw = btween - 1 )
+      integer(ip), parameter :: notbtw = btween - 1
 
-      integer(ip)           btwexp
-      parameter           ( btwexp = notbtw - 1 )
+      integer(ip), parameter :: btwexp = notbtw - 1
 
-      integer(ip)           name
-      parameter           ( name   = btwexp - 1 )
+      integer(ip), parameter :: name = btwexp - 1
 
-      integer(ip)           ident
-      parameter           ( ident  = name   - 1 )
+      integer(ip), parameter :: ident = name   - 1
 
-      integer(ip)           value
-      parameter           ( value  = ident  - 1 )
+      integer(ip), parameter :: value = ident  - 1
 
-      integer(ip)           period
-      parameter           ( period = value  - 1 )
+      integer(ip), parameter :: period = value  - 1
 
-      integer(ip)           and
-      parameter           ( and    = period - 1 )
+      integer(ip), parameter :: and = period - 1
 
-      integer(ip)           or
-      parameter           ( or     = and    - 1 )
+      integer(ip), parameter :: or = and    - 1
 
-      integer(ip)           not
-      parameter           ( not    = or     - 1 )
+      integer(ip), parameter :: not = or     - 1
 
-      integer(ip)           expr
-      parameter           ( expr   = not    - 1 )
+      integer(ip), parameter :: expr = not    - 1
 
 !
 !     Number of keywords that can terminate a WHERE clause.
 !
-      integer(ip)           nendkw
-      parameter           ( nendkw = 3 )
+      integer(ip), parameter :: nendkw = 3
 
 !
 !
 !     State parameters:
 !
-      integer(ip)           push
-      parameter           ( push   =          0 )
+      integer(ip), parameter :: push = 0
 
-      integer(ip)           pop
-      parameter           ( pop    = push   + 1 )
+      integer(ip), parameter :: pop = push   + 1
 
-      integer(ip)           parse
-      parameter           ( parse  = pop    + 1 )
+      integer(ip), parameter :: parse = pop    + 1
 
-      integer(ip)           reducd
-      parameter           ( reducd = parse  + 1 )
+      integer(ip), parameter :: reducd = parse  + 1
 
-      integer(ip)           term
-      parameter           ( term   = reducd + 1 )
+      integer(ip), parameter :: term = reducd + 1
 
 
 !
 !
 !     'Pop condition' codes:
 !
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
-      integer(ip)           reduce
-      parameter           ( reduce = 1 )
+      integer(ip), parameter :: reduce = 1
 
-      integer(ip)           endgrp
-      parameter           ( endgrp = reduce + 1 )
+      integer(ip), parameter :: endgrp = reduce + 1
 
 !
 !     Token descriptor size:
 !
-      integer(ip)           dscsiz
-      parameter           ( dscsiz = eqvdsz + 1 )
+      integer(ip), parameter :: dscsiz = eqvdsz + 1
 
 !
 !     Local variables

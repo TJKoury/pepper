@@ -184,30 +184,23 @@
 !
 !     Local parameters
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           mthlen
-      parameter           ( mthlen = 200 )
+      integer(ip), parameter :: mthlen = 200
 
 !
 !     Indices of illumination angles in the ANGLES
 !     array:
 !
-      integer(ip)           phsidx
-      parameter           ( phsidx = 1 )
+      integer(ip), parameter :: phsidx = 1
 
-      integer(ip)           incidx
-      parameter           ( incidx = 2 )
+      integer(ip), parameter :: incidx = 2
 
-      integer(ip)           emtidx
-      parameter           ( emtidx = 3 )
+      integer(ip), parameter :: emtidx = 3
 
-      integer(ip)           namlen
-      parameter           ( namlen = 50 )
+      integer(ip), parameter :: namlen = 50
 
 !
 !     Local Variables

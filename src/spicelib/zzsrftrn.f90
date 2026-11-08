@@ -168,11 +168,9 @@
 !
 !     Hash control area items.
 !
-      integer(ip)           sizidx
-      parameter           ( sizidx =   0 )
+      integer(ip), parameter :: sizidx = 0
 
-      integer(ip)           freidx
-      parameter           ( freidx =  -1 )
+      integer(ip), parameter :: freidx = -1
 
 !
 !     Local variables

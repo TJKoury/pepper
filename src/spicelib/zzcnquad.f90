@@ -160,8 +160,7 @@
 !
 !     Local parameters
 !
-      real(wp)              small
-      parameter           ( small = 1.0e-8_wp )
+      real(wp), parameter :: small = 1.0e-8_wp
 
 !
 !     Local variables

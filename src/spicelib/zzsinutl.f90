@@ -204,11 +204,9 @@
 !
 !     Target types:
 !
-      integer(ip)           elltrg
-      parameter           ( elltrg = 1 )
+      integer(ip), parameter :: elltrg = 1
 
-      integer(ip)           dsktrg
-      parameter           ( dsktrg = 2 )
+      integer(ip), parameter :: dsktrg = 2
 
 !
 !     Local variables

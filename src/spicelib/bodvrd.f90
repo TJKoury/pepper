@@ -349,17 +349,14 @@
 !
 !     Local parameters
 !
-      integer(ip)           cdelen
-      parameter           ( cdelen = 16 )
+      integer(ip), parameter :: cdelen = 16
 
-      integer(ip)           namlen
-      parameter           ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 
 !

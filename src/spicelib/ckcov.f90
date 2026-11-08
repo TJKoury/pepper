@@ -27,8 +27,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          ckfnm
       integer(ip)           idcode
@@ -715,21 +714,16 @@
 !
 !     Local parameters
 !
-      character(*)          kwintv
-      parameter           ( kwintv = 'INTERVAL' )
+      character(*), parameter :: kwintv = 'INTERVAL'
 
-      character(*)          kwseg
-      parameter           ( kwseg  = 'SEGMENT' )
+      character(*), parameter :: kwseg = 'SEGMENT'
 
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     Local variables

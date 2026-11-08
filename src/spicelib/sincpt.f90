@@ -1759,20 +1759,17 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'SINCPT' )
+      character(*), parameter :: rname = 'SINCPT'
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl   = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

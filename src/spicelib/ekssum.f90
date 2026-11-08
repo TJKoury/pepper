@@ -289,11 +289,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           ntypes
-      parameter           ( ntypes = 4 )
+      integer(ip), parameter :: ntypes = 4
 
-      integer(ip)           short
-      parameter           ( short  = 4 )
+      integer(ip), parameter :: short = 4
 
 !
 !     Local variables

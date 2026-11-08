@@ -343,74 +343,55 @@
 !        KNO
 !
 
-      integer(ip)           start
-      parameter           ( start = 0 )
+      integer(ip), parameter :: start = 0
 
-      integer(ip)           kndt20
-      parameter           ( kndt20 = start  + 1 )
+      integer(ip), parameter :: kndt20 = start  + 1
 
-      integer(ip)           kndd60
-      parameter           ( kndd60 = kndt20 + 1 )
+      integer(ip), parameter :: kndd60 = kndt20 + 1
 
-      integer(ip)           kbstar
-      parameter           ( kbstar = kndd60 + 1 )
+      integer(ip), parameter :: kbstar = kndd60 + 1
 
-      integer(ip)           kincl
-      parameter           ( kincl  = kbstar + 1 )
+      integer(ip), parameter :: kincl = kbstar + 1
 
-      integer(ip)           knode0
-      parameter           ( knode0 = kincl  + 1 )
+      integer(ip), parameter :: knode0 = kincl  + 1
 
-      integer(ip)           kecc
-      parameter           ( kecc   = knode0 + 1 )
+      integer(ip), parameter :: kecc = knode0 + 1
 
-      integer(ip)           komega
-      parameter           ( komega = kecc   + 1 )
+      integer(ip), parameter :: komega = kecc   + 1
 
-      integer(ip)           kmo
-      parameter           ( kmo    = komega + 1 )
+      integer(ip), parameter :: kmo = komega + 1
 
-      integer(ip)           kno
-      parameter           ( kno    = kmo    + 1 )
+      integer(ip), parameter :: kno = kmo    + 1
 
-      integer(ip)           kepoch
-      parameter           ( kepoch = kno    + 1 )
+      integer(ip), parameter :: kepoch = kno    + 1
 
-      integer(ip)           nelems
-      parameter           ( nelems = kepoch )
+      integer(ip), parameter :: nelems = kepoch
 
 !
 !     Character string lengths
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 160 )
+      integer(ip), parameter :: lnsize = 160
 
 !
 !     Maximum exponent (base 10)
 !
-      integer(ip)           maxp
-      parameter           ( maxp =     37     )
+      integer(ip), parameter :: maxp = 37
 
-      integer(ip)           minp
-      parameter           ( minp =  -maxp     )
+      integer(ip), parameter :: minp = -maxp
 
 !
 !     Double precision constants.
 !
-      real(wp)              one
-      parameter           ( one  =      1.0_wp )
+      real(wp), parameter :: one = 1.0_wp
 
-      real(wp)              ten
-      parameter           ( ten  =     10.0_wp )
+      real(wp), parameter :: ten = 10.0_wp
 
 !
 !     Minutes/day
 !
-      real(wp)              mnpday
-      parameter           ( mnpday = 1440.0_wp )
+      real(wp), parameter :: mnpday = 1440.0_wp
 
 !
 !     Local variables

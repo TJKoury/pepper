@@ -33,8 +33,7 @@
       include               'gf.inc'
       include               'zzholdd.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          target
       character(*)          abcorr
@@ -1245,17 +1244,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           qnpars
-      parameter           ( qnpars = 3 )
+      integer(ip), parameter :: qnpars = 3
 
-      logical               nobail
-      parameter           ( nobail = .false. )
+      logical, parameter :: nobail = .false.
 
-      logical               norpt
-      parameter           ( norpt  = .false. )
+      logical, parameter :: norpt = .false.
 
 !
 !     Local variables

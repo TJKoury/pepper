@@ -13382,14 +13382,12 @@ contains
 !
 !     Maximum number of allowed significant digits.
 !
-      integer(ip)           mostdg
-      parameter           ( mostdg = 14 )
+      integer(ip), parameter :: mostdg = 14
 
 !
 !     Local variables
 !
-      integer(ip)           maxpow
-      parameter           ( maxpow = 17 )
+      integer(ip), parameter :: maxpow = 17
 
       real(wp), parameter :: power (0:maxpow) = &
          [ 1.0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, 1.0e5_wp, &
@@ -15085,38 +15083,28 @@ contains
       real(wp)              base
       parameter           ( base   = 10.0_wp )
 
-      integer(ip)           digit
-      parameter           ( digit  = 1   )
+      integer(ip), parameter :: digit = 1
 
-      integer(ip)           dpoint
-      parameter           ( dpoint = 2   )
+      integer(ip), parameter :: dpoint = 2
 
       integer(ip)           expont
       parameter           ( expont = 3   )
 
-      integer(ip)           ignore
-      parameter           ( ignore = 4   )
+      integer(ip), parameter :: ignore = 4
 
-      integer(ip)           bpistr
-      parameter           ( bpistr = 5   )
+      integer(ip), parameter :: bpistr = 5
 
-      integer(ip)           epistr
-      parameter           ( epistr = 6   )
+      integer(ip), parameter :: epistr = 6
 
-      integer(ip)           sign
-      parameter           ( sign   = 7   )
+      integer(ip), parameter :: sign = 7
 
-      integer(ip)           ibase
-      parameter           ( ibase  = 10  )
+      integer(ip), parameter :: ibase = 10
 
-      integer(ip)           nknown
-      parameter           ( nknown = 128 )
+      integer(ip), parameter :: nknown = 128
 
-      integer(ip)           test
-      parameter           ( test = 16 )
+      integer(ip), parameter :: test = 16
 
-      integer(ip)           errsiz
-      parameter           ( errsiz = 160 )
+      integer(ip), parameter :: errsiz = 160
 
       character(errsiz)     blnkst
       character(errsiz)     toobig
@@ -16343,11 +16331,9 @@ contains
 !
 !     Local parameters
 !
-      integer(ip)           maxc
-      parameter           ( maxc    =   255 )
+      integer(ip), parameter :: maxc = 255
 
-      integer(ip)           minc
-      parameter           ( minc    =  -128 )
+      integer(ip), parameter :: minc = -128
 
 !
 !     Local variables

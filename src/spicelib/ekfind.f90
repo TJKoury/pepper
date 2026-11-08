@@ -709,14 +709,12 @@
 !
 !     Local parameters
 !
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
 !
 !     Storage limits:
 !
-      integer(ip)           maxcol
-      parameter           ( maxcol = 100 )
+      integer(ip), parameter :: maxcol = 100
 
 
 !

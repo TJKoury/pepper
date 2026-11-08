@@ -30,14 +30,11 @@
 
       implicit none
 
-      integer(ip)           nwd
-      parameter           ( nwd    =  128 )
+      integer(ip), parameter :: nwd = 128
 
-      integer(ip)           nwi
-      parameter           ( nwi    =  256 )
+      integer(ip), parameter :: nwi = 256
 
-      integer(ip)           nwc
-      parameter           ( nwc    = 1024 )
+      integer(ip), parameter :: nwc = 1024
 
       integer(ip)           handle
       integer(ip)           recno
@@ -50,14 +47,11 @@
       integer(ip)           datai   ( * )
       character(*)          datac
 
-      integer(ip)           bufszd
-      parameter           ( bufszd = 10 )
+      integer(ip), parameter :: bufszd = 10
 
-      integer(ip)           bufszi
-      parameter           ( bufszi = 10 )
+      integer(ip), parameter :: bufszi = 10
 
-      integer(ip)           bufszc
-      parameter           ( bufszc = 10 )
+      integer(ip), parameter :: bufszc = 10
 
 ! $ Brief_I/O
 !
@@ -280,17 +274,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           lbpool
-      parameter           ( lbpool  =   -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           forwrd
-      parameter           ( forwrd  =    1 )
+      integer(ip), parameter :: forwrd = 1
 
-      integer(ip)           bufnvd
-      parameter           ( bufnvd  = bufszd * nwd )
+      integer(ip), parameter :: bufnvd = bufszd * nwd
 
-      integer(ip)           bufnvi
-      parameter           ( bufnvi  = bufszi * nwi )
+      integer(ip), parameter :: bufnvi = bufszi * nwi
 
 !
 !     Local variables

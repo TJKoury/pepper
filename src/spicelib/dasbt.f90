@@ -189,8 +189,7 @@
 !
 !     Local parameters
 !
-      character(*)          quote
-      parameter           ( quote  = ''''                         )
+      character(*), parameter :: quote = ''''
 !
 !      CHARACTER*(*)         BEGRES
 !      PARAMETER           ( BEGRES = 'BEGIN_RESERVED_BLOCK'      )
@@ -201,87 +200,65 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'     )
 !
-      character(*)          begcom
-      parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'        )
+      character(*), parameter :: begcom = 'BEGIN_COMMENT_BLOCK'
 
-      character(*)          endcom
-      parameter           ( endcom = 'END_COMMENT_BLOCK'          )
+      character(*), parameter :: endcom = 'END_COMMENT_BLOCK'
 
-      character(*)          tcmblk
-      parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'       )
+      character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'
 
-      character(*)          bcblk
-      parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'      )
+      character(*), parameter :: bcblk = 'BEGIN_CHARACTER_BLOCK'
 
-      character(*)          ecblk
-      parameter           ( ecblk  = 'END_CHARACTER_BLOCK'        )
+      character(*), parameter :: ecblk = 'END_CHARACTER_BLOCK'
 
-      character(*)          tcblks
-      parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS'     )
+      character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'
 
-      character(*)          bdblk
-      parameter           ( bdblk  = 'BEGIN_DP_BLOCK'             )
+      character(*), parameter :: bdblk = 'BEGIN_DP_BLOCK'
 
-      character(*)          edblk
-      parameter           ( edblk  = 'END_DP_BLOCK'               )
+      character(*), parameter :: edblk = 'END_DP_BLOCK'
 
-      character(*)          tdblks
-      parameter           ( tdblks = 'TOTAL_DP_BLOCKS'            )
+      character(*), parameter :: tdblks = 'TOTAL_DP_BLOCKS'
 
-      character(*)          biblk
-      parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'        )
+      character(*), parameter :: biblk = 'BEGIN_INTEGER_BLOCK'
 
-      character(*)          eiblk
-      parameter           ( eiblk  = 'END_INTEGER_BLOCK'          )
+      character(*), parameter :: eiblk = 'END_INTEGER_BLOCK'
 
-      character(*)          tiblks
-      parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'       )
+      character(*), parameter :: tiblks = 'TOTAL_INTEGER_BLOCKS'
 
-      character(*)          ftypid
-      parameter           ( ftypid = 'DASETF'                     )
+      character(*), parameter :: ftypid = 'DASETF'
 
-      character(*)          infoln
-      parameter           ( infoln = 'NAIF DAS ENCODED TRANSFER FILE' )
+      character(*), parameter :: infoln = 'NAIF DAS ENCODED TRANSFER FILE'
 !
 !     Some parameters for writing the array markers
 !
-      integer(ip)           linlen
-      parameter           ( linlen = 80 )
+      integer(ip), parameter :: linlen = 80
 !
 !     Length of a character buffer array element.
 !
-      integer(ip)           cbflen
-      parameter           ( cbflen = 4                            )
+      integer(ip), parameter :: cbflen = 4
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8                            )
+      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60                           )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     Length of a DAS comment record, in characters.
 !
-      integer(ip)           crlen
-      parameter           ( crlen = 1024                          )
+      integer(ip), parameter :: crlen = 1024
 !
 !     Size of the character, double precision, and integer data buffers.
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 1024                         )
+      integer(ip), parameter :: bufsiz = 1024
 !
 !     Beginning and ending string positions for reading/writing
 !     character data from/to a DAS file using the character data
 !     buffer.
 !
-      integer(ip)           bcbpos
-      parameter           ( bcbpos = 1                            )
+      integer(ip), parameter :: bcbpos = 1
 
-      integer(ip)           ecbpos
-      parameter           ( ecbpos = cbflen                       )
+      integer(ip), parameter :: ecbpos = cbflen
 !
 !     Local variables
 !

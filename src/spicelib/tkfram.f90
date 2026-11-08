@@ -25,8 +25,7 @@
       integer(ip)           frame
       logical               found
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 200 )
+      integer(ip), parameter :: bufsiz = 200
 
 ! $ Brief_I/O
 !
@@ -375,29 +374,21 @@
 !     Local Parameters
 !
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
-      integer(ip)           nitems
-      parameter           ( nitems = 14 )
+      integer(ip), parameter :: nitems = 14
 
-      integer(ip)           nvars
-      parameter           ( nvars = 14 )
+      integer(ip), parameter :: nvars = 14
 
-      integer(ip)           ndps
-      parameter           ( ndps  =  9 )
+      integer(ip), parameter :: ndps = 9
 
-      integer(ip)           dbufsz
-      parameter           ( dbufsz = ndps * bufsiz )
+      integer(ip), parameter :: dbufsz = ndps * bufsiz
 
-      integer(ip)           nints
-      parameter           ( nints =  1 )
+      integer(ip), parameter :: nints = 1
 
-      integer(ip)           ibufsz
-      parameter           ( ibufsz = nints * bufsiz )
+      integer(ip), parameter :: ibufsz = nints * bufsiz
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
 
 !

@@ -150,8 +150,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           methln
-      parameter           ( methln  = 10 )
+      integer(ip), parameter :: methln = 10
 
 !
 !     Local variables

@@ -33,8 +33,7 @@
       include 'ektype.inc'
 
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           njrs
       integer(ip)           ubases ( * )
@@ -279,11 +278,9 @@
 !
 !     Other local parameters
 !
-      integer(ip)           inisub
-      parameter           ( inisub = 32 )
+      integer(ip), parameter :: inisub = 32
 
-      integer(ip)           limit1
-      parameter           ( limit1 = 250000 )
+      integer(ip), parameter :: limit1 = 250000
 
 !
 !     Local variables

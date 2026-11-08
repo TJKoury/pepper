@@ -261,56 +261,47 @@
 !
 !     Length of an aberration correction name string.
 !
-      integer(ip)           abclen
-      parameter           ( abclen = 20 )
+      integer(ip), parameter :: abclen = 20
 
 !
 !     Length of a reference frame name.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Length of a body name.
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
 !
 !     Length of a coordinate system name.
 !
-      integer(ip)           syslen
-      parameter           ( syslen = 32 )
+      integer(ip), parameter :: syslen = 32
 
 !
 !     Length of a vector definition name.
 !
-      integer(ip)           vdflen
-      parameter           ( vdflen = 32 )
+      integer(ip), parameter :: vdflen = 32
 
 !
 !     Number of recognized coordinate systems.
 !
-      integer(ip)           nsys
-      parameter           ( nsys   = 7 )
+      integer(ip), parameter :: nsys = 7
 
 !
 !     Maximum length of a coordinate name.
 !
-      integer(ip)           crdlen
-      parameter           ( crdlen = 32 )
+      integer(ip), parameter :: crdlen = 32
 
 !
 !     Maximum length of computation method name.
 !
-      integer(ip)           metlen
-      parameter           ( metlen = 200 )
+      integer(ip), parameter :: metlen = 200
 
 !
 !     Time string length.
 !
-      integer(ip)           timlen
-      parameter           ( timlen = 40 )
+      integer(ip), parameter :: timlen = 40
 
 !
 !     Local Variables

@@ -171,14 +171,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           errlen
-      parameter           ( errlen = 80 )
+      integer(ip), parameter :: errlen = 80
 
-      integer(ip)           maxenc
-      parameter           ( maxenc = 64 )
+      integer(ip), parameter :: maxenc = 64
 
-      integer(ip)           wrksiz
-      parameter           ( wrksiz = 64 )
+      integer(ip), parameter :: wrksiz = 64
 !
 !     Local variables
 !

@@ -443,11 +443,9 @@
 !     Local Parameters
 !
 
-      real(wp)              half
-      parameter           ( half  = 1.0_wp / 2.0_wp )
+      real(wp), parameter :: half = 1.0_wp / 2.0_wp
 
-      real(wp)              eighth
-      parameter           ( eighth = 1.0_wp / 8.0_wp )
+      real(wp), parameter :: eighth = 1.0_wp / 8.0_wp
 
 !
 !     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
@@ -503,14 +501,11 @@
 !     (counting 1/(1*2) as the first) will be the last one needed in
 !     the evaluation of C_2 and C_3.
 !
-      integer(ip)           npairs
-      parameter           ( npairs = 2*trunc - 2 )
+      integer(ip), parameter :: npairs = 2*trunc - 2
 
-      integer(ip)           lpair3
-      parameter           ( lpair3 = npairs      )
+      integer(ip), parameter :: lpair3 = npairs
 
-      integer(ip)           lpair2
-      parameter           ( lpair2 = npairs - 1  )
+      integer(ip), parameter :: lpair2 = npairs - 1
 
 
 !

@@ -181,26 +181,19 @@
 !
 
 
-      integer(ip)           maxsig
-      parameter           ( maxsig = 14 )
+      integer(ip), parameter :: maxsig = 14
 
-      integer(ip)           esgn
-      parameter           ( esgn   = maxsig + 4 )
+      integer(ip), parameter :: esgn = maxsig + 4
 
-      integer(ip)           efst
-      parameter           ( efst   = esgn + 1 )
+      integer(ip), parameter :: efst = esgn + 1
 
-      integer(ip)           escd
-      parameter           ( escd   = efst + 1 )
+      integer(ip), parameter :: escd = efst + 1
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = maxsig + 16 )
+      integer(ip), parameter :: wdsize = maxsig + 16
 
-      logical               yes
-      parameter           ( yes = .true. )
+      logical, parameter :: yes = .true.
 
-      logical               no
-      parameter           ( no  = .false. )
+      logical, parameter :: no = .false.
 
 
 

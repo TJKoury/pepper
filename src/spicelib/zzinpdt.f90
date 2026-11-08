@@ -39,21 +39,16 @@
       integer(ip)           exclud
       logical               inside
 
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
-      integer(ip)           lonidx
-      parameter           ( lonidx = 1 )
+      integer(ip), parameter :: lonidx = 1
 
-      integer(ip)           latidx
-      parameter           ( latidx = 2 )
+      integer(ip), parameter :: latidx = 2
 
-      integer(ip)           altidx
-      parameter           ( altidx = 3 )
+      integer(ip), parameter :: altidx = 3
 
 
-      real(wp)              latmrg
-      parameter           ( latmrg = 1.0e-8_wp )
+      real(wp), parameter :: latmrg = 1.0e-8_wp
 
 ! $ Brief_I/O
 !
@@ -290,33 +285,25 @@
 !
 !     Element boundary indices:
 !
-      integer(ip)           west
-      parameter           ( west   = 1 )
+      integer(ip), parameter :: west = 1
 
-      integer(ip)           east
-      parameter           ( east   = 2 )
+      integer(ip), parameter :: east = 2
 
-      integer(ip)           south
-      parameter           ( south  = 1 )
+      integer(ip), parameter :: south = 1
 
-      integer(ip)           north
-      parameter           ( north  = 2 )
+      integer(ip), parameter :: north = 2
 
-      integer(ip)           lower
-      parameter           ( lower  = 1 )
+      integer(ip), parameter :: lower = 1
 
-      integer(ip)           upper
-      parameter           ( upper  = 2 )
+      integer(ip), parameter :: upper = 2
 
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      integer(ip)           lt
-      parameter           ( lt = -1 )
+      integer(ip), parameter :: lt = -1
 
-      integer(ip)           gt
-      parameter           ( gt =  1 )
+      integer(ip), parameter :: gt = 1
 
 !
 !     The code EQ can be returned by ZZPDCMPL, but we make no

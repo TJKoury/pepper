@@ -164,8 +164,7 @@
 !-&
 
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
       character(1)          type
       character(wdsize)     item

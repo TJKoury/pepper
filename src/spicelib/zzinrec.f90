@@ -35,8 +35,7 @@
       integer(ip)           exclud
       logical               inside
 
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
 ! $ Brief_I/O
 !
@@ -178,11 +177,9 @@
 !
 !     Element boundary indices:
 !
-      integer(ip)           lower
-      parameter           ( lower  = 1 )
+      integer(ip), parameter :: lower = 1
 
-      integer(ip)           upper
-      parameter           ( upper  = 2 )
+      integer(ip), parameter :: upper = 2
 
 !
 !     Local variables

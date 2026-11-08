@@ -219,8 +219,7 @@
 !
 !     Set the length of a SPICE file ID word.
 !
-      integer(ip)           idwlen
-      parameter           ( idwlen = 8 )
+      integer(ip), parameter :: idwlen = 8
 !
 !     Local Variables
 !

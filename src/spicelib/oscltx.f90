@@ -543,11 +543,9 @@
 !
 !     Local parameters
 !
-      real(wp)              small
-      parameter           ( small  = 1.0e-10_wp )
+      real(wp), parameter :: small = 1.0e-10_wp
 
-      real(wp)              margin
-      parameter           ( margin = 2.0e2_wp )
+      real(wp), parameter :: margin = 2.0e2_wp
 
 !
 !     Local variables

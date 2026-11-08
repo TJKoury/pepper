@@ -69,8 +69,7 @@
       implicit none
       integer(ip) :: number  !! Number of excess elements.
       character(*) :: struct  !! Name of the data structure.
-      integer(ip) longln
-      parameter           ( longln = 320 )
+      integer(ip), parameter :: longln = 320
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%excess ( number, struct )

@@ -371,23 +371,17 @@
 !                   operates on.
 !
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           ndc
-      parameter           ( ndc    = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic    = 6 )
+      integer(ip), parameter :: nic = 6
 
-      integer(ip)           qsiz
-      parameter           ( qsiz   = 4 )
+      integer(ip), parameter :: qsiz = 4
 
-      integer(ip)           qavsiz
-      parameter           ( qavsiz = 7 )
+      integer(ip), parameter :: qavsiz = 7
 
-      integer(ip)           dtype
-      parameter           ( dtype =  1 )
+      integer(ip), parameter :: dtype = 1
 
 !
 !     Local variables

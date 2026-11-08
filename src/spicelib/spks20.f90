@@ -127,8 +127,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 100 )
+      integer(ip), parameter :: bufsiz = 100
 
 !
 !     Local variables

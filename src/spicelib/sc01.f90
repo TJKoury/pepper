@@ -340,17 +340,13 @@
 !
 
 
-      integer(ip)           errlen
-      parameter           ( errlen =    240 )
+      integer(ip), parameter :: errlen = 240
 
-      integer(ip)           msglen
-      parameter           ( msglen =    320 )
+      integer(ip), parameter :: msglen = 320
 
-      integer(ip)           initsc
-      parameter           ( initsc =      0 )
+      integer(ip), parameter :: initsc = 0
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln =     32 )
+      integer(ip), parameter :: kvnmln = 32
 
 !
 !     Local variables

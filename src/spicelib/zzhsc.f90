@@ -24,8 +24,7 @@
 
       implicit none
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           hashsz
       integer(ip)           hedlst  (          * )
@@ -384,11 +383,9 @@
 !
 !     Hash control area items.
 !
-      integer(ip)           sizidx
-      parameter           ( sizidx =   0 )
+      integer(ip), parameter :: sizidx = 0
 
-      integer(ip)           freidx
-      parameter           ( freidx =  -1 )
+      integer(ip), parameter :: freidx = -1
 
 !
 !     SPICELIB functions.

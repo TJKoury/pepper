@@ -629,8 +629,7 @@ contains
 !
       character(10)         iochar
 
-      integer(ip)           longln
-      parameter           ( longln = 320 )
+      integer(ip), parameter :: longln = 320
       character(longln)     error
 
 !
@@ -2753,11 +2752,9 @@ contains
 !
 !-&
 
-      integer(ip)           maxplc
-      parameter           ( maxplc = 14 )
+      integer(ip), parameter :: maxplc = 14
 
-      integer(ip)           maxsiz
-      parameter           ( maxsiz = maxplc + 12 )
+      integer(ip), parameter :: maxsiz = maxplc + 12
 
       character(maxplc)     places
       character(maxsiz)     mymark
@@ -5397,8 +5394,7 @@ contains
       integer(ip)           wdsize
       parameter           ( wdsize = 12 )
 
-      integer(ip)           room
-      parameter           ( room = 300 )
+      integer(ip), parameter :: room = 300
 
       integer(ip)           nknown
       character(wdsize)     known ( room )
@@ -5409,14 +5405,11 @@ contains
 !
 !     Time Zone Variables
 !
-      integer(ip)           zsize
-      parameter           ( zsize = 3 )
+      integer(ip), parameter :: zsize = 3
 
-      integer(ip)           osize
-      parameter           ( osize = 6 )
+      integer(ip), parameter :: osize = 6
 
-      integer(ip)           nzones
-      parameter           ( nzones = 8 )
+      integer(ip), parameter :: nzones = 8
 
       character(zsize), parameter :: zones ( nzones ) = &
          [ character(zsize) :: 'EST', 'EDT', 'CST', 'CDT', 'MST', 'MDT', 'PST', 'PDT' ]
@@ -10443,8 +10436,7 @@ contains
 !
 !     Local parameters
 !
-      integer(ip)           shrtln
-      parameter           ( shrtln =  9 )
+      integer(ip), parameter :: shrtln = 9
 
       integer(ip)           bslash
       parameter           ( bslash = 92 )

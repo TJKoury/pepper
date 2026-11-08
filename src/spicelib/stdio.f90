@@ -117,8 +117,7 @@
 !
 !     Local Variables
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 8 )
+      integer(ip), parameter :: wdsize = 8
 
       character(wdsize)     myname
 

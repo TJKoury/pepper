@@ -4188,8 +4188,7 @@ contains
 !-&
 
 
-      real(wp) third
-      parameter (third = 1.0_wp/3.0_wp)
+      real(wp), parameter :: third = 1.0_wp/3.0_wp
 !
       dcbrt = dsign (dabs(x)**third, x)
 !
@@ -5102,8 +5101,7 @@ contains
       integer(ip)           dlon
       parameter           ( dlon = 2 )
 
-      integer(ip)           dlat
-      parameter           ( dlat = 3 )
+      integer(ip), parameter :: dlat = 3
 
 
 !
@@ -5482,8 +5480,7 @@ contains
       integer(ip)           dr
       parameter           ( dr     = 1 )
 
-      integer(ip)           dcolat
-      parameter           ( dcolat = 2 )
+      integer(ip), parameter :: dcolat = 2
 
       integer(ip)           dlon
       parameter           ( dlon   = 3 )
@@ -6708,11 +6705,9 @@ contains
 !
 !     Local Constants.
 !
-      integer(ip)           pos
-      parameter           ( pos = 1 )
+      integer(ip), parameter :: pos = 1
 
-      integer(ip)           vel
-      parameter           ( vel = 4 )
+      integer(ip), parameter :: vel = 4
 
 !
 !     Local variables.
@@ -7038,8 +7033,7 @@ contains
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel    =   9 )
+      integer(ip), parameter :: ubel = 9
 
       real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
       real(wp), intent(out) :: center (    3 )  !! Center and semi-axes of ELLIPS.
@@ -7324,14 +7318,11 @@ contains
 !        MINPOS through MINPOS + 1
 !
 !
-      integer(ip)           ctrpos
-      parameter           ( ctrpos = 1 )
+      integer(ip), parameter :: ctrpos = 1
 
-      integer(ip)           majpos
-      parameter           ( majpos = 4 )
+      integer(ip), parameter :: majpos = 4
 
-      integer(ip)           minpos
-      parameter           ( minpos = 7 )
+      integer(ip), parameter :: minpos = 7
 
 
 !
@@ -13371,11 +13362,9 @@ contains
 !        closest point in the plane to the origin.
 !
 !
-      integer(ip)           nmlpos
-      parameter           ( nmlpos = 1 )
+      integer(ip), parameter :: nmlpos = 1
 
-      integer(ip)           conpos
-      parameter           ( conpos = 4 )
+      integer(ip), parameter :: conpos = 4
 
 !
 !     Note for programmers: validity of the input plane is not

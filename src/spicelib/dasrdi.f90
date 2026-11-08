@@ -287,11 +287,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           nwi
-      parameter           ( nwi    =  256 )
+      integer(ip), parameter :: nwi = 256
 
-      integer(ip)           int
-      parameter           ( int    =  3  )
+      integer(ip), parameter :: int = 3
 
 !
 !     Local variables

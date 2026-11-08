@@ -208,26 +208,20 @@
 !
 !     Local parameters
 !
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = dirsiz + 1 )
+      integer(ip), parameter :: bufsiz = dirsiz + 1
 
-      integer(ip)           ctrlsz
-      parameter           ( ctrlsz = 3 )
+      integer(ip), parameter :: ctrlsz = 3
 
 !
 !     Maximum polynomial degree:
 !
-      integer(ip)           maxdeg
-      parameter           ( maxdeg = 15 )
+      integer(ip), parameter :: maxdeg = 15
 
 !
 !     Local variables

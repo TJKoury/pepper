@@ -144,8 +144,7 @@
 !
 !     Local Parameters
 !
-      real(wp)              dpvalu
-      parameter           ( dpvalu = 7.0_wp )
+      real(wp), parameter :: dpvalu = 7.0_wp
 
 !
 !     Local Variables

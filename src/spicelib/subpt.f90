@@ -484,14 +484,12 @@
 !
 !     Local parameters
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln =  80 )
+      integer(ip), parameter :: frnmln = 80
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Local variables

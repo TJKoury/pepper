@@ -54,26 +54,19 @@
 !     match after being left justified, converted to upper case,
 !     and having all embedded blanks removed.
 !
-      character(*)          recsys
-      parameter           ( recsys = 'RECTANGULAR' )
+      character(*), parameter :: recsys = 'RECTANGULAR'
 
-      character(*)          latsys
-      parameter           ( latsys = 'LATITUDINAL' )
+      character(*), parameter :: latsys = 'LATITUDINAL'
 
-      character(*)          sphsys
-      parameter           ( sphsys = 'SPHERICAL' )
+      character(*), parameter :: sphsys = 'SPHERICAL'
 
-      character(*)          radsys
-      parameter           ( radsys = 'RA/DEC' )
+      character(*), parameter :: radsys = 'RA/DEC'
 
-      character(*)          cylsys
-      parameter           ( cylsys = 'CYLINDRICAL' )
+      character(*), parameter :: cylsys = 'CYLINDRICAL'
 
-      character(*)          geosys
-      parameter           ( geosys = 'GEODETIC' )
+      character(*), parameter :: geosys = 'GEODETIC'
 
-      character(*)          pgrsys
-      parameter           ( pgrsys = 'PLANETOGRAPHIC' )
+      character(*), parameter :: pgrsys = 'PLANETOGRAPHIC'
 
 
 !
@@ -81,23 +74,17 @@
 !     inputs naming coordinates must match these when
 !     compared using EQSTR.
 !
-      character(*)          xcrd
-      parameter           ( xcrd   = 'X' )
+      character(*), parameter :: xcrd = 'X'
 
-      character(*)          ycrd
-      parameter           ( ycrd   = 'Y' )
+      character(*), parameter :: ycrd = 'Y'
 
-      character(*)          zcrd
-      parameter           ( zcrd   = 'Z' )
+      character(*), parameter :: zcrd = 'Z'
 
-      character(*)          radcrd
-      parameter           ( radcrd = 'RADIUS' )
+      character(*), parameter :: radcrd = 'RADIUS'
 
-      character(*)          loncrd
-      parameter           ( loncrd = 'LONGITUDE' )
+      character(*), parameter :: loncrd = 'LONGITUDE'
 
-      character(*)          latcrd
-      parameter           ( latcrd = 'LATITUDE' )
+      character(*), parameter :: latcrd = 'LATITUDE'
 
 !
 !     Note that the RA parameter value below matches
@@ -106,20 +93,15 @@
 !
 !     when extra blanks are compressed out of the above value.
 !
-      character(*)          racrd
-      parameter           ( racrd  = 'RIGHT ASCENSION' )
+      character(*), parameter :: racrd = 'RIGHT ASCENSION'
 
-      character(*)          deccrd
-      parameter           ( deccrd = 'DECLINATION' )
+      character(*), parameter :: deccrd = 'DECLINATION'
 
-      character(*)          rngcrd
-      parameter           ( rngcrd = 'RANGE' )
+      character(*), parameter :: rngcrd = 'RANGE'
 
-      character(*)          cltcrd
-      parameter           ( cltcrd = 'COLATITUDE' )
+      character(*), parameter :: cltcrd = 'COLATITUDE'
 
-      character(*)          altcrd
-      parameter           ( altcrd = 'ALTITUDE' )
+      character(*), parameter :: altcrd = 'ALTITUDE'
 
 !
 !     Parameters specifying types of vector definitions
@@ -131,24 +113,21 @@
 !     POSDEF indicates the vector is defined by the
 !     position of a target relative to an observer.
 !
-      character(*)          posdef
-      parameter           ( posdef = 'POSITION' )
+      character(*), parameter :: posdef = 'POSITION'
 
 !
 !     SOBDEF indicates the vector points from the center
 !     of a target body to the sub-observer point on
 !     that body, for a given observer and target.
 !
-      character(*)          sobdef
-      parameter           ( sobdef = 'SUB-OBSERVER POINT' )
+      character(*), parameter :: sobdef = 'SUB-OBSERVER POINT'
 
 !
 !     SOBDEF indicates the vector points from the center
 !     of a target body to the surface intercept point on
 !     that body, for a given observer, ray, and target.
 !
-      character(*)          sindef
-      parameter           ( sindef = 'SURFACE INTERCEPT POINT' )
+      character(*), parameter :: sindef = 'SURFACE INTERCEPT POINT'
 
 
 !

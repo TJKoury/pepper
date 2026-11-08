@@ -233,8 +233,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           namlen
-      parameter           ( namlen =     60 )
+      integer(ip), parameter :: namlen = 60
 
 !
 !     Following are parameters for the indices within the
@@ -243,41 +242,30 @@
 !
 !     NOTE: indices for the d.p. variables must be listed first.
 !
-      integer(ip)           cofidx
-      parameter           ( cofidx =          1 )
+      integer(ip), parameter :: cofidx = 1
 
-      integer(ip)           prsidx
-      parameter           ( prsidx = cofidx + 1 )
+      integer(ip), parameter :: prsidx = cofidx + 1
 
-      integer(ip)           preidx
-      parameter           ( preidx = prsidx + 1 )
+      integer(ip), parameter :: preidx = prsidx + 1
 
-      integer(ip)           offidx
-      parameter           ( offidx = preidx + 1 )
+      integer(ip), parameter :: offidx = preidx + 1
 
-      integer(ip)           modidx
-      parameter           ( modidx = offidx + 1 )
+      integer(ip), parameter :: modidx = offidx + 1
 
-      integer(ip)           nflidx
-      parameter           ( nflidx = modidx + 1 )
+      integer(ip), parameter :: nflidx = modidx + 1
 
-      integer(ip)           delidx
-      parameter           ( delidx = nflidx + 1 )
+      integer(ip), parameter :: delidx = nflidx + 1
 
-      integer(ip)           sysidx
-      parameter           ( sysidx = delidx + 1 )
+      integer(ip), parameter :: sysidx = delidx + 1
 
-      integer(ip)           nkitem
-      parameter           ( nkitem = sysidx )
+      integer(ip), parameter :: nkitem = sysidx
 
-      integer(ip)           ndp
-      parameter           ( ndp    = modidx )
+      integer(ip), parameter :: ndp = modidx
 
 !
 !     Maximum number of elements in coefficient array:
 !
-      integer(ip)           mxcfsz
-      parameter           ( mxcfsz =  3 * mxcoef )
+      integer(ip), parameter :: mxcfsz = 3 * mxcoef
 
 !
 !     Local variables

@@ -152,11 +152,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           vnmlen
-      parameter           ( vnmlen = 32 )
+      integer(ip), parameter :: vnmlen = 32
 
-      integer(ip)           numlen
-      parameter           ( numlen = 16 )
+      integer(ip), parameter :: numlen = 16
 
 !
 !     Local variables

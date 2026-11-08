@@ -29,8 +29,7 @@
       include 'ekqlimit.inc'
       include 'eksegdsc.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           jbase1
       integer(ip)           jbase2

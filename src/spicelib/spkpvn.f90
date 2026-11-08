@@ -264,8 +264,7 @@
 !
 !     Local Parameters
 !
-      integer(ip)           nstate
-      parameter           ( nstate = 6 )
+      integer(ip), parameter :: nstate = 6
 
 !
 !     Standard SPICE error handling.

@@ -151,8 +151,7 @@
 !
 !     Local variables
 !
-      integer(ip)           nitems
-      parameter           ( nitems = 16 )
+      integer(ip), parameter :: nitems = 16
 
       real(wp)              data     ( nitems )
 

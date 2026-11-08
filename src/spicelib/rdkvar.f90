@@ -21,8 +21,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
@@ -30,8 +29,7 @@
       character(*)          name
       logical               eof
 
-      integer(ip)           linlen
-      parameter           ( linlen = 80 )
+      integer(ip), parameter :: linlen = 80
 
 ! $ Brief_I/O
 !
@@ -226,17 +224,13 @@
 !
 !     Local variables
 !
-      character(1)          comma
-      parameter           ( comma = ',' )
+      character(1), parameter :: comma = ','
 
-      character(1)          blank
-      parameter           ( blank = ' ' )
+      character(1), parameter :: blank = ' '
 
-      character(1)          lparen
-      parameter           ( lparen = '(' )
+      character(1), parameter :: lparen = '('
 
-      character(1)          rparen
-      parameter           ( rparen = ')' )
+      character(1), parameter :: rparen = ')'
 
       character(linlen)     line
       character(linlen)     varnam

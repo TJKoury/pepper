@@ -169,23 +169,17 @@
 !
 !     Local parameters
 !
-      integer(ip)           term
-      parameter           ( term   = 1 )
+      integer(ip), parameter :: term = 1
 
-      integer(ip)           lcheck
-      parameter           ( lcheck = term   + 1 )
+      integer(ip), parameter :: lcheck = term   + 1
 
-      integer(ip)           rcheck
-      parameter           ( rcheck = lcheck + 1 )
+      integer(ip), parameter :: rcheck = lcheck + 1
 
-      integer(ip)           balnce
-      parameter           ( balnce = rcheck + 1 )
+      integer(ip), parameter :: balnce = rcheck + 1
 
-      integer(ip)           splt23
-      parameter           ( splt23 = balnce + 1 )
+      integer(ip), parameter :: splt23 = balnce + 1
 
-      integer(ip)           splt13
-      parameter           ( splt13 = splt23 + 1 )
+      integer(ip), parameter :: splt13 = splt23 + 1
 
 
 !

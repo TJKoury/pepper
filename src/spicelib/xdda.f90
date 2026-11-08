@@ -23,8 +23,7 @@
 
       implicit none
 
-      real(wp)              grdtol
-      parameter           ( grdtol = 1.0e-12_wp )
+      real(wp), parameter :: grdtol = 1.0e-12_wp
 
       real(wp)              vertex ( 3 )
       real(wp)              raydir ( 3 )
@@ -246,8 +245,7 @@
 !
 !     Local parameters
 !
-      real(wp)              eps
-      parameter           ( eps = 1.0e-20_wp )
+      real(wp), parameter :: eps = 1.0e-20_wp
 
 !
 !     Local variables

@@ -96,8 +96,7 @@
 !
 !     Local Parameters
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 !
 !     Local Variables

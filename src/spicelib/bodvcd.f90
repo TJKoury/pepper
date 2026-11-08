@@ -295,11 +295,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           cdelen
-      parameter           ( cdelen = 16 )
+      integer(ip), parameter :: cdelen = 16
 
-      integer(ip)           namlen
-      parameter           ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
 !
 !     Local variables

@@ -937,8 +937,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           longln
-      parameter           ( longln = 320 )
+      integer(ip), parameter :: longln = 320
       character(longln)     error
 !
 !     Set up the error processing.

@@ -112,14 +112,11 @@
 !
 !     Local Variables
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           maxids
-      parameter           ( maxids = 10 )
+      integer(ip), parameter :: maxids = 10
 
 
       character(wdsize)     sclk

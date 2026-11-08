@@ -825,14 +825,12 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  =  'SPKEZP' )
+      character(*), parameter :: rname = 'SPKEZP'
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 
 !

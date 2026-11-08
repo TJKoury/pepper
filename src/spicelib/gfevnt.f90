@@ -36,11 +36,9 @@
       include 'zzgf.inc'
       include 'zzabcorr.inc'
 
-      integer(ip)           maxpar
-      parameter           ( maxpar = 10 )
+      integer(ip), parameter :: maxpar = 10
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       external              udstep
       external              udrefn
@@ -1616,42 +1614,32 @@
 !
 !     Event quantity codes:
 !
-      integer(ip)           sep
-      parameter           ( sep    = 1 )
+      integer(ip), parameter :: sep = 1
 
-      integer(ip)           dist
-      parameter           ( dist   = 2 )
+      integer(ip), parameter :: dist = 2
 
-      integer(ip)           coord
-      parameter           ( coord  = 3 )
+      integer(ip), parameter :: coord = 3
 
-      integer(ip)           rngrat
-      parameter           ( rngrat = 4 )
+      integer(ip), parameter :: rngrat = 4
 
-      integer(ip)           phase
-      parameter           ( phase  = 5 )
+      integer(ip), parameter :: phase = 5
 
-      integer(ip)           iluang
-      parameter           ( iluang = 6 )
+      integer(ip), parameter :: iluang = 6
 
-      integer(ip)           angspd
-      parameter           ( angspd = 7 )
+      integer(ip), parameter :: angspd = 7
 
-      integer(ip)           apdiam
-      parameter           ( apdiam = 8 )
+      integer(ip), parameter :: apdiam = 8
 
 
 !
 !     Number of supported quantities:
 !
-      integer(ip)           nq
-      parameter           ( nq     = 8 )
+      integer(ip), parameter :: nq = 8
 
 !
 !     Number of supported comparison operators:
 !
-      integer(ip)           nc
-      parameter           ( nc     = 7 )
+      integer(ip), parameter :: nc = 7
 
 !
 !     Assorted string lengths:
@@ -1661,15 +1649,13 @@
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      integer(ip)           maxop
-      parameter           ( maxop = 6 )
+      integer(ip), parameter :: maxop = 6
 
 !
 !     MAXCLN is the maximum character string length of the quantity
 !     parameter names and character quantity parameters.
 !
-      integer(ip)           maxcln
-      parameter           ( maxcln = 80 )
+      integer(ip), parameter :: maxcln = 80
 
 
 !

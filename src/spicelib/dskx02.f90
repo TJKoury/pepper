@@ -861,37 +861,32 @@
 !
 !     Tolerance used for vertex-voxel grid distance test:
 !
-      real(wp)              vtxtol
-      parameter           ( vtxtol = 1.0e-12_wp )
+      real(wp), parameter :: vtxtol = 1.0e-12_wp
 
 !
 !     Maximum number of voxels we can accept for
 !     one XDDA call.
 !
-      integer(ip)           nvxlst
-      parameter           ( nvxlst = 50000 )
+      integer(ip), parameter :: nvxlst = 50000
 
 !
 !     Maximum number of plates we work with
 !     at any time.
 !
-      integer(ip)           maxpl
-      parameter           ( maxpl  =  maxplt/125 )
+      integer(ip), parameter :: maxpl = maxplt/125
 
 !
 !     Parameter indicating no coordinates are to be excluded
 !     in the test for a point being within segment boundaries.
 !
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
 !
 !     Local Variables
 !
       integer(ip)           isrchi
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 200 )
+      integer(ip), parameter :: bufsiz = 200
 
 
       real(wp)              coord  ( 3 )

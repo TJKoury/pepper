@@ -370,31 +370,25 @@
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 !
 !     Length of an SPK descriptor.
 !
-      integer(ip)           ndescr
-      parameter           ( ndescr =  nd + (ni+1)/2 )
+      integer(ip), parameter :: ndescr = nd + (ni+1)/2
 !
 !     Length of a state.
 !
-      integer(ip)           nstate
-      parameter           ( nstate = 6 )
+      integer(ip), parameter :: nstate = 6
 !
 !     The type of this segment
 !
-      integer(ip)           type
-      parameter           ( type = 14 )
+      integer(ip), parameter :: type = 14
 !
 !     The number of constants:
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 1 )
+      integer(ip), parameter :: nconst = 1
 !
 !     Local variables
 !

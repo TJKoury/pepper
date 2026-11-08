@@ -488,75 +488,52 @@
 !
 !     Define rather a large number of local parameters.
 !
-      real(wp)              zns
-      parameter           ( zns    = 1.19459e-5_wp   )
+      real(wp), parameter :: zns = 1.19459e-5_wp
 
-      real(wp)              c1ss
-      parameter           ( c1ss   = 2.9864797e-6_wp )
+      real(wp), parameter :: c1ss = 2.9864797e-6_wp
 
 
-      real(wp)              zes
-      parameter           ( zes    = 0.01675_wp    )
+      real(wp), parameter :: zes = 0.01675_wp
 
-      real(wp)              znl
-      parameter           ( znl    = 1.5835218e-4_wp )
+      real(wp), parameter :: znl = 1.5835218e-4_wp
 
-      real(wp)              c1l
-      parameter           ( c1l    = 4.7968065e-7_wp )
+      real(wp), parameter :: c1l = 4.7968065e-7_wp
 
-      real(wp)              zel
-      parameter           ( zel    = 0.05490_wp     )
+      real(wp), parameter :: zel = 0.05490_wp
 
-      real(wp)              zcosis
-      parameter           ( zcosis = 0.91744867_wp  )
+      real(wp), parameter :: zcosis = 0.91744867_wp
 
-      real(wp)              zsinis
-      parameter           ( zsinis = 0.39785416_wp  )
+      real(wp), parameter :: zsinis = 0.39785416_wp
 
-      real(wp)              zsings
-      parameter           ( zsings = -0.98088458_wp )
+      real(wp), parameter :: zsings = -0.98088458_wp
 
-      real(wp)              zcosgs
-      parameter           ( zcosgs = 0.1945905_wp   )
+      real(wp), parameter :: zcosgs = 0.1945905_wp
 
-      real(wp)              q22
-      parameter           ( q22    = 1.7891679e-6_wp )
+      real(wp), parameter :: q22 = 1.7891679e-6_wp
 
-      real(wp)              q31
-      parameter           ( q31    = 2.1460748e-6_wp )
+      real(wp), parameter :: q31 = 2.1460748e-6_wp
 
-      real(wp)              q33
-      parameter           ( q33    = 2.2123015e-7_wp )
+      real(wp), parameter :: q33 = 2.2123015e-7_wp
 
-      real(wp)              root22
-      parameter           ( root22 = 1.7891679e-6_wp )
+      real(wp), parameter :: root22 = 1.7891679e-6_wp
 
-      real(wp)              root32
-      parameter           ( root32 = 3.7393792e-7_wp )
+      real(wp), parameter :: root32 = 3.7393792e-7_wp
 
-      real(wp)              root44
-      parameter           ( root44 = 7.3636953e-9_wp )
+      real(wp), parameter :: root44 = 7.3636953e-9_wp
 
-      real(wp)              root52
-      parameter           ( root52 = 1.1428639e-7_wp )
+      real(wp), parameter :: root52 = 1.1428639e-7_wp
 
-      real(wp)              root54
-      parameter           ( root54 = 2.1765803e-9_wp )
+      real(wp), parameter :: root54 = 2.1765803e-9_wp
 
-      real(wp)              thdt
-      parameter           ( thdt   = 4.3752691e-3_wp )
+      real(wp), parameter :: thdt = 4.3752691e-3_wp
 
-      real(wp)              step2
-      parameter           ( step2 = 259200.0_wp )
+      real(wp), parameter :: step2 = 259200.0_wp
 
-      integer(ip)           lunar
-      parameter           ( lunar = 1 )
+      integer(ip), parameter :: lunar = 1
 
-      real(wp)              zero
-      parameter           ( zero    =  0.0_wp    )
+      real(wp), parameter :: zero = 0.0_wp
 
-      real(wp)              one
-      parameter           ( one     =  1.0_wp    )
+      real(wp), parameter :: one = 1.0_wp
 
 
 !

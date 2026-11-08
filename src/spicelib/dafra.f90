@@ -181,11 +181,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           namlen
-      parameter           ( namlen = 1000 )
+      integer(ip), parameter :: namlen = 1000
 
-      integer(ip)           sumlen
-      parameter           ( sumlen =  128 )
+      integer(ip), parameter :: sumlen = 128
 
 !
 !     Local variables

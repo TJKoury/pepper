@@ -187,8 +187,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = ipsize )
+      integer(ip), parameter :: bufsiz = ipsize
 
 !
 !     Local variables

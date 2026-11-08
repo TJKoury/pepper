@@ -28,11 +28,9 @@
       integer(ip)           rwvbas
       integer(ip)           sgvbas
 
-      integer(ip)           mxjoin
-      parameter           ( mxjoin = 10 )
+      integer(ip), parameter :: mxjoin = 10
 
-      integer(ip)           mxjrs
-      parameter           ( mxjrs  = 200 )
+      integer(ip), parameter :: mxjrs = 200
 
 ! $ Brief_I/O
 !
@@ -237,32 +235,27 @@
 !
 !     Base-relative index of join row set size
 !
-      integer(ip)           jszidx
-      parameter           ( jszidx = 1 )
+      integer(ip), parameter :: jszidx = 1
 
 !
 !     Index of row vector count
 !
-      integer(ip)           jrcidx
-      parameter           ( jrcidx = 2 )
+      integer(ip), parameter :: jrcidx = 2
 
 !
 !     Index of table count
 !
-      integer(ip)           jtcidx
-      parameter           ( jtcidx = 3 )
+      integer(ip), parameter :: jtcidx = 3
 
 !
 !     Index of segment vector count
 !
-      integer(ip)           jscidx
-      parameter           ( jscidx = 4 )
+      integer(ip), parameter :: jscidx = 4
 
 !
 !     Base address of first segment vector
 !
-      integer(ip)           jsvbas
-      parameter           ( jsvbas = 4 )
+      integer(ip), parameter :: jsvbas = 4
 !
 !
 !     End Include Section:  EK Join Row Set Parameters

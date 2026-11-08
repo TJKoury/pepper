@@ -24,8 +24,7 @@
 
       implicit none
 
-      integer(ip)           maxord
-      parameter           ( maxord = 148 )
+      integer(ip), parameter :: maxord = 148
 
       integer(ip)           n
       character(*)          string

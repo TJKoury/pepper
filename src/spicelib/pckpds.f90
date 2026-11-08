@@ -152,16 +152,13 @@
 !
 !     ND and NI values for a PCK file.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 5 )
+      integer(ip), parameter :: ni = 5
 !
 !     Length of a calender string.
 !
-      integer(ip)           calsiz
-      parameter           ( calsiz = 40 )
+      integer(ip), parameter :: calsiz = 40
 !
 !     Local Variables
 !

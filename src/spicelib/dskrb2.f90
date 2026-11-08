@@ -520,8 +520,7 @@
 !
 !     Local parameters
 !
-      real(wp)              third
-      parameter           ( third  = 1.0_wp/3.0_wp )
+      real(wp), parameter :: third = 1.0_wp/3.0_wp
 !
 !
 !     Local variables

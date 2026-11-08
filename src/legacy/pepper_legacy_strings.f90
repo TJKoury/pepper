@@ -800,10 +800,8 @@
       implicit none
       integer(ip)           number  !! Integer to be converted.
       character(*)          string  !! Equivalent character string, left justified.
-      integer(ip)           base
-      parameter           ( base = 10 )
-      integer(ip)           strlen
-      parameter           ( strlen = 80 )
+      integer(ip), parameter :: base = 10
+      integer(ip), parameter :: strlen = 80
       character(1), parameter :: digits(0:9) = &
                  ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
       call pepper_intstr ( number, string )
@@ -820,10 +818,8 @@
       real(wp) x  !! A double precision number
       integer(ip)      sigdig  !! The number of significant digits placed in output
       character(*)     string  !! A character string representation of X
-      integer(ip)           mostdg
-      parameter           ( mostdg = 14 )
-      integer(ip)           maxpow
-      parameter           ( maxpow = 17 )
+      integer(ip), parameter :: mostdg = 14
+      integer(ip), parameter :: maxpow = 17
       real(wp), parameter :: power (0:maxpow) = &
          [ 1.0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, 1.0e5_wp, &
            1.0e6_wp, 1.0e7_wp, 1.0e8_wp, 1.0e9_wp, 1.0e10_wp, 1.0e11_wp, &
@@ -839,8 +835,7 @@
       real(wp), parameter :: values(0:9) = &
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
            7.0_wp, 8.0_wp, 9.0_wp ]
-      integer(ip)           maxexp
-      parameter           ( maxexp = 40 )
+      integer(ip), parameter :: maxexp = 40
       character(2), parameter :: vaxexp(0:40) = &
          [ character(2) :: '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', &
            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', &

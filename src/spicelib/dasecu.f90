@@ -145,13 +145,11 @@
 !
 !     Set the value for the maximum length of a text line.
 !
-      integer(ip)           linlen
-      parameter           ( linlen = 255 )
+      integer(ip), parameter :: linlen = 255
 !
 !     Set the size of the comment buffer.
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 22 )
+      integer(ip), parameter :: bufsiz = 22
 !
 !     Local variables
 !

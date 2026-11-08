@@ -417,17 +417,13 @@
 !        DTYPE      is the data type.
 !
 
-      integer(ip)           ndc
-      parameter           ( ndc    = 2 )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic    = 6 )
+      integer(ip), parameter :: nic = 6
 
-      integer(ip)           psiz
-      parameter           ( psiz   = 8 )
+      integer(ip), parameter :: psiz = 8
 
-      integer(ip)           dtype
-      parameter           ( dtype  = 2 )
+      integer(ip), parameter :: dtype = 2
 
 !
 !     Local variables

@@ -34,8 +34,7 @@
       real(wp)              maxlat
       real(wp)              maxp   ( 3 )
 
-      integer(ip)           ubpl
-      parameter           ( ubpl = 4 )
+      integer(ip), parameter :: ubpl = 4
 
 ! $ Brief_I/O
 !

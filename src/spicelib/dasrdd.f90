@@ -297,11 +297,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           nwd
-      parameter           ( nwd   =  128 )
+      integer(ip), parameter :: nwd = 128
 
-      integer(ip)           dp
-      parameter           ( dp     =  2  )
+      integer(ip), parameter :: dp = 2
 
 
 !

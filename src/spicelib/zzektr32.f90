@@ -272,11 +272,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           lsize
-      parameter           ( lsize  = (3*mnkeyc)/2 )
+      integer(ip), parameter :: lsize = (3*mnkeyc)/2
 
-      integer(ip)           rsize
-      parameter           ( rsize  =  3*mnkeyc - lsize )
+      integer(ip), parameter :: rsize = 3*mnkeyc - lsize
 
 !
 !     Local variables

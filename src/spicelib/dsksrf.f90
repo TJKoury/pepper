@@ -29,8 +29,7 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          dskfnm
       integer(ip)           bodyid
@@ -255,8 +254,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           toklen
-      parameter           ( toklen = 4 )
+      integer(ip), parameter :: toklen = 4
 
 !
 !     Local variables

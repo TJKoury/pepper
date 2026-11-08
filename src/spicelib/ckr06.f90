@@ -286,39 +286,29 @@
 !
 !     Local parameters
 !
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = dirsiz + 1 )
+      integer(ip), parameter :: bufsiz = dirsiz + 1
 
-      integer(ip)           ctrlsz
-      parameter           ( ctrlsz = 4 )
+      integer(ip), parameter :: ctrlsz = 4
 
-      integer(ip)           nsgpar
-      parameter           ( nsgpar = 2 )
+      integer(ip), parameter :: nsgpar = 2
 
 
 !
 !     Maximum window sizes, based on subtypes:
 !
-      integer(ip)           c06mw0
-      parameter           ( c06mw0 =  ( maxdeg + 1 )/2  )
+      integer(ip), parameter :: c06mw0 = ( maxdeg + 1 )/2
 
-      integer(ip)           c06mw1
-      parameter           ( c06mw1 =  ( maxdeg + 1 )    )
+      integer(ip), parameter :: c06mw1 = ( maxdeg + 1 )
 
-      integer(ip)           c06mw2
-      parameter           ( c06mw2 =  ( maxdeg + 1 )/2  )
+      integer(ip), parameter :: c06mw2 = ( maxdeg + 1 )/2
 
-      integer(ip)           c06mw3
-      parameter           ( c06mw3 =  ( maxdeg + 1 )    )
+      integer(ip), parameter :: c06mw3 = ( maxdeg + 1 )
 
 !
 !     Local variables

@@ -23,8 +23,7 @@
 
       implicit none
 
-      integer(ip)           nwi
-      parameter           ( nwi = 256 )
+      integer(ip), parameter :: nwi = 256
 
       character(*)          action
       integer(ip)           unit

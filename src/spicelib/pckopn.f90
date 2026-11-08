@@ -277,22 +277,18 @@
 !
 !     Local parameters
 !
-      character(*)          type
-      parameter           ( type = 'PCK'    )
+      character(*), parameter :: type = 'PCK'
 
 !
 !     DAF ND and NI values for PCK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 5 )
+      integer(ip), parameter :: ni = 5
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer(ip)           mxcrec
-      parameter           ( mxcrec = 1000 )
+      integer(ip), parameter :: mxcrec = 1000
 
 !
 !     Local variables

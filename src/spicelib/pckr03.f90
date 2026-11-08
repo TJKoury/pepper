@@ -160,14 +160,12 @@
 !     The number of constant values stored with a type 03 segment
 !     segment.
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 1  )
+      integer(ip), parameter :: nconst = 1
 !
 !     The beginning location in the output record for the non-constant
 !     segment data.
 !
-      integer(ip)           begel1
-      parameter           ( begel1 = nconst + 1 )
+      integer(ip), parameter :: begel1 = nconst + 1
 
 !
 !     Local Variables

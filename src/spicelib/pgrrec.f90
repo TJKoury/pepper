@@ -469,35 +469,26 @@
 !
 !     Local parameters
 !
-      character(*)          pmtmp
-      parameter           ( pmtmp  = 'BODY#_PM' )
+      character(*), parameter :: pmtmp = 'BODY#_PM'
 
-      character(*)          ovrtmp
-      parameter           ( ovrtmp = 'BODY#_PGR_POSITIVE_LON' )
+      character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
 
-      integer(ip)           earth
-      parameter           ( earth  = 399 )
+      integer(ip), parameter :: earth = 399
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln = 32  )
+      integer(ip), parameter :: kvnmln = 32
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80  )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           moon
-      parameter           ( moon   = 301 )
+      integer(ip), parameter :: moon = 301
 
-      integer(ip)           sensln
-      parameter           ( sensln = 4 )
+      integer(ip), parameter :: sensln = 4
 
-      integer(ip)           sun
-      parameter           ( sun    = 10  )
+      integer(ip), parameter :: sun = 10
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 
 

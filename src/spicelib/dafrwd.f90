@@ -38,8 +38,7 @@
       integer(ip)           reads
       integer(ip)           reqs
 
-      integer(ip)           rbsize
-      parameter           ( rbsize = 100 )
+      integer(ip), parameter :: rbsize = 100
 
 ! $ Brief_I/O
 !
@@ -287,8 +286,7 @@
 !
 !     Local variables
 !
-      integer(ip)           rdsize
-      parameter           ( rdsize = 128 * rbsize )
+      integer(ip), parameter :: rdsize = 128 * rbsize
 
       integer(ip)           unit
       integer(ip)           iostat

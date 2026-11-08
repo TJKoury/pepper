@@ -269,8 +269,7 @@
       integer(ip)           ncpos
 
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 
       character(1)          fill

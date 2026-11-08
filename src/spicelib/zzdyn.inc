@@ -178,8 +178,7 @@
 !
 !     Token used to build the base frame keyword:
 !
-      character(*)          kwbfrm
-      parameter           ( kwbfrm = 'RELATIVE' )
+      character(*), parameter :: kwbfrm = 'RELATIVE'
 
 !
 !     Frame definition style parameters
@@ -187,14 +186,12 @@
 !
 !     Token used to build the frame definition style keyword:
 !
-      character(*)          kwstyl
-      parameter           ( kwstyl = 'DEF_STYLE' )
+      character(*), parameter :: kwstyl = 'DEF_STYLE'
 
 !
 !     Token indicating parameterized dynamic frame.
 !
-      character(*)          kvparm
-      parameter           ( kvparm = 'PARAMETERIZED' )
+      character(*), parameter :: kvparm = 'PARAMETERIZED'
 
 
 !
@@ -203,8 +200,7 @@
 !
 !     Token used to build the freeze epoch keyword:
 !
-      character(*)          kwfrez
-      parameter           ( kwfrez = 'FREEZE_EPOCH' )
+      character(*), parameter :: kwfrez = 'FREEZE_EPOCH'
 
 !
 !     Rotation state parameters
@@ -212,20 +208,17 @@
 !
 !     Token used to build the rotation state keyword:
 !
-      character(*)          kwrsta
-      parameter           ( kwrsta = 'ROTATION_STATE' )
+      character(*), parameter :: kwrsta = 'ROTATION_STATE'
 
 !
 !     Token indicating rotating rotation state:
 !
-      character(*)          kvrotg
-      parameter           ( kvrotg = 'ROTATING' )
+      character(*), parameter :: kvrotg = 'ROTATING'
 
 !
 !     Token indicating inertial rotation state:
 !
-      character(*)          kvinrt
-      parameter           ( kvinrt = 'INERTIAL' )
+      character(*), parameter :: kvinrt = 'INERTIAL'
 
 !
 !     Frame family parameters
@@ -233,44 +226,37 @@
 !
 !     Token used to build the frame family keyword:
 !
-      character(*)          kwffam
-      parameter           ( kwffam = 'FAMILY' )
+      character(*), parameter :: kwffam = 'FAMILY'
 
 !
 !     Token indicating mean equator and equinox of date frame.
 !
-      character(*)        kvmeqt
-      parameter         ( kvmeqt = 'MEAN_EQUATOR_AND_EQUINOX_OF_DATE'  )
+      character(*), parameter :: kvmeqt = 'MEAN_EQUATOR_AND_EQUINOX_OF_DATE'
 
 !
 !     Token indicating mean ecliptic and equinox of date frame.
 !
-      character(*)        kvmecl
-      parameter         ( kvmecl = 'MEAN_ECLIPTIC_AND_EQUINOX_OF_DATE' )
+      character(*), parameter :: kvmecl = 'MEAN_ECLIPTIC_AND_EQUINOX_OF_DATE'
 
 !
 !     Token indicating true equator and equinox of date frame.
 !
-      character(*)        kvteqt
-      parameter         ( kvteqt = 'TRUE_EQUATOR_AND_EQUINOX_OF_DATE'  )
+      character(*), parameter :: kvteqt = 'TRUE_EQUATOR_AND_EQUINOX_OF_DATE'
 
 !
 !     Token indicating two-vector frame.
 !
-      character(*)          kv2vec
-      parameter           ( kv2vec = 'TWO-VECTOR'  )
+      character(*), parameter :: kv2vec = 'TWO-VECTOR'
 
 !
 !     Token indicating Euler frame.
 !
-      character(*)          kveulr
-      parameter           ( kveulr = 'EULER'  )
+      character(*), parameter :: kveulr = 'EULER'
 
 !
 !     Token indicating product frame.
 !
-      character(*)          kvprod
-      parameter           ( kvprod = 'PRODUCT'  )
+      character(*), parameter :: kvprod = 'PRODUCT'
 
 
 !
@@ -279,20 +265,17 @@
 !
 !     Token used to build the precession model keyword:
 !
-      character(*)          kwprcm
-      parameter           ( kwprcm = 'PREC_MODEL' )
+      character(*), parameter :: kwprcm = 'PREC_MODEL'
 
 !
 !     Token used to build the nutation model keyword:
 !
-      character(*)          kwnutm
-      parameter           ( kwnutm = 'NUT_MODEL' )
+      character(*), parameter :: kwnutm = 'NUT_MODEL'
 
 !
 !     Token used to build the obliquity model keyword:
 !
-      character(*)          kwobqm
-      parameter           ( kwobqm = 'OBLIQ_MODEL' )
+      character(*), parameter :: kwobqm = 'OBLIQ_MODEL'
 
 !
 !     Mathematical models used to define "of date" frames will
@@ -302,14 +285,12 @@
 !
 !     Token indicating the Lieske earth precession model:
 !
-      character(*)          kvm001
-      parameter           ( kvm001 = 'EARTH_IAU_1976' )
+      character(*), parameter :: kvm001 = 'EARTH_IAU_1976'
 
 !
 !     Token indicating the IAU 1980 earth nutation model:
 !
-      character(*)          kvm002
-      parameter           ( kvm002 = 'EARTH_IAU_1980' )
+      character(*), parameter :: kvm002 = 'EARTH_IAU_1980'
 
 !
 !     Token indicating the IAU 1980 earth mean obliqity of
@@ -318,8 +299,7 @@
 !     used in the kernel variable definition indicates what
 !     kind of model is being defined.
 !
-      character(*)          kvm003
-      parameter           ( kvm003 = 'EARTH_IAU_1980' )
+      character(*), parameter :: kvm003 = 'EARTH_IAU_1980'
 
 
 !
@@ -328,147 +308,122 @@
 !
 !     Token used to build the vector axis keyword:
 !
-      character(*)          kwvaxi
-      parameter           ( kwvaxi = 'AXIS' )
+      character(*), parameter :: kwvaxi = 'AXIS'
 
 !
 !     Tokens indicating axis values:
 !
-      character(*)          kvx
-      parameter           ( kvx    = 'X' )
+      character(*), parameter :: kvx = 'X'
 
-      character(*)          kvy
-      parameter           ( kvy    = 'Y' )
+      character(*), parameter :: kvy = 'Y'
 
-      character(*)          kvz
-      parameter           ( kvz    = 'Z' )
+      character(*), parameter :: kvz = 'Z'
 
 !
 !     Prefixes used for primary and secondary vector definition
 !     keywords:
 !
-      character(*)          kwpri
-      parameter           ( kwpri  = 'PRI_' )
+      character(*), parameter :: kwpri = 'PRI_'
 
-      character(*)          kwsec
-      parameter           ( kwsec  = 'SEC_' )
+      character(*), parameter :: kwsec = 'SEC_'
 
 !
 !     Token used to build the vector definition keyword:
 !
-      character(*)          kwvcdf
-      parameter           ( kwvcdf = 'VECTOR_DEF' )
+      character(*), parameter :: kwvcdf = 'VECTOR_DEF'
 
 !
 !     Token indicating observer-target position vector:
 !
-      character(*)          kvposv
-      parameter           ( kvposv = 'OBSERVER_TARGET_POSITION' )
+      character(*), parameter :: kvposv = 'OBSERVER_TARGET_POSITION'
 
 !
 !     Token indicating observer-target velocity vector:
 !
-      character(*)          kvvelv
-      parameter           ( kvvelv = 'OBSERVER_TARGET_VELOCITY' )
+      character(*), parameter :: kvvelv = 'OBSERVER_TARGET_VELOCITY'
 
 !
 !     Token indicating observer-target near point vector:
 !
-      character(*)          kvnear
-      parameter           ( kvnear = 'TARGET_NEAR_POINT' )
+      character(*), parameter :: kvnear = 'TARGET_NEAR_POINT'
 
 !
 !     Token indicating constant vector:
 !
-      character(*)          kvcons
-      parameter           ( kvcons = 'CONSTANT' )
+      character(*), parameter :: kvcons = 'CONSTANT'
 
 !
 !     Token used to build the vector observer keyword:
 !
-      character(*)          kwvobs
-      parameter           ( kwvobs = 'OBSERVER' )
+      character(*), parameter :: kwvobs = 'OBSERVER'
 
 !
 !     Token used to build the vector target keyword:
 !
-      character(*)          kwvtrg
-      parameter           ( kwvtrg = 'TARGET' )
+      character(*), parameter :: kwvtrg = 'TARGET'
 
 !
 !     Token used to build the vector frame keyword:
 !
-      character(*)          kwvfrm
-      parameter           ( kwvfrm = 'FRAME' )
+      character(*), parameter :: kwvfrm = 'FRAME'
 
 !
 !     Token used to build the vector aberration correction keyword:
 !
-      character(*)          kwvabc
-      parameter           ( kwvabc = 'ABCORR' )
+      character(*), parameter :: kwvabc = 'ABCORR'
 
 !
 !     Token used to build the constant vector specification keyword:
 !
-      character(*)          kwvspc
-      parameter           ( kwvspc = 'SPEC' )
+      character(*), parameter :: kwvspc = 'SPEC'
 
 !
 !     Token indicating rectangular coordinates used to
 !     specify constant vector:
 !
-      character(*)          kvrecc
-      parameter           ( kvrecc = 'RECTANGULAR' )
+      character(*), parameter :: kvrecc = 'RECTANGULAR'
 
 !
 !     Token indicating latitudinal coordinates used to
 !     specify constant vector:
 !
-      character(*)          kvlatc
-      parameter           ( kvlatc = 'LATITUDINAL' )
+      character(*), parameter :: kvlatc = 'LATITUDINAL'
 
 !
 !     Token indicating RA/DEC coordinates used to
 !     specify constant vector:
 !
-      character(*)          kvradc
-      parameter           ( kvradc = 'RA/DEC' )
+      character(*), parameter :: kvradc = 'RA/DEC'
 
 !
 !     Token used to build the cartesian vector literal keyword:
 !
-      character(*)          kwvect
-      parameter           ( kwvect = 'VECTOR' )
+      character(*), parameter :: kwvect = 'VECTOR'
 
 !
 !     Token used to build the constant vector latitude keyword:
 !
-      character(*)          kwlat
-      parameter           ( kwlat  = 'LATITUDE' )
+      character(*), parameter :: kwlat = 'LATITUDE'
 
 !
 !     Token used to build the constant vector longitude keyword:
 !
-      character(*)          kwlon
-      parameter           ( kwlon  = 'LONGITUDE' )
+      character(*), parameter :: kwlon = 'LONGITUDE'
 
 !
 !     Token used to build the constant vector right ascension keyword:
 !
-      character(*)          kwra
-      parameter           ( kwra   = 'RA' )
+      character(*), parameter :: kwra = 'RA'
 
 !
 !     Token used to build the constant vector declination keyword:
 !
-      character(*)          kwdec
-      parameter           ( kwdec  = 'DEC' )
+      character(*), parameter :: kwdec = 'DEC'
 
 !
 !     Token used to build the angular separation tolerance keyword:
 !
-      character(*)          kwatol
-      parameter           ( kwatol = 'ANGLE_SEP_TOL' )
+      character(*), parameter :: kwatol = 'ANGLE_SEP_TOL'
 
 !
 !     See the section "Physical unit parameters" below for additional
@@ -481,26 +436,21 @@
 !
 !     Token used to build the epoch keyword:
 !
-      character(*)          kwepoc
-      parameter           ( kwepoc = 'EPOCH' )
+      character(*), parameter :: kwepoc = 'EPOCH'
 
 !
 !     Token used to build the Euler axis sequence keyword:
 !
-      character(*)          kweuax
-      parameter           ( kweuax = 'AXES' )
+      character(*), parameter :: kweuax = 'AXES'
 
 !
 !     Tokens used to build the Euler angle coefficients keywords:
 !
-      character(*)          kweac1
-      parameter           ( kweac1 = 'ANGLE_1_COEFFS' )
+      character(*), parameter :: kweac1 = 'ANGLE_1_COEFFS'
 
-      character(*)          kweac2
-      parameter           ( kweac2 = 'ANGLE_2_COEFFS' )
+      character(*), parameter :: kweac2 = 'ANGLE_2_COEFFS'
 
-      character(*)          kweac3
-      parameter           ( kweac3 = 'ANGLE_3_COEFFS' )
+      character(*), parameter :: kweac3 = 'ANGLE_3_COEFFS'
 
 !
 !     See the section "Physical unit parameters" below for additional
@@ -511,11 +461,9 @@
 !     Product frame family parameters
 !     ---------------------------------
 !
-      character(*)          kwffrm
-      parameter           ( kwffrm = 'FROM_FRAMES'  )
+      character(*), parameter :: kwffrm = 'FROM_FRAMES'
 
-      character(*)          kwtfrm
-      parameter           ( kwtfrm = 'TO_FRAMES'  )
+      character(*), parameter :: kwtfrm = 'TO_FRAMES'
 
 
 !
@@ -524,20 +472,17 @@
 !
 !     Token used to build the units keyword:
 !
-      character(*)          kwunit
-      parameter           ( kwunit = 'UNITS' )
+      character(*), parameter :: kwunit = 'UNITS'
 
 !
 !     Token indicating radians:
 !
-      character(*)          kvradn
-      parameter           ( kvradn = 'RADIANS' )
+      character(*), parameter :: kvradn = 'RADIANS'
 
 !
 !     Token indicating degrees:
 !
-      character(*)          kvdegr
-      parameter           ( kvdegr = 'DEGREES' )
+      character(*), parameter :: kvdegr = 'DEGREES'
 
 
 !

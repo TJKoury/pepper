@@ -379,35 +379,30 @@
 !
 !     DTYPE is the SPK data type.
 !
-      integer(ip)           dtype
-      parameter           ( dtype   =   20 )
+      integer(ip), parameter :: dtype = 20
 
 !
 !     ND is the number of double precision components in an SPK
 !     segment descriptor. SPK uses ND = 2.
 !
-      integer(ip)           nd
-      parameter           ( nd      =   2 )
+      integer(ip), parameter :: nd = 2
 
 !
 !     NI is the number of integer components in an SPK segment
 !     descriptor. SPK uses NI = 6.
 !
-      integer(ip)           ni
-      parameter           ( ni      =   6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     NS is the size of a packed SPK segment descriptor.
 !
-      integer(ip)           ns
-      parameter           ( ns      =   5 )
+      integer(ip), parameter :: ns = 5
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen  =  40 )
+      integer(ip), parameter :: sidlen = 40
 
 !
 !     Local variables

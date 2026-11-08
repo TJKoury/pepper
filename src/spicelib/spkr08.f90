@@ -189,20 +189,15 @@
 !
 !     Local parameters
 !
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           statsz
-      parameter           ( statsz = 6 )
+      integer(ip), parameter :: statsz = 6
 
-      integer(ip)           ctrlsz
-      parameter           ( ctrlsz = 4 )
+      integer(ip), parameter :: ctrlsz = 4
 
-      integer(ip)           staidx
-      parameter           ( staidx = 4 )
+      integer(ip), parameter :: staidx = 4
 
 !
 !     Local variables

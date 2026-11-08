@@ -33,11 +33,9 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      real(wp)              cntrct
-      parameter           ( cntrct = 1.0_wp )
+      real(wp), parameter :: cntrct = 1.0_wp
 
       character(*)          vecdef
       character(*)          method
@@ -779,27 +777,22 @@
 !
 !     Local parameters
 !
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           mxpass
-      parameter           ( mxpass  = 3 )
+      integer(ip), parameter :: mxpass = 3
 
-      integer(ip)           xpass
-      parameter           ( xpass  = 3 )
+      integer(ip), parameter :: xpass = 3
 
 !
 !     Number of supported comparison operators:
 !
-      integer(ip)           nc
-      parameter           ( nc     = 7 )
+      integer(ip), parameter :: nc = 7
 
 !
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      integer(ip)           maxop
-      parameter           ( maxop = 6 )
+      integer(ip), parameter :: maxop = 6
 
 
 !

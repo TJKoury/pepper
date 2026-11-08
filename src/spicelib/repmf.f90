@@ -29,8 +29,7 @@
       character(*)          format
       character(*)          out
 
-      integer(ip)           maxlfd
-      parameter           ( maxlfd = 56 )
+      integer(ip), parameter :: maxlfd = 56
 
 ! $ Brief_I/O
 !

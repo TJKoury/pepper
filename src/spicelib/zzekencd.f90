@@ -26,8 +26,7 @@
       include 'ekquery.inc'
       include 'ektype.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          query
       integer(ip)           eqryi  ( lbcell : * )
@@ -139,8 +138,7 @@
 !
 !     Storage limits:
 !
-      integer(ip)           maxcol
-      parameter           ( maxcol = 100 )
+      integer(ip), parameter :: maxcol = 100
 
 !
 !     Local variables

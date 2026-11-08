@@ -22,11 +22,9 @@
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel    =  9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl    =  4 )
+      integer(ip), parameter :: ubpl = 4
 
       real(wp)              elin  ( ubel )
       real(wp)              plane ( ubpl )

@@ -24,8 +24,7 @@
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel    =   9 )
+      integer(ip), parameter :: ubel = 9
 
       real(wp)              ellips ( ubel )
       real(wp)              point  (    3 )

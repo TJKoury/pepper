@@ -703,29 +703,21 @@
 !
 !     Local (in-line) Functions
 !
-      integer(ip)           smwdsz
-      parameter           ( smwdsz = 16 )
+      integer(ip), parameter :: smwdsz = 16
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           msgsiz
-      parameter           ( msgsiz = 400 )
+      integer(ip), parameter :: msgsiz = 400
 
-      integer(ip)           era
-      parameter           ( era    = 1 )
+      integer(ip), parameter :: era = 1
 
-      integer(ip)           wkday
-      parameter           ( wkday  = era    + 1 )
+      integer(ip), parameter :: wkday = era    + 1
 
-      integer(ip)           zone
-      parameter           ( zone   = wkday  + 1 )
+      integer(ip), parameter :: zone = wkday  + 1
 
-      integer(ip)           ampm
-      parameter           ( ampm   = zone   + 1 )
+      integer(ip), parameter :: ampm = zone   + 1
 
-      integer(ip)           system
-      parameter           ( system = ampm   + 1 )
+      integer(ip), parameter :: system = ampm   + 1
 
       character(lnsize)     pictur
       character(msgsiz)     error

@@ -31,11 +31,9 @@
 
       include              'zzddhman.inc'
 
-      integer(ip)           inteoc
-      parameter           ( inteoc = 4 )
+      integer(ip), parameter :: inteoc = 4
 
-      integer(ip)           lbcell
-      parameter           ( lbcell  = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          fname
       character(*)          ftype
@@ -755,44 +753,31 @@
 !
 !     Local parameters
 !
-      integer(ip)           acclen
-      parameter           ( acclen =   10 )
+      integer(ip), parameter :: acclen = 10
 
-      integer(ip)           arclen
-      parameter           ( arclen =    3 )
+      integer(ip), parameter :: arclen = 3
 
-      integer(ip)           crlen
-      parameter           ( crlen  = 1000 )
+      integer(ip), parameter :: crlen = 1000
 
-      integer(ip)           dprsiz
-      parameter           ( dprsiz =  128 )
+      integer(ip), parameter :: dprsiz = 128
 
-      integer(ip)           fmtlen
-      parameter           ( fmtlen =    8 )
+      integer(ip), parameter :: fmtlen = 8
 
-      integer(ip)           idlen
-      parameter           ( idlen  =    8 )
+      integer(ip), parameter :: idlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen =   60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           maxnd
-      parameter           ( maxnd  =  124 )
+      integer(ip), parameter :: maxnd = 124
 
-      integer(ip)           maxni
-      parameter           ( maxni  =  250 )
+      integer(ip), parameter :: maxni = 250
 
-      integer(ip)           maxsum
-      parameter           ( maxsum =  125 )
+      integer(ip), parameter :: maxsum = 125
 
-      integer(ip)           maxpc
-      parameter           ( maxpc  =  126 )
+      integer(ip), parameter :: maxpc = 126
 
-      integer(ip)           minpc
-      parameter           ( minpc  =   32 )
+      integer(ip), parameter :: minpc = 32
 
-      integer(ip)           typlen
-      parameter           ( typlen =    4 )
+      integer(ip), parameter :: typlen = 4
 
 !
 !     Local variables

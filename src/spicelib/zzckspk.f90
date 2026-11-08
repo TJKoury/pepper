@@ -99,44 +99,33 @@
 !     integer portion of the DAF descriptor where the values are
 !     located.
 !
-      integer(ip)           bodid
-      parameter           ( bodid  =  1 )
+      integer(ip), parameter :: bodid = 1
 
-      integer(ip)           cenid
-      parameter           ( cenid  = bodid  + 1 )
+      integer(ip), parameter :: cenid = bodid  + 1
 
-      integer(ip)           spkfrm
-      parameter           ( spkfrm = cenid  + 1 )
+      integer(ip), parameter :: spkfrm = cenid  + 1
 
-      integer(ip)           spktyp
-      parameter           ( spktyp = spkfrm + 1 )
+      integer(ip), parameter :: spktyp = spkfrm + 1
 
-      integer(ip)           start
-      parameter           ( start  = spktyp + 1 )
+      integer(ip), parameter :: start = spktyp + 1
 
-      integer(ip)           finish
-      parameter           ( finish = start  + 1 )
+      integer(ip), parameter :: finish = start  + 1
 
-      integer(ip)           ckrate
-      parameter           ( ckrate = spktyp     )
+      integer(ip), parameter :: ckrate = spktyp
 
-      integer(ip)           cktype
-      parameter           ( cktype = spkfrm )
+      integer(ip), parameter :: cktype = spkfrm
 
 !
 !     These parameters give the number of integer and double precision
 !     components of the descriptor for SPK and CK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 !
 !     The size of a summary.
 !
-      integer(ip)           sumsiz
-      parameter           ( sumsiz = nd + ((ni+1)/2) )
+      integer(ip), parameter :: sumsiz = nd + ((ni+1)/2)
 
 
       real(wp)              chcktm

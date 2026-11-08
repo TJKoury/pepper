@@ -329,8 +329,7 @@
       logical               return
 
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
       character(lnsize)     part
 

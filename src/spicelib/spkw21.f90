@@ -276,33 +276,26 @@
 !
 !     Local parameters
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen  =  40 )
+      integer(ip), parameter :: sidlen = 40
 
-      integer(ip)           fprint
-      parameter           ( fprint  =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint  = 126 )
+      integer(ip), parameter :: lprint = 126
 
 !
 !     MINDSZ is the minimum MDA size; this is the size
 !     of type 1 MDAs.
 !
-      integer(ip)           mindsz
-      parameter           ( mindsz =   71 )
+      integer(ip), parameter :: mindsz = 71
 
 !
 !     Local variables
 !
-      integer(ip)           dscsiz
-      parameter           ( dscsiz  =   5 )
+      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip)           dtype
-      parameter           ( dtype   =  21 )
+      integer(ip), parameter :: dtype = 21
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz  = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
 
 !

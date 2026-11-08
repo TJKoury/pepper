@@ -48,14 +48,11 @@
       integer(ip)           nxpts
       real(wp)              xpt    ( 3 )
 
-      integer(ip)           lonidx
-      parameter           ( lonidx = 1 )
+      integer(ip), parameter :: lonidx = 1
 
-      integer(ip)           latidx
-      parameter           ( latidx = 2 )
+      integer(ip), parameter :: latidx = 2
 
-      integer(ip)           altidx
-      parameter           ( altidx = 3 )
+      integer(ip), parameter :: altidx = 3
 
 ! $ Brief_I/O
 !
@@ -227,33 +224,25 @@
 !
 !     Altitude expansion factor:
 !
-      real(wp)              radfac
-      parameter           ( radfac = 1.1_wp )
+      real(wp), parameter :: radfac = 1.1_wp
 
 
 !
 !     Element boundary indices:
 !
-      integer(ip)           west
-      parameter           ( west   = 1 )
+      integer(ip), parameter :: west = 1
 
-      integer(ip)           east
-      parameter           ( east   = 2 )
+      integer(ip), parameter :: east = 2
 
-      integer(ip)           south
-      parameter           ( south  = 1 )
+      integer(ip), parameter :: south = 1
 
-      integer(ip)           north
-      parameter           ( north  = 2 )
+      integer(ip), parameter :: north = 2
 
-      integer(ip)           lower
-      parameter           ( lower  = 1 )
+      integer(ip), parameter :: lower = 1
 
-      integer(ip)           upper
-      parameter           ( upper  = 2 )
+      integer(ip), parameter :: upper = 2
 
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
 !
 !     Local variables

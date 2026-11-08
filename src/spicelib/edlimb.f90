@@ -23,8 +23,7 @@
 
       implicit none
 
-      integer(ip)           ubel
-      parameter           ( ubel   =    9 )
+      integer(ip), parameter :: ubel = 9
 
       real(wp)              a
       real(wp)              b
@@ -421,8 +420,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           ubpl
-      parameter           ( ubpl   =    4 )
+      integer(ip), parameter :: ubpl = 4
 
 
 !

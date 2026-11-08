@@ -135,17 +135,13 @@
 !
 !     Coefficients for the mean obliquity:
 !
-      real(wp)              c0
-      parameter           ( c0 = 84381.448_wp )
+      real(wp), parameter :: c0 = 84381.448_wp
 
-      real(wp)              c1
-      parameter           ( c1 = -46.8150_wp )
+      real(wp), parameter :: c1 = -46.8150_wp
 
-      real(wp)              c2
-      parameter           ( c2 = -0.00059_wp )
+      real(wp), parameter :: c2 = -0.00059_wp
 
-      real(wp)              c3
-      parameter           ( c3 = 0.001813_wp )
+      real(wp), parameter :: c3 = 0.001813_wp
 
 !
 !     Local variables

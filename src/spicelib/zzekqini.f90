@@ -26,8 +26,7 @@
       include 'ekqlimit.inc'
       include 'ekbool.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           isize
       integer(ip)           dsize

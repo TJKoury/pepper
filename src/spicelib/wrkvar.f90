@@ -21,8 +21,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           unit
       character(*)          name
@@ -168,17 +167,13 @@
 !
 !     Local variables
 !
-      character(1)          blank
-      parameter           ( blank = ' '    )
+      character(1), parameter :: blank = ' '
 
-      character(1)          lparen
-      parameter           ( lparen = '('   )
+      character(1), parameter :: lparen = '('
 
-      character(3)          rparen
-      parameter           ( rparen = '  )' )
+      character(3), parameter :: rparen = '  )'
 
-      character(2)          comma
-      parameter           ( comma  = ','   )
+      character(2), parameter :: comma = ','
 
       integer(ip)           varlen
       integer(ip)           margin

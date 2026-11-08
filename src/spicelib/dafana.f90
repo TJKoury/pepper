@@ -27,8 +27,7 @@
       real(wp)              data     ( * )
       integer(ip)           n
 
-      integer(ip)           tbsize
-      parameter           ( tbsize =   20  )
+      integer(ip), parameter :: tbsize = 20
 
 ! $ Brief_I/O
 !
@@ -783,38 +782,27 @@
 !
 !     Local parameters
 !
-      integer(ip)           arycnt
-      parameter           ( arycnt =    3 )
+      integer(ip), parameter :: arycnt = 3
 
-      integer(ip)           bwdptr
-      parameter           ( bwdptr =    2 )
+      integer(ip), parameter :: bwdptr = 2
 
-      integer(ip)           crlen
-      parameter           ( crlen  = 1000 )
+      integer(ip), parameter :: crlen = 1000
 
-      integer(ip)           dprsiz
-      parameter           ( dprsiz =  128 )
+      integer(ip), parameter :: dprsiz = 128
 
-      integer(ip)           fwdptr
-      parameter           ( fwdptr =    1 )
+      integer(ip), parameter :: fwdptr = 1
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen =   60 )
+      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip)           lbcell
-      parameter           ( lbcell =   -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           maxndc
-      parameter           ( maxndc =  124 )
+      integer(ip), parameter :: maxndc = 124
 
-      integer(ip)           maxnic
-      parameter           ( maxnic =  250 )
+      integer(ip), parameter :: maxnic = 250
 
-      integer(ip)           maxsum
-      parameter           ( maxsum =  125 )
+      integer(ip), parameter :: maxsum = 125
 
-      integer(ip)           nil
-      parameter           ( nil    =   -1 )
+      integer(ip), parameter :: nil = -1
 
 
 !

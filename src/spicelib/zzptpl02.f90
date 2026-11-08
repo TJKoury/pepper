@@ -248,8 +248,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 1000 )
+      integer(ip), parameter :: bufsiz = 1000
 
 !
 !     Local variables

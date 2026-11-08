@@ -512,8 +512,7 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  = 'ZZSFXCOR' )
+      character(*), parameter :: rname = 'ZZSFXCOR'
 
 
 !
@@ -521,32 +520,27 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-17_wp )
+      real(wp), parameter :: cnvlim = 1.0e-17_wp
 
 !
 !     Round-off error limit for arc sine input:
 !
-      real(wp)              rndtol
-      parameter           ( rndtol = 1.0e-14_wp )
+      real(wp), parameter :: rndtol = 1.0e-14_wp
 
 !
 !     Fraction of target body angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      real(wp)              margin
-      parameter           ( margin = 1.01_wp )
+      real(wp), parameter :: margin = 1.01_wp
 
 
-      integer(ip)           maxitr
-      parameter           ( maxitr =  10 )
+      integer(ip), parameter :: maxitr = 10
 
 !
 !     Code for the frame J2000.
 !
-      integer(ip)           j2code
-      parameter           ( j2code = 1 )
+      integer(ip), parameter :: j2code = 1
 
 
 !

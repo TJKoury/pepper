@@ -27,8 +27,7 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           handle
       integer(ip)           arrbeg
@@ -173,14 +172,11 @@
 !
 !     Local Parameters
 !
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 100 )
+      integer(ip), parameter :: bufsiz = 100
 
-      integer(ip)           qavsiz
-      parameter           ( qavsiz = 7 )
+      integer(ip), parameter :: qavsiz = 7
 
-      integer(ip)           qsiz
-      parameter           ( qsiz   = 4 )
+      integer(ip), parameter :: qsiz = 4
 
 !
 !     Local Variables

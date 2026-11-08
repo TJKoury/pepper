@@ -29,8 +29,7 @@
 
       include              'zzbodtrn.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       character(maxl)       names  (          * )
       character(maxl)       nornam (          * )

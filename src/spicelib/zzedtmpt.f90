@@ -197,20 +197,17 @@
 !
 !     Tolerance used for arcsine arguments:
 !
-      real(wp)              atol
-      parameter           ( atol = 1.0e-14_wp )
+      real(wp), parameter :: atol = 1.0e-14_wp
 
 !
 !     Angular error used to determine convergence:
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-15_wp )
+      real(wp), parameter :: cnvlim = 1.0e-15_wp
 
 !
 !     Maximum number of iterations allowed for root finding:
 !
-      integer(ip)           maxitr
-      parameter           ( maxitr = 20 )
+      integer(ip), parameter :: maxitr = 20
 
 !
 !     Local variables

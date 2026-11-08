@@ -1968,44 +1968,37 @@
 !     which is dependent on the choice of aberration correction, is
 !     reached.
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-16_wp )
+      real(wp), parameter :: cnvlim = 1.0e-16_wp
 
 !
 !     Upper bound on converged solution iterations.
 !
-      integer(ip)           mxcvit
-      parameter           ( mxcvit = 10 )
+      integer(ip), parameter :: mxcvit = 10
 
 !
 !     Upper bound on non-converged solution iterations.
 !
-      integer(ip)           mxncit
-      parameter           ( mxncit =  3 )
+      integer(ip), parameter :: mxncit = 3
 
 !
 !     Saved body name length.
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Locus string length.
 !
-      integer(ip)           loclen
-      parameter           ( loclen = 15 )
+      integer(ip), parameter :: loclen = 15
 
 !
 !     Code for the frame J2000.
 !
-      integer(ip)           j2code
-      parameter           ( j2code = 1 )
+      integer(ip), parameter :: j2code = 1
 
 !
 !     Local variables

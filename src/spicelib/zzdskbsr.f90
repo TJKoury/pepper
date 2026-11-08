@@ -45,17 +45,13 @@
       logical               found
 
 
-      integer(ip)           ftsize
-      parameter           ( ftsize =  5000 )
+      integer(ip), parameter :: ftsize = 5000
 
-      integer(ip)           btsize
-      parameter           ( btsize =  100 )
+      integer(ip), parameter :: btsize = 100
 
-      integer(ip)           lbpool
-      parameter           ( lbpool =   -5 )
+      integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           stsize
-      parameter           ( stsize = 10000 )
+      integer(ip), parameter :: stsize = 10000
 
 ! $ Brief_I/O
 !
@@ -269,14 +265,12 @@
 !     Local parameters
 
 
-      integer(ip)           slen
-      parameter           ( slen   = 40 )
+      integer(ip), parameter :: slen = 40
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer(ip)           forwrd
-      parameter           ( forwrd  = 1 )
+      integer(ip), parameter :: forwrd = 1
 
 !
 !     Local variables

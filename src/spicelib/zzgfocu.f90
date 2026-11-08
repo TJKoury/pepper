@@ -274,23 +274,18 @@
 !     at which target body may move, relative to the solar
 !     system barycenter.
 !
-      real(wp)              alpha
-      parameter           ( alpha = 1.0e-2_wp )
+      real(wp), parameter :: alpha = 1.0e-2_wp
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
-      real(wp)              atol
-      parameter           ( atol  = 1.0e-12_wp )
+      real(wp), parameter :: atol = 1.0e-12_wp
 
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           poslen
-      parameter           ( poslen = 10 )
+      integer(ip), parameter :: poslen = 10
 
 !
 !     Local variables

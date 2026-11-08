@@ -43,17 +43,13 @@
       logical               inside
 
 
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
-      integer(ip)           lonidx
-      parameter           ( lonidx = 1 )
+      integer(ip), parameter :: lonidx = 1
 
-      integer(ip)           latidx
-      parameter           ( latidx = 2 )
+      integer(ip), parameter :: latidx = 2
 
-      integer(ip)           altidx
-      parameter           ( altidx = 3 )
+      integer(ip), parameter :: altidx = 3
 
 ! $ Brief_I/O
 !
@@ -262,23 +258,18 @@
 !
 !     Local parameters
 !
-      integer(ip)           lower
-      parameter           ( lower = 1 )
+      integer(ip), parameter :: lower = 1
 
-      integer(ip)           upper
-      parameter           ( upper = 2 )
+      integer(ip), parameter :: upper = 2
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      integer(ip)           lt
-      parameter           ( lt = -1 )
+      integer(ip), parameter :: lt = -1
 
-      integer(ip)           eq
-      parameter           ( eq =  0 )
+      integer(ip), parameter :: eq = 0
 
-      integer(ip)           gt
-      parameter           ( gt =  1 )
+      integer(ip), parameter :: gt = 1
 
 
 !

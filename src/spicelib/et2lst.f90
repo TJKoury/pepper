@@ -436,14 +436,11 @@
 !     Local parameters
 !
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip)           sun
-      parameter           ( sun    = 10 )
+      integer(ip), parameter :: sun = 10
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 
 !

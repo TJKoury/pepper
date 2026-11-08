@@ -372,8 +372,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           msglen
-      parameter           ( msglen = 80 )
+      integer(ip), parameter :: msglen = 80
 
 !
 !     Local variables

@@ -284,39 +284,29 @@
 !
 !     Local parameters
 !
-      integer(ip)           nattr
-      parameter           ( nattr  =   5 )
+      integer(ip), parameter :: nattr = 5
 
-      integer(ip)           maxtok
-      parameter           ( maxtok =  20 )
+      integer(ip), parameter :: maxtok = 20
 
-      integer(ip)           toklen
-      parameter           ( toklen =  32 )
+      integer(ip), parameter :: toklen = 32
 
-      integer(ip)           msglen
-      parameter           ( msglen = 320 )
+      integer(ip), parameter :: msglen = 320
 
-      integer(ip)           nrkey
-      parameter           ( nrkey  =   1 )
+      integer(ip), parameter :: nrkey = 1
 
 !
 !     Parameters naming indices of keywords in the attribute list
 !     ATTKEY:
 !
-      integer(ip)           typpos
-      parameter           ( typpos =          1 )
+      integer(ip), parameter :: typpos = 1
 
-      integer(ip)           sizpos
-      parameter           ( sizpos = typpos + 1 )
+      integer(ip), parameter :: sizpos = typpos + 1
 
-      integer(ip)           idxpos
-      parameter           ( idxpos = sizpos + 1 )
+      integer(ip), parameter :: idxpos = sizpos + 1
 
-      integer(ip)           nflpos
-      parameter           ( nflpos = idxpos + 1 )
+      integer(ip), parameter :: nflpos = idxpos + 1
 
-      integer(ip)           fxcpos
-      parameter           ( fxcpos = nflpos + 1 )
+      integer(ip), parameter :: fxcpos = nflpos + 1
 
 
 !

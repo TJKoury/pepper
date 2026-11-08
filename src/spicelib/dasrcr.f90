@@ -172,35 +172,28 @@
 !
 !     Words per data record, for each data type:
 !
-      integer(ip)           nwc
-      parameter           ( nwc    = 1024 )
+      integer(ip), parameter :: nwc = 1024
 
-      integer(ip)           nwd
-      parameter           ( nwd    =  128 )
+      integer(ip), parameter :: nwd = 128
 
-      integer(ip)           nwi
-      parameter           ( nwi    =  256 )
+      integer(ip), parameter :: nwi = 256
 
 !
 !     Data type parameters
 !
-      integer(ip)           char
-      parameter           ( char   =   1  )
+      integer(ip), parameter :: char = 1
 
-      integer(ip)           dp
-      parameter           ( dp     =   2  )
+      integer(ip), parameter :: dp = 2
 
 !
 !     Directory pointer location (forward):
 !
-      integer(ip)           fwdloc
-      parameter           ( fwdloc =   1  )
+      integer(ip), parameter :: fwdloc = 1
 
 !
 !     Location of first type descriptor
 !
-      integer(ip)           begdsc
-      parameter           ( begdsc = 9 )
+      integer(ip), parameter :: begdsc = 9
 
 
 !

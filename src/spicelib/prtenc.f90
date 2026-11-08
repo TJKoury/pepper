@@ -24,8 +24,7 @@
       integer(ip)        number
       character(*)       string
 
-      integer(ip)        minlen
-      parameter        ( minlen = 5 )
+      integer(ip), parameter :: minlen = 5
 
 ! $ Brief_I/O
 !
@@ -143,8 +142,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           chbase
-      parameter           ( chbase = 128 )
+      integer(ip), parameter :: chbase = 128
 
 !
 !     Local variables

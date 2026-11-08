@@ -534,33 +534,25 @@
 !
 !     The type of this segment
 !
-      integer(ip)           spktyp
-      parameter           ( spktyp = 10 )
+      integer(ip), parameter :: spktyp = 10
 !
 !     The number of geophysical constants:
 !
-      integer(ip)           nconst
-      parameter           ( nconst = 8 )
+      integer(ip), parameter :: nconst = 8
 !
 !     The number of elements per two-line set:
 !
-      integer(ip)           nelems
-      parameter           ( nelems = 10 )
+      integer(ip), parameter :: nelems = 10
 
-      integer(ip)           nuobl
-      parameter           ( nuobl  = 11 )
+      integer(ip), parameter :: nuobl = 11
 
-      integer(ip)           nulon
-      parameter           ( nulon  = 12 )
+      integer(ip), parameter :: nulon = 12
 
-      integer(ip)           dnuobl
-      parameter           ( dnuobl = 13 )
+      integer(ip), parameter :: dnuobl = 13
 
-      integer(ip)           dnulon
-      parameter           ( dnulon = 14 )
+      integer(ip), parameter :: dnulon = 14
 
-      integer(ip)           pktsiz
-      parameter           ( pktsiz = dnulon )
+      integer(ip), parameter :: pktsiz = dnulon
 
 
       real(wp)              descr ( 6 )

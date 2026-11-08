@@ -41,17 +41,13 @@
       integer(ip)           exclud
       logical               inside
 
-      integer(ip)           none
-      parameter           ( none   = 0 )
+      integer(ip), parameter :: none = 0
 
-      integer(ip)           lonidx
-      parameter           ( lonidx = 1 )
+      integer(ip), parameter :: lonidx = 1
 
-      integer(ip)           latidx
-      parameter           ( latidx = 2 )
+      integer(ip), parameter :: latidx = 2
 
-      integer(ip)           radidx
-      parameter           ( radidx = 3 )
+      integer(ip), parameter :: radidx = 3
 
 ! $ Brief_I/O
 !
@@ -229,11 +225,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           lower
-      parameter           ( lower = 1 )
+      integer(ip), parameter :: lower = 1
 
-      integer(ip)           upper
-      parameter           ( upper = 2 )
+      integer(ip), parameter :: upper = 2
 
 !
 !     Local variables

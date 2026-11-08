@@ -35,14 +35,11 @@
       real(wp)              lat
       integer(ip)           rel
 
-      integer(ip)           lt
-      parameter           ( lt = -1 )
+      integer(ip), parameter :: lt = -1
 
-      integer(ip)           eq
-      parameter           ( eq =  0 )
+      integer(ip), parameter :: eq = 0
 
-      integer(ip)           gt
-      parameter           ( gt =  1 )
+      integer(ip), parameter :: gt = 1
 
 ! $ Brief_I/O
 !

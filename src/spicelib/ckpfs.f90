@@ -381,11 +381,9 @@
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel segment descriptor.
 !
-      integer(ip)           ndc
-      parameter           ( ndc    = 2  )
+      integer(ip), parameter :: ndc = 2
 
-      integer(ip)           nic
-      parameter           ( nic    = 6  )
+      integer(ip), parameter :: nic = 6
 
 !
 !     Local variables

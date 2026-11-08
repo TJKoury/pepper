@@ -324,23 +324,17 @@
 !
 !     Local parameters
 !
-      character(*)          comma
-      parameter           ( comma  = ',' )
+      character(*), parameter :: comma = ','
 
-      character(*)          dquote
-      parameter           ( dquote = '"' )
+      character(*), parameter :: dquote = '"'
 
-      character(*)          equals
-      parameter           ( equals = '=' )
+      character(*), parameter :: equals = '='
 
-      character(*)          slash
-      parameter           ( slash  = '/' )
+      character(*), parameter :: slash = '/'
 
-      integer(ip)           nmax
-      parameter           ( nmax   = 100 )
+      integer(ip), parameter :: nmax = 100
 
-      integer(ip)           metlen
-      parameter           ( metlen = 1000 )
+      integer(ip), parameter :: metlen = 1000
 
 !
 !     Local variables

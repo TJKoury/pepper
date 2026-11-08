@@ -126,26 +126,21 @@
 !     allows a 20th degree Chebyshev Polynomial, which should be more
 !     than sufficient. This should be the same as the value in SPKPV.
 !
-      integer(ip)           maxrec
-      parameter           ( maxrec = 128 )
+      integer(ip), parameter :: maxrec = 128
 !
 !     Reference frame name size. See CHGIRF.
 !
-      integer(ip)           frmsiz
-      parameter           ( frmsiz = 16 )
+      integer(ip), parameter :: frmsiz = 16
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 !
 !     Length of a state.
 !
-      integer(ip)           nstate
-      parameter           ( nstate = 6 )
+      integer(ip), parameter :: nstate = 6
 !
 !     Local Variables
 !

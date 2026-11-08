@@ -277,17 +277,14 @@
 !
 !     Local Parameters
 !
-      integer(ip)           maxnod
-      parameter           ( maxnod = 10 )
+      integer(ip), parameter :: maxnod = 10
 
-      integer(ip)           maxxfm
-      parameter           ( maxxfm = maxnod + 4 )
+      integer(ip), parameter :: maxxfm = maxnod + 4
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      integer(ip)           rootf
-      parameter           ( rootf = 1 )
+      integer(ip), parameter :: rootf = 1
 
 !
 !     Local Variables

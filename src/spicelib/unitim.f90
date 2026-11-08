@@ -215,61 +215,52 @@
 !
 !     LBCELL is the bottom slot of a cell.
 !
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 !
 !     NEEDED is the number of kernel pool variables needed by this
 !     routine.
 !
-      integer(ip)           needed
-      parameter           ( needed = 4 )
+      integer(ip), parameter :: needed = 4
 
 !
 !     LNGVAR is the length of the longest kernel pool variable name
 !     that is used by this routine.
 !
-      integer(ip)           lngvar
-      parameter           ( lngvar = 16 )
+      integer(ip), parameter :: lngvar = 16
 
 !
 !     MISLEN is the length required by the MISSED array of strings
 !     used for error messages.
 !
-      integer(ip)           mislen
-      parameter           ( mislen = 20 )
+      integer(ip), parameter :: mislen = 20
 !
 !     TYPLEN is the maximum length allowed for names of uniform
 !     time types.
 !
-      integer(ip)           typlen
-      parameter           ( typlen = 8 )
+      integer(ip), parameter :: typlen = 8
 
 !
 !     NTDT is the number of time types based on terrestrial dynamical
 !     time (TDT).
 !
-      integer(ip)           ntdt
-      parameter           ( ntdt   = 5 )
+      integer(ip), parameter :: ntdt = 5
 
 !
 !     NTDB is the number of time types base on barycentric dynamical
 !     time (TDB).
 !
-      integer(ip)           ntdb
-      parameter           ( ntdb   = 4 )
+      integer(ip), parameter :: ntdb = 4
 
 
 !
 !     NRECOG is the total number of recognized types.
 !
-      integer(ip)           nrecog
-      parameter           ( nrecog = ntdb + ntdt )
+      integer(ip), parameter :: nrecog = ntdb + ntdt
 
 !
 !     Constant shift between GPS time system and TAI time system.
 !
-      real(wp)              gpstai
-      parameter           ( gpstai = 19.0_wp )
+      real(wp), parameter :: gpstai = 19.0_wp
 
 
 !

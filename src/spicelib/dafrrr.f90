@@ -178,30 +178,25 @@
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60       )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     WPR         is the maximum number of double precision
 !                 numbers per record.  WPR stands for words
 !                 per record.
 !
-      integer(ip)           wpr
-      parameter           ( wpr    = 128      )
+      integer(ip), parameter :: wpr = 128
 
 !
 !     MAXD,       are the maximum number of double precision
 !     MAXI,       numbers, integers, and characters, respectively,
 !     MAXC        not including space reserved for control information.
 !
-      integer(ip)           maxd
-      parameter           ( maxd   = wpr  - 3 )
+      integer(ip), parameter :: maxd = wpr  - 3
 
-      integer(ip)           maxi
-      parameter           ( maxi   = maxd * 2 )
+      integer(ip), parameter :: maxi = maxd * 2
 
-      integer(ip)           maxc
-      parameter           ( maxc   = maxd * 8 )
+      integer(ip), parameter :: maxc = maxd * 8
 
 !
 !     Local variables

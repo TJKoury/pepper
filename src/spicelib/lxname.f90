@@ -24,11 +24,9 @@
 
       implicit none
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           mxspec
-      parameter           ( mxspec = 512 )
+      integer(ip), parameter :: mxspec = 512
 
       character(*)          hdchrs
       character(*)          tlchrs
@@ -287,29 +285,22 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxchr
-      parameter           ( maxchr = 255 )
+      integer(ip), parameter :: maxchr = 255
 
-      integer(ip)           blank
-      parameter           ( blank  = 32  )
+      integer(ip), parameter :: blank = 32
 
-      integer(ip)           minprt
-      parameter           ( minprt = 32 )
+      integer(ip), parameter :: minprt = 32
 
-      integer(ip)           maxprt
-      parameter           ( maxprt = 126 )
+      integer(ip), parameter :: maxprt = 126
 
 !
 !     IDSPEC parameters:
 !
-      integer(ip)           nhpos
-      parameter           ( nhpos  = 1 )
+      integer(ip), parameter :: nhpos = 1
 
-      integer(ip)           ntpos
-      parameter           ( ntpos  = 2 )
+      integer(ip), parameter :: ntpos = 2
 
-      integer(ip)           hcpos
-      parameter           ( hcpos  = 3 )
+      integer(ip), parameter :: hcpos = 3
 
 
 !

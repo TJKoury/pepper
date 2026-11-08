@@ -203,14 +203,11 @@
 !
 !     Local Parameters
 !
-      integer(ip)           base
-      parameter           ( base   = 16 )
+      integer(ip), parameter :: base = 16
 
-      integer(ip)           maxdig
-      parameter           ( maxdig = 16 )
+      integer(ip), parameter :: maxdig = 16
 
-      integer(ip)           strlen
-      parameter           ( strlen = 255 )
+      integer(ip), parameter :: strlen = 255
 !
 !     Local variables
 !

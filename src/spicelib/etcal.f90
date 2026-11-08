@@ -240,144 +240,102 @@
 !     We declare the variables that contain the number of days in
 !     400 years, 100 years, 4 years and 1 year.
 !
-      integer(ip)           dp400y
-      parameter           ( dp400y = 365*400 + 97 )
+      integer(ip), parameter :: dp400y = 365*400 + 97
 
-      integer(ip)           dp100y
-      parameter           ( dp100y = 365*100 + 24 )
+      integer(ip), parameter :: dp100y = 365*100 + 24
 
-      integer(ip)           dp4y
-      parameter           ( dp4y   = 365*4   + 1  )
+      integer(ip), parameter :: dp4y = 365*4   + 1
 
-      integer(ip)           dp1y
-      parameter           ( dp1y   = 365 )
+      integer(ip), parameter :: dp1y = 365
 
 
 !
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      integer(ip)           jan
-      parameter           ( jan = 31 )
+      integer(ip), parameter :: jan = 31
 
-      integer(ip)           feb
-      parameter           ( feb = 28 )
+      integer(ip), parameter :: feb = 28
 
-      integer(ip)           mar
-      parameter           ( mar = 31 )
+      integer(ip), parameter :: mar = 31
 
-      integer(ip)           apr
-      parameter           ( apr = 30 )
+      integer(ip), parameter :: apr = 30
 
-      integer(ip)           may
-      parameter           ( may = 31 )
+      integer(ip), parameter :: may = 31
 
-      integer(ip)           jun
-      parameter           ( jun = 30 )
+      integer(ip), parameter :: jun = 30
 
-      integer(ip)           jul
-      parameter           ( jul = 31 )
+      integer(ip), parameter :: jul = 31
 
-      integer(ip)           aug
-      parameter           ( aug = 31 )
+      integer(ip), parameter :: aug = 31
 
-      integer(ip)           sep
-      parameter           ( sep = 30 )
+      integer(ip), parameter :: sep = 30
 
-      integer(ip)           oct
-      parameter           ( oct = 31 )
+      integer(ip), parameter :: oct = 31
 
-      integer(ip)           nov
-      parameter           ( nov = 30 )
+      integer(ip), parameter :: nov = 30
 
-      integer(ip)           dec
-      parameter           ( dec = 31 )
+      integer(ip), parameter :: dec = 31
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      integer(ip)           jan0
-      parameter           ( jan0 = 0  )
+      integer(ip), parameter :: jan0 = 0
 
-      integer(ip)           feb0
-      parameter           ( feb0 = jan + jan0 )
+      integer(ip), parameter :: feb0 = jan + jan0
 
-      integer(ip)           mar0
-      parameter           ( mar0 = feb + feb0 )
+      integer(ip), parameter :: mar0 = feb + feb0
 
-      integer(ip)           apr0
-      parameter           ( apr0 = mar + mar0 )
+      integer(ip), parameter :: apr0 = mar + mar0
 
-      integer(ip)           may0
-      parameter           ( may0 = apr + apr0 )
+      integer(ip), parameter :: may0 = apr + apr0
 
-      integer(ip)           jun0
-      parameter           ( jun0 = may + may0 )
+      integer(ip), parameter :: jun0 = may + may0
 
-      integer(ip)           jul0
-      parameter           ( jul0 = jun + jun0 )
+      integer(ip), parameter :: jul0 = jun + jun0
 
-      integer(ip)           aug0
-      parameter           ( aug0 = jul + jul0 )
+      integer(ip), parameter :: aug0 = jul + jul0
 
-      integer(ip)           sep0
-      parameter           ( sep0 = aug + aug0 )
+      integer(ip), parameter :: sep0 = aug + aug0
 
-      integer(ip)           oct0
-      parameter           ( oct0 = sep + sep0 )
+      integer(ip), parameter :: oct0 = sep + sep0
 
-      integer(ip)           nov0
-      parameter           ( nov0 = oct + oct0 )
+      integer(ip), parameter :: nov0 = oct + oct0
 
-      integer(ip)           dec0
-      parameter           ( dec0 = nov + nov0 )
+      integer(ip), parameter :: dec0 = nov + nov0
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      integer(ip)           janl0
-      parameter           ( janl0 = jan0  )
+      integer(ip), parameter :: janl0 = jan0
 
-      integer(ip)           febl0
-      parameter           ( febl0 = feb0 )
+      integer(ip), parameter :: febl0 = feb0
 
-      integer(ip)           marl0
-      parameter           ( marl0 = mar0 + 1 )
+      integer(ip), parameter :: marl0 = mar0 + 1
 
-      integer(ip)           aprl0
-      parameter           ( aprl0 = apr0 + 1 )
+      integer(ip), parameter :: aprl0 = apr0 + 1
 
-      integer(ip)           mayl0
-      parameter           ( mayl0 = may0 + 1 )
+      integer(ip), parameter :: mayl0 = may0 + 1
 
-      integer(ip)           junl0
-      parameter           ( junl0 = jun0 + 1 )
+      integer(ip), parameter :: junl0 = jun0 + 1
 
-      integer(ip)           jull0
-      parameter           ( jull0 = jul0 + 1 )
+      integer(ip), parameter :: jull0 = jul0 + 1
 
-      integer(ip)           augl0
-      parameter           ( augl0 = aug0 + 1 )
+      integer(ip), parameter :: augl0 = aug0 + 1
 
-      integer(ip)           sepl0
-      parameter           ( sepl0 = sep0 + 1 )
+      integer(ip), parameter :: sepl0 = sep0 + 1
 
-      integer(ip)           octl0
-      parameter           ( octl0 = oct0 + 1 )
+      integer(ip), parameter :: octl0 = oct0 + 1
 
-      integer(ip)           novl0
-      parameter           ( novl0 = nov0 + 1 )
+      integer(ip), parameter :: novl0 = nov0 + 1
 
-      integer(ip)           decl0
-      parameter           ( decl0 = dec0 + 1 )
+      integer(ip), parameter :: decl0 = dec0 + 1
 
-      integer(ip)           strsiz
-      parameter           ( strsiz = 16 )
+      integer(ip), parameter :: strsiz = 16
 
-      integer(ip)           lngsiz
-      parameter           ( lngsiz = 180 )
+      integer(ip), parameter :: lngsiz = 180
 
 
 !

@@ -234,14 +234,11 @@
 !
 !     Local Variables.
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
-      integer(ip)           eoltsz
-      parameter           ( eoltsz = 5 )
+      integer(ip), parameter :: eoltsz = 5
 
-      integer(ip)           klinsz
-      parameter           ( klinsz = 132 )
+      integer(ip), parameter :: klinsz = 132
 
       character(wdsize)     versn
       character(wdsize)     arch

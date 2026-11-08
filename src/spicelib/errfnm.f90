@@ -27,8 +27,7 @@
 
       integer(ip)           unit
 
-      integer(ip)           filen
-      parameter           ( filen = 128 )
+      integer(ip), parameter :: filen = 128
 
 ! $ Brief_I/O
 !

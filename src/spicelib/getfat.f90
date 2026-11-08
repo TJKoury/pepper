@@ -635,30 +635,24 @@
 !
 !     Local parameters
 !
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
 !
 !     Set the length of a SPICE kernel file ID word.
 !
-      integer(ip)           idlen
-      parameter           ( idlen = 12 )
+      integer(ip), parameter :: idlen = 12
 
-      integer(ip)           filsiz
-      parameter           ( filsiz = 255 )
+      integer(ip), parameter :: filsiz = 255
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 !
 !     Set minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      integer(ip)           minpch
-      parameter           ( minpch = 32 )
+      integer(ip), parameter :: minpch = 32
 
-      integer(ip)           maxpch
-      parameter           ( maxpch = 126 )
+      integer(ip), parameter :: maxpch = 126
 
 !
 !     Local Variables

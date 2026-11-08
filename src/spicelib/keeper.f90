@@ -33,17 +33,13 @@
       logical               found
 
 
-      integer(ip)           filsiz
-      parameter           ( filsiz = 255 )
+      integer(ip), parameter :: filsiz = 255
 
-      integer(ip)           ftsize
-      parameter           ( ftsize = 5000 )
+      integer(ip), parameter :: ftsize = 5000
 
-      integer(ip)           maxtxt
-      parameter           ( maxtxt = 300 )
+      integer(ip), parameter :: maxtxt = 300
 
-      integer(ip)           maxfil
-      parameter           ( maxfil = ftsize + maxtxt )
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
 
 ! $ Brief_I/O
 !
@@ -610,8 +606,7 @@
 !     The file type of every loaded kernel will be stored in the array
 !     TYPES.
 !
-      integer(ip)           typlen
-      parameter           ( typlen = 8 )
+      integer(ip), parameter :: typlen = 8
 
       character(typlen)     types ( maxfil )
       save                  types
@@ -623,18 +618,14 @@
       integer(ip)           loaded
       save                  loaded
 
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
 
-      integer(ip)           nknown
-      parameter           ( nknown = 3 )
+      integer(ip), parameter :: nknown = 3
 
-      integer(ip)           lnsize
-      parameter           ( lnsize = 80 )
+      integer(ip), parameter :: lnsize = 80
 
-      integer(ip)           msgsiz
-      parameter           ( msgsiz = 500 )
+      integer(ip), parameter :: msgsiz = 500
 
       character(1)          norc
       character(filsiz)     fil2ld

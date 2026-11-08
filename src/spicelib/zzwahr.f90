@@ -140,11 +140,9 @@
 !     NTERM is the number of SIN and COSINE terms used in the
 !     computation of Delta Psi and Delta epsilon
 !
-      integer(ip)           nterm
-      parameter           ( nterm = 106 )
+      integer(ip), parameter :: nterm = 106
 
-      real(wp)              zero
-      parameter           ( zero  = 0.0_wp )
+      real(wp), parameter :: zero = 0.0_wp
 
 !
 !     The parameters below stand for
@@ -163,46 +161,34 @@
 !     to degrees, degrees/day, degrees/(0.0001 days)**2 and
 !     degrees/(0.0001 days)**3.
 !
-      real(wp)              rev
-      parameter           ( rev   = 360.0_wp           )
+      real(wp), parameter :: rev = 360.0_wp
 
-      real(wp)              deg
-      parameter           ( deg   = 1.0_wp             )
+      real(wp), parameter :: deg = 1.0_wp
 
-      real(wp)              min
-      parameter           ( min   = 1.0_wp / 60.0_wp    )
+      real(wp), parameter :: min = 1.0_wp / 60.0_wp
 
-      real(wp)              sec
-      parameter           ( sec   = 1.0_wp / 3600.0_wp  )
+      real(wp), parameter :: sec = 1.0_wp / 3600.0_wp
 
-      real(wp)              cent1
-      parameter           ( cent1 = 36525.0_wp         )
+      real(wp), parameter :: cent1 = 36525.0_wp
 
-      real(wp)              cent2
-      parameter           ( cent2 = cent1*cent1*1.0e-8_wp )
+      real(wp), parameter :: cent2 = cent1*cent1*1.0e-8_wp
 
-      real(wp)              cent3
-      parameter           ( cent3 = cent1*cent2*1.0e-4_wp )
+      real(wp), parameter :: cent3 = cent1*cent2*1.0e-4_wp
 
 
 !
 !     The next set of parameters is an enumeration of the various
 !     angles needed in the computation of nutations.
 !
-      integer(ip)           l
-      parameter           ( l      = 1 )
+      integer(ip), parameter :: l = 1
 
-      integer(ip)           lp
-      parameter           ( lp     = l      + 1 )
+      integer(ip), parameter :: lp = l      + 1
 
-      integer(ip)           f
-      parameter           ( f      = lp     + 1 )
+      integer(ip), parameter :: f = lp     + 1
 
-      integer(ip)           d
-      parameter           ( d      = f      + 1 )
+      integer(ip), parameter :: d = f      + 1
 
-      integer(ip)           mg
-      parameter           ( mg     = d      + 1 )
+      integer(ip), parameter :: mg = d      + 1
 
 !
 !     Local Variables.

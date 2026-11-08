@@ -352,8 +352,7 @@
       character(filen)      upnam
       character(filen)      locnam
 
-      integer(ip)           oplen
-      parameter           ( oplen = 3 )
+      integer(ip), parameter :: oplen = 3
 
       character(oplen)      upop
       character(oplen)      locop

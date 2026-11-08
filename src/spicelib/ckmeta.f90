@@ -319,17 +319,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32
 
-      integer(ip)           nck
-      parameter           ( nck = 30 )
+      integer(ip), parameter :: nck = 30
 
-      integer(ip)           sclk
-      parameter           ( sclk   =          1 )
+      integer(ip), parameter :: sclk = 1
 
-      integer(ip)           spk
-      parameter           ( spk    = sclk   + 1 )
+      integer(ip), parameter :: spk = sclk   + 1
 
 !
 !     Local variables

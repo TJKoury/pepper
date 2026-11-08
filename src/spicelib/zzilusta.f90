@@ -202,8 +202,7 @@
 !
 !     Local parameters
 !
-      character(*)          iref
-      parameter           ( iref = 'J2000' )
+      character(*), parameter :: iref = 'J2000'
 
 !
 !     Local variables

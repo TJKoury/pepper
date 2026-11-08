@@ -30,8 +30,7 @@
       include 'ninert.inc'
       include 'nninrt.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           frmcls
       integer(ip)           idset  ( lbcell : * )
@@ -402,14 +401,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln = 32 )
+      integer(ip), parameter :: kvnmln = 32
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = 100 )
+      integer(ip), parameter :: bufsiz = 100
 
 !
 !     Local variables

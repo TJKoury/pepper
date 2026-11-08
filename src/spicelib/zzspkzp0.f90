@@ -815,14 +815,12 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  =  'ZZSPKZP0' )
+      character(*), parameter :: rname = 'ZZSPKZP0'
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 
 !

@@ -19,8 +19,7 @@
 
       implicit none
 
-      integer(ip)           maxrec
-      parameter           ( maxrec = 129 )
+      integer(ip), parameter :: maxrec = 129
 
       real(wp)              et
       real(wp)              record   ( * )
@@ -177,17 +176,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           sizidx
-      parameter           ( sizidx = 1 )
+      integer(ip), parameter :: sizidx = 1
 
-      integer(ip)           stridx
-      parameter           ( stridx = sizidx + 1 )
+      integer(ip), parameter :: stridx = sizidx + 1
 
-      integer(ip)           stpidx
-      parameter           ( stpidx = stridx + 1 )
+      integer(ip), parameter :: stpidx = stridx + 1
 
-      integer(ip)           staidx
-      parameter           ( staidx = stpidx + 1 )
+      integer(ip), parameter :: staidx = stpidx + 1
 
 
 !

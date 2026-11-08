@@ -343,22 +343,18 @@
 !
 !     Local parameters
 !
-      character(*)          type
-      parameter           ( type = 'CK'    )
+      character(*), parameter :: type = 'CK'
 !
 !     DAF ND and NI values for CK files.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 6 )
+      integer(ip), parameter :: ni = 6
 
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer(ip)           mxcrec
-      parameter           ( mxcrec = 1000 )
+      integer(ip), parameter :: mxcrec = 1000
 
 !
 !     Local variables

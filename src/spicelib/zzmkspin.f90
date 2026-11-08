@@ -318,8 +318,7 @@
 !     Fraction of voxel edge length used a tolerance for plate
 !     inclusion in voxels:
 !
-      real(wp)              tol
-      parameter           ( tol  = 1.0e-3_wp )
+      real(wp), parameter :: tol = 1.0e-3_wp
 
 !
 !     Local Variables

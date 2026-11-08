@@ -355,11 +355,9 @@
 !
 !     Local parameters
 !
-      real(wp)              tdelta
-      parameter           ( tdelta = 1.0_wp )
+      real(wp), parameter :: tdelta = 1.0_wp
 
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
 !
 !     Local variables

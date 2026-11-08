@@ -28,8 +28,7 @@
       include 'ektype.inc'
       include 'ekbool.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       real(wp)              value
       integer(ip)           type

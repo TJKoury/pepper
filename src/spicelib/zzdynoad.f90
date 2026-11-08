@@ -207,15 +207,13 @@
 !
 !     Local Parameters
 !
-      character(*)          templt
-      parameter           ( templt = 'FRAME_#_#' )
+      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip)           templn
-      parameter           ( templn = 7 )
+      integer(ip), parameter :: templn = 7
 
 !
 !     Local Variables

@@ -142,8 +142,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxnum
-      parameter           ( maxnum = 32 )
+      integer(ip), parameter :: maxnum = 32
 
 !
 !     Local variables

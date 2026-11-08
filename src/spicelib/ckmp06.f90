@@ -509,29 +509,22 @@
 !                   operates on.
 !
 
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dtype
-      parameter           ( dtype  = 6 )
+      integer(ip), parameter :: dtype = 6
 
-      integer(ip)           ctrlsz
-      parameter           ( ctrlsz = 2 )
+      integer(ip), parameter :: ctrlsz = 2
 
 !
 !     Mini-segment control area size:
 !
-      integer(ip)           mctlsz
-      parameter           ( mctlsz = 4 )
+      integer(ip), parameter :: mctlsz = 4
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = mctlsz )
+      integer(ip), parameter :: bufsiz = mctlsz
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
 !
 !     Local variables

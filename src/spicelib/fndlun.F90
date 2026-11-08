@@ -21,8 +21,7 @@
 
       integer(ip)      unit
 
-      integer(ip)      minlun
-      parameter      ( minlun =  1 )
+      integer(ip), parameter :: minlun = 1
 
       integer(ip)      maxlun
 #if defined(SPICE_OS_MACOS) && defined(SPICE_COMPILER_INTEL)
@@ -483,8 +482,7 @@
 !
 !     Parameters
 !
-      integer(ip)           nresv
-      parameter           ( nresv = 3 )
+      integer(ip), parameter :: nresv = 3
 
 !
 !     Local variables

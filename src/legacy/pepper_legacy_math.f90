@@ -189,8 +189,7 @@
       use pepper_kinds, only: wp
       implicit none
       real(wp)           x  !! Number whose cube root is desired.
-      real(wp) third
-      parameter (third = 1.0_wp/3.0_wp)
+      real(wp), parameter :: third = 1.0_wp/3.0_wp
       dcbrt = pepper_dcbrt ( x )
       end function dcbrt
 
@@ -252,8 +251,7 @@
       parameter           ( dr   = 1 )
       integer(ip)           dlon
       parameter           ( dlon = 2 )
-      integer(ip)           dlat
-      parameter           ( dlat = 3 )
+      integer(ip), parameter :: dlat = 3
       call pepper_drdlat ( r, lon, lat, jacobi )
       end subroutine drdlat
 
@@ -277,8 +275,7 @@
       parameter           ( dz     = 3 )
       integer(ip)           dr
       parameter           ( dr     = 1 )
-      integer(ip)           dcolat
-      parameter           ( dcolat = 2 )
+      integer(ip), parameter :: dcolat = 2
       integer(ip)           dlon
       parameter           ( dlon   = 3 )
       call pepper_drdsph ( r, colat, slon, jacobi )
@@ -335,10 +332,8 @@
       implicit none
       real(wp)           s1   ( 6 )  !! State to be normalized.
       real(wp)           sout ( 6 )  !! Unit vector S1 / |S1|, and its time derivative.
-      integer(ip)           pos
-      parameter           ( pos = 1 )
-      integer(ip)           vel
-      parameter           ( vel = 4 )
+      integer(ip), parameter :: pos = 1
+      integer(ip), parameter :: vel = 4
       call pepper_dvhat ( s1, sout )
       end subroutine dvhat
 
@@ -363,18 +358,14 @@
       use pepper_math, only: pepper_el2cgv => el2cgv
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)           ubel
-      parameter           ( ubel    =   9 )
+      integer(ip), parameter :: ubel = 9
       real(wp)              ellips ( ubel )  !! A SPICE ellipse.
       real(wp)              center (    3 )  !! Center and semi-axes of ELLIPS.
       real(wp)              smajor (    3 )  !! Center and semi-axes of ELLIPS.
       real(wp)              sminor (    3 )  !! Center and semi-axes of ELLIPS.
-      integer(ip)           ctrpos
-      parameter           ( ctrpos = 1 )
-      integer(ip)           majpos
-      parameter           ( majpos = 4 )
-      integer(ip)           minpos
-      parameter           ( minpos = 7 )
+      integer(ip), parameter :: ctrpos = 1
+      integer(ip), parameter :: majpos = 4
+      integer(ip), parameter :: minpos = 7
       call pepper_el2cgv ( ellips, center, smajor, sminor )
       end subroutine el2cgv
 
@@ -752,10 +743,8 @@
                                              !! plane represented by PLANE.
       real(wp)              konst  !! A normal vector and constant defining the geometric plane
                                    !! represented by PLANE.
-      integer(ip)           nmlpos
-      parameter           ( nmlpos = 1 )
-      integer(ip)           conpos
-      parameter           ( conpos = 4 )
+      integer(ip), parameter :: nmlpos = 1
+      integer(ip), parameter :: conpos = 4
       call pepper_pl2nvc ( plane, normal, konst )
       end subroutine pl2nvc
 

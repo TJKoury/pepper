@@ -1595,32 +1595,27 @@
 !
 !     Local parameters
 !
-      character(*)          rname
-      parameter           ( rname  =  'SUBPNT' )
+      character(*), parameter :: rname = 'SUBPNT'
 
 !
 !     This value will become system-dependent when systems
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      real(wp)              cnvlim
-      parameter           ( cnvlim = 1.0e-17_wp )
+      real(wp), parameter :: cnvlim = 1.0e-17_wp
 
 
-      integer(ip)           maxitr
-      parameter           ( maxitr =  5 )
+      integer(ip), parameter :: maxitr = 5
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl   = 36 )
+      integer(ip), parameter :: maxl = 36
 
 !
 !     Saved frame name length.
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables

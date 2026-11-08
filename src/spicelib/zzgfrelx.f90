@@ -41,11 +41,9 @@
 
       include               'gf.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nwreq
-      parameter           ( nwreq  = 5 )
+      integer(ip), parameter :: nwreq = 5
 
       external              udstep
       external              udrefn
@@ -517,51 +515,40 @@
 !
 !     Local parameters
 !
-      integer(ip)           left
-      parameter           ( left   = 1 )
+      integer(ip), parameter :: left = 1
 
-      integer(ip)           right
-      parameter           ( right  = 2 )
+      integer(ip), parameter :: right = 2
 
-      integer(ip)           maxcln
-      parameter           ( maxcln = 80 )
+      integer(ip), parameter :: maxcln = 80
 
 !
 !     Workspace window indices:
 !
-      integer(ip)           confin
-      parameter           ( confin = 3 )
+      integer(ip), parameter :: confin = 3
 
-      integer(ip)           copy
-      parameter           ( copy   = 4 )
+      integer(ip), parameter :: copy = 4
 
-      integer(ip)           decres
-      parameter           ( decres = 2 )
+      integer(ip), parameter :: decres = 2
 
-      integer(ip)           incres
-      parameter           ( incres = 1 )
+      integer(ip), parameter :: incres = 1
 
-      integer(ip)           tempw
-      parameter           ( tempw  = 5 )
+      integer(ip), parameter :: tempw = 5
 
 
 !
 !     Number of supported comparison operators.
 !
-      integer(ip)           nc
-      parameter           ( nc     = 7 )
+      integer(ip), parameter :: nc = 7
 
 !     One-letter alias for LBCELL to make references to the workspace
 !     array tolerable:
 !
-      integer(ip)           b
-      parameter           ( b      = lbcell )
+      integer(ip), parameter :: b = lbcell
 
 !
 !     Context string length:
 !
-      integer(ip)           ctxlen
-      parameter           ( ctxlen = 500 )
+      integer(ip), parameter :: ctxlen = 500
 
 !
 !     Local variables

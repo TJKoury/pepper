@@ -23,8 +23,7 @@
 
       implicit none
 
-      integer(ip)           dlsize
-      parameter           ( dlsize = 71 )
+      integer(ip), parameter :: dlsize = 71
 
       integer(ip)           handle
       integer(ip)           body
@@ -245,29 +244,22 @@
 !
 !     Local parameters
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen  =  40 )
+      integer(ip), parameter :: sidlen = 40
 
-      integer(ip)           fprint
-      parameter           ( fprint  =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint  = 126 )
+      integer(ip), parameter :: lprint = 126
 
 !
 !     Local variables
 !
-      integer(ip)           dscsiz
-      parameter           ( dscsiz  =   5 )
+      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip)           typidx
-      parameter           ( typidx  =   4 )
+      integer(ip), parameter :: typidx = 4
 
-      integer(ip)           dtype
-      parameter           ( dtype   =   1 )
+      integer(ip), parameter :: dtype = 1
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz  = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
 
 !

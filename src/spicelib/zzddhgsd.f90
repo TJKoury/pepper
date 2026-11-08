@@ -114,27 +114,22 @@
 !
 !     Local Parameters
 !
-      integer(ip)           locsiz
-      parameter           ( locsiz = 8 )
+      integer(ip), parameter :: locsiz = 8
 
 !
 !     Number of classes of label/ID pairs of which this routine is
 !     aware.
 !
-      integer(ip)           numcls
-      parameter           ( numcls = 3 )
+      integer(ip), parameter :: numcls = 3
 
 !
 !     Integer codes for the currently supported classes.
 !
-      integer(ip)           method
-      parameter           ( method = 1 )
+      integer(ip), parameter :: method = 1
 
-      integer(ip)           arch
-      parameter           ( arch   = method + 1 )
+      integer(ip), parameter :: arch = method + 1
 
-      integer(ip)           bff
-      parameter           ( bff    = arch   + 1 )
+      integer(ip), parameter :: bff = arch   + 1
 
 !
 !     Local Variables

@@ -188,11 +188,9 @@
 !
       include 'sgparam.inc'
 
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip)           bufsiz
-      parameter           ( bufsiz = dirsiz + 1 )
+      integer(ip), parameter :: bufsiz = dirsiz + 1
 !
 !     Local Variables
 !

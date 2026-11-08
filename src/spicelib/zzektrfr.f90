@@ -140,14 +140,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           paridx
-      parameter           ( paridx =  1 )
+      integer(ip), parameter :: paridx = 1
 
-      integer(ip)           nkdidx
-      parameter           ( nkdidx =  2 )
+      integer(ip), parameter :: nkdidx = 2
 
-      integer(ip)           begidx
-      parameter           ( begidx =  3 )
+      integer(ip), parameter :: begidx = 3
 
 !
 !     Local variables

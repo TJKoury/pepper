@@ -219,8 +219,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           nmax
-      parameter           ( nmax = 200 )
+      integer(ip), parameter :: nmax = 200
 
 !
 !     Local variables

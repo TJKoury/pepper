@@ -39,8 +39,7 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       character(*)          vecdef
       character(*)          method
@@ -903,75 +902,63 @@
 !
 !     Margin for branch cut avoidance. Units are radians:
 !
-      real(wp)              bcamrg
-      parameter           ( bcamrg = 1.0e-11_wp )
+      real(wp), parameter :: bcamrg = 1.0e-11_wp
 
 !
 !     Margin for local extrema search. Units are radians:
 !
-      real(wp)              lcxmrg
-      parameter           ( lcxmrg = 1.0e-12_wp )
+      real(wp), parameter :: lcxmrg = 1.0e-12_wp
 
 !
 !     Short alias for LBCELL:
 !
-      integer(ip)           lb
-      parameter           ( lb     = lbcell )
+      integer(ip), parameter :: lb = lbcell
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = lbcell )
+      integer(ip), parameter :: lbpool = lbcell
 
 !
 !     Number of supported comparison operators:
 !
-      integer(ip)           nc
-      parameter           ( nc     = 7 )
+      integer(ip), parameter :: nc = 7
 
 !
 !     Assorted string lengths:
 !
 !     Maximum body name length:
 !
-      integer(ip)           bdnmln
-      parameter           ( bdnmln = 36 )
+      integer(ip), parameter :: bdnmln = 36
 
 !
 !     NAMLEN is the maximum length of both a frame name and of
 !     any kernel pool variable name.
 !
-      integer(ip)           namlen
-      parameter           ( namlen = 32 )
+      integer(ip), parameter :: namlen = 32
 
 !
 !     OPLEN is the maximum string length for comparison operators.
 !     OPLEN may grow if new comparisons are added.
 !
-      integer(ip)           oplen
-      parameter           ( oplen = 6 )
+      integer(ip), parameter :: oplen = 6
 
 !
 !     FUNLEN is the length of the function name string.
 !
-      integer(ip)           funlen
-      parameter           ( funlen = 50 )
+      integer(ip), parameter :: funlen = 50
 
 !
 !     CRDLEN is the maximum length of a coordinate name.
 !
-      integer(ip)           crdlen
-      parameter           ( crdlen = 32 )
+      integer(ip), parameter :: crdlen = 32
 
 !
 !     SYSLEN is the maximum length of a coordinate system name.
 !
-      integer(ip)           syslen
-      parameter           ( syslen = 32 )
+      integer(ip), parameter :: syslen = 32
 
 !
 !     RPTLEN is the maximum length of a progress reporter message.
 !
-      integer(ip)           rptlen
-      parameter           ( rptlen = 80 )
+      integer(ip), parameter :: rptlen = 80
 !
 !     Local variables
 !

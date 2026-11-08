@@ -29,8 +29,7 @@
 
       include              'ck06.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       integer(ip)           handle
       integer(ip)           arrbeg
@@ -201,26 +200,22 @@
 !     Number of elements in a type 6 mini-segment
 !     interval directory:
 !
-      integer(ip)           nvdsiz
-      parameter           ( nvdsiz = 100 )
+      integer(ip), parameter :: nvdsiz = 100
 
 !
 !     Mini-segment epoch directory size:
 !
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 
 !
 !     Type 6 control area size:
 !
-      integer(ip)           nsgpar
-      parameter           ( nsgpar = 2 )
+      integer(ip), parameter :: nsgpar = 2
 
 !
 !     Type 6 mini-segment control area size:
 !
-      integer(ip)           mctlsz
-      parameter           ( mctlsz = 4 )
+      integer(ip), parameter :: mctlsz = 4
 
 !
 !     Local Variables

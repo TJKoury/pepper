@@ -361,31 +361,26 @@
 !
 !     DTYPE is the PCK data type.
 !
-      integer(ip)           dtype
-      parameter           ( dtype   =   2 )
+      integer(ip), parameter :: dtype = 2
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      integer(ip)           ns
-      parameter           ( ns      =   5 )
+      integer(ip), parameter :: ns = 5
 !
 !     ND is the number of double precision components in an PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      integer(ip)           nd
-      parameter           ( nd      =   2 )
+      integer(ip), parameter :: nd = 2
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
 !
-      integer(ip)           ni
-      parameter           ( ni      =   5 )
+      integer(ip), parameter :: ni = 5
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      integer(ip)           sidlen
-      parameter           ( sidlen  =  40 )
+      integer(ip), parameter :: sidlen = 40
 
 !
 !     Local variables

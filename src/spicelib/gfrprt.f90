@@ -23,8 +23,7 @@
 
       include               'zzgf.inc'
 
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
+      integer(ip), parameter :: lbcell = -5
 
       real(wp)              window ( lbcell : * )
       character(*)          begmss
@@ -498,11 +497,9 @@
 !
 !     Local parameters
 !
-      integer(ip)           fprint
-      parameter           ( fprint  =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint  = 126 )
+      integer(ip), parameter :: lprint = 126
 
 !
 !     Local variables

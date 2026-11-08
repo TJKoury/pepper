@@ -281,14 +281,11 @@
 !
 !     Local parameters
 !
-      integer(ip)           bsize
-      parameter           ( bsize = 100 )
+      integer(ip), parameter :: bsize = 100
 
-      integer(ip)           idwlen
-      parameter           ( idwlen =  8 )
+      integer(ip), parameter :: idwlen = 8
 
-      character(*)          quote
-      parameter           ( quote = '''' )
+      character(*), parameter :: quote = ''''
 
 !
 !     Local variables

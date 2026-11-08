@@ -1210,28 +1210,23 @@
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer(ip)           fprint
-      parameter           ( fprint =  32 )
+      integer(ip), parameter :: fprint = 32
 
-      integer(ip)           lprint
-      parameter           ( lprint = 126 )
+      integer(ip), parameter :: lprint = 126
 !
 !     The number of reference values it takes to get a reference
 !     directory value.
 !
-      integer(ip)           dirsiz
-      parameter           ( dirsiz = 100 )
+      integer(ip), parameter :: dirsiz = 100
 !
 !     The length of a DAF internal filename.
 !
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 !
 !     The file table size. This needs to be the same as the file table
 !     size in DAFAH.
 !
-      integer(ip)           ftsize
-      parameter           ( ftsize = 20 )
+      integer(ip), parameter :: ftsize = 20
 !
 !     Include the mnemonic values for the generic segment declarations
 !     and the meta data information.

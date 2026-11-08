@@ -189,29 +189,21 @@
 !
 !     Local parameters
 !
-      integer(ip)           term
-      parameter           ( term   = 1 )
+      integer(ip), parameter :: term = 1
 
-      integer(ip)           lcheck
-      parameter           ( lcheck = term   + 1 )
+      integer(ip), parameter :: lcheck = term   + 1
 
-      integer(ip)           rcheck
-      parameter           ( rcheck = lcheck + 1 )
+      integer(ip), parameter :: rcheck = lcheck + 1
 
-      integer(ip)           balnce
-      parameter           ( balnce = rcheck + 1 )
+      integer(ip), parameter :: balnce = rcheck + 1
 
-      integer(ip)           merg32
-      parameter           ( merg32 = balnce + 1 )
+      integer(ip), parameter :: merg32 = balnce + 1
 
-      integer(ip)           merg31
-      parameter           ( merg31 = merg32 + 1 )
+      integer(ip), parameter :: merg31 = merg32 + 1
 
-      integer(ip)           llchck
-      parameter           ( llchck = merg31 + 1 )
+      integer(ip), parameter :: llchck = merg31 + 1
 
-      integer(ip)           rrchck
-      parameter           ( rrchck = llchck + 1 )
+      integer(ip), parameter :: rrchck = llchck + 1
 
 !
 !     Local variables

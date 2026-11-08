@@ -240,8 +240,7 @@
 !
 !     Define the mnemonic for the return action.
 !
-      integer(ip)           iretrn
-      parameter           ( iretrn = 3 )
+      integer(ip), parameter :: iretrn = 3
 
 !
 !     Local Variables

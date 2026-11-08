@@ -34,8 +34,7 @@
       include 'ekquery.inc'
       include 'eksegdsc.inc'
 
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5
 
       integer(ip)           segvec ( * )
       integer(ip)           jbase1
@@ -186,17 +185,13 @@
 !
 !     Local parameters
 !
-      integer(ip)           equi
-      parameter           ( equi   = 1 )
+      integer(ip), parameter :: equi = 1
 
-      integer(ip)           noneq
-      parameter           ( noneq  = 2 )
+      integer(ip), parameter :: noneq = 2
 
-      integer(ip)           noluck
-      parameter           ( noluck = 3 )
+      integer(ip), parameter :: noluck = 3
 
-      integer(ip)           empty
-      parameter           ( empty  = 4 )
+      integer(ip), parameter :: empty = 4
 
 !
 !     Local variables

@@ -249,8 +249,7 @@
 !
 !     Local parameters
 !
-      integer(ip)           maxhit
-      parameter           ( maxhit = 1000 )
+      integer(ip), parameter :: maxhit = 1000
 
 
 !

@@ -184,8 +184,7 @@
 !
 !     Local parameters
 !
-      real(wp)              limit
-      parameter           ( limit = 1.0e-2_wp )
+      real(wp), parameter :: limit = 1.0e-2_wp
 
 !
 !     Local variables

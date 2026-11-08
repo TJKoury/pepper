@@ -22,11 +22,9 @@
 !
 ! $ Declarations
 
-      integer(ip)           ubel
-      parameter           ( ubel   = 9 )
+      integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
-      parameter           ( ubpl   = 4 )
+      integer(ip), parameter :: ubpl = 4
 
       character(*)          extrem
       real(wp)              ellips ( ubel )
@@ -421,8 +419,7 @@
 !     Tolerance used for loop convergence.  This tolerance applies
 !     to the angular parameter used to specify points on the ellipse.
 !
-      real(wp)              tol
-      parameter           ( tol   = 1.0e-9_wp )
+      real(wp), parameter :: tol = 1.0e-9_wp
 
 !
 !     Number of steps used to search the ellipse for region containing
@@ -430,29 +427,24 @@
 !     values:  one for the outer minimum case, which is mathematically
 !     well behaved, and one for the other cases.
 !
-      integer(ip)           smlnpt
-      parameter           ( smlnpt =  320 )
+      integer(ip), parameter :: smlnpt = 320
 
-      integer(ip)           bignpt
-      parameter           ( bignpt =  400 )
+      integer(ip), parameter :: bignpt = 400
 
 !
 !     Maximum number of loop iterations allowed for extremum search.
 !
-      integer(ip)           maxitr
-      parameter           ( maxitr = 100 )
+      integer(ip), parameter :: maxitr = 100
 
 !
 !     Code returned in INRYPL indicating ray lies in plane.
 !
-      integer(ip)           inf
-      parameter           ( inf    = -1 )
+      integer(ip), parameter :: inf = -1
 
 !
 !     String length for extremum specifier.
 !
-      integer(ip)           extlen
-      parameter           ( extlen = 3 )
+      integer(ip), parameter :: extlen = 3
 
 !
 !     Local variables

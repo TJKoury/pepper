@@ -308,17 +308,14 @@
 !
 !     Local parameters
 !
-      character(*)          ref
-      parameter           ( ref     = 'J2000' )
+      character(*), parameter :: ref = 'J2000'
 
-      integer(ip)           sun
-      parameter           ( sun     = 10 )
+      integer(ip), parameter :: sun = 10
 
 !
 !     Saved body name length.
 !
-      integer(ip)           maxl
-      parameter           ( maxl  = 36 )
+      integer(ip), parameter :: maxl = 36
 
 
 !

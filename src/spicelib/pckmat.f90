@@ -229,37 +229,30 @@
 !
 !     ND and NI values for a PCK file.
 !
-      integer(ip)           nd
-      parameter           ( nd = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni = 5 )
+      integer(ip), parameter :: ni = 5
 !
 !     Index for the reference frame code in the integer summary.
 !
-      integer(ip)           nr
-      parameter           ( nr = 2 )
+      integer(ip), parameter :: nr = 2
 !
 !     Length of the descriptor for a PCK file.
 !
-      integer(ip)           ns
-      parameter           ( ns = nd + (ni+1)/2 )
+      integer(ip), parameter :: ns = nd + (ni+1)/2
 !
 !     Index for the data type code in the integer summary.
 !
-      integer(ip)           nt
-      parameter           ( nt = 3 )
+      integer(ip), parameter :: nt = 3
 !
 !     Maximum size allowed for a record in a segment of a binary PCK
 !     file.
 !
-      integer(ip)           maxrec
-      parameter           ( maxrec = 130 )
+      integer(ip), parameter :: maxrec = 130
 !
 !     Number of components in a state vector.
 !
-      integer(ip)           nstate
-      parameter           ( nstate = 6 )
+      integer(ip), parameter :: nstate = 6
 
 !
 !     Local Variables

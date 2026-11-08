@@ -249,14 +249,11 @@
 !
 !     Local Parameters
 !
-      integer(ip)           fmtlen
-      parameter           ( fmtlen =  8 )
+      integer(ip), parameter :: fmtlen = 8
 
-      integer(ip)           idwlen
-      parameter           ( idwlen =  8 )
+      integer(ip), parameter :: idwlen = 8
 
-      integer(ip)           ifnlen
-      parameter           ( ifnlen = 60 )
+      integer(ip), parameter :: ifnlen = 60
 
 !
 !     The parameter TAILEN determines the tail length of a DAF file
@@ -290,8 +287,7 @@
 !     1 byte characters, and a DAF record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer(ip)           tailen
-      parameter           ( tailen = 928 )
+      integer(ip), parameter :: tailen = 928
 
 !
 !     Local variables

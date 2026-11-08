@@ -460,14 +460,11 @@
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-      integer(ip)           nd
-      parameter           ( nd     = 2 )
+      integer(ip), parameter :: nd = 2
 
-      integer(ip)           ni
-      parameter           ( ni     = 6 )
+      integer(ip), parameter :: ni = 6
 
-      integer(ip)           dtype
-      parameter           ( dtype  = 6 )
+      integer(ip), parameter :: dtype = 6
 
 !
 !     Local variables

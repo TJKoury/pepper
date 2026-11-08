@@ -352,72 +352,52 @@
 !
 !     Kernel variable name templates:
 !
-      character(*)          tmalgn
-      parameter           ( tmalgn = 'FRAME_#_ALIGNED_WITH' )
+      character(*), parameter :: tmalgn = 'FRAME_#_ALIGNED_WITH'
 
-      character(*)          tmcent
-      parameter           ( tmcent = 'FRAME_#_CENTER' )
+      character(*), parameter :: tmcent = 'FRAME_#_CENTER'
 
-      character(*)          tmclas
-      parameter           ( tmclas = 'FRAME_#_CLASS' )
+      character(*), parameter :: tmclas = 'FRAME_#_CLASS'
 
-      character(*)          tmclid
-      parameter           ( tmclid = 'FRAME_#_CLASS_ID' )
+      character(*), parameter :: tmclid = 'FRAME_#_CLASS_ID'
 
-      character(*)          tmid
-      parameter           ( tmid   = 'FRAME_#' )
+      character(*), parameter :: tmid = 'FRAME_#'
 
-      character(*)          tmfnam
-      parameter           ( tmfnam = 'FRAME_#_NAME' )
+      character(*), parameter :: tmfnam = 'FRAME_#_NAME'
 
-      character(*)          tmstrt
-      parameter           ( tmstrt = 'FRAME_#_START' )
+      character(*), parameter :: tmstrt = 'FRAME_#_START'
 
-      character(*)          tmstop
-      parameter           ( tmstop = 'FRAME_#_STOP' )
+      character(*), parameter :: tmstop = 'FRAME_#_STOP'
 
 !
 !     Other parameters
 !
-      integer(ip)           frnmln
-      parameter           ( frnmln = 32 )
+      integer(ip), parameter :: frnmln = 32
 
-      integer(ip)           timlen
-      parameter           ( timlen = 80 )
+      integer(ip), parameter :: timlen = 80
 
 !
 !     Indices of items in the arrays of kernel variables:
 !
-      integer(ip)           ixfnam
-      parameter           ( ixfnam = 1 )
+      integer(ip), parameter :: ixfnam = 1
 
-      integer(ip)           ixid
-      parameter           ( ixid   = ixfnam + 1 )
+      integer(ip), parameter :: ixid = ixfnam + 1
 
-      integer(ip)           ixcent
-      parameter           ( ixcent = ixid    + 1 )
+      integer(ip), parameter :: ixcent = ixid    + 1
 
-      integer(ip)           ixclas
-      parameter           ( ixclas = ixcent + 1 )
+      integer(ip), parameter :: ixclas = ixcent + 1
 
-      integer(ip)           ixclid
-      parameter           ( ixclid = ixclas + 1 )
+      integer(ip), parameter :: ixclid = ixclas + 1
 
-      integer(ip)           ixalgn
-      parameter           ( ixalgn = ixclid + 1 )
+      integer(ip), parameter :: ixalgn = ixclid + 1
 
-      integer(ip)           ixstrt
-      parameter           ( ixstrt = ixalgn + 1 )
+      integer(ip), parameter :: ixstrt = ixalgn + 1
 
-      integer(ip)           ixstop
-      parameter           ( ixstop = ixstrt + 1 )
+      integer(ip), parameter :: ixstop = ixstrt + 1
 
 
-      integer(ip)           kvnmln
-      parameter           ( kvnmln = 32 )
+      integer(ip), parameter :: kvnmln = 32
 
-      integer(ip)           nkv
-      parameter           ( nkv    = 8 )
+      integer(ip), parameter :: nkv = 8
 
 !
 !     Local variables
