@@ -94,7 +94,7 @@ def convert_dble(code: str) -> str:
 def convert_code(code: str, renames: dict) -> str:
     code = rename(code, renames)
     code = convert_dble(code)
-    code = INTEGER.sub(lambda m: "integer(ip)" + (m.group(1)[4:] if m.group(1) else ""), code)
+    code = INTEGER.sub(lambda m: "integer(ip)" + (m.group(1)[4:] or " " if m.group(1) else ""), code)
     code = DOUBLE.sub(lambda m: "real(wp)" + (m.group(1) + " " * 8 if m.group(1) else ""), code)
 
     def lit(m):
