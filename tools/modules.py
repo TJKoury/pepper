@@ -11,7 +11,21 @@ Steps to move the routines of a new module (MODULE = e.g. pepper_cells):
     python tools/document_procedures.py --remove-brief-io \
         src/MODULE.f90 src/legacy/pepper_legacy_<name>.f90
     python tools/modernize_syntax.py src
+    python tools/wrap_docs.py src
     pixi run tspice
+
+Steps for a context module (CONTEXT_MODULES; intents, documentation and
+the Brief_I/O removal are done by modularize_ctx.py itself):
+
+    python tools/data_to_parameter.py src/spicelib/<file>  (read-only tables)
+    python tools/modularize_ctx.py --dry-run MODULE     (checks the calls)
+    python tools/modularize_ctx.py MODULE
+    python tools/modernize_syntax.py src
+    python tools/wrap_docs.py src
+    pixi run tspice
+
+Constants computed on the first call (a saved FIRST flag) are rewritten as
+parameters by hand before the move.
 """
 
 # Constant functions of SPICELIB that are named constants in
@@ -31,6 +45,7 @@ MODULES = {
         moved movei notru orderc orderd orderi prodad prodai reordc reordd
         reordi reordl rmdupc rmdupd rmdupi sameai shellc shelld shelli somfls
         somtru sumad sumai swapc swapd swapi
+        touchc touchd touchi touchl
         """.split(),
     "pepper_math": """
         approx axisar azlrec brcktd brckti chbder chbint chbval cyllat cylrec
@@ -51,7 +66,41 @@ MODULES = {
         lparse lparsm ltrim lxqstr matchw nblen nbwid ncpos ncposr nextwd nthwd
         parsqs pcwid pos posr prefix quote replch replwd repmc rjust rtrim
         samch samsub scanrj shiftl shiftr sigdgt suffix ucase wdcnt wdindx
-        zzinssub zzrepsub
+        zzinssub zzrepsub intstr dpstr
         """.split(),
     "pepper_errors": ["expln"],
+}
+
+# Routines that need the context (they signal errors): moved by
+# tools/modularize_ctx.py into submodules of pepper_instance. In dependency
+# order, like MODULES.
+CONTEXT_MODULES = {
+    "pepper_cells": """
+        chbase enchar dechar excess
+        cardc cardd cardi sizec sized sizei scardc scardd scardi
+        ssizec ssized ssizei validc validd validi
+        appndc appndd appndi copyc copyd copyi insrtc insrtd insrti
+        removc removd removi elemc elemd elemi ordc ordd ordi setc setd seti
+        unionc uniond unioni interc interd interi diffc diffd diffi
+        sdiffc sdiffd sdiffi
+        zzwninsd wncard wncomd wncond wndifd wnelmd wnexpd wnextd wnfetd
+        wnfild wnfltd wnincd wninsd wnintd wnreld wnsumd wnunid wnvald
+        """.split(),
+    "pepper_numerics": """
+        dacosh dacosn dasine datanh dazldr dcyldr dlatdr drdazl drdgeo dsphdr
+        eqncpv edpnt ednmpt elltof hrmesp hrmint lgresp lgrind lgrint chbigr
+        inelpl inrypl invort invstm isrot kepleq kpsolv m2q nplnpt npsgpt
+        nvc2pl nvp2pl psv2pl pltar pltnp pltvol qderiv raxisa rquad rmaind
+        rmaini vprjp vprjpi stelab stlabx xposbl
+        """.split(),
+    "pepper_array_ops": """
+        cyacip cyadip cyaiip cyclac cyclad cyclai inslac inslad inslai
+        remlac remlad remlai swapac swapad swapai packac packad packai
+        lnkan lnkfsl lnkhl lnkila lnkilb lnkini lnknfn lnknxt lnkprv lnksiz
+        lnktl lnkxsl
+        """.split(),
+    "pepper_text": """
+        cyclec repmd repmi repsub remsub inssub shiftc chckid countc hx2int
+        locati locln
+        """.split(),
 }

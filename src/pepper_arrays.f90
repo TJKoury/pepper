@@ -16,7 +16,8 @@ module pepper_arrays
       maxai, minac, minad, minai, movec, moved, movei, notru, orderc,&
       orderd, orderi, prodad, prodai, reordc, reordd, reordi, reordl,&
       rmdupc, rmdupd, rmdupi, sameai, shellc, shelld, shelli, somfls,&
-      somtru, sumad, sumai, swapc, swapd, swapi
+      somtru, sumad, sumai, swapc, swapd, swapi, touchc, touchd, touchi,&
+      touchl
 
 contains
 
@@ -1388,7 +1389,8 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to
+                                       !! zero.
       real(wp), intent(out) :: array ( * )  !! Double precision array to be filled.
 
 ! $ Detailed_Input
@@ -1552,7 +1554,8 @@ contains
 
       implicit none
 
-      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to
+                                       !! zero.
       integer(ip), intent(out) :: array ( * )  !! Integer array to be filled.
 
 ! $ Detailed_Input
@@ -1844,7 +1847,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: value  !! Double precision value to be placed in all the elements of ARRAY.
+      real(wp), intent(in) :: value  !! Double precision value to be placed in all the elements of
+                                     !! ARRAY.
       integer(ip), intent(in) :: ndim  !! The number of elements in ARRAY.
       real(wp), intent(out) :: array ( * )  !! Double precision array which is to be filled.
 
@@ -5849,7 +5853,8 @@ contains
       implicit none
 
       character(*), intent(in) :: arrfrm ( * )  !! Character array to be moved.
-      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM
+                                       !! and ARRTO.
       character(*), intent(out) :: arrto  ( * )  !! Destination array.
 
 ! $ Detailed_Input
@@ -6242,7 +6247,8 @@ contains
       implicit none
 
       integer(ip), intent(in) :: arrfrm ( * )  !! Integer array to be moved.
-      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      integer(ip), intent(in) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM
+                                       !! and ARRTO.
       integer(ip), intent(out) :: arrto  ( * )  !! Destination array.
 
 ! $ Detailed_Input
@@ -10802,5 +10808,495 @@ contains
 
       return
       end subroutine swapi
+
+!$Procedure TOUCHC ( Touch a variable )
+
+      !> Return the first character of a string
+      !>
+      !> The function returns the first character of the string.
+      elemental character function touchc ( string )
+
+! $ Abstract
+!
+!     Return the first character of a string
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: string  !! any character string
+
+! $ Detailed_Input
+!
+!     STRING   is any character string
+!
+! $ Detailed_Output
+!
+!     The function returns the first character of the string
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine so that formal arguments to a routine
+!     that are never used can be given the appearance of being used
+!     to a compiler. In this way it is possible to leave "hooks" in
+!     a calling sequence even if those variables are for the moment
+!     unused. Similarly, variables declared for future use can be left
+!     in place so that they don't need to be commented out
+!
+! $ Examples
+!
+!     Suppose that a routine takes as an argument a
+!     fortran structure implemented as a set of parallel arrays.
+!     But that one of the arrays is not needed for the purposes of
+!     the routine. This routine allows you to touch that array
+!     without changing it.
+!
+!
+!        SUBROUTINE INCPTR ( N, PTR, VALUES )
+!
+!        This routine increments the current pointer into a circular
+!        array of character strings.
+!
+!        INTEGER               N
+!        INTEGER               PTR
+!        CHARACTER*(*)         VALUES ( * )
+!
+!        Even though we don't need to do anything with the values
+!        array, it's passed for the sake of uniformity in calling
+!        sequences. Touch the VALUES array so that the compiler
+!        will think it's been used.
+!
+!        VALUES(1)(1:1) = TOUCHC ( VALUES(1)(1:1) )
+!
+!        PTR = PTR + 1
+!
+!        IF ( PTR .GT. N ) THEN
+!           PTR = 1
+!        END IF
+!        RETURN
+!
+! $ Restrictions
+!
+!     1)  If you use this routine, it would be a very good idea to
+!         write down why you are using it in the calling routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 06-MAY-1994 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     touch a character string
+!
+!-&
+
+
+      touchc = string(1:1)
+      return
+      end function touchc
+
+!$Procedure TOUCHD ( Touch a variable )
+
+      !> Return the value of a double precision number.
+      !>
+      !> The function returns the value of DP.
+      elemental real(wp) function touchd ( dp )
+      use pepper_kinds, only: wp
+
+! $ Abstract
+!
+!     Return the value of a double precision number.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      real(wp), intent(in) :: dp  !! any double precision number
+
+! $ Detailed_Input
+!
+!     DP       is any double precision number
+!
+! $ Detailed_Output
+!
+!     The function returns the input d.p.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine so that formal arguments to a routine
+!     that are never used can be given the appearance of being used
+!     to a compiler. In this way it is possible to leave "hooks" in
+!     a calling sequence even if those variables are for the moment
+!     unused. Similarly, variables declared for future use can be left
+!     in place so that they don't need to be commented out
+!
+! $ Examples
+!
+!     Suppose that a routine takes as an argument a
+!     fortran structure implemented as a set of parallel arrays.
+!     But that one of the arrays is not needed for the purposes of
+!     the routine. This routine allows you to touch that array
+!     without changing it.
+!
+!
+!        SUBROUTINE INCPTR ( N, PTR, VALUES )
+!
+!        This routine increments the current pointer into a circular
+!        array of double precision numbers.
+!
+!        INTEGER               N
+!        INTEGER               PTR
+!        DOUBLE PRECISION      VALUES ( * )
+!
+!        Even though we don't need to do anything with the values
+!        array, it's passed for the sake of uniformity in calling
+!        sequences. Touch the VALUES array so that the compiler
+!        will think it's been used.
+!
+!        VALUES(1) = TOUCHD ( VALUES(1) )
+!
+!        PTR = PTR + 1
+!
+!        IF ( PTR .GT. N ) THEN
+!           PTR = 1
+!        END IF
+!        RETURN
+!
+! $ Restrictions
+!
+!     1)  If you use this routine, it would be a very good idea to
+!         write down why you are using it in the calling routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 06-MAY-1994 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     touch a d.p. number
+!
+!-&
+
+
+      touchd = dp
+      return
+      end function touchd
+
+!$Procedure TOUCHI ( Touch a variable )
+
+      !> Return the value of the input integer
+      !>
+      !> The function returns the value of INT.
+      elemental integer(ip) function touchi ( int )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Return the value of the input integer
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      integer(ip), intent(in) :: int  !! any integer
+
+! $ Detailed_Input
+!
+!     INT      is any integer
+!
+! $ Detailed_Output
+!
+!     The function returns the input integer
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine so that formal arguments to a routine
+!     that are never used can be given the appearance of being used
+!     to a compiler. In this way it is possible to leave "hooks" in
+!     a calling sequence even if those variables are for the moment
+!     unused. Similarly, variables declared for future use can be left
+!     in place so that they don't need to be commented out
+!
+! $ Examples
+!
+!     Suppose that a routine takes as an argument a
+!     fortran structure implemented as a set of parallel arrays.
+!     But that one of the arrays is not needed for the purposes of
+!     the routine. This routine allows you to touch that array
+!     without changing it.
+!
+!
+!        SUBROUTINE INCPTR ( N, PTR, VALUES )
+!
+!        This routine increments the current pointer into a circular
+!        array of  integers.
+!
+!        INTEGER               N
+!        INTEGER               PTR
+!        INTEGER               VALUES ( * )
+!
+!        Even though we don't need to do anything with the values
+!        array, it's passed for the sake of uniformity in calling
+!        sequences. Touch the VALUES array so that the compiler
+!        will think it's been used.
+!
+!        VALUES(1) = TOUCHI ( VALUES(1) )
+!
+!        PTR = PTR + 1
+!
+!        IF ( PTR .GT. N ) THEN
+!           PTR = 1
+!        END IF
+!        RETURN
+!
+! $ Restrictions
+!
+!     1)  If you use this routine, it would be a very good idea to
+!         write down why you are using it in the calling routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 06-MAY-1994 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     touch an integer
+!
+!-&
+
+
+      touchi = int
+      return
+      end function touchi
+
+!$Procedure TOUCHL ( Touch a variable )
+
+      !> Return the value of the input logical
+      !>
+      !> The function returns the value of LOG.
+      elemental logical function touchl ( log )
+
+! $ Abstract
+!
+!     Return the value of the input logical
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      logical, intent(in) :: log  !! any logical
+
+! $ Detailed_Input
+!
+!     LOG      is any logical
+!
+! $ Detailed_Output
+!
+!     The function returns the input logical
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine so that formal arguments to a routine
+!     that are never used can be given the appearance of being used
+!     to a compiler. In this way it is possible to leave "hooks" in
+!     a calling sequence even if those variables are for the moment
+!     unused. Similarly, variables declared for future use can be left
+!     in place so that they don't need to be commented out
+!
+! $ Examples
+!
+!     Suppose that a routine takes as an argument a
+!     fortran structure implemented as a set of parallel arrays.
+!     But that one of the arrays is not needed for the purposes of
+!     the routine. This routine allows you to touch that array
+!     without changing it.
+!
+!
+!        SUBROUTINE INCPTR ( N, PTR, VALUES )
+!
+!        This routine increments the current pointer into a circular
+!        array of logicals.
+!
+!        INTEGER               N
+!        INTEGER               PTR
+!        LOGICAL               VALUES ( * )
+!
+!        Even though we don't need to do anything with the values
+!        array, it's passed for the sake of uniformity in calling
+!        sequences. Touch the VALUES array so that the compiler
+!        will think it's been used.
+!
+!        VALUES(1) = TOUCHL ( VALUES(1) )
+!
+!        PTR = PTR + 1
+!
+!        IF ( PTR .GT. N ) THEN
+!           PTR = 1
+!        END IF
+!        RETURN
+!
+! $ Restrictions
+!
+!     1)  If you use this routine, it would be a very good idea to
+!         write down why you are using it in the calling routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 06-MAY-1994 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     touch a logical
+!
+!-&
+
+
+      touchl = log
+      return
+      end function touchl
 
 end module pepper_arrays

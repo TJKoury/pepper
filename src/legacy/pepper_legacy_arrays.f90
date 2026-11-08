@@ -150,7 +150,8 @@
       use pepper_arrays, only: pepper_filld => filld
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              value  !! Double precision value to be placed in all the elements of ARRAY.
+      real(wp)              value  !! Double precision value to be placed in all the elements of
+                                   !! ARRAY.
       integer(ip)           ndim  !! The number of elements in ARRAY.
       real(wp)              array ( * )  !! Double precision array which is to be filled.
       call pepper_filld ( value, ndim, array )
@@ -767,3 +768,45 @@
       integer(ip)      b  !! Second variable.
       call pepper_swapi ( a, b )
       end subroutine swapi
+
+      !> Return the first character of a string
+      !>
+      !> Legacy interface: calls touchc of module pepper_arrays.
+      character function touchc ( string )
+      use pepper_arrays, only: pepper_touchc => touchc
+      implicit none
+      character(*)          string  !! any character string
+      touchc = pepper_touchc ( string )
+      end function touchc
+
+      !> Return the value of a double precision number.
+      !>
+      !> Legacy interface: calls touchd of module pepper_arrays.
+      real(wp) function touchd ( dp )
+      use pepper_arrays, only: pepper_touchd => touchd
+      use pepper_kinds, only: wp
+      implicit none
+      real(wp)              dp  !! any double precision number
+      touchd = pepper_touchd ( dp )
+      end function touchd
+
+      !> Return the value of the input integer
+      !>
+      !> Legacy interface: calls touchi of module pepper_arrays.
+      integer(ip) function touchi ( int )
+      use pepper_arrays, only: pepper_touchi => touchi
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip)           int  !! any integer
+      touchi = pepper_touchi ( int )
+      end function touchi
+
+      !> Return the value of the input logical
+      !>
+      !> Legacy interface: calls touchl of module pepper_arrays.
+      logical function touchl ( log )
+      use pepper_arrays, only: pepper_touchl => touchl
+      implicit none
+      logical               log  !! any logical
+      touchl = pepper_touchl ( log )
+      end function touchl

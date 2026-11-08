@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from add_intents import procedures  # noqa: E402
 from modularize import HEADER, parse_decl, raw_statements, entity_name, SPEC_START  # noqa: E402
 
-ROW = re.compile(r"^!(\s{2,})([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)(\s+)(I/O|I-O|I|O)(\s+)(\S.*)$")
+ROW = re.compile(r"^!(\s{2,})([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)(\s+)(I/O|I-O|I,O|I|O)(\s+)(\S.*)$")
 PENDING = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s*,\s*$")
 
 

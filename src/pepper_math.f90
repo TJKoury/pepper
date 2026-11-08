@@ -1,4 +1,5 @@
-!> Vectors, matrices, rotations, quaternions, coordinate systems, planes, ellipses and other numerical routines.
+!> Vectors, matrices, rotations, quaternions, coordinate systems, planes, ellipses and other
+!> numerical routines.
 !>
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
@@ -6773,7 +6774,8 @@ contains
 
       implicit none
 
-      real(wp), intent(in) :: state ( 6 )  !! A 6-vector composed of three coordinates and their derivatives.
+      real(wp), intent(in) :: state ( 6 )  !! A 6-vector composed of three coordinates and their
+                                           !! derivatives.
 
 ! $ Detailed_Input
 !
@@ -8594,7 +8596,8 @@ contains
       implicit none
 
       real(wp), intent(in) :: m    ( 3,3 )  !! Matrix to be inverted.
-      real(wp), intent(out) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will be the zero matrix.
+      real(wp), intent(out) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT
+                                             !! will be the zero matrix.
 
 ! $ Detailed_Input
 !
@@ -10461,7 +10464,8 @@ contains
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp), intent(out) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) * M2.
+      real(wp), intent(out) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product
+                                             !! (M1**T) * M2.
 
 ! $ Detailed_Input
 !
@@ -10669,7 +10673,8 @@ contains
       integer(ip), intent(in) :: nc1  !! Column dimension of M1 and row dimension of MOUT.
       integer(ip), intent(in) :: nr1r2  !! Row dimension of both M1 and M2.
       integer(ip), intent(in) :: nc2  !! Column dimension of both M2 and MOUT.
-      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+                                                  !! multiplied.
       real(wp), intent(in) :: m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
       real(wp), intent(out) :: mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
 
@@ -10898,7 +10903,8 @@ contains
 
       real(wp), intent(in) :: m      ( 3,3 )  !! 3X3 double precision matrix.
       real(wp), intent(in) :: vin    (   3 )  !! 3-dimensional double precision vector.
-      real(wp), intent(out) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the product M**T * VIN.
+      real(wp), intent(out) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
+                                               !! product M**T * VIN.
 
 ! $ Detailed_Input
 !
@@ -11118,7 +11124,8 @@ contains
 
       integer(ip), intent(in) :: nc1  !! Column dimension of M1 and length of VOUT.
       integer(ip), intent(in) :: nr1r2  !! Row dimension of M1 and length of V2.
-      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(in) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+                                                  !! multiplied.
       real(wp), intent(in) :: v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
       real(wp), intent(out) :: vout (       nc1 )  !! Product vector M1**T * V2.
 
@@ -12005,7 +12012,8 @@ contains
       integer(ip), intent(in) :: nc1c2  !! Column dimension of M1 and column dimension of M2.
       integer(ip), intent(in) :: nr2  !! Row dimension of M2 and column dimension of MOUT.
       real(wp), intent(in) :: m1   ( nr1,nc1c2 )  !! Left-hand matrix to be multiplied.
-      real(wp), intent(in) :: m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be multiplied.
+      real(wp), intent(in) :: m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be
+                                                  !! multiplied.
       real(wp), intent(out) :: mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
 
 ! $ Detailed_Input
@@ -12235,7 +12243,8 @@ contains
 
       real(wp), intent(in) :: m      ( 3, 3 )  !! 3x3 double precision matrix.
       real(wp), intent(in) :: vin    (    3 )  !! 3-dimensional double precision vector.
-      real(wp), intent(out) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the product M*VIN.
+      real(wp), intent(out) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is
+                                                !! the product M*VIN.
 
 ! $ Detailed_Input
 !
@@ -13025,8 +13034,10 @@ contains
       parameter           ( ubpl    =   4 )
 
       real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
-      real(wp), intent(out) :: normal (    3 )  !! A normal vector and constant defining the geometric plane represented by PLANE.
-      real(wp), intent(out) :: konst  !! A normal vector and constant defining the geometric plane represented by PLANE.
+      real(wp), intent(out) :: normal (    3 )  !! A normal vector and constant defining the
+                                                !! geometric plane represented by PLANE.
+      real(wp), intent(out) :: konst  !! A normal vector and constant defining the geometric plane
+                                      !! represented by PLANE.
 
 ! $ Detailed_Input
 !
@@ -13573,9 +13584,12 @@ contains
       parameter           ( ubpl   =   4 )
 
       real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane.
-      real(wp), intent(out) :: point (    3 )  !! A point in the input plane and two vectors spanning the input plane.
-      real(wp), intent(out) :: span1 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
-      real(wp), intent(out) :: span2 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
+      real(wp), intent(out) :: point (    3 )  !! A point in the input plane and two vectors
+                                               !! spanning the input plane.
+      real(wp), intent(out) :: span1 (    3 )  !! A point in the input plane and two vectors
+                                               !! spanning the input plane.
+      real(wp), intent(out) :: span2 (    3 )  !! A point in the input plane and two vectors
+                                               !! spanning the input plane.
 
 ! $ Detailed_Input
 !
@@ -21216,7 +21230,8 @@ contains
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of the matrix.
-      real(wp), intent(in) :: matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision numbers.
+      real(wp), intent(in) :: matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision
+                                                    !! numbers.
 
 ! $ Detailed_Input
 !
@@ -23496,7 +23511,8 @@ contains
       implicit none
 
       real(wp), intent(in) :: vin   ( 3 )  !! Double precision 3-dimensional vector.
-      real(wp), intent(out) :: vout  ( 3 )  !! Double precision 3-dimensional vector set equal to VIN.
+      real(wp), intent(out) :: vout  ( 3 )  !! Double precision 3-dimensional vector set equal to
+                                            !! VIN.
 
 ! $ Detailed_Input
 !
@@ -23671,7 +23687,8 @@ contains
 
       integer(ip), intent(in) :: ndim  !! Dimension of VIN (and also VOUT).
       real(wp), intent(in) :: vin   ( ndim )  !! Double precision n-dimensional vector.
-      real(wp), intent(out) :: vout  ( ndim )  !! Double precision n-dimensional vector set equal to VIN.
+      real(wp), intent(out) :: vout  ( ndim )  !! Double precision n-dimensional vector set equal to
+                                               !! VIN.
 
 ! $ Detailed_Input
 !
@@ -29281,9 +29298,11 @@ contains
 
       integer(ip), intent(in) :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
       integer(ip), intent(in) :: ncol  !! Number of columns in MATRIX (number of rows in V2.)
-      real(wp), intent(in) :: v1      ( nrow       )  !! N-dimensional double precision column vector.
+      real(wp), intent(in) :: v1      ( nrow       )  !! N-dimensional double precision column
+                                                      !! vector.
       real(wp), intent(in) :: matrix  ( nrow, ncol )  !! NxM double precision matrix.
-      real(wp), intent(in) :: v2      (       ncol )  !! M-dimensional double precision column vector.
+      real(wp), intent(in) :: v2      (       ncol )  !! M-dimensional double precision column
+                                                      !! vector.
 
 ! $ Detailed_Input
 !

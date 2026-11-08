@@ -24,6 +24,10 @@ For each MODULE (a key of modules.MODULES, e.g. pepper_math):
 pepper_constants is written by hand (constants as parameters); its legacy
 wrappers (functions such as ``pi()``) are generated.
 
+If src/<MODULE>.f90 exists already, the routines of its list that are
+still in src/spicelib are added to it (and their wrappers to the legacy
+file).
+
 Modules must be given in dependency order of modules.MODULES; a module may
 use only modules that come before it. A call to a routine that is in a
 module that has not been generated yet is an error.
@@ -109,9 +113,9 @@ def split_top(s: str) -> list:
     """Split s at commas outside parentheses."""
     parts, depth, cur = [], 0, ""
     for ch in s:
-        if ch == "(":
+        if ch in "([":
             depth += 1
-        elif ch == ")":
+        elif ch in ")]":
             depth -= 1
         if ch == "," and depth == 0:
             parts.append(cur)
@@ -133,7 +137,7 @@ def parse_decl(text: str):
         return None          # e.g. 'integer_x = 1' (not a declaration)
     if "::" in rest:
         attrs, ents = rest.split("::", 1)
-        return m.group(1), attrs.strip(), split_top(ents)
+        return m.group(1), attrs.strip().lstrip(",").strip(), split_top(ents)
     if rest.lstrip().startswith(","):
         return None
     if re.match(r"\s*function\b", rest, re.I):
@@ -146,12 +150,12 @@ def entity_name(ent: str) -> str:
 
 
 class Routine:
-    def __init__(self, name: str):
+    def __init__(self, name: str, preprocessed_ok: bool = False):
         paths = sorted(SPICELIB.glob(name + ".[fF]90"))
         if len(paths) != 1:
             raise SystemExit(f"modularize: no unique source file for {name}")
         self.path = paths[0]
-        if self.path.suffix == ".F90":
+        if self.path.suffix == ".F90" and not preprocessed_ok:
             raise SystemExit(f"modularize: {self.path.name} is preprocessed (not supported)")
         self.name = name
         text = self.path.read_text(encoding="ascii")
@@ -387,20 +391,37 @@ def generate(mod: str, where: dict, dry_run: bool) -> list:
         sources = [SPICELIB / f"{n}.f90" for n in MODULES[mod]]
         src = "src/pepper_constants.f90"
     else:
-        routines = [Routine(n) for n in MODULES[mod]]
+        target = SRC / f"{mod}.f90"
+        # Adding to an existing module: only the routines still in src/spicelib.
+        existing = target.exists()
+        names = [n for n in MODULES[mod]
+                 if not existing or list(SPICELIB.glob(n + ".[fF]90"))]
+        if not names:
+            raise SystemExit(f"modularize: nothing to move for {mod}")
+        routines = [Routine(n) for n in names]
         procs = [module_procedure(r, mod, where) for r in routines]
         wrappers = [wrapper(r, mod) for r in routines]
         sources = [r.path for r in routines]
         src = f"src/{mod}.f90"
         publics = ", ".join(sorted(MODULES[mod]))
         publics = "&\n      ".join(_wrap(publics, 70))
-        body = MODULE_HEADER.format(doc=DOCS[mod], legacy=legacy.name, mod=mod,
-                                    uses="", publics=publics)
-        body += "\n\n".join(procs) + f"\n\nend module {mod}\n"
+        if existing:
+            body = target.read_text(encoding="ascii")
+            body = re.sub(r"   public :: .*?\n\n", f"   public :: {publics}\n\n", body,
+                          count=1, flags=re.S)
+            body = body.replace(f"\nend module {mod}\n",
+                                "\n" + "\n\n".join(procs) + f"\n\nend module {mod}\n")
+        else:
+            body = MODULE_HEADER.format(doc=DOCS[mod], legacy=legacy.name, mod=mod,
+                                        uses="", publics=publics)
+            body += "\n\n".join(procs) + f"\n\nend module {mod}\n"
         if not dry_run:
-            (SRC / f"{mod}.f90").write_text(body, encoding="ascii")
-        written.append(SRC / f"{mod}.f90")
-    text = LEGACY_HEADER.format(mod=mod, src=src) + "\n" + "\n\n".join(wrappers) + "\n"
+            target.write_text(body, encoding="ascii")
+        written.append(target)
+    if mod != "pepper_constants" and legacy.exists():
+        text = legacy.read_text(encoding="ascii").rstrip("\n") + "\n\n" + "\n\n".join(wrappers) + "\n"
+    else:
+        text = LEGACY_HEADER.format(mod=mod, src=src) + "\n" + "\n\n".join(wrappers) + "\n"
     if not dry_run:
         legacy.write_text(text, encoding="ascii")
         for p in sources:

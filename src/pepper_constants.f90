@@ -33,7 +33,8 @@ module pepper_constants
 
    ! Limits (SPICELIB's dpmax/dpmin are slightly inside huge(1.0_wp)).
    real(wp), parameter, public :: dpmax =  1.79769313486231e308_wp     !! largest real
-   real(wp), parameter, public :: dpmin = -1.79769313486231e308_wp     !! smallest (most negative) real
+   real(wp), parameter, public :: dpmin = -1.79769313486231e308_wp     !! smallest (most negative)
+                                                                       !! real
    integer(ip), parameter, public :: intmax = 2147483647_ip            !! largest integer
    integer(ip), parameter, public :: intmin = -2147483647_ip - 1_ip    !! smallest integer
 

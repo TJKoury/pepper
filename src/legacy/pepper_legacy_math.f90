@@ -349,7 +349,8 @@
       use pepper_math, only: pepper_dvnorm => dvnorm
        use pepper_kinds, only: wp
       implicit none
-      real(wp)              state ( 6 )  !! A 6-vector composed of three coordinates and their derivatives.
+      real(wp)              state ( 6 )  !! A 6-vector composed of three coordinates and their
+                                         !! derivatives.
       dvnorm = pepper_dvnorm ( state )
       end function dvnorm
 
@@ -467,7 +468,8 @@
       use pepper_kinds, only: wp
       implicit none
       real(wp)           m    ( 3,3 )  !! Matrix to be inverted.
-      real(wp)           mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will be the zero matrix.
+      real(wp)           mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will
+                                       !! be the zero matrix.
       call pepper_invert ( m, mout )
       end subroutine invert
 
@@ -553,7 +555,8 @@
       implicit none
       real(wp)           m1   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp)           m2   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) * M2.
+      real(wp)           mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) *
+                                       !! M2.
       call pepper_mtxm ( m1, m2, mout )
       end subroutine mtxm
 
@@ -569,7 +572,8 @@
       integer(ip)        nc1  !! Column dimension of M1 and row dimension of MOUT.
       integer(ip)        nr1r2  !! Row dimension of both M1 and M2.
       integer(ip)        nc2  !! Column dimension of both M2 and MOUT.
-      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+                                             !! multiplied.
       real(wp)           m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
       real(wp)           mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
       call pepper_mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
@@ -585,7 +589,8 @@
       implicit none
       real(wp)          m      ( 3,3 )  !! 3X3 double precision matrix.
       real(wp)          vin    (   3 )  !! 3-dimensional double precision vector.
-      real(wp)          vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the product M**T * VIN.
+      real(wp)          vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
+                                        !! product M**T * VIN.
       call pepper_mtxv ( m, vin, vout )
       end subroutine mtxv
 
@@ -599,7 +604,8 @@
       implicit none
       integer(ip)        nc1  !! Column dimension of M1 and length of VOUT.
       integer(ip)        nr1r2  !! Row dimension of M1 and length of V2.
-      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be multiplied.
+      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+                                             !! multiplied.
       real(wp)           v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
       real(wp)           vout (       nc1 )  !! Product vector M1**T * V2.
       call pepper_mtxvg ( m1, v2, nc1, nr1r2, vout )
@@ -659,7 +665,8 @@
       integer(ip)        nc1c2  !! Column dimension of M1 and column dimension of M2.
       integer(ip)        nr2  !! Row dimension of M2 and column dimension of MOUT.
       real(wp)           m1   ( nr1,nc1c2 )  !! Left-hand matrix to be multiplied.
-      real(wp)           m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be multiplied.
+      real(wp)           m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be
+                                             !! multiplied.
       real(wp)           mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
       call pepper_mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
       end subroutine mxmtg
@@ -674,7 +681,8 @@
       implicit none
       real(wp)           m      ( 3, 3 )  !! 3x3 double precision matrix.
       real(wp)           vin    (    3 )  !! 3-dimensional double precision vector.
-      real(wp)           vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the product M*VIN.
+      real(wp)           vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the
+                                          !! product M*VIN.
       call pepper_mxv ( m, vin, vout )
       end subroutine mxv
 
@@ -740,8 +748,10 @@
       integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
       real(wp)              plane  ( ubpl )  !! A SPICE plane.
-      real(wp)              normal (    3 )  !! A normal vector and constant defining the geometric plane represented by PLANE.
-      real(wp)              konst  !! A normal vector and constant defining the geometric plane represented by PLANE.
+      real(wp)              normal (    3 )  !! A normal vector and constant defining the geometric
+                                             !! plane represented by PLANE.
+      real(wp)              konst  !! A normal vector and constant defining the geometric plane
+                                   !! represented by PLANE.
       integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
       integer(ip)           conpos
@@ -776,9 +786,12 @@
       integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
       real(wp)              plane ( ubpl )  !! A SPICE plane.
-      real(wp)              point (    3 )  !! A point in the input plane and two vectors spanning the input plane.
-      real(wp)              span1 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
-      real(wp)              span2 (    3 )  !! A point in the input plane and two vectors spanning the input plane.
+      real(wp)              point (    3 )  !! A point in the input plane and two vectors spanning
+                                            !! the input plane.
+      real(wp)              span1 (    3 )  !! A point in the input plane and two vectors spanning
+                                            !! the input plane.
+      real(wp)              span2 (    3 )  !! A point in the input plane and two vectors spanning
+                                            !! the input plane.
       call pepper_pl2psv ( plane, point, span1, span2 )
       end subroutine pl2psv
 

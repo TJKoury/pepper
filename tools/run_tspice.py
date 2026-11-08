@@ -17,7 +17,8 @@ F_SPK18, ...). With no FAMILY arguments, all families are run.
 
 Work directories are created under build/tspice/<FAMILY>. The directory of a
 family that passed is deleted (unless --keep); a failed family's directory is
-kept with its output (output.txt) and tspice logs. Family timings are saved in
+kept with its output (output.txt) and tspice logs, and the failure is
+appended to build/tspice/failures.log. Family timings are saved in
 build/tspice/timings.json and used to start the slowest families first on the
 next run. Families with timing comparisons (TIMING_SENSITIVE) run one at a
 time after all the others.
@@ -47,6 +48,7 @@ WORK = ROOT / "build" / "tspice"
 # parallel batch.
 TIMING_SENSITIVE = {"F_SCLK1", "F_ZZHSC", "F_ZZHSI"}
 TIMINGS = WORK / "timings.json"
+FAILURES = WORK / "failures.log"   # failures of all runs, appended
 
 _procs = set()
 _lock = threading.Lock()
@@ -212,6 +214,15 @@ def main() -> int:
         print("Failed families (work directories kept):")
         for f in failed:
             print(f"  {f:24s} {results[f][0]:7s} {(WORK / f).relative_to(ROOT)}")
+        # Keep a record across runs (a rerun replaces the work directories).
+        try:
+            with open(FAILURES, "a") as log:
+                stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+                for f in failed:
+                    log.write(f"{stamp} {f} {results[f][0]}\n")
+                    log.write("    " + tail(WORK / f / "output.txt", 15).replace("\n", "\n    ") + "\n")
+        except OSError:
+            pass
     return 1 if failed or skipped else 0
 
 

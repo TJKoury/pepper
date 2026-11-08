@@ -10,7 +10,7 @@ A declaration such as ``real(wp)   v1 ( 3 )`` of an argument becomes
 ``real(wp), intent(in) :: v1 ( 3 )``. Declarations that also declare
 non-arguments are split. An argument without a table entry, or without a
 declaration, is an error (fix the table or the declaration by hand). Run it
-once per file: arguments that already have an intent are left alone.
+it again: procedures whose arguments all have intents are left alone.
 """
 
 import argparse
@@ -21,9 +21,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from modularize import HEADER, parse_decl, raw_statements, entity_name, SPEC_START  # noqa: E402
 
-ROW = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s+(I/O|I-O|I|O)(\s|$)")
+ROW = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s+(I/O|I-O|I,O|I|O)(\s|$)")
 PENDING = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s*,\s*$")
-INTENT = {"I": "in", "O": "out", "I/O": "inout", "I-O": "inout"}
+INTENT = {"I": "in", "O": "out", "I/O": "inout", "I-O": "inout", "I,O": "inout"}
 
 
 def procedures(lines: list):
@@ -73,6 +73,13 @@ def add_intents(lines: list, first: int, last: int, errors: list) -> list:
     args = [a.strip().lower() for a in (head.group("args") or "").split(",") if a.strip()]
     if not args:
         return body
+    have = set()
+    for s in stmts[1:]:
+        d = parse_decl(s.text)
+        if d and d[1] and "intent" in d[1].lower():
+            have.update(entity_name(e) for e in d[2])
+    if all(a in have for a in args):
+        return body          # done already
     intents = table(body)
     missing = [a for a in args if a not in intents]
     if missing:
